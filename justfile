@@ -18,5 +18,9 @@ fix:
 add-component component:
     ./nvm-exec.sh pnpm dlx shadcn-ui@latest add {{component}}
 
+# Install git hooks
+install-git-hooks:
+    ./nvm-exec.sh pnpm exec lefthook install
+
 # Aliases
 alias i := install
