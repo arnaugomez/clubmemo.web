@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "fix": "next lint --fix",
-    "format": "prettier . -w --check"
+    "format": "prettier . -w --check",
+    "check-format": "prettier . --check"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
