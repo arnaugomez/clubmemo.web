@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier . -w --check"
+    "fix": "next lint --fix",
+    "format": "prettier . -w --check",
+    "lefthook-install": "lefthook install"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
@@ -29,6 +31,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.1.1",
     "eslint-config-prettier": "^9.1.0",
+    "lefthook": "^1.6.5",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"

@@ -10,9 +10,9 @@ dev:
     ./nvm-exec.sh pnpm run dev
 
 # Apply automatic fixes
-lint:
-    ./nvm-exec.sh pnpm lint
+fix:
     ./nvm-exec.sh pnpm format
+    ./nvm-exec.sh pnpm fix
 
 # Add a new shadcn-ui component
 add-component component:

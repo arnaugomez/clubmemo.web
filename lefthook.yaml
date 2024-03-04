@@ -1,0 +1,7 @@
+pre-push:
+  piped: true
+  commands:
+    format:
+      run: ./nvm-exec.sh pnpm format
+    lint:
+      run: ./nvm-exec.sh pnpm lint
