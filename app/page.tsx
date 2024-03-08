@@ -5,7 +5,7 @@ import { FileUp, GraduationCap, Layers } from "lucide-react";
 const textStyles = {
   logo: "text-2xl font-bold",
   h1: "text-5xl font-extrabold",
-  h2: "text-3xl font-semibold text-left text-slate-900",
+  h2: "text-3xl font-semibold",
   h3: "text-2xl font-semibold",
   h4: "text-xl font-semibold",
   lead: "text-xl",
@@ -71,11 +71,11 @@ export default function Home() {
           <p
             className={clsx(
               textStyles.p,
-              "mx-auto px-8 text-center max-w-prose",
+              "mx-auto px-8 text-center max-w-prose"
             )}
           >
             Clubmemo es más eficiente que leer tus apuntes. Su método se apoya
-            en 3 técnicas de estudio efectivas estudiadas por la ciencia:
+            en 3 técnicas de estudio avaladas por la ciencia:
             <div className="flex space-x-12"></div>
           </p>
         </div>
