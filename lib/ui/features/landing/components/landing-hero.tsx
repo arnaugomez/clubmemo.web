@@ -5,7 +5,7 @@ import { FileUp, GraduationCap, Layers } from "lucide-react";
 
 export function LandingHero() {
   return (
-    <div className="py-36">
+    <div className="py-24 md:py-36">
       <h1 className={cn(textStyles.h1, "text-center px-8")}>
         Olvídate de memorizar
       </h1>

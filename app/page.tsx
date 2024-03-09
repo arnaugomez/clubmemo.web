@@ -1,3 +1,4 @@
+import { Footer } from "@/lib/ui/components/footer/footer";
 import { Navbar } from "@/lib/ui/components/navbar/navbar";
 import { LandingAdvantagesSection } from "@/lib/ui/features/landing/components/landing-advantages-section";
 import { LandingFaq } from "@/lib/ui/features/landing/components/landing-faq";
@@ -12,6 +13,7 @@ export default function Home() {
         <LandingAdvantagesSection />
         <LandingFaq />
       </main>
+      <Footer />
     </>
   );
 }
