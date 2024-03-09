@@ -51,7 +51,9 @@ function HeroButtons() {
       <Button variant="ghost" asChild>
         <Link href="/auth/login">Login</Link>
       </Button>
-      <Button variant="default">Crear cuenta</Button>
+      <Button asChild>
+        <Link href="/auth/register">Crear cuenta</Link>
+      </Button>
     </div>
   );
 }
