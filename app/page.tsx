@@ -76,7 +76,6 @@ export default function Home() {
           >
             Clubmemo es más eficiente que leer tus apuntes. Su método se apoya
             en 3 técnicas de estudio avaladas por la ciencia.
-            <div className="flex space-x-12"></div>
           </p>
         </div>
       </main>
