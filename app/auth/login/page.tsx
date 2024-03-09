@@ -1,3 +1,7 @@
 export default function LoginPage() {
-  return <>Login page</>;
+  return (
+    <>
+      Login page 
+    </>
+  );
 }
