@@ -91,7 +91,7 @@ export default function Home() {
           <p
             className={cn(
               textStyles.base,
-              "mx-auto px-8 text-center max-w-prose mt-0"
+              "mx-auto px-8 text-center max-w-prose mt-0",
             )}
           >
             Clubmemo es más eficiente que leer tus apuntes. Su método se apoya
@@ -158,7 +158,7 @@ export default function Home() {
           <p
             className={cn(
               textStyles.muted,
-              "mx-auto px-8 text-center max-w-prose"
+              "mx-auto px-8 text-center max-w-prose",
             )}
           >
             Crea tu cuenta en menos de 1 minuto
