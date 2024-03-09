@@ -21,6 +21,6 @@ add-component component:
 
 # Install git hooks
 install-git-hooks:
-    ./nvm-exec.sh pnpm exec lefthook install
+    lefthook install
 
 alias i := install

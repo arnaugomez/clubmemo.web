@@ -9,9 +9,9 @@
       "command": "just install"
     },
     {
-      "label": "lint",
+      "label": "fix",
       "type": "shell",
-      "command": "just lint"
+      "command": "just fix"
     }
   ]
 }
