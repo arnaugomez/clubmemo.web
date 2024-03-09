@@ -1,7 +1,16 @@
+import { LoginForm } from "@/lib/ui/features/auth/login/components/login-form";
+import { textStyles } from "@/lib/ui/styles/text-styles";
+
 export default function LoginPage() {
   return (
     <>
-      Login page 
+      <div className="w-full max-w-prose">
+        <h1 className={textStyles.h2}>¡Bienvenido!</h1>
+        <div className="h-2"></div>
+        <p>Nos alegra tenerte por aquí.</p>
+        <div className="h-6"></div>
+        <LoginForm />
+      </div>
     </>
   );
 }
