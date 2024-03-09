@@ -7,8 +7,6 @@ import { z } from "zod";
 import { InputFormField } from "@/lib/ui/components/form/form-fields";
 import { Button } from "@/lib/ui/components/shadcn/ui/button";
 import { Form } from "@/lib/ui/components/shadcn/ui/form";
-import { textStyles } from "@/lib/ui/styles/text-styles";
-import { cn } from "@/lib/ui/utils/shadcn";
 import { Check } from "lucide-react";
 import Link from "next/link";
 
@@ -32,14 +30,13 @@ export function RegisterForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <InputFormField
           label="Correo electrónico"
           name="email"
           placeholder="Tu correo electrónico"
           autoComplete="email"
         />
-        <div className="h-6" />
         <InputFormField
           label="Contraseña"
           name="password"
@@ -47,22 +44,14 @@ export function RegisterForm() {
           type="password"
           autoComplete="new-password"
         />
-        <div className="h-2" />
-        <p className={cn(textStyles.muted, "text-right hover:underline")}>
-          <Link className="" href="/auth/forgot-password">
-            Olvidaste tu contraseña?
-          </Link>
-        </p>
-        <div className="h-6" />
         <div className="flex space-x-6 justify-between">
           <Button variant="ghost" asChild>
             <Link href="/auth/login">Login</Link>
           </Button>
           <Button>Crear cuenta</Button>
         </div>
-        <div className="h-6" />
         <p className="text-sm italic">
-          <Check size={16} className="inline" /> Mediante el envío de este
+          <Check size={16} className="inline" /> Con el envío de este
           formulario, acepto la{" "}
           <a
             className="underline"
