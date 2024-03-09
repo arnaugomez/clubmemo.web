@@ -19,7 +19,7 @@ export function LandingAdvantagesSection() {
       <p
         className={cn(
           textStyles.base,
-          "mx-auto px-8 text-center max-w-prose mt-0",
+          "mx-auto px-8 text-center max-w-prose mt-0"
         )}
       >
         Clubmemo es más eficiente que leer tus apuntes. Su método se apoya en 3
@@ -28,7 +28,7 @@ export function LandingAdvantagesSection() {
       <div className="h-10" />
 
       <LandingAdvantageCards />
-      <div className="h-16">L</div>
+      <div className="h-16"/>
       <p
         className={cn(textStyles.muted, "mx-auto px-8 text-center max-w-prose")}
       >
@@ -60,7 +60,7 @@ function LandingAdvantageCards() {
       title: "Repetición espaciada",
       icon: <CalendarCheck />,
       description:
-        "Practicar un poco cada día es exponencialmente más eficiente que dedicar un día entero a estudiar. Clubmemo te ayuda a mantener un hábito de estudio.",
+        "Practicar un poco cada día es mejor que dedicar un día entero a estudiar. Clubmemo te ayuda a mantener un hábito de estudio.",
     },
     {
       title: "Práctica intercalada",
@@ -70,7 +70,7 @@ function LandingAdvantageCards() {
     },
   ];
   return (
-    <div className="flex w-fit mx-auto space-x-8 ">
+    <div className="flex flex-col md:flex-row w-fit mx-auto space-y-8 md:space-y-0 md:space-x-8 px-8">
       {advantages.map((advantage, index) => (
         <LandingAdvantageCard key={index} {...advantage} />
       ))}
@@ -84,7 +84,7 @@ function LandingAdvantageCard({
   description,
 }: LandingAdvantageCardViewModel) {
   return (
-    <Card className="max-w-80">
+    <Card className="max-w-80 flex-1">
       <div className="pt-10 px-6">
         <div className="mx-auto w-fit">{icon}</div>
       </div>
