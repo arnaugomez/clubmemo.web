@@ -8,7 +8,7 @@ export default function AuthLayout({
 }>) {
   return (
     <main className="md:flex md:h-screen divide-slate-200 md:divide-x-2">
-      <div className="bg-slate-100 flex-1 hidden md:block">
+      <div className="gradient-animation flex-1 hidden md:block">
         <Logo />
       </div>
       <div className="flex-1">
