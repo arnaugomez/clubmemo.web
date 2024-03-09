@@ -16,7 +16,13 @@ interface InputFormFieldProps {
   autoComplete?: HTMLInputAutoCompleteAttribute;
 }
 
-export function InputFormField({label, name, placeholder, type, autoComplete}: InputFormFieldProps) {
+export function InputFormField({
+  label,
+  name,
+  placeholder,
+  type,
+  autoComplete,
+}: InputFormFieldProps) {
   return (
     <FormField
       name={name}
@@ -24,7 +30,12 @@ export function InputFormField({label, name, placeholder, type, autoComplete}: I
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input type={type} placeholder={placeholder} autoComplete={autoComplete} {...field} />
+            <Input
+              type={type}
+              placeholder={placeholder}
+              autoComplete={autoComplete}
+              {...field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
