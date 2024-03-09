@@ -13,7 +13,7 @@ export function Footer() {
       <div className="h-2" />
       <p className={cn(textStyles.muted, "text-center")}>
         <a className="hover:underline" href="">
-          Licencia de uso
+          Licencia de uso EUPL
         </a>{" "}
         -{" "}
         <a className="hover:underline" href="">
