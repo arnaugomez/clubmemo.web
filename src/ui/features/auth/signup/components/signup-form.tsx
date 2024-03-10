@@ -9,6 +9,7 @@ import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { Check } from "lucide-react";
 import Link from "next/link";
+import { signupAction } from "../actions/signup-action";
 
 const FormSchema = z.object({
   email: z.string().email(),
@@ -24,8 +25,8 @@ export function RegisterForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    await signupAction(data);
   }
 
   return (
