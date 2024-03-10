@@ -30,7 +30,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 215.4 16.3% 46.9%;
 
     --radius: 0.5rem;
   }
@@ -72,5 +72,24 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.gradient-animation {
+  background: radial-gradient(circle, #f1f5f9 0%, #94a3b8 100%);
+  background-size: 400% 400%;
+  animation: gradient 9s linear infinite;
+  height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
