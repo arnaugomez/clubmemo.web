@@ -59,7 +59,7 @@ export const lucia = new Lucia(adapter, {
       secure: process.env.NODE_ENV === "production",
     },
   },
-  getUserAttributes(attributes) {
+  getUserAttributes(attributes: DatabaseUserAttributes) {
     return {
       username: attributes.email,
     };

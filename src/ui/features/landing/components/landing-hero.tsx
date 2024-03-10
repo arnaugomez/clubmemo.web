@@ -52,7 +52,7 @@ function HeroButtons() {
         <Link href="/auth/login">Login</Link>
       </Button>
       <Button asChild>
-        <Link href="/auth/register">Crear cuenta</Link>
+        <Link href="/auth/signup">Crear cuenta</Link>
       </Button>
     </div>
   );

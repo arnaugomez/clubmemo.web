@@ -55,7 +55,7 @@ export function LoginForm() {
         <div className="h-6" />
         <div className="flex space-x-6 justify-between">
           <Button variant="ghost" asChild>
-            <Link href="/auth/register">Nuevo usuario</Link>
+            <Link href="/auth/signup">Nuevo usuario</Link>
           </Button>
           <Button>Login</Button>
         </div>
