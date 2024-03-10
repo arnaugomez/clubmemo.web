@@ -1,4 +1,4 @@
-import { RegisterForm } from "@/src/ui/features/auth/register/components/register-form";
+import { RegisterForm } from "@/src/ui/features/auth/signup/components/signup-form";
 import { textStyles } from "@/src/ui/styles/text-styles";
 
 export default function RegisterPage() {

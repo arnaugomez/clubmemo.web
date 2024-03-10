@@ -38,7 +38,7 @@ export function LandingAdvantagesSection() {
       <div className="h-6" />
       <div className="mx-auto px-8 flex space-x-8 w-fit">
         <Button asChild>
-          <Link href="/auth/register">Crear cuenta</Link>
+          <Link href="/auth/signup">Crear cuenta</Link>
         </Button>
       </div>
     </div>
