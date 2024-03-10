@@ -8,6 +8,7 @@ import {
 import { textStyles } from "@/lib/ui/styles/text-styles";
 import { cn } from "@/lib/ui/utils/shadcn";
 import { CalendarCheck, Dumbbell, Shapes } from "lucide-react";
+import Link from "next/link";
 
 export function LandingAdvantagesSection() {
   return (
@@ -32,11 +33,13 @@ export function LandingAdvantagesSection() {
       <p
         className={cn(textStyles.muted, "mx-auto px-8 text-center max-w-prose")}
       >
-        Crea tu cuenta en menos de 1 minuto
+        Crea tu usuario en menos de 1 minuto
       </p>
       <div className="h-6" />
       <div className="mx-auto px-8 flex space-x-8 w-fit">
-        <Button variant="default">Crear cuenta</Button>
+        <Button asChild>
+          <Link href="/auth/register">Crear cuenta</Link>
+        </Button>
       </div>
     </div>
   );

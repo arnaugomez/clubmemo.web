@@ -2,6 +2,7 @@ import { Button } from "@/lib/ui/components/shadcn/ui/button";
 import { textStyles } from "@/lib/ui/styles/text-styles";
 import { cn } from "@/lib/ui/utils/shadcn";
 import { FileUp, GraduationCap, Layers } from "lucide-react";
+import Link from "next/link";
 
 export function LandingHero() {
   return (
@@ -47,8 +48,12 @@ function HeroStep({ text, icon }: HeroStepViewModel) {
 function HeroButtons() {
   return (
     <div className="mx-auto px-8 flex space-x-8 w-fit">
-      <Button variant="ghost">Login</Button>
-      <Button variant="default">Crear cuenta</Button>
+      <Button variant="ghost" asChild>
+        <Link href="/auth/login">Login</Link>
+      </Button>
+      <Button asChild>
+        <Link href="/auth/register">Crear cuenta</Link>
+      </Button>
     </div>
   );
 }
