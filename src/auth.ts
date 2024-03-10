@@ -1,53 +1,23 @@
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
-import { Lucia } from "lucia";
-import mongoose from "mongoose";
+import { Lucia, RegisteredDatabaseUserAttributes } from "lucia";
+import { Collection } from "mongodb";
+import { mongo } from "./mongodb-connect";
 
-export const User = mongoose.model(
-  "User",
-  new mongoose.Schema(
-    {
-      _id: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-      },
-      hashed_password: {
-        type: String,
-        required: true,
-      },
-    } as const,
-    { _id: false },
-  ),
-);
+const db = mongo.client.db();
+const User = db.collection("users") as Collection<UserDoc>;
+const Session = db.collection("sessions") as Collection<SessionDoc>;
 
-export const Session = mongoose.model(
-  "Session",
-  new mongoose.Schema(
-    {
-      _id: {
-        type: String,
-        required: true,
-      },
-      user_id: {
-        type: String,
-        required: true,
-      },
-      expires_at: {
-        type: Date,
-        required: true,
-      },
-    } as const,
-    { _id: false },
-  ),
-);
+const adapter = new MongodbAdapter(Session, User);
 
-const adapter = new MongodbAdapter(
-  mongoose.connection.collection("sessions"),
-  mongoose.connection.collection("users"),
-);
+interface UserDoc extends RegisteredDatabaseUserAttributes {
+  _id: string;
+}
+
+interface SessionDoc {
+  _id: string;
+  expires_at: Date;
+  user_id: string;
+}
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
@@ -61,7 +31,7 @@ export const lucia = new Lucia(adapter, {
   },
   getUserAttributes(attributes: DatabaseUserAttributes) {
     return {
-      username: attributes.email,
+      email: attributes.email,
     };
   },
 });
