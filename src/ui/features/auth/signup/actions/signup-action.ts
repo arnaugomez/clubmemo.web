@@ -1,6 +1,10 @@
 "use server";
-
-import { connectToMongo } from "@/src/mongodb-connect";
+import { lucia, usersCollection } from "@/src/lucia";
+import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { generateId } from "lucia";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { Argon2id } from "oslo/password";
 
 interface SignupViewModel {
   email: string;
@@ -8,40 +12,32 @@ interface SignupViewModel {
 }
 
 export async function signupAction(data: SignupViewModel) {
-  console.log(data);
-  connectToMongo();
-  // const username = formData.get("username");
-  // // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
-  // // keep in mind some database (e.g. mysql) are case insensitive
-  // if (
-  // 	typeof username !== "string" ||
-  // 	username.length < 3 ||
-  // 	username.length > 31 ||
-  // 	!/^[a-z0-9_-]+$/.test(username)
-  // ) {
-  // 	return {
-  // 		error: "Invalid username"
-  // 	};
-  // }
-  // const password = formData.get("password");
-  // if (typeof password !== "string" || password.length < 6 || password.length > 255) {
-  // 	return {
-  // 		error: "Invalid password"
-  // 	};
-  // }
+  // TODO: validate email and password on the server side too?
+  const hashedPassword = await new Argon2id().hash(data.password);
+  const userId = generateId(15);
+  // TODO Check if user with that email already exists
+  const existingUser = await usersCollection.findOne({ email: data.email });
+  if (existingUser) {
+    return ActionResponse.formError({
+      name: "email",
+      type: "exists",
+      message: "A user with this email already exists",
+    });
+  }
+  await usersCollection.insertOne({
+    _id: userId, // TODO: do we need to use the Lucia `generateId` function here? Or can we let MongoDB handle it?
+    email: data.email,
+    hashed_password: hashedPassword,
+  });
 
-  // const hashedPassword = await new Argon2id().hash(password);
-  // const userId = generateId(15);
+  const session = await lucia.createSession(userId, {});
+  const sessionCookie = lucia.createSessionCookie(session.id);
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes,
+  );
 
-  // // TODO: check if username is already used
-  // await db.table("user").insert({
-  // 	id: userId,
-  // 	username: username,
-  // 	hashed_password: hashedPassword
-  // });
-
-  // const session = await lucia.createSession(userId, {});
-  // const sessionCookie = lucia.createSessionCookie(session.id);
-  // cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-  // return redirect("/");
+  // TODO: send email verification
+  redirect(`/auth/verify-email`);
 }

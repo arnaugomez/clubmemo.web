@@ -1,12 +1,12 @@
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import { Lucia, RegisteredDatabaseUserAttributes } from "lucia";
-import { mongoClient } from "./mongodb-connect";
+import { mongoClient } from "./mongo";
 
 const db = mongoClient.db();
-const User = db.collection<UserDoc>("users");
-const Session = db.collection<SessionDoc>("sessions");
+export const usersCollection = db.collection<UserDoc>("users");
+export const sessionsCollection = db.collection<SessionDoc>("sessions");
 
-const adapter = new MongodbAdapter(Session, User);
+const adapter = new MongodbAdapter(sessionsCollection, usersCollection);
 
 interface UserDoc extends RegisteredDatabaseUserAttributes {
   _id: string;
@@ -28,14 +28,13 @@ export const lucia = new Lucia(adapter, {
       secure: process.env.NODE_ENV === "production",
     },
   },
-  getUserAttributes(attributes: DatabaseUserAttributes) {
+  getUserAttributes(attributes: RegisteredDatabaseUserAttributes) {
     return {
       email: attributes.email,
     };
   },
 });
 
-// IMPORTANT!
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
@@ -45,4 +44,5 @@ declare module "lucia" {
 
 interface DatabaseUserAttributes {
   email: string;
+  hashed_password: string;
 }
