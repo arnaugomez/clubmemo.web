@@ -5,28 +5,37 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { InputFormField } from "@/src/ui/components/form/form-fields";
+import { FormServerErrorMessage } from "@/src/ui/components/form/form-server-error-message";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
+import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
 
-const FormSchema = z.object({
+const SignupFormSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
 
-export function RegisterForm() {
+export function SignupForm() {
   const form = useForm({
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(SignupFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    await signupAction(data);
+  async function onSubmit(data: z.infer<typeof SignupFormSchema>) {
+    try {
+      const response = await signupAction(data);
+      const handler = new FormResponseHandler(response, form);
+      handler.setErrors();
+    } catch (error) {
+      console.error(error);
+      FormResponseHandler.setGeneralError(form);
+    }
   }
 
   return (
@@ -45,11 +54,12 @@ export function RegisterForm() {
           type="password"
           autoComplete="new-password"
         />
+        <FormServerErrorMessage />
         <div className="flex space-x-6 justify-between">
           <Button variant="ghost" asChild>
             <Link href="/auth/login">Login</Link>
           </Button>
-          <Button>Crear cuenta</Button>
+          <Button disabled={form.formState.isSubmitting}>Crear cuenta</Button>
         </div>
         <p className="text-sm italic">
           <Check size={16} className="inline" /> Con el envío de este
