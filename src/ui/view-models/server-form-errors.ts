@@ -11,23 +11,23 @@ export type FormActionResponse<T = null> = {
   data: T | null;
 };
 
-const serverErrors = {
+const globalErrors = {
   invalidCredentials: "Invalid credentials",
 };
-type GlobalErrorType = keyof typeof serverErrors;
+type GlobalErrorType = keyof typeof globalErrors;
 
-export function createServerError(type: GlobalErrorType): CreateErrorInput {
+export function createGlobalError(type: GlobalErrorType): CreateErrorInput {
   return {
-    name: "root.serverError",
+    name: "root.globalError",
     type,
-    message: serverErrors[type],
+    message: globalErrors[type],
   };
 }
 
 export class ActionResponse {
-  static formServerError(error: GlobalErrorType): FormActionResponse {
+  static formGlobalError(error: GlobalErrorType): FormActionResponse {
     return {
-      errors: [createServerError(error)],
+      errors: [createGlobalError(error)],
       data: null,
     };
   }
@@ -78,13 +78,13 @@ export class FormResponseHandler<
     }
   }
 
-  static setGeneralError<
+  static setGlobalError<
     U extends FieldValues,
     V,
     W extends FieldValues | undefined,
   >(form: UseFormReturn<U, V, W>) {
-    form.setError("root.serverError", {
-      type: "general",
+    form.setError("root.globalError", {
+      type: "global",
       message: "Something went wrong",
     });
   }

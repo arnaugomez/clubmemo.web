@@ -5,11 +5,15 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { InputFormField } from "@/src/ui/components/form/form-fields";
+import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import Link from "next/link";
+import { loginAction } from "../actions/login-action";
+import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 
 const FormSchema = z.object({
   email: z.string().email(),
@@ -25,8 +29,15 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const response = await loginAction(data);
+      const handler = new FormResponseHandler(response, form);
+      handler.setErrors();
+    } catch (error) {
+      console.error(error);
+      FormResponseHandler.setGlobalError(form);
+    }
   }
 
   return (
@@ -52,12 +63,13 @@ export function LoginForm() {
             Olvidaste tu contraseña?
           </Link>
         </p>
+        <FormGlobalErrorMessage />
         <div className="h-6" />
         <div className="flex space-x-6 justify-between">
           <Button variant="ghost" asChild>
             <Link href="/auth/signup">Nuevo usuario</Link>
           </Button>
-          <Button>Login</Button>
+          <FormSubmitButton>Login</FormSubmitButton>
         </div>
       </form>
     </Form>
