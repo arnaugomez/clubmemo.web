@@ -5,13 +5,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { InputFormField } from "@/src/ui/components/form/form-fields";
-import { FormServerErrorMessage } from "@/src/ui/components/form/form-server-error-message";
+import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
+import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 
 const SignupFormSchema = z.object({
   email: z.string().email(),
@@ -34,7 +35,7 @@ export function SignupForm() {
       handler.setErrors();
     } catch (error) {
       console.error(error);
-      FormResponseHandler.setGeneralError(form);
+      FormResponseHandler.setGlobalError(form);
     }
   }
 
@@ -54,12 +55,12 @@ export function SignupForm() {
           type="password"
           autoComplete="new-password"
         />
-        <FormServerErrorMessage />
+        <FormGlobalErrorMessage />
         <div className="flex space-x-6 justify-between">
           <Button variant="ghost" asChild>
             <Link href="/auth/login">Login</Link>
           </Button>
-          <Button disabled={form.formState.isSubmitting}>Crear cuenta</Button>
+          <FormSubmitButton>Crear cuenta</FormSubmitButton>
         </div>
         <p className="text-sm italic">
           <Check size={16} className="inline" /> Con el envío de este

@@ -2,13 +2,13 @@ import { forwardRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { cn } from "../../utils/shadcn";
 
-const FormServerErrorMessage = forwardRef<
+const FormGlobalErrorMessage = forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { errors } = useFormContext().formState;
-  const body = errors.root?.serverError
-    ? String(errors.root?.serverError.message)
+  const body = errors.root?.globalError
+    ? String(errors.root?.globalError.message)
     : children;
 
   if (!body) {
@@ -18,12 +18,12 @@ const FormServerErrorMessage = forwardRef<
   return (
     <p
       ref={ref}
-      className={cn("text-sm font-medium text-destructive", className)}
+      className={cn("text-sm font-medium text-destructive pt-2", className)}
       {...props}
     >
       {body}
     </p>
   );
 });
-FormServerErrorMessage.displayName = "FormServerErrorMessage";
-export { FormServerErrorMessage };
+FormGlobalErrorMessage.displayName = "FormGlobalErrorMessage";
+export { FormGlobalErrorMessage };
