@@ -7,7 +7,7 @@ type AuthType = "email"; // | "google"
 
 interface SessionDoc {
   expires_at: Date;
-  user_id: ObjectId
+  user_id: ObjectId;
 }
 
 export interface UserDoc extends RegisteredDatabaseUserAttributes {}
@@ -18,7 +18,7 @@ export const usersCollection = db.collection<UserDoc>("users");
 
 const adapter = new MongodbAdapter(
   sessionsCollection as unknown as Collection<SessionDoc & { _id: string }>,
-  usersCollection as unknown as Collection<UserDoc & { _id: ObjectId }>
+  usersCollection as unknown as Collection<UserDoc & { _id: ObjectId }>,
 );
 
 export const lucia = new Lucia(adapter, {

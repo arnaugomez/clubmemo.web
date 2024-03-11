@@ -33,7 +33,7 @@ export async function signupAction(data: SignupViewModel) {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
 
   // TODO: send email verification
