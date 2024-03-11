@@ -1,22 +1,25 @@
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import { Lucia, RegisteredDatabaseUserAttributes } from "lucia";
+import { Collection, ObjectId } from "mongodb";
 import { mongoClient } from "./mongo";
 
-const db = mongoClient.db();
-export const usersCollection = db.collection<UserDoc>("users");
-export const sessionsCollection = db.collection<SessionDoc>("sessions");
-
-const adapter = new MongodbAdapter(sessionsCollection, usersCollection);
-
-interface UserDoc extends RegisteredDatabaseUserAttributes {
-  _id: string;
-}
+type AuthType = "email"; // | "google"
 
 interface SessionDoc {
-  _id: string;
   expires_at: Date;
-  user_id: string;
+  user_id: ObjectId
 }
+
+export interface UserDoc extends RegisteredDatabaseUserAttributes {}
+
+const db = mongoClient.db();
+export const sessionsCollection = db.collection<SessionDoc>("sessions");
+export const usersCollection = db.collection<UserDoc>("users");
+
+const adapter = new MongodbAdapter(
+  sessionsCollection as unknown as Collection<SessionDoc & { _id: string }>,
+  usersCollection as unknown as Collection<UserDoc & { _id: ObjectId }>
+);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
@@ -31,6 +34,8 @@ export const lucia = new Lucia(adapter, {
   getUserAttributes(attributes: RegisteredDatabaseUserAttributes) {
     return {
       email: attributes.email,
+      authTypes: attributes.authTypes,
+      isEmailVerified: attributes.isEmailVerified,
     };
   },
 });
@@ -38,6 +43,7 @@ export const lucia = new Lucia(adapter, {
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
+    UserId: ObjectId;
     DatabaseUserAttributes: DatabaseUserAttributes;
   }
 }
@@ -45,4 +51,6 @@ declare module "lucia" {
 interface DatabaseUserAttributes {
   email: string;
   hashed_password: string;
+  authTypes: AuthType[];
+  isEmailVerified?: boolean;
 }
