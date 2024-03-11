@@ -1,5 +1,7 @@
 "use server";
 
+import { connectToMongo } from "@/src/mongodb-connect";
+
 interface SignupViewModel {
   email: string;
   password: string;
@@ -7,6 +9,7 @@ interface SignupViewModel {
 
 export async function signupAction(data: SignupViewModel) {
   console.log(data);
+  connectToMongo();
   // const username = formData.get("username");
   // // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
   // // keep in mind some database (e.g. mysql) are case insensitive

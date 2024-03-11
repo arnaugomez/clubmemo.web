@@ -1,11 +1,10 @@
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import { Lucia, RegisteredDatabaseUserAttributes } from "lucia";
-import { Collection } from "mongodb";
-import { mongo } from "./mongodb-connect";
+import { mongoClient } from "./mongodb-connect";
 
-const db = mongo.client.db();
-const User = db.collection("users") as Collection<UserDoc>;
-const Session = db.collection("sessions") as Collection<SessionDoc>;
+const db = mongoClient.db();
+const User = db.collection<UserDoc>("users");
+const Session = db.collection<SessionDoc>("sessions");
 
 const adapter = new MongodbAdapter(Session, User);
 
