@@ -21,7 +21,7 @@ const AsyncButton = forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </Button>
     );
-  }
+  },
 );
 
 AsyncButton.displayName = "AsyncButton";
