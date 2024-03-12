@@ -1,4 +1,5 @@
 "use server";
+import { EmailServiceImpl } from "@/src/core/app/data/services/email-service-impl";
 import { lucia, usersCollection } from "@/src/lucia";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { generateEmailVerificationCode } from "@/src/verification-codes";
@@ -47,6 +48,7 @@ async function sendEmailVerificationCode(
   email: string,
   verificationCode: string,
 ) {
+  new EmailServiceImpl().sendVerificationCode(email, verificationCode);
   // TODO: send email
   console.log(
     `Sending email verification code to ${email}: ${verificationCode}`,

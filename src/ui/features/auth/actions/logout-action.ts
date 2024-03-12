@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export async function logoutAction() {
   const { session } = await checkSession();
   if (!session) {
-    redirect("/auth/login");
+    redirect("/");
   }
 
   await lucia.invalidateSession(session.id);
@@ -19,5 +19,5 @@ export async function logoutAction() {
     sessionCookie.value,
     sessionCookie.attributes,
   );
-  return redirect("/auth/login");
+  return redirect("/");
 }
