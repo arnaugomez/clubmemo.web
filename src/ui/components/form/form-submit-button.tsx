@@ -6,7 +6,7 @@ import { Button } from "../shadcn/ui/button";
 export function FormSubmitButton({ children }: PropsWithChildren) {
   const { isSubmitting } = useFormState();
   return (
-    <Button disabled={isSubmitting}>
+    <Button type="submit" disabled={isSubmitting}>
       {isSubmitting && <Loader2 className="mr-3 animate-spin" />}
       {children}
     </Button>

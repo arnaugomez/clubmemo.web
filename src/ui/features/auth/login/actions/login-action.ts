@@ -18,7 +18,11 @@ export async function loginAction(data: LoginViewModel) {
 
   if (!existingUser) {
     await waitMilliseconds(800); // Prevent brute-force attacks
-    return ActionResponse.formGlobalError("invalidCredentials");
+    return ActionResponse.formError({
+      name: "password",
+      message: "Invalid credentials",
+      type: "invalidCredentials",
+    });
   }
 
   const passwordIsValid = await new Argon2id().verify(
@@ -27,7 +31,11 @@ export async function loginAction(data: LoginViewModel) {
   );
   if (!passwordIsValid) {
     await waitMilliseconds(800); // Prevent brute-force attacks
-    return ActionResponse.formGlobalError("invalidCredentials");
+    return ActionResponse.formError({
+      name: "password",
+      message: "Invalid credentials",
+      type: "invalidCredentials",
+    });
   }
 
   const session = await lucia.createSession(existingUser._id, {});
@@ -37,7 +45,5 @@ export async function loginAction(data: LoginViewModel) {
     sessionCookie.value,
     sessionCookie.attributes,
   );
-
-  // TODO: send email verification
   redirect(`/home`);
 }

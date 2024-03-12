@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 async function loginGuard() {
   const result = await checkSession();
   if (!result.session) {
-    redirect("/login");
+    redirect("/auth/login");
   }
   if (!result.user.isEmailVerified) {
     redirect("/auth/verify-email");
