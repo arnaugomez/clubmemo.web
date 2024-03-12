@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { waitMilliseconds } from "@/src/common/utils/promises";
 import { AsyncButton } from "@/src/ui/components/button/async-button";
 import { InputOtpFormField } from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
@@ -31,6 +32,7 @@ export function VerifyEmailForm() {
     try {
       const response = await verifyEmailAction(data);
       const handler = new FormResponseHandler(response, form);
+      if (!handler.hasErrors) waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
       console.error(error);
