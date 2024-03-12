@@ -19,18 +19,16 @@ export default async function VerifyEmailPage() {
   const { user } = await checkSession();
   return (
     <>
-      <div className="w-full max-w-prose">
-        <MailCheck size={32} />
-        <div className="h-6"></div>
-        <h1 className={textStyles.h2}>¡Ya casi estamos!</h1>
-        <div className="h-2"></div>
-        <p>
-          Te hemos enviado un correo electrónico a {user?.email} con un código
-          de verificación.
-        </p>
-        <div className="h-8" />
-        <VerifyEmailForm />
-      </div>
+      <MailCheck size={32} />
+      <div className="h-6"></div>
+      <h1 className={textStyles.h2}>¡Ya casi estamos!</h1>
+      <div className="h-2"></div>
+      <p>
+        Te hemos enviado un correo electrónico a {user?.email} con un código de
+        verificación.
+      </p>
+      <div className="h-8" />
+      <VerifyEmailForm />
     </>
   );
 }
