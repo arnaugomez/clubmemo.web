@@ -3,7 +3,7 @@ import { forwardRef, useState } from "react";
 import { Button, ButtonProps } from "../shadcn/ui/button";
 
 const AsyncButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, onClick, ...props }) => {
+  ({ children, onClick, ...props }, ref) => {
     const [isLoading, setIsLoading] = useState(false);
     const handleClick: ButtonProps["onClick"] = async (e) => {
       try {
@@ -16,12 +16,12 @@ const AsyncButton = forwardRef<HTMLButtonElement, ButtonProps>(
       }
     };
     return (
-      <Button onClick={handleClick} disabled={isLoading} {...props}>
+      <Button onClick={handleClick} disabled={isLoading} {...props} ref={ref}>
         {isLoading && <Loader2 className="mr-3 animate-spin" />}
         {children}
       </Button>
     );
-  },
+  }
 );
 
 AsyncButton.displayName = "AsyncButton";
