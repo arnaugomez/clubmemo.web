@@ -14,6 +14,7 @@ import Link from "next/link";
 import { loginAction } from "../actions/login-action";
 import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
+import { waitMilliseconds } from "@/src/common/utils/promises";
 
 const FormSchema = z.object({
   email: z.string().email(),
@@ -33,6 +34,7 @@ export function LoginForm() {
     try {
       const response = await loginAction(data);
       const handler = new FormResponseHandler(response, form);
+      if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
       console.error(error);

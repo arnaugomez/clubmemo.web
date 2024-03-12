@@ -12,7 +12,7 @@ export type FormActionResponse<T = null> = {
 };
 
 const globalErrors = {
-  invalidCredentials: "Invalid credentials",
+  sessionExpired: "User session expired. Log out and log in again.",
 };
 type GlobalErrorType = keyof typeof globalErrors;
 

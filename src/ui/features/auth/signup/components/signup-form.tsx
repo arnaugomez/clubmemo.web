@@ -4,15 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { waitMilliseconds } from "@/src/common/utils/promises";
 import { InputFormField } from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
+import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
-import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 
 const SignupFormSchema = z.object({
   email: z.string().email(),
@@ -32,6 +33,7 @@ export function SignupForm() {
     try {
       const response = await signupAction(data);
       const handler = new FormResponseHandler(response, form);
+      if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
       console.error(error);

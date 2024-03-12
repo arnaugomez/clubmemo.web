@@ -1,6 +1,7 @@
 "use server";
 import { lucia, usersCollection } from "@/src/lucia";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { generateEmailVerificationCode } from "@/src/verification-codes";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Argon2id } from "oslo/password";
@@ -11,10 +12,10 @@ interface SignupViewModel {
 }
 
 export async function signupAction(data: SignupViewModel) {
+  const { email, password } = data;
   // TODO: validate email and password on the server side too?
-  const hashedPassword = await new Argon2id().hash(data.password);
-  // TODO Check if user with that email already exists
-  const existingUser = await usersCollection.findOne({ email: data.email });
+  const hashedPassword = await new Argon2id().hash(password);
+  const existingUser = await usersCollection.findOne({ email });
   if (existingUser) {
     return ActionResponse.formError({
       name: "email",
@@ -23,10 +24,13 @@ export async function signupAction(data: SignupViewModel) {
     });
   }
   const result = await usersCollection.insertOne({
-    email: data.email,
+    email,
     hashed_password: hashedPassword,
     authTypes: ["email"],
   });
+  const userId = result.insertedId;
+  const verificationCode = await generateEmailVerificationCode(userId);
+  await sendEmailVerificationCode(email, verificationCode);
 
   const session = await lucia.createSession(result.insertedId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
@@ -36,6 +40,15 @@ export async function signupAction(data: SignupViewModel) {
     sessionCookie.attributes,
   );
 
-  // TODO: send email verification
   redirect(`/auth/verify-email`);
+}
+
+async function sendEmailVerificationCode(
+  email: string,
+  verificationCode: string,
+) {
+  // TODO: send email
+  console.log(
+    `Sending email verification code to ${email}: ${verificationCode}`,
+  );
 }
