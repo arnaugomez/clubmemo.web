@@ -55,7 +55,7 @@ export function VerifyEmailForm() {
         <div className="flex space-x-6 justify-between">
           <AsyncButton
             type="button"
-            onClick={async () => await logoutAction()}
+            onClick={() => logoutAction()}
             variant="ghost"
           >
             Logout
