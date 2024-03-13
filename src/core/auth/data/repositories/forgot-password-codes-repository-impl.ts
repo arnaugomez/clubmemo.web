@@ -16,7 +16,9 @@ export class ForgotPasswordCodesRepositoryImpl
   constructor(mongoService: MongoService) {
     this.collection = mongoService.collection(forgotPasswordCodesCollection);
   }
+
   async generate(userId: ObjectId): Promise<ForgotPasswordCodeModel> {
+    await this.collection.deleteMany({ userId });
     const doc = {
       userId,
       code: generateRandomString(10, alphabet("A-Z", "0-9")),
@@ -25,10 +27,12 @@ export class ForgotPasswordCodesRepositoryImpl
     await this.collection.insertOne(doc);
     return new ForgotPasswordCodeModel(doc);
   }
+
   async get(userId: ObjectId): Promise<ForgotPasswordCodeModel | null> {
     const doc = await this.collection.findOne({ userId });
     return doc && new ForgotPasswordCodeModel(doc);
   }
+
   async delete(userId: ObjectId): Promise<void> {
     await this.collection.deleteOne({ userId });
   }

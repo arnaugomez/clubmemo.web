@@ -14,6 +14,7 @@ import {
   SignupWithPasswordModel,
   SignupWithPasswordResultModel,
 } from "../../domain/interfaces/auth-service";
+import { AuthType } from "../../domain/models/auth-type-model";
 import { CheckSessionModel } from "../../domain/models/check-session-model";
 import {
   SessionDoc,
@@ -21,13 +22,16 @@ import {
 } from "../collections/sessions-collection";
 import { UserDoc, usersCollection } from "../collections/users-collection";
 
+interface DatabaseUserAttributes {
+  email: string;
+  hashed_password: string;
+  authTypes: AuthType[];
+  isEmailVerified?: boolean;
+}
+
 type MyLucia = Lucia<
   Record<never, never>,
-  {
-    email: string;
-    authTypes: "email"[];
-    isEmailVerified: boolean | undefined;
-  }
+  Omit<DatabaseUserAttributes, "hashed_password">
 >;
 
 export class AuthServiceImpl implements AuthService {
@@ -152,12 +156,3 @@ declare module "lucia" {
     DatabaseUserAttributes: DatabaseUserAttributes;
   }
 }
-
-interface DatabaseUserAttributes {
-  email: string;
-  hashed_password: string;
-  authTypes: AuthType[];
-  isEmailVerified?: boolean;
-}
-
-type AuthType = "email"; // | "google"

@@ -1,15 +1,14 @@
-import memoizeOne from "memoize-one";
+import singleton from "memoize-one";
 import { AuthServiceImpl } from "../auth/data/services/auth-service-impl";
 import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
 import { ForgotPasswordCodesRepository } from "../auth/domain/interfaces/forgot-password-codes-repository";
+import { UsersRepository } from "../auth/domain/interfaces/users-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
 import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
 import { EmailService } from "./domain/interfaces/email-service";
 import { EnvService } from "./domain/interfaces/env-service";
 import { MongoService } from "./domain/interfaces/mongo-service";
-
-const singleton = memoizeOne;
 
 type Dependency<T> = () => T;
 type Lazy<T> = () => Promise<T>;
@@ -22,6 +21,7 @@ interface Locator {
   AuthService: Dependency<AuthService>;
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
   ForgotPasswordCodesRepository: Lazy<ForgotPasswordCodesRepository>;
+  UsersRepository: Lazy<UsersRepository>;
 }
 
 /**
@@ -52,5 +52,11 @@ export const locator: Locator = {
       "../auth/data/repositories/forgot-password-codes-repository-impl"
     );
     return new file.ForgotPasswordCodesRepositoryImpl(this.MongoService());
+  },
+  async UsersRepository() {
+    const file = await import(
+      "../auth/data/repositories/users-repository-impl"
+    );
+    return new file.UsersRepositoryImpl(this.MongoService());
   },
 };
