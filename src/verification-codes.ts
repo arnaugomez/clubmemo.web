@@ -2,7 +2,7 @@ import { User } from "lucia";
 import { ObjectId } from "mongodb";
 import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
 import { alphabet, generateRandomString } from "oslo/crypto";
-import { waitMilliseconds } from "./common/utils/promises";
+import { waitMilliseconds } from "./core/app/utils/promises";
 import { mongoClient } from "./mongo";
 
 interface EmailVerificationCodeDoc {

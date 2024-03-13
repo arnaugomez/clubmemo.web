@@ -1,10 +1,11 @@
 import { Resend } from "resend";
 import { EmailService } from "../../domain/interfaces/email-service";
+import { EnvService } from "../../domain/interfaces/env-service";
 
 export class EmailServiceImpl implements EmailService {
   private readonly resend;
-  constructor() {
-    this.resend = new Resend(process.env.SENDGRID_API_KEY);
+  constructor(private readonly envService: EnvService) {
+    this.resend = new Resend(envService.resendApiKey);
   }
   async sendVerificationCode(
     email: string,

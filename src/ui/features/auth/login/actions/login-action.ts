@@ -1,5 +1,5 @@
 "use server";
-import { waitMilliseconds } from "@/src/common/utils/promises";
+import { waitMilliseconds } from "@/src/core/app/utils/promises";
 import { lucia, usersCollection } from "@/src/lucia";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { cookies } from "next/headers";
