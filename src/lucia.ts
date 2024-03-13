@@ -1,7 +1,7 @@
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import { Lucia, RegisteredDatabaseUserAttributes } from "lucia";
 import { Collection, ObjectId } from "mongodb";
-import { mongoClient } from "./mongo";
+import { locator } from "./core/app/locator";
 
 type AuthType = "email"; // | "google"
 
@@ -12,7 +12,7 @@ interface SessionDoc {
 
 export interface UserDoc extends RegisteredDatabaseUserAttributes {}
 
-const db = mongoClient.db();
+const db = locator.MongoService().db;
 export const sessionsCollection = db.collection<SessionDoc>("sessions");
 export const usersCollection = db.collection<UserDoc>("users");
 
