@@ -9,7 +9,7 @@ export class EmailServiceImpl implements EmailService {
   }
   async sendVerificationCode(
     email: string,
-    verificationCode: string
+    verificationCode: string,
   ): Promise<void> {
     await this.resend.emails.send({
       from: "El equipo de clubmemo <noreply@app.clubmemo.com>",
@@ -21,7 +21,7 @@ export class EmailServiceImpl implements EmailService {
 
   async sendForgotPasswordCode(
     email: string,
-    forgotPasswordCode: string
+    forgotPasswordCode: string,
   ): Promise<void> {
     const url = new URL(this.envService.baseUrl);
     url.pathname = "/auth/reset-password";
