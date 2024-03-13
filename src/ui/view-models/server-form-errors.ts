@@ -12,7 +12,9 @@ export type FormActionResponse<T = null> = {
 };
 
 const globalErrors = {
-  sessionExpired: "User session expired. Log out and log in again.",
+  sessionExpired:
+    "La sesión ha expirado. Refresca la página y vuelve a iniciar sesión.",
+  general: "Ha ocurrido un error. Inténtelo más tarde.",
 };
 type GlobalErrorType = keyof typeof globalErrors;
 

@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { db } from "@/src/core/app/data/services/mongodb-service-impl";
 import { ObjectId } from "mongodb";
 
 interface EmailVerificationCodeDoc {
@@ -7,6 +7,5 @@ interface EmailVerificationCodeDoc {
   expiresAt: Date;
 }
 
-const db = locator.MongoService().db;
 export const emailVerificationCodesCollection =
   db.collection<EmailVerificationCodeDoc>("emailVerificationCodes");
