@@ -1,10 +1,14 @@
-import singleton from "memoize-one";
-import { EmailService } from "./domain/interfaces/email-service";
-import { EnvServiceImpl } from "./data/services/env-service-impl";
-import { EnvService } from "./domain/interfaces/env-service";
-import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
-import { MongoService } from "./domain/interfaces/mongo-service";
+import memoizeOne from "memoize-one";
+import { AuthServiceImpl } from "../auth/data/services/auth-service-impl";
+import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
+import { EnvServiceImpl } from "./data/services/env-service-impl";
+import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
+import { EmailService } from "./domain/interfaces/email-service";
+import { EnvService } from "./domain/interfaces/env-service";
+import { MongoService } from "./domain/interfaces/mongo-service";
+
+const singleton = memoizeOne;
 
 type Dependency<T> = () => T;
 type Lazy<T> = () => Promise<T>;
@@ -13,6 +17,8 @@ interface Locator {
   EnvService: Dependency<EnvService>;
   MongoService: Dependency<MongoService>;
   EmailService: Lazy<EmailService>;
+  // Auth
+  AuthService: Dependency<AuthService>;
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
 }
 
@@ -33,4 +39,5 @@ export const locator: Locator = {
     );
     return new file.EmailVerificationCodesRepositoryImpl();
   },
+  AuthService: singleton(() => new AuthServiceImpl()),
 };

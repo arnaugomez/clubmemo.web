@@ -40,9 +40,10 @@ async function handleVerificationCodeExpirationDate() {
 
 export default async function VerifyEmailPage() {
   await verifyEmailGuard();
-  const { user } = await checkSession();
 
   const hasExpired = await handleVerificationCodeExpirationDate();
+
+  const { user } = await checkSession();
 
   return (
     <>

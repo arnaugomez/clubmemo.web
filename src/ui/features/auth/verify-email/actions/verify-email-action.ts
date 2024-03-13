@@ -2,7 +2,6 @@
 
 import { checkSession } from "@/src/check-session";
 import { locator } from "@/src/core/app/locator";
-import { lucia, usersCollection } from "@/src/lucia";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -28,15 +27,7 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
     });
   }
 
-  await usersCollection.findOneAndUpdate(
-    { _id: user.id },
-    { $set: { isEmailVerified: true } },
-  );
-
-  await lucia.invalidateUserSessions(user.id);
-  const session = await lucia.createSession(user.id, {});
-
-  const sessionCookie = lucia.createSessionCookie(session.id);
+  const sessionCookie = await locator.AuthService().verifyEmail(user.id);
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
