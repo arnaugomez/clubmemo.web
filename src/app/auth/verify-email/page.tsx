@@ -27,7 +27,12 @@ async function handleVerificationCodeExpirationDate() {
   const repository = await locator.EmailVerificationCodesRepository();
   const verificationCode = await repository.getByUserId(user.id);
   if (!verificationCode || verificationCode.hasExpired) {
-    repository.generate(user.id);
+    const newVerificationCode = await repository.generate(user.id);
+    const emailService = await locator.EmailService();
+    await emailService.sendVerificationCode(
+      user.email,
+      newVerificationCode.code,
+    );
     return true;
   }
   return false;
