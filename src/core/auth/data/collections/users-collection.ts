@@ -1,5 +1,5 @@
-import { db } from "@/src/core/app/data/services/mongodb-service-impl";
+import { collection } from "@/src/core/app/utils/mongo";
 import { RegisteredDatabaseUserAttributes } from "lucia";
 
 export interface UserDoc extends RegisteredDatabaseUserAttributes {}
-export const usersCollection = db.collection<UserDoc>("users");
+export const usersCollection = collection<UserDoc>("users");

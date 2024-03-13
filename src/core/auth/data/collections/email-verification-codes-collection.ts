@@ -1,11 +1,11 @@
-import { db } from "@/src/core/app/data/services/mongodb-service-impl";
+import { collection } from "@/src/core/app/utils/mongo";
 import { ObjectId } from "mongodb";
 
-interface EmailVerificationCodeDoc {
+export interface EmailVerificationCodeDoc {
   userId: ObjectId;
   code: string;
   expiresAt: Date;
 }
 
 export const emailVerificationCodesCollection =
-  db.collection<EmailVerificationCodeDoc>("emailVerificationCodes");
+  collection<EmailVerificationCodeDoc>("emailVerificationCodes");

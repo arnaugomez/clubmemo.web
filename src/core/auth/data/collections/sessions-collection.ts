@@ -1,4 +1,4 @@
-import { db } from "@/src/core/app/data/services/mongodb-service-impl";
+import { collection } from "@/src/core/app/utils/mongo";
 import { ObjectId } from "mongodb";
 
 export interface SessionDoc {
@@ -6,4 +6,4 @@ export interface SessionDoc {
   user_id: ObjectId;
 }
 
-export const sessionsCollection = db.collection<SessionDoc>("sessions");
+export const sessionsCollection = collection<SessionDoc>("sessions");

@@ -1,14 +1,23 @@
+import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { waitMilliseconds } from "@/src/core/app/utils/promises";
-import { ObjectId } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { TimeSpan, createDate } from "oslo";
 import { alphabet, generateRandomString } from "oslo/crypto";
 import { EmailVerificationCodesRepository } from "../../domain/interfaces/email-verification-codes-repository";
 import { EmailVerificationCodeModel } from "../../domain/models/email-verification-code-model";
-import { emailVerificationCodesCollection } from "../collections/email-verification-codes-collection";
+import {
+  EmailVerificationCodeDoc,
+  emailVerificationCodesCollection,
+} from "../collections/email-verification-codes-collection";
 
 export class EmailVerificationCodesRepositoryImpl
   implements EmailVerificationCodesRepository
 {
+  private readonly collection: Collection<EmailVerificationCodeDoc>;
+  constructor(mongoService: MongoService) {
+    this.collection = emailVerificationCodesCollection(mongoService.db);
+  }
+
   async generate(userId: ObjectId): Promise<EmailVerificationCodeModel> {
     await this.deleteByUserId(userId);
 
@@ -17,7 +26,7 @@ export class EmailVerificationCodesRepositoryImpl
       code: generateRandomString(6, alphabet("0-9")),
       expiresAt: createDate(new TimeSpan(10, "m")),
     };
-    await emailVerificationCodesCollection.insertOne(data);
+    await this.collection.insertOne(data);
 
     return new EmailVerificationCodeModel(data);
   }
@@ -25,7 +34,7 @@ export class EmailVerificationCodesRepositoryImpl
   async getByUserId(
     userId: ObjectId,
   ): Promise<EmailVerificationCodeModel | null> {
-    const data = await emailVerificationCodesCollection.findOne({ userId });
+    const data = await this.collection.findOne({ userId });
     return data && new EmailVerificationCodeModel(data);
   }
 
@@ -44,6 +53,6 @@ export class EmailVerificationCodesRepositoryImpl
   }
 
   private async deleteByUserId(userId: ObjectId): Promise<void> {
-    await emailVerificationCodesCollection.deleteMany({ userId });
+    await this.collection.deleteMany({ userId });
   }
 }
