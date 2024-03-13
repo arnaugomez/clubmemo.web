@@ -15,7 +15,7 @@ export class EmailVerificationCodesRepositoryImpl
 {
   private readonly collection: Collection<EmailVerificationCodeDoc>;
   constructor(mongoService: MongoService) {
-    this.collection = emailVerificationCodesCollection(mongoService.db);
+    this.collection = mongoService.collection(emailVerificationCodesCollection);
   }
 
   async generate(userId: ObjectId): Promise<EmailVerificationCodeModel> {

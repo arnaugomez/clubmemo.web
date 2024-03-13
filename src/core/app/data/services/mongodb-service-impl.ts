@@ -1,6 +1,13 @@
-import { Db, MongoClient, ServerApiVersion } from "mongodb";
+import {
+  Collection,
+  Db,
+  MongoClient,
+  ServerApiVersion,
+  Document,
+} from "mongodb";
 import { EnvService } from "../../domain/interfaces/env-service";
 import { MongoService } from "../../domain/interfaces/mongo-service";
+import { CollectionType } from "../../utils/mongo";
 
 export class MongoServiceImpl implements MongoService {
   readonly client: MongoClient;
@@ -15,6 +22,12 @@ export class MongoServiceImpl implements MongoService {
       },
     });
     this.db = this.client.db();
+  }
+
+  collection<TSchema extends Document = Document>(
+    collectionType: CollectionType<TSchema>,
+  ): Collection<TSchema> {
+    return this.db.collection<TSchema>(collectionType.name);
   }
 }
 

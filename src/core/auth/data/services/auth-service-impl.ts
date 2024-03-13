@@ -36,10 +36,10 @@ export class AuthServiceImpl implements AuthService {
   private readonly usersCollection: Collection<UserDoc>;
 
   constructor(mongoService: MongoService) {
-    this.usersCollection = usersCollection(mongoService.db);
+    this.usersCollection = mongoService.collection(usersCollection);
 
     const adapter = new MongodbAdapter(
-      sessionsCollection(mongoService.db) as unknown as Collection<
+      mongoService.collection(sessionsCollection) as unknown as Collection<
         SessionDoc & { _id: string }
       >,
       this.usersCollection as unknown as Collection<WithId<UserDoc>>,
