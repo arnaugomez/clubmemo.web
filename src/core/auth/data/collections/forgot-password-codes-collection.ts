@@ -7,5 +7,6 @@ export interface ForgotPasswordCodeDoc {
   expiresAt: Date;
 }
 
-export const emailVerificationCodesCollection =
-  collection<ForgotPasswordCodeDoc>("forgotPasswordCodes");
+export const forgotPasswordCodesCollection = collection<ForgotPasswordCodeDoc>(
+  "forgotPasswordCodes",
+);

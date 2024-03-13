@@ -1,4 +1,4 @@
-import { ForgotPassword2Form } from "@/src/ui/features/auth/forgot-password/components/forgot-password-2-form";
+import { ResetPasswordForm } from "@/src/ui/features/auth/forgot-password/components/reset-password-form";
 import { textStyles } from "@/src/ui/styles/text-styles";
 
 export default function ForgotPassword2Page() {
@@ -8,7 +8,7 @@ export default function ForgotPassword2Page() {
       <div className="h-2"></div>
       <p>Entra una nueva contraseña para el usuario todo@gmail.com</p>
       <div className="h-6"></div>
-      <ForgotPassword2Form />
+      <ResetPasswordForm />
     </>
   );
 }
