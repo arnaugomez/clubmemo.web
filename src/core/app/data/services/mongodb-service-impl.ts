@@ -1,9 +1,9 @@
 import {
   Collection,
   Db,
+  Document,
   MongoClient,
   ServerApiVersion,
-  Document,
 } from "mongodb";
 import { EnvService } from "../../domain/interfaces/env-service";
 import { MongoService } from "../../domain/interfaces/mongo-service";
@@ -25,23 +25,8 @@ export class MongoServiceImpl implements MongoService {
   }
 
   collection<TSchema extends Document = Document>(
-    collectionType: CollectionType<TSchema>,
+    collectionType: CollectionType<TSchema>
   ): Collection<TSchema> {
     return this.db.collection<TSchema>(collectionType.name);
   }
 }
-
-// export async function connectToMongo() {
-//   try {
-//     // Connect the client to the server	(optional starting in v4.7)
-//     await mongoClient.connect();
-//     // Send a ping to confirm a successful connection
-//     await mongoClient.db("admin").command({ ping: 1 });
-//     console.log(
-//       "Pinged your deployment. You successfully connected to MongoDB!"
-//     );
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await mongoClient.close();
-//   }
-// }
