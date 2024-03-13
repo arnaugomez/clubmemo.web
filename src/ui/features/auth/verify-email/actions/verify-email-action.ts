@@ -1,9 +1,9 @@
 "use server";
 
 import { checkSession } from "@/src/check-session";
+import { locator } from "@/src/core/app/locator";
 import { lucia, usersCollection } from "@/src/lucia";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
-import { verifyEmailVerificationCode } from "@/src/verification-codes";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -17,7 +17,9 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
     return ActionResponse.formGlobalError("sessionExpired");
   }
 
-  const isValid = await verifyEmailVerificationCode(user, code);
+  const emailVerificationCodesRepository =
+    await locator.EmailVerificationCodesRepository();
+  const isValid = await emailVerificationCodesRepository.verify(user.id, code);
   if (!isValid) {
     return ActionResponse.formError({
       name: "code",

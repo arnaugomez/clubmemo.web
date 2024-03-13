@@ -2,7 +2,6 @@
 import { locator } from "@/src/core/app/locator";
 import { lucia, usersCollection } from "@/src/lucia";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
-import { generateEmailVerificationCode } from "@/src/verification-codes";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Argon2id } from "oslo/password";
@@ -30,8 +29,10 @@ export async function signupAction(data: SignupViewModel) {
     authTypes: ["email"],
   });
   const userId = result.insertedId;
-  const verificationCode = await generateEmailVerificationCode(userId);
-  await sendEmailVerificationCode(email, verificationCode);
+  const emailVerificationCodesRepository =
+    await locator.EmailVerificationCodesRepository();
+  const { code } = await emailVerificationCodesRepository.generate(userId);
+  await sendEmailVerificationCode(email, code);
 
   const session = await lucia.createSession(result.insertedId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);

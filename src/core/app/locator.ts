@@ -4,6 +4,7 @@ import { EnvServiceImpl } from "./data/services/env-service-impl";
 import { EnvService } from "./domain/interfaces/env-service";
 import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
 import { MongoService } from "./domain/interfaces/mongo-service";
+import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
 
 type Dependency<T> = () => T;
 type Lazy<T> = () => Promise<T>;
@@ -12,6 +13,7 @@ interface Locator {
   EnvService: Dependency<EnvService>;
   MongoService: Dependency<MongoService>;
   EmailService: Lazy<EmailService>;
+  EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
 }
 
 /**
@@ -24,5 +26,11 @@ export const locator: Locator = {
     const envService = this.EnvService();
     const file = await import("./data/services/email-service-impl");
     return new file.EmailServiceImpl(envService);
+  },
+  async EmailVerificationCodesRepository() {
+    const file = await import(
+      "../auth/data/repositories/email-verification-codes-repository-impl"
+    );
+    return new file.EmailVerificationCodesRepositoryImpl();
   },
 };
