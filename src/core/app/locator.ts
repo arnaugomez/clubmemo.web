@@ -37,7 +37,7 @@ export const locator: Locator = {
     const file = await import(
       "../auth/data/repositories/email-verification-codes-repository-impl"
     );
-    return new file.EmailVerificationCodesRepositoryImpl();
+    return new file.EmailVerificationCodesRepositoryImpl(this.MongoService());
   },
-  AuthService: singleton(() => new AuthServiceImpl()),
+  AuthService: singleton(() => new AuthServiceImpl(locator.MongoService())),
 };
