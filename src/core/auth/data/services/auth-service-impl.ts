@@ -42,7 +42,7 @@ export class AuthServiceImpl implements AuthService {
       sessionsCollection(mongoService.db) as unknown as Collection<
         SessionDoc & { _id: string }
       >,
-      this.usersCollection as unknown as Collection<WithId<UserDoc>>
+      this.usersCollection as unknown as Collection<WithId<UserDoc>>,
     );
     this.lucia = new Lucia(adapter, {
       sessionCookie: {
@@ -97,7 +97,7 @@ export class AuthServiceImpl implements AuthService {
 
     const passwordIsCorrect = await new Argon2id().verify(
       existingUser.hashed_password,
-      password
+      password,
     );
     if (!passwordIsCorrect) {
       throw new IncorrectPasswordError();
@@ -107,7 +107,7 @@ export class AuthServiceImpl implements AuthService {
     return this.lucia.createSessionCookie(session.id);
   }
   async signupWithPassword(
-    input: SignupWithPasswordModel
+    input: SignupWithPasswordModel,
   ): Promise<SignupWithPasswordResultModel> {
     const { email, password } = input;
     const hashedPassword = await new Argon2id().hash(password);
@@ -135,7 +135,7 @@ export class AuthServiceImpl implements AuthService {
   async verifyEmail(userId: ObjectId): Promise<Cookie> {
     await this.usersCollection.findOneAndUpdate(
       { _id: userId },
-      { $set: { isEmailVerified: true } }
+      { $set: { isEmailVerified: true } },
     );
 
     await this.lucia.invalidateUserSessions(userId);
