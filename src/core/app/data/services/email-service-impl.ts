@@ -9,7 +9,7 @@ export class EmailServiceImpl implements EmailService {
   }
   async sendVerificationCode(
     email: string,
-    verificationCode: string,
+    verificationCode: string
   ): Promise<void> {
     await this.resend.emails.send({
       from: "El equipo de clubmemo <noreply@app.clubmemo.com>",
@@ -21,9 +21,15 @@ export class EmailServiceImpl implements EmailService {
 
   async sendForgotPasswordCode(
     email: string,
-    forgotPasswordCode: string,
+    forgotPasswordCode: string
   ): Promise<void> {
-    // TODO: use the Uri class to encode urls
+    const url = new URL(this.envService.baseUrl);
+    url.pathname = "/auth/reset-password";
+    url.search = new URLSearchParams({
+      email,
+      forgotPasswordCode,
+    }).toString();
+
     await this.resend.emails.send({
       from: "El equipo de clubmemo <noreply@app.clubmemo.com>",
       to: email,
@@ -31,7 +37,7 @@ export class EmailServiceImpl implements EmailService {
       html: `
       <div>
         <h1>¿Has olvidado tu contraseña?</h1>
-        <p>No te preocupes. Recupera tu cuenta haciendo clic en en este <a href="${this.envService.baseUrl}/auth/reset-password?email=${email}&forgotPasswordCode=${forgotPasswordCode}"><strong>enlace de recuperación</strong></a>.</p> 
+        <p>No te preocupes. Recupera tu cuenta haciendo clic en en este <a href="${url}"><strong>enlace de recuperación</strong></a>.</p> 
       </div>
       `,
     });
