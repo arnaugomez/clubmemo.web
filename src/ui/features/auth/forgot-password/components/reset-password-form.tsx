@@ -8,13 +8,19 @@ import { InputFormField } from "@/src/ui/components/form/form-fields";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
 import Link from "next/link";
+import { ObjectId } from "mongodb";
 
 const FormSchema = z.object({
   password: z.string().min(8),
   repeatPassword: z.string(),
 });
 
-export function ResetPasswordForm() {
+interface Props {
+  userId: ObjectId;
+}
+
+export function ResetPasswordForm({ userId }: Props) {
+  console.log(userId)
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
