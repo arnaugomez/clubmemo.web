@@ -41,6 +41,9 @@ dependencies:
   lucide-react:
     specifier: ^0.354.0
     version: 0.354.0(react@18.2.0)
+  memoize-one:
+    specifier: ^6.0.0
+    version: 6.0.0
   mongodb:
     specifier: ~6.3.0
     version: 6.3.0
@@ -3456,6 +3459,10 @@ packages:
       fs-monkey: 1.0.5
     dev: false
     optional: true
+
+  /memoize-one@6.0.0:
+    resolution: {integrity: sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw==}
+    dev: false
 
   /memory-pager@1.5.0:
     resolution: {integrity: sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==}
