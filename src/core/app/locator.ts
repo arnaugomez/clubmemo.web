@@ -2,6 +2,7 @@ import memoizeOne from "memoize-one";
 import { AuthServiceImpl } from "../auth/data/services/auth-service-impl";
 import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
+import { ForgotPasswordCodesRepository } from "../auth/domain/interfaces/forgot-password-codes-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
 import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
 import { EmailService } from "./domain/interfaces/email-service";
@@ -20,6 +21,7 @@ interface Locator {
   // Auth
   AuthService: Dependency<AuthService>;
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
+  ForgotPasswordCodesRepository: Lazy<ForgotPasswordCodesRepository>;
 }
 
 /**
@@ -30,14 +32,25 @@ export const locator: Locator = {
   MongoService: singleton(() => new MongoServiceImpl(locator.EnvService())),
   async EmailService() {
     const envService = this.EnvService();
-    const file = await import("./data/services/email-service-impl");
-    return new file.EmailServiceImpl(envService);
+    if (envService.sendEmail) {
+      const file = await import("./data/services/email-service-impl");
+      return new file.EmailServiceImpl(envService);
+    }
+    const file = await import("./data/services/email-service-fake-impl");
+    return new file.EmailServiceFakeImpl();
   },
+  // Auth
+  AuthService: singleton(() => new AuthServiceImpl(locator.MongoService())),
   async EmailVerificationCodesRepository() {
     const file = await import(
       "../auth/data/repositories/email-verification-codes-repository-impl"
     );
     return new file.EmailVerificationCodesRepositoryImpl(this.MongoService());
   },
-  AuthService: singleton(() => new AuthServiceImpl(locator.MongoService())),
+  async ForgotPasswordCodesRepository() {
+    const file = await import(
+      "../auth/data/repositories/forgot-password-codes-repository-impl"
+    );
+    return new file.ForgotPasswordCodesRepositoryImpl(this.MongoService());
+  },
 };

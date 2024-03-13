@@ -1,14 +1,13 @@
 import { ObjectId } from "mongodb";
 import { isWithinExpirationDate } from "oslo";
 
-interface EmailVerificationCodeModelData {
+interface ForgotPasswordCodeModelData {
   userId: ObjectId;
   code: string;
   expiresAt: Date;
 }
-
-export class EmailVerificationCodeModel {
-  constructor(private data: EmailVerificationCodeModelData) {}
+export class ForgotPasswordCodeModel {
+  constructor(private data: ForgotPasswordCodeModelData) {}
 
   get userId() {
     return this.data.userId;

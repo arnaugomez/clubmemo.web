@@ -25,7 +25,7 @@ export class MongoServiceImpl implements MongoService {
   }
 
   collection<TSchema extends Document = Document>(
-    collectionType: CollectionType<TSchema>
+    collectionType: CollectionType<TSchema>,
   ): Collection<TSchema> {
     return this.db.collection<TSchema>(collectionType.name);
   }

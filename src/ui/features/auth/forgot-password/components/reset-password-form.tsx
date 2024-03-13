@@ -14,7 +14,7 @@ const FormSchema = z.object({
   repeatPassword: z.string(),
 });
 
-export function ForgotPassword2Form() {
+export function ResetPasswordForm() {
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
