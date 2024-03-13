@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
 import { alphabet, generateRandomString } from "oslo/crypto";
 import { waitMilliseconds } from "./core/app/utils/promises";
-import { mongoClient } from "./mongo";
+import { locator } from "./core/app/locator";
 
 interface EmailVerificationCodeDoc {
   userId: ObjectId;
@@ -11,7 +11,7 @@ interface EmailVerificationCodeDoc {
   expiresAt: Date;
 }
 
-const db = mongoClient.db();
+const db = locator.MongoService().db;
 export const emailVerificationCodesCollection =
   db.collection<EmailVerificationCodeDoc>("emailVerificationCodes");
 
