@@ -20,7 +20,7 @@ interface Props {
 }
 
 export function ResetPasswordForm({ userId }: Props) {
-  console.log(userId)
+  console.log(userId);
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
