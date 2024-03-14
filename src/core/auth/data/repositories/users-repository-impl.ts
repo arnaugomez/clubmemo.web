@@ -1,9 +1,6 @@
 import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { Collection } from "mongodb";
-import {
-  UpdatePasswordModel,
-  UsersRepository,
-} from "../../domain/interfaces/users-repository";
+import { UsersRepository } from "../../domain/interfaces/users-repository";
 import { UserModel } from "../../domain/models/user-model";
 import {
   UserDoc,
@@ -21,15 +18,5 @@ export class UsersRepositoryImpl implements UsersRepository {
   async getByEmail(email: string): Promise<UserModel | null> {
     const doc = await this.usersCollection.findOne({ email });
     return doc && userTransformer(doc);
-  }
-
-  async updatePassword({
-    userId,
-    password,
-  }: UpdatePasswordModel): Promise<void> {
-    await this.usersCollection.updateOne(
-      { _id: userId },
-      { $set: { password } },
-    );
   }
 }

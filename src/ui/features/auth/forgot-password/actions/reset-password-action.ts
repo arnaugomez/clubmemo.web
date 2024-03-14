@@ -27,14 +27,14 @@ export async function resetPasswordAction({
       return ActionResponse.formGlobalError("forgotPasswordCodeExpired");
     }
 
-    await usersRepository.updatePassword({
+    const authService = locator.AuthService();
+    await authService.updatePassword({
       userId: user.id,
       password,
     });
 
     await forgotPasswordCodesRepository.delete(user.id);
 
-    const authService = locator.AuthService();
     await authService.invalidateUserSessions(user.id);
   } catch (e) {
     console.error(e);

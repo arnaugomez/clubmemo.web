@@ -17,6 +17,11 @@ export interface SignupWithPasswordResultModel {
   userId: ObjectId;
 }
 
+export interface UpdatePasswordModel {
+  userId: ObjectId;
+  password: string;
+}
+
 export interface AuthService {
   validateSession(sessionId: string): Promise<CheckSessionModel>;
 
@@ -37,4 +42,6 @@ export interface AuthService {
   ): Promise<SignupWithPasswordResultModel>;
 
   verifyEmail(userId: ObjectId): Promise<Cookie>;
+
+  updatePassword(input: UpdatePasswordModel): Promise<void>;
 }
