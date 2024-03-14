@@ -22,6 +22,8 @@ export interface AuthService {
 
   invalidateSession(sessionId: string): Promise<void>;
 
+  invalidateUserSessions(userId: ObjectId): Promise<void>;
+
   getSessionCookieName(): string;
 
   createSessionCookie(sessionId: string): Cookie;

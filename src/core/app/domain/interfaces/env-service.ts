@@ -7,4 +7,10 @@ export interface EnvService {
   readonly resendApiKey: string;
   /** The base url of the website, for example, https://example.com */
   readonly baseUrl: string;
+  /**
+   * Pepper code for the password hashing algorithm.
+   * Adds an extra layer of protection to the password hash.
+   * It prevents the hash from being cracked even if it is leaked.
+   */
+  readonly passwordPepper: string;
 }

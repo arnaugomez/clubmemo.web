@@ -43,7 +43,9 @@ export const locator: Locator = {
   },
 
   // Auth
-  AuthService: singleton(() => new AuthServiceImpl(locator.MongoService())),
+  AuthService: singleton(
+    () => new AuthServiceImpl(locator.EnvService(), locator.MongoService()),
+  ),
   async EmailVerificationCodesRepository() {
     const file = await import(
       "../auth/data/repositories/email-verification-codes-repository-impl"
