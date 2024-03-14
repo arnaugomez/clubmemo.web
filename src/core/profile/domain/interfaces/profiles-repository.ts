@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
-import { ProfileDoc } from "../../data/collections/profiles-collection";
+import { ProfileModel } from "../models/profile-model";
 
 export interface ProfilesRepository {
   create(userId: ObjectId): Promise<void>;
-  // TODO: return ProfileModel
-  getByUserId(userId: ObjectId): Promise<ProfileDoc | null>;
+
+  getByUserId(userId: ObjectId): Promise<ProfileModel | null>;
 }

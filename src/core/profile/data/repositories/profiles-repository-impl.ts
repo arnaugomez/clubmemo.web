@@ -1,8 +1,10 @@
 import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { Collection, ObjectId } from "mongodb";
 import { ProfilesRepository } from "../../domain/interfaces/profiles-repository";
+import { ProfileModel } from "../../domain/models/profile-model";
 import {
   ProfileDoc,
+  ProfileDocTransformer,
   profilesCollection,
 } from "../collections/profiles-collection";
 
@@ -17,8 +19,8 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
     await this.collection.insertOne({ userId });
   }
 
-  async getByUserId(userId: ObjectId): Promise<ProfileDoc | null> {
+  async getByUserId(userId: ObjectId): Promise<ProfileModel | null> {
     const doc = await this.collection.findOne({ userId });
-    return doc;
+    return doc && new ProfileDocTransformer(doc).toDomain();
   }
 }
