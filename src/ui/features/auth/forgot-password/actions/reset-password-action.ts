@@ -25,6 +25,10 @@ export async function resetPasswordAction({
       password,
     });
 
+    const forgotPasswordCodesRepository =
+      await locator.ForgotPasswordCodesRepository();
+    await forgotPasswordCodesRepository.delete(user.id);
+
     const authService = locator.AuthService();
     await authService.invalidateUserSessions(user.id);
   } catch (e) {
