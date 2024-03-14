@@ -14,8 +14,9 @@ export type FormActionResponse<T = null> = {
 const globalErrors = {
   sessionExpired:
     "La sesión ha expirado. Refresca la página y vuelve a iniciar sesión.",
-  general: "Ha ocurrido un error. Inténtelo más tarde.",
+  general: "Ha ocurrido un error. Inténtalo más tarde.",
   userDoesNotExist: "El usuario no existe.",
+  forgotPasswordCodeExpired: "El código de recuperación ha expirado.",
 };
 type GlobalErrorType = keyof typeof globalErrors;
 

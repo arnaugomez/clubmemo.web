@@ -20,13 +20,18 @@ export async function resetPasswordAction({
       return ActionResponse.formGlobalError("userDoesNotExist");
     }
 
+    const forgotPasswordCodesRepository =
+      await locator.ForgotPasswordCodesRepository();
+    const forgotPasswordCode = await forgotPasswordCodesRepository.get(user.id);
+    if (!forgotPasswordCode || forgotPasswordCode.hasExpired) {
+      return ActionResponse.formGlobalError("forgotPasswordCodeExpired");
+    }
+
     await usersRepository.updatePassword({
       userId: user.id,
       password,
     });
 
-    const forgotPasswordCodesRepository =
-      await locator.ForgotPasswordCodesRepository();
     await forgotPasswordCodesRepository.delete(user.id);
 
     const authService = locator.AuthService();
