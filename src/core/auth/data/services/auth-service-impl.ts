@@ -20,6 +20,7 @@ import {
   SignupWithPasswordModel,
   SignupWithPasswordResultModel,
 } from "../../domain/interfaces/auth-service";
+import { UpdatePasswordModel } from "../../domain/interfaces/users-repository";
 import { AuthType } from "../../domain/models/auth-type-model";
 import { CheckSessionModel } from "../../domain/models/check-session-model";
 import {
@@ -128,16 +129,17 @@ export class AuthServiceImpl implements AuthService {
     input: SignupWithPasswordModel,
   ): Promise<SignupWithPasswordResultModel> {
     const { email, password } = input;
-    const hashedPassword = await this.passwordHashingAlgorithm.hash(password);
     const existingUser = await this.usersCollection.findOne({
       email,
     });
     if (existingUser) {
       throw new UserAlreadyExistsError();
     }
+
+    const hashed_password = await this.passwordHashingAlgorithm.hash(password);
     const result = await this.usersCollection.insertOne({
       email,
-      hashed_password: hashedPassword,
+      hashed_password,
       authTypes: ["email"],
     });
     const userId = result.insertedId;
@@ -160,6 +162,17 @@ export class AuthServiceImpl implements AuthService {
     const session = await this.lucia.createSession(userId, {});
 
     return this.lucia.createSessionCookie(session.id);
+  }
+
+  async updatePassword({
+    userId,
+    password,
+  }: UpdatePasswordModel): Promise<void> {
+    const hashed_password = await this.passwordHashingAlgorithm.hash(password);
+    await this.usersCollection.updateOne(
+      { _id: userId },
+      { $set: { hashed_password } },
+    );
   }
 
   private get passwordHashingAlgorithm(): PasswordHashingAlgorithm {
