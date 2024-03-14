@@ -4,6 +4,7 @@ import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
 import { ForgotPasswordCodesRepository } from "../auth/domain/interfaces/forgot-password-codes-repository";
 import { UsersRepository } from "../auth/domain/interfaces/users-repository";
+import { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
 import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
 import { EmailService } from "./domain/interfaces/email-service";
@@ -22,6 +23,7 @@ interface Locator {
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
   ForgotPasswordCodesRepository: Lazy<ForgotPasswordCodesRepository>;
   UsersRepository: Lazy<UsersRepository>;
+  ProfilesRepository: Lazy<ProfilesRepository>;
 }
 
 /**
@@ -39,6 +41,7 @@ export const locator: Locator = {
     const file = await import("./data/services/email-service-fake-impl");
     return new file.EmailServiceFakeImpl();
   },
+
   // Auth
   AuthService: singleton(() => new AuthServiceImpl(locator.MongoService())),
   async EmailVerificationCodesRepository() {
@@ -58,5 +61,13 @@ export const locator: Locator = {
       "../auth/data/repositories/users-repository-impl"
     );
     return new file.UsersRepositoryImpl(this.MongoService());
+  },
+
+  // Profile
+  async ProfilesRepository() {
+    const file = await import(
+      "../profile/data/repositories/profiles-repository-impl"
+    );
+    return new file.ProfilesRepositoryImpl(this.MongoService());
   },
 };

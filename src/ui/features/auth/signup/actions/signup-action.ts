@@ -7,16 +7,18 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function signupAction(data: SignupWithPasswordModel) {
-  const authService = locator.AuthService();
-  const emailVerificationCodesRepository =
-    await locator.EmailVerificationCodesRepository();
-  const emailService = await locator.EmailService();
-
   try {
+    const authService = locator.AuthService();
     const { userId, sessionCookie } =
       await authService.signupWithPassword(data);
 
+    const profilesRepository = await locator.ProfilesRepository();
+    await profilesRepository.create(userId);
+
+    const emailVerificationCodesRepository =
+      await locator.EmailVerificationCodesRepository();
     const { code } = await emailVerificationCodesRepository.generate(userId);
+    const emailService = await locator.EmailService();
     await emailService.sendVerificationCode(data.email, code);
 
     cookies().set(
