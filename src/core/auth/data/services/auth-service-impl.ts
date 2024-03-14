@@ -1,6 +1,12 @@
+import { EnvService } from "@/src/core/app/domain/interfaces/env-service";
 import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
-import { Cookie, Lucia, RegisteredDatabaseUserAttributes } from "lucia";
+import {
+  Cookie,
+  Lucia,
+  PasswordHashingAlgorithm,
+  RegisteredDatabaseUserAttributes,
+} from "lucia";
 import { Collection, ObjectId, WithId } from "mongodb";
 import { Argon2id } from "oslo/password";
 import {
@@ -39,7 +45,10 @@ export class AuthServiceImpl implements AuthService {
 
   private readonly usersCollection: Collection<UserDoc>;
 
-  constructor(mongoService: MongoService) {
+  constructor(
+    private readonly envService: EnvService,
+    mongoService: MongoService,
+  ) {
     this.usersCollection = mongoService.collection(usersCollection);
 
     const adapter = new MongodbAdapter(
@@ -87,6 +96,11 @@ export class AuthServiceImpl implements AuthService {
   async invalidateSession(sessionId: string): Promise<void> {
     await this.lucia.invalidateSession(sessionId);
   }
+
+  async invalidateUserSessions(userId: ObjectId): Promise<void> {
+    await this.lucia.invalidateUserSessions(userId);
+  }
+
   async loginWithPassword({
     email,
     password,
@@ -99,7 +113,7 @@ export class AuthServiceImpl implements AuthService {
       throw new UserDoesNotExistError();
     }
 
-    const passwordIsCorrect = await new Argon2id().verify(
+    const passwordIsCorrect = await this.passwordHashingAlgorithm.verify(
       existingUser.hashed_password,
       password,
     );
@@ -114,7 +128,7 @@ export class AuthServiceImpl implements AuthService {
     input: SignupWithPasswordModel,
   ): Promise<SignupWithPasswordResultModel> {
     const { email, password } = input;
-    const hashedPassword = await new Argon2id().hash(password);
+    const hashedPassword = await this.passwordHashingAlgorithm.hash(password);
     const existingUser = await this.usersCollection.findOne({
       email,
     });
@@ -146,6 +160,11 @@ export class AuthServiceImpl implements AuthService {
     const session = await this.lucia.createSession(userId, {});
 
     return this.lucia.createSessionCookie(session.id);
+  }
+
+  private get passwordHashingAlgorithm(): PasswordHashingAlgorithm {
+    const secret = new TextEncoder().encode(this.envService.passwordPepper);
+    return new Argon2id({ secret });
   }
 }
 

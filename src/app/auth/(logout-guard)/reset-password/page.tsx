@@ -24,7 +24,6 @@ async function resetPasswordPageGuard(searchParams: SearchParams) {
   if (forgotPasswordCode.hasExpired) notFound();
 
   if (forgotPasswordCode.code !== searchParams.forgotPasswordCode) notFound();
-  return user;
 }
 
 export default async function ResetPasswordPage({
@@ -32,14 +31,18 @@ export default async function ResetPasswordPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const user = await resetPasswordPageGuard(searchParams);
+  await resetPasswordPageGuard(searchParams);
+
+  const { email } = searchParams;
+  if (!email) return notFound();
+
   return (
     <>
       <h1 className={textStyles.h2}>Nueva contraseña</h1>
       <div className="h-2"></div>
-      <p>Entra una nueva contraseña para el usuario {searchParams.email}</p>
+      <p>Entra una nueva contraseña para el usuario {email}</p>
       <div className="h-6"></div>
-      <ResetPasswordForm userId={user.id} />
+      <ResetPasswordForm email={email} />
     </>
   );
 }

@@ -15,6 +15,7 @@ const globalErrors = {
   sessionExpired:
     "La sesión ha expirado. Refresca la página y vuelve a iniciar sesión.",
   general: "Ha ocurrido un error. Inténtelo más tarde.",
+  userDoesNotExist: "El usuario no existe.",
 };
 type GlobalErrorType = keyof typeof globalErrors;
 
