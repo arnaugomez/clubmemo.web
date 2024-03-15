@@ -7,6 +7,7 @@ import { ForgotPasswordTokensRepository } from "../../domain/interfaces/forgot-p
 import { ForgotPasswordTokenModel } from "../../domain/models/forgot-password-token-model";
 import {
   ForgotPasswordTokenDoc,
+  ForgotPasswordTokenDocTransformer,
   forgotPasswordTokensCollection,
 } from "../collections/forgot-password-tokens-collection";
 
@@ -18,11 +19,11 @@ export class ForgotPasswordTokensRepositoryImpl
     this.collection = mongoService.collection(forgotPasswordTokensCollection);
   }
 
-  async generate(userId: ObjectId): Promise<string> {
-    await this.collection.deleteMany({ userId });
+  async generate(userId: string): Promise<string> {
+    await this.collection.deleteMany({ userId: new ObjectId(userId) });
     const token = generateRandomString(10, alphabet("A-Z", "0-9"));
     const doc = {
-      userId,
+      userId: new ObjectId(userId),
       tokenHash: await this.hashToken(token),
       expiresAt: createDate(new TimeSpan(15, "m")),
     };
@@ -30,20 +31,20 @@ export class ForgotPasswordTokensRepositoryImpl
     return token;
   }
 
-  async validate(userId: ObjectId, token: string): Promise<boolean> {
-    const doc = await this.collection.findOne({ userId });
+  async validate(userId: string, token: string): Promise<boolean> {
+    const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
     if (!doc) return false;
     const tokenHash = await this.hashToken(token);
     return tokenHash === doc.tokenHash;
   }
 
-  async get(userId: ObjectId): Promise<ForgotPasswordTokenModel | null> {
-    const doc = await this.collection.findOne({ userId });
-    return doc && new ForgotPasswordTokenModel(doc);
+  async get(userId: string): Promise<ForgotPasswordTokenModel | null> {
+    const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
+    return doc && new ForgotPasswordTokenDocTransformer(doc).toDomain();
   }
 
-  async delete(userId: ObjectId): Promise<void> {
-    await this.collection.deleteOne({ userId });
+  async delete(userId: string): Promise<void> {
+    await this.collection.deleteOne({ userId: new ObjectId(userId) });
   }
 
   async hashToken(token: string) {

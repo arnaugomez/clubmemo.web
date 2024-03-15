@@ -1,12 +1,11 @@
-import { ObjectId } from "mongodb";
 import { ForgotPasswordTokenModel } from "../models/forgot-password-token-model";
 
 export interface ForgotPasswordTokensRepository {
-  generate(userId: ObjectId): Promise<string>;
+  generate(userId: string): Promise<string>;
 
-  validate(userId: ObjectId, token: string): Promise<boolean>;
+  validate(userId: string, token: string): Promise<boolean>;
 
-  get(userId: ObjectId): Promise<ForgotPasswordTokenModel | null>;
+  get(userId: string): Promise<ForgotPasswordTokenModel | null>;
 
-  delete(userId: ObjectId): Promise<void>;
+  delete(userId: string): Promise<void>;
 }

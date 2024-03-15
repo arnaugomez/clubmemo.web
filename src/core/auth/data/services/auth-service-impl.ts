@@ -20,7 +20,7 @@ import {
   SignupWithPasswordModel,
   SignupWithPasswordResultModel,
 } from "../../domain/interfaces/auth-service";
-import { UpdatePasswordModel } from "../../domain/interfaces/users-repository";
+import { UpdatePasswordModel } from "../../domain/interfaces/auth-service";
 import { AuthType } from "../../domain/models/auth-type-model";
 import { CheckSessionModel } from "../../domain/models/check-session-model";
 import {

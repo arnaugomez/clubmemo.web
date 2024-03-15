@@ -7,6 +7,7 @@ import { EmailVerificationCodesRepository } from "../../domain/interfaces/email-
 import { EmailVerificationCodeModel } from "../../domain/models/email-verification-code-model";
 import {
   EmailVerificationCodeDoc,
+  EmailVerificationCodeDocTransformer,
   emailVerificationCodesCollection,
 } from "../collections/email-verification-codes-collection";
 
@@ -18,27 +19,27 @@ export class EmailVerificationCodesRepositoryImpl
     this.collection = mongoService.collection(emailVerificationCodesCollection);
   }
 
-  async generate(userId: ObjectId): Promise<EmailVerificationCodeModel> {
+  async generate(userId: string): Promise<EmailVerificationCodeModel> {
     await this.deleteByUserId(userId);
 
-    const data = {
-      userId,
+    const doc = {
+      userId: new ObjectId(userId),
       code: generateRandomString(6, alphabet("0-9")),
       expiresAt: createDate(new TimeSpan(10, "m")),
     };
-    await this.collection.insertOne(data);
+    await this.collection.insertOne(doc);
 
-    return new EmailVerificationCodeModel(data);
+    return new EmailVerificationCodeDocTransformer(doc).toDomain();
   }
 
   async getByUserId(
-    userId: ObjectId,
+    userId: string,
   ): Promise<EmailVerificationCodeModel | null> {
-    const data = await this.collection.findOne({ userId });
-    return data && new EmailVerificationCodeModel(data);
+    const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
+    return doc && new EmailVerificationCodeDocTransformer(doc).toDomain();
   }
 
-  async verify(userId: ObjectId, code: string): Promise<boolean> {
+  async verify(userId: string, code: string): Promise<boolean> {
     const verificationCode = await this.getByUserId(userId);
     if (!verificationCode || verificationCode.code !== code) {
       await waitMilliseconds(2000); // Prevent brute-force attacks
@@ -52,7 +53,7 @@ export class EmailVerificationCodesRepositoryImpl
     return true;
   }
 
-  private async deleteByUserId(userId: ObjectId): Promise<void> {
-    await this.collection.deleteMany({ userId });
+  private async deleteByUserId(userId: string): Promise<void> {
+    await this.collection.deleteMany({ userId: new ObjectId(userId) });
   }
 }
