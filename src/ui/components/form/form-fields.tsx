@@ -62,7 +62,7 @@ export function InputOtpFormField() {
                 <InputOTPGroup>
                   {slots.map((slot, index) => (
                     <InputOTPSlot key={index} {...slot} />
-                  ))}{" "}
+                  ))}
                 </InputOTPGroup>
               )}
               {...field}

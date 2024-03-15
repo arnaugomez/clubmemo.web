@@ -25,7 +25,7 @@ export class ForgotPasswordTokensRepositoryImpl
     const doc = {
       userId: new ObjectId(userId),
       tokenHash: await this.hashToken(token),
-      expiresAt: createDate(new TimeSpan(15, "m")),
+      expiresAt: createDate(new TimeSpan(1, "h")),
     };
     await this.collection.insertOne(doc);
     return token;
