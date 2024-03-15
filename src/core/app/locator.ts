@@ -44,7 +44,7 @@ export const locator: Locator = {
 
   // Auth
   AuthService: singleton(
-    () => new AuthServiceImpl(locator.EnvService(), locator.MongoService()),
+    () => new AuthServiceImpl(locator.EnvService(), locator.MongoService())
   ),
   async EmailVerificationCodesRepository() {
     const file = await import(
@@ -56,7 +56,7 @@ export const locator: Locator = {
     const file = await import(
       "../auth/data/repositories/forgot-password-tokens-repository-impl"
     );
-    return new file.ForgotPasswordCodesRepositoryImpl(this.MongoService());
+    return new file.ForgotPasswordTokensRepositoryImpl(this.MongoService());
   },
   async UsersRepository() {
     const file = await import(
