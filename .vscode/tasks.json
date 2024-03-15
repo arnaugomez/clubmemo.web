@@ -4,11 +4,6 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "install",
-      "type": "shell",
-      "command": "just install"
-    },
-    {
       "label": "fix",
       "type": "shell",
       "command": "just fix"

@@ -13,7 +13,7 @@ dev:
 fix:
     ./nvm-exec.sh pnpm format
     ./nvm-exec.sh pnpm fix
-    just --unstable --fmt
+    # just --unstable --fmt
 
 # Add a new shadcn-ui component
 add-component component:
