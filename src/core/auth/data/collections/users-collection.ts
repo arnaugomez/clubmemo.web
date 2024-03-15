@@ -8,7 +8,7 @@ export const usersCollection = collection<UserDoc>("users");
 
 export function userTransformer(doc: WithId<UserDoc>): UserModel {
   return new UserModel({
-    id: doc._id,
+    id: doc._id.toString(),
     ...doc,
   });
 }

@@ -1,8 +1,7 @@
-import { UserId } from "lucia";
 import { AuthType } from "./auth-type-model";
 
 interface UserModelData {
-  id: UserId;
+  id: string;
   email: string;
   authTypes: AuthType[];
   isEmailVerified?: boolean;
