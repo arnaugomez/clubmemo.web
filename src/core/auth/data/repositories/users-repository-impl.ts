@@ -4,7 +4,7 @@ import { UsersRepository } from "../../domain/interfaces/users-repository";
 import { UserModel } from "../../domain/models/user-model";
 import {
   UserDoc,
-  userTransformer,
+  UserDocTransformer,
   usersCollection,
 } from "../collections/users-collection";
 
@@ -17,6 +17,6 @@ export class UsersRepositoryImpl implements UsersRepository {
 
   async getByEmail(email: string): Promise<UserModel | null> {
     const doc = await this.usersCollection.findOne({ email });
-    return doc && userTransformer(doc);
+    return doc && new UserDocTransformer(doc).toDomain();
   }
 }

@@ -1,14 +1,29 @@
 import { collection } from "@/src/core/app/utils/mongo";
-import { RegisteredDatabaseUserAttributes } from "lucia";
+import { RegisteredDatabaseUserAttributes, User } from "lucia";
 import { WithId } from "mongodb";
 import { UserModel } from "../../domain/models/user-model";
 
 export interface UserDoc extends RegisteredDatabaseUserAttributes {}
 export const usersCollection = collection<UserDoc>("users");
 
-export function userTransformer(doc: WithId<UserDoc>): UserModel {
-  return new UserModel({
-    id: doc._id.toString(),
-    ...doc,
-  });
+export class UserDocTransformer {
+  constructor(private readonly user: WithId<UserDoc>) {}
+
+  toDomain(): UserModel {
+    return new UserModel({
+      ...this.user,
+      id: this.user._id.toString(),
+    });
+  }
+}
+
+export class LuciaUserTransformer {
+  constructor(private readonly user: User) {}
+
+  toDomain(): UserModel {
+    return new UserModel({
+      ...this.user,
+      id: this.user.id.toString(),
+    });
+  }
 }
