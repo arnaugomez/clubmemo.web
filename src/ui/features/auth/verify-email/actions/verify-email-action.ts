@@ -1,7 +1,7 @@
 "use server";
 
-import { checkSession } from "@/src/check-session";
 import { locator } from "@/src/core/app/locator";
+import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -11,7 +11,7 @@ interface VerifyEmailActionViewModel {
 }
 
 export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
-  const { user } = await checkSession();
+  const { user } = await checkSessionProvider();
   if (!user) {
     return ActionResponse.formGlobalError("sessionExpired");
   }

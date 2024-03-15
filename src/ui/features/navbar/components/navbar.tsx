@@ -1,4 +1,4 @@
-import { checkSession } from "@/src/check-session";
+import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
 import Link from "next/link";
 import { Button } from "../../../components/shadcn/ui/button";
 import { textStyles } from "../../../styles/text-styles";
@@ -6,7 +6,7 @@ import { cn } from "../../../utils/shadcn";
 import { NavbarUserSection } from "./navbar-user-section";
 
 export async function Navbar() {
-  const result = await checkSession();
+  const result = await checkSessionProvider();
   return (
     <header className="sticky top-0">
       <nav className="h-16 flex justify-between items-center px-6 border-slate-200 border-b-[1px] bg-white">
@@ -20,7 +20,7 @@ export async function Navbar() {
 }
 
 async function UserSection() {
-  const result = await checkSession();
+  const result = await checkSessionProvider();
   if (!result.session || !result.user.isEmailVerified) {
     return (
       <Button variant="outline" asChild>
