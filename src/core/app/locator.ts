@@ -2,7 +2,7 @@ import singleton from "memoize-one";
 import { AuthServiceImpl } from "../auth/data/services/auth-service-impl";
 import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
-import { ForgotPasswordCodesRepository } from "../auth/domain/interfaces/forgot-password-codes-repository";
+import { ForgotPasswordTokensRepository } from "../auth/domain/interfaces/forgot-password-tokens-repository";
 import { UsersRepository } from "../auth/domain/interfaces/users-repository";
 import { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
@@ -21,7 +21,7 @@ interface Locator {
   // Auth
   AuthService: Dependency<AuthService>;
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
-  ForgotPasswordCodesRepository: Lazy<ForgotPasswordCodesRepository>;
+  ForgotPasswordTokensRepository: Lazy<ForgotPasswordTokensRepository>;
   UsersRepository: Lazy<UsersRepository>;
   ProfilesRepository: Lazy<ProfilesRepository>;
 }
@@ -52,9 +52,9 @@ export const locator: Locator = {
     );
     return new file.EmailVerificationCodesRepositoryImpl(this.MongoService());
   },
-  async ForgotPasswordCodesRepository() {
+  async ForgotPasswordTokensRepository() {
     const file = await import(
-      "../auth/data/repositories/forgot-password-codes-repository-impl"
+      "../auth/data/repositories/forgot-password-tokens-repository-impl"
     );
     return new file.ForgotPasswordCodesRepositoryImpl(this.MongoService());
   },

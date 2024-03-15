@@ -1,20 +1,15 @@
 import { ObjectId } from "mongodb";
 import { isWithinExpirationDate } from "oslo";
 
-interface ForgotPasswordCodeModelData {
+interface ForgotPasswordTokenModelData {
   userId: ObjectId;
-  code: string;
   expiresAt: Date;
 }
-export class ForgotPasswordCodeModel {
-  constructor(private data: ForgotPasswordCodeModelData) {}
+export class ForgotPasswordTokenModel {
+  constructor(private data: ForgotPasswordTokenModelData) {}
 
   get userId() {
     return this.data.userId;
-  }
-
-  get code() {
-    return this.data.code;
   }
 
   get hasExpired() {

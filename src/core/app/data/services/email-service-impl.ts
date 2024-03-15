@@ -19,15 +19,12 @@ export class EmailServiceImpl implements EmailService {
     });
   }
 
-  async sendForgotPasswordCode(
-    email: string,
-    forgotPasswordCode: string,
-  ): Promise<void> {
+  async sendForgotPasswordLink(email: string, token: string): Promise<void> {
     const url = new URL(this.envService.baseUrl);
     url.pathname = "/auth/reset-password";
     url.search = new URLSearchParams({
       email,
-      forgotPasswordCode,
+      token,
     }).toString();
 
     await this.resend.emails.send({
