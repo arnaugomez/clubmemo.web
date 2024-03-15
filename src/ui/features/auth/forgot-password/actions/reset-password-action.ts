@@ -24,7 +24,7 @@ export async function resetPasswordAction({
     const forgotPasswordCodesRepository =
       await locator.ForgotPasswordTokensRepository();
     const forgotPasswordCode = await forgotPasswordCodesRepository.get(
-      user.id.toString()
+      user.id.toString(),
     );
     if (!forgotPasswordCode || forgotPasswordCode.hasExpired) {
       return ActionResponse.formGlobalError("forgotPasswordCodeExpired");
