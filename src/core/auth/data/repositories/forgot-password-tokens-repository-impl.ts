@@ -21,7 +21,7 @@ export class ForgotPasswordTokensRepositoryImpl
 
   async generate(userId: string): Promise<string> {
     await this.collection.deleteMany({ userId: new ObjectId(userId) });
-    const token = generateRandomString(10, alphabet("A-Z", "0-9"));
+    const token = generateRandomString(24, alphabet("a-z", "0-9"));
     const doc = {
       userId: new ObjectId(userId),
       tokenHash: await this.hashToken(token),

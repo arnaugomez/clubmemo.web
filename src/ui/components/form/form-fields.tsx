@@ -1,3 +1,4 @@
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { HTMLInputAutoCompleteAttribute, HTMLInputTypeAttribute } from "react";
 import {
   FormControl,
@@ -56,6 +57,7 @@ export function InputOtpFormField() {
           <FormControl>
             <InputOTP
               maxLength={6}
+              pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
               render={({ slots }) => (
                 <InputOTPGroup>
                   {slots.map((slot, index) => (
