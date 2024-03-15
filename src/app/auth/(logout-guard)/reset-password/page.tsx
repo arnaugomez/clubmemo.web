@@ -18,9 +18,7 @@ async function resetPasswordPageGuard(searchParams: SearchParams) {
 
   const forgotPasswordTokensRepository =
     await locator.ForgotPasswordTokensRepository();
-  const forgotPasswordCode = await forgotPasswordTokensRepository.get(
-    user.id.toString(),
-  );
+  const forgotPasswordCode = await forgotPasswordTokensRepository.get(user.id);
   if (!forgotPasswordCode) notFound();
 
   if (forgotPasswordCode.hasExpired) notFound();
