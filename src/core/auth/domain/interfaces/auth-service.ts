@@ -1,5 +1,4 @@
 import { Cookie } from "lucia";
-import { ObjectId } from "mongodb";
 import { CheckSessionModel } from "../models/check-session-model";
 
 export interface LoginWithPasswordModel {
@@ -14,11 +13,11 @@ export interface SignupWithPasswordModel {
 
 export interface SignupWithPasswordResultModel {
   sessionCookie: Cookie;
-  userId: ObjectId;
+  userId: string;
 }
 
 export interface UpdatePasswordModel {
-  userId: ObjectId;
+  userId: string;
   password: string;
 }
 
@@ -27,7 +26,7 @@ export interface AuthService {
 
   invalidateSession(sessionId: string): Promise<void>;
 
-  invalidateUserSessions(userId: ObjectId): Promise<void>;
+  invalidateUserSessions(userId: string): Promise<void>;
 
   getSessionCookieName(): string;
 
@@ -41,7 +40,7 @@ export interface AuthService {
     input: SignupWithPasswordModel,
   ): Promise<SignupWithPasswordResultModel>;
 
-  verifyEmail(userId: ObjectId): Promise<Cookie>;
+  verifyEmail(userId: string): Promise<Cookie>;
 
   updatePassword(input: UpdatePasswordModel): Promise<void>;
 }

@@ -98,8 +98,8 @@ export class AuthServiceImpl implements AuthService {
     await this.lucia.invalidateSession(sessionId);
   }
 
-  async invalidateUserSessions(userId: ObjectId): Promise<void> {
-    await this.lucia.invalidateUserSessions(userId);
+  async invalidateUserSessions(userId: string): Promise<void> {
+    await this.lucia.invalidateUserSessions(new ObjectId(userId));
   }
 
   async loginWithPassword({
@@ -147,19 +147,20 @@ export class AuthServiceImpl implements AuthService {
     const session = await this.lucia.createSession(result.insertedId, {});
     const sessionCookie = this.lucia.createSessionCookie(session.id);
     return {
-      userId,
+      userId: userId.toString(),
       sessionCookie,
     };
   }
 
-  async verifyEmail(userId: ObjectId): Promise<Cookie> {
+  async verifyEmail(userId: string): Promise<Cookie> {
+    const _id = new ObjectId(userId);
     await this.usersCollection.findOneAndUpdate(
-      { _id: userId },
+      { _id },
       { $set: { isEmailVerified: true } },
     );
 
-    await this.lucia.invalidateUserSessions(userId);
-    const session = await this.lucia.createSession(userId, {});
+    await this.lucia.invalidateUserSessions(_id);
+    const session = await this.lucia.createSession(_id, {});
 
     return this.lucia.createSessionCookie(session.id);
   }
@@ -170,7 +171,7 @@ export class AuthServiceImpl implements AuthService {
   }: UpdatePasswordModel): Promise<void> {
     const hashed_password = await this.passwordHashingAlgorithm.hash(password);
     await this.usersCollection.updateOne(
-      { _id: userId },
+      { _id: new ObjectId(userId) },
       { $set: { hashed_password } },
     );
   }

@@ -30,7 +30,9 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
     });
   }
 
-  const sessionCookie = await locator.AuthService().verifyEmail(user.id);
+  const sessionCookie = await locator
+    .AuthService()
+    .verifyEmail(user.id.toString());
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
