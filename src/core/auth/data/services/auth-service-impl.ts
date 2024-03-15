@@ -19,15 +19,20 @@ import {
   LoginWithPasswordModel,
   SignupWithPasswordModel,
   SignupWithPasswordResultModel,
+  UpdatePasswordModel,
 } from "../../domain/interfaces/auth-service";
-import { UpdatePasswordModel } from "../../domain/interfaces/auth-service";
 import { AuthType } from "../../domain/models/auth-type-model";
 import { CheckSessionModel } from "../../domain/models/check-session-model";
 import {
   SessionDoc,
+  SessionTransformer,
   sessionsCollection,
 } from "../collections/sessions-collection";
-import { UserDoc, usersCollection } from "../collections/users-collection";
+import {
+  LuciaUserTransformer,
+  UserDoc,
+  usersCollection,
+} from "../collections/users-collection";
 
 interface DatabaseUserAttributes {
   email: string;
@@ -79,7 +84,12 @@ export class AuthServiceImpl implements AuthService {
   }
 
   async validateSession(sessionId: string): Promise<CheckSessionModel> {
-    return await this.lucia.validateSession(sessionId);
+    const result = await this.lucia.validateSession(sessionId);
+    if (!result.session) return result;
+    return {
+      user: new LuciaUserTransformer(result.user).toDomain(),
+      session: new SessionTransformer(result.session).toDomain(),
+    };
   }
 
   getSessionCookieName(): string {

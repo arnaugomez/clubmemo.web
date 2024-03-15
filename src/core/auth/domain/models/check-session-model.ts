@@ -1,11 +1,36 @@
-import { Session, User } from "lucia";
+import { UserModel } from "./user-model";
+
+interface SessionModelData {
+  id: string;
+  expiresAt: Date;
+  fresh: boolean;
+  userId: string;
+}
+
+export class SessionModel {
+  constructor(private data: SessionModelData) {}
+
+  get id() {
+    return this.data.id;
+  }
+
+  get expiresAt() {
+    return this.data.expiresAt;
+  }
+
+  get fresh() {
+    return this.data.fresh;
+  }
+}
+
+export const emptyCheckSession = {
+  user: null,
+  session: null,
+};
 
 export type CheckSessionModel =
   | {
-      user: User;
-      session: Session;
+      user: UserModel;
+      session: SessionModel;
     }
-  | {
-      user: null;
-      session: null;
-    };
+  | typeof emptyCheckSession;

@@ -2,20 +2,18 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 
 import { locator } from "./core/app/locator";
-import { CheckSessionModel } from "./core/auth/domain/models/check-session-model";
+import {
+  CheckSessionModel,
+  emptyCheckSession,
+} from "./core/auth/domain/models/check-session-model";
 
 export const checkSession = cache(async (): Promise<CheckSessionModel> => {
   const authService = locator.AuthService();
   const sessionId =
     cookies().get(authService.getSessionCookieName())?.value ?? null;
-  if (!sessionId) {
-    return {
-      user: null,
-      session: null,
-    };
-  }
+  if (!sessionId) return emptyCheckSession;
 
-  const result = await locator.AuthService().validateSession(sessionId);
+  const result = await authService.validateSession(sessionId);
 
   // next.js throws when you attempt to set cookie when rendering page
   try {
