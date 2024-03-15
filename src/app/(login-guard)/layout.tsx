@@ -1,8 +1,8 @@
-import { checkSession } from "@/src/check-session";
+import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
 import { redirect } from "next/navigation";
 
 async function loginGuard() {
-  const result = await checkSession();
+  const result = await checkSessionProvider();
   if (!result.session) {
     redirect("/auth/login");
   }

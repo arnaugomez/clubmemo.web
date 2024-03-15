@@ -1,12 +1,12 @@
 "use server";
 
-import { checkSession } from "@/src/check-session";
 import { locator } from "@/src/core/app/locator";
+import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function logoutAction() {
-  const { session } = await checkSession();
+  const { session } = await checkSessionProvider();
   if (!session) {
     redirect("/");
   }

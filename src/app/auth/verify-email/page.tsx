@@ -1,17 +1,17 @@
-import { checkSession } from "@/src/check-session";
 import { locator } from "@/src/core/app/locator";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/src/ui/components/shadcn/ui/alert";
+import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
 import { VerifyEmailForm } from "@/src/ui/features/auth/verify-email/components/verify-email-form";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { Inbox, MailCheck } from "lucide-react";
 import { redirect } from "next/navigation";
 
 async function verifyEmailGuard() {
-  const result = await checkSession();
+  const result = await checkSessionProvider();
   if (!result.session) {
     redirect("/auth/login");
   }
@@ -21,7 +21,7 @@ async function verifyEmailGuard() {
 }
 
 async function handleVerificationCodeExpirationDate() {
-  const { user } = await checkSession();
+  const { user } = await checkSessionProvider();
   if (user == null) throw new Error("User not found");
 
   const repository = await locator.EmailVerificationCodesRepository();
@@ -43,7 +43,7 @@ export default async function VerifyEmailPage() {
 
   const hasExpired = await handleVerificationCodeExpirationDate();
 
-  const { user } = await checkSession();
+  const { user } = await checkSessionProvider();
 
   return (
     <>
