@@ -1,10 +1,10 @@
 import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 async function loginGuard() {
   const result = await checkSessionProvider();
   if (!result.session) {
-    redirect("/auth/login");
+    notFound();
   }
   if (!result.user.isEmailVerified) {
     redirect("/auth/verify-email");
