@@ -9,7 +9,7 @@ export class EmailServiceFakeImpl implements EmailService {
     console.table({ email, verificationCode });
   }
 
-  async sendForgotPasswordCode(
+  async sendForgotPasswordLink(
     email: string,
     forgotPasswordCode: string,
   ): Promise<void> {

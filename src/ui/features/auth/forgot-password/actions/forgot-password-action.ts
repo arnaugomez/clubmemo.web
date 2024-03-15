@@ -15,12 +15,12 @@ export async function forgotPasswordAction(email: string) {
       });
     }
 
-    const forgotPasswordCodesRepository =
-      await locator.ForgotPasswordCodesRepository();
-    const code = await forgotPasswordCodesRepository.generate(user.id);
+    const forgotPasswordTokensRepository =
+      await locator.ForgotPasswordTokensRepository();
+    const token = await forgotPasswordTokensRepository.generate(user.id);
 
     const emailService = await locator.EmailService();
-    await emailService.sendForgotPasswordCode(user.email, code.code);
+    await emailService.sendForgotPasswordLink(user.email, token);
   } catch (e) {
     console.error(e);
     return ActionResponse.formGlobalError("general");

@@ -5,25 +5,30 @@ import { notFound } from "next/navigation";
 
 interface SearchParams {
   email?: string;
-  forgotPasswordCode?: string;
+  token?: string;
 }
 
 async function resetPasswordPageGuard(searchParams: SearchParams) {
-  if (!searchParams.email || !searchParams.forgotPasswordCode) {
+  if (!searchParams.email || !searchParams.token) {
     notFound();
   }
   const usersRepository = await locator.UsersRepository();
   const user = await usersRepository.getByEmail(searchParams.email);
   if (!user) notFound();
 
-  const forgotPasswordCodesRepository =
-    await locator.ForgotPasswordCodesRepository();
-  const forgotPasswordCode = await forgotPasswordCodesRepository.get(user.id);
+  const forgotPasswordTokensRepository =
+    await locator.ForgotPasswordTokensRepository();
+  const forgotPasswordCode = await forgotPasswordTokensRepository.get(user.id);
   if (!forgotPasswordCode) notFound();
 
   if (forgotPasswordCode.hasExpired) notFound();
 
-  if (forgotPasswordCode.code !== searchParams.forgotPasswordCode) notFound();
+  const isValid = await forgotPasswordTokensRepository.validate(
+    user.id,
+    searchParams.token,
+  );
+
+  if (!isValid) notFound();
 }
 
 export default async function ResetPasswordPage({

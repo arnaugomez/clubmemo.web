@@ -1,8 +1,5 @@
 export interface EmailService {
   sendVerificationCode(email: string, verificationCode: string): Promise<void>;
 
-  sendForgotPasswordCode(
-    email: string,
-    forgotPasswordCode: string,
-  ): Promise<void>;
+  sendForgotPasswordLink(email: string, token: string): Promise<void>;
 }
