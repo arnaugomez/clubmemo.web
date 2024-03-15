@@ -17,7 +17,9 @@ export async function forgotPasswordAction(email: string) {
 
     const forgotPasswordTokensRepository =
       await locator.ForgotPasswordTokensRepository();
-    const token = await forgotPasswordTokensRepository.generate(user.id);
+    const token = await forgotPasswordTokensRepository.generate(
+      user.id.toString(),
+    );
 
     const emailService = await locator.EmailService();
     await emailService.sendForgotPasswordLink(user.email, token);

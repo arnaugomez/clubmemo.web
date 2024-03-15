@@ -1,8 +1,6 @@
-import { ObjectId } from "mongodb";
-
 interface ProfileModelData {
-  id: ObjectId;
-  userId: ObjectId;
+  id: string;
+  userId: string;
   displayName?: string;
   handle?: string;
   bio?: string;

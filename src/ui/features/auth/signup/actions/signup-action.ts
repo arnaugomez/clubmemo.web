@@ -13,18 +13,21 @@ export async function signupAction(data: SignupWithPasswordModel) {
       await authService.signupWithPassword(data);
 
     const profilesRepository = await locator.ProfilesRepository();
-    await profilesRepository.create(userId);
+    await profilesRepository.create(userId.toString());
 
     const emailVerificationCodesRepository =
       await locator.EmailVerificationCodesRepository();
-    const { code } = await emailVerificationCodesRepository.generate(userId);
+    const { code } = await emailVerificationCodesRepository.generate(
+      userId.toString()
+    );
+    
     const emailService = await locator.EmailService();
     await emailService.sendVerificationCode(data.email, code);
 
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes,
+      sessionCookie.attributes
     );
   } catch (e) {
     if (e instanceof UserAlreadyExistsError) {

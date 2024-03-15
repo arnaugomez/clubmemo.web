@@ -1,8 +1,7 @@
-import { ObjectId } from "mongodb";
 import { isWithinExpirationDate } from "oslo";
 
 interface EmailVerificationCodeModelData {
-  userId: ObjectId;
+  userId: string;
   code: string;
   expiresAt: Date;
 }

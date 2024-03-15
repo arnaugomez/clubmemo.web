@@ -18,7 +18,10 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
 
   const emailVerificationCodesRepository =
     await locator.EmailVerificationCodesRepository();
-  const isValid = await emailVerificationCodesRepository.verify(user.id, code);
+  const isValid = await emailVerificationCodesRepository.verify(
+    user.id.toString(),
+    code,
+  );
   if (!isValid) {
     return ActionResponse.formError({
       name: "code",

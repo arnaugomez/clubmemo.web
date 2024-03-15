@@ -25,9 +25,9 @@ async function handleVerificationCodeExpirationDate() {
   if (user == null) throw new Error("User not found");
 
   const repository = await locator.EmailVerificationCodesRepository();
-  const verificationCode = await repository.getByUserId(user.id);
+  const verificationCode = await repository.getByUserId(user.id.toString());
   if (!verificationCode || verificationCode.hasExpired) {
-    const newVerificationCode = await repository.generate(user.id);
+    const newVerificationCode = await repository.generate(user.id.toString());
     const emailService = await locator.EmailService();
     await emailService.sendVerificationCode(
       user.email,

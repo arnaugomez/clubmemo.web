@@ -1,8 +1,7 @@
-import { ObjectId } from "mongodb";
 import { EmailVerificationCodeModel } from "../models/email-verification-code-model";
 
 export interface EmailVerificationCodesRepository {
-  generate(userId: ObjectId): Promise<EmailVerificationCodeModel>;
-  getByUserId(userId: ObjectId): Promise<EmailVerificationCodeModel | null>;
-  verify(userId: ObjectId, code: string): Promise<boolean>;
+  generate(userId: string): Promise<EmailVerificationCodeModel>;
+  getByUserId(userId: string): Promise<EmailVerificationCodeModel | null>;
+  verify(userId: string, code: string): Promise<boolean>;
 }

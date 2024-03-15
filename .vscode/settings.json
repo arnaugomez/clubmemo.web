@@ -3,5 +3,6 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
   },
-  "git.commandsToLog": ["push"]
+  "git.commandsToLog": ["push"],
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

@@ -18,8 +18,8 @@ export class ProfileDocTransformer {
 
   toDomain(): ProfileModel {
     return new ProfileModel({
-      id: this.doc._id,
-      userId: this.doc.userId,
+      id: this.doc._id.toString(),
+      userId: this.doc.userId.toString(),
       displayName: this.doc.displayName,
       handle: this.doc.handle,
       bio: this.doc.bio,

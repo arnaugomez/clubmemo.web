@@ -1,5 +1,6 @@
 import { collection } from "@/src/core/app/utils/mongo";
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
+import { ForgotPasswordTokenModel } from "../../domain/models/forgot-password-token-model";
 
 export interface ForgotPasswordTokenDoc {
   userId: ObjectId;
@@ -9,3 +10,14 @@ export interface ForgotPasswordTokenDoc {
 
 export const forgotPasswordTokensCollection =
   collection<ForgotPasswordTokenDoc>("forgotPasswordTokens");
+
+export class ForgotPasswordTokenDocTransformer {
+  constructor(private readonly doc: WithId<ForgotPasswordTokenDoc>) {}
+
+  toDomain(): ForgotPasswordTokenModel {
+    return new ForgotPasswordTokenModel({
+      userId: this.doc.userId.toString(),
+      expiresAt: this.doc.expiresAt,
+    });
+  }
+}

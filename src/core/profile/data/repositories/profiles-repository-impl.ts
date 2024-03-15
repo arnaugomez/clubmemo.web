@@ -15,12 +15,12 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
     this.collection = mongoService.collection(profilesCollection);
   }
 
-  async create(userId: ObjectId): Promise<void> {
-    await this.collection.insertOne({ userId });
+  async create(userId: string): Promise<void> {
+    await this.collection.insertOne({ userId: new ObjectId(userId) });
   }
 
-  async getByUserId(userId: ObjectId): Promise<ProfileModel | null> {
-    const doc = await this.collection.findOne({ userId });
+  async getByUserId(userId: string): Promise<ProfileModel | null> {
+    const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
     return doc && new ProfileDocTransformer(doc).toDomain();
   }
 }
