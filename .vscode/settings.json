@@ -4,5 +4,6 @@
     "source.organizeImports": "explicit"
   },
   "git.commandsToLog": ["push"],
-  "typescript.tsserver.experimental.enableProjectDiagnostics": true
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "conventionalCommits.promptFooter": false
 }
