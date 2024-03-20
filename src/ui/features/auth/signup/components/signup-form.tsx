@@ -16,8 +16,8 @@ import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
 
 const SignupFormSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  email: z.string().email().max(254),
+  password: z.string().min(8).max(256),
 });
 
 export function SignupForm() {

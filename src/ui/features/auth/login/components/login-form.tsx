@@ -17,7 +17,7 @@ import Link from "next/link";
 import { loginAction } from "../actions/login-action";
 
 const FormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().max(254),
   password: z.string(),
 });
 

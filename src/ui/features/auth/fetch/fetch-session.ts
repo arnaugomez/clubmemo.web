@@ -22,7 +22,7 @@ export const fetchSession = cache(async (): Promise<CheckSessionModel> => {
       cookies().set(
         sessionCookie.name,
         sessionCookie.value,
-        sessionCookie.attributes
+        sessionCookie.attributes,
       );
     }
     if (!result.session) {
@@ -30,7 +30,7 @@ export const fetchSession = cache(async (): Promise<CheckSessionModel> => {
       cookies().set(
         sessionCookie.name,
         sessionCookie.value,
-        sessionCookie.attributes
+        sessionCookie.attributes,
       );
     }
   } catch {}
