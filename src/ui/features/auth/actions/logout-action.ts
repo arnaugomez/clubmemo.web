@@ -1,12 +1,12 @@
 "use server";
 
 import { locator } from "@/src/core/app/locator";
-import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
+import { fetchSession } from "@/src/ui/features/auth/fetch/fetch-session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function logoutAction() {
-  const { session } = await checkSessionProvider();
+  const { session } = await fetchSession();
   if (!session) {
     redirect("/");
   }
@@ -18,7 +18,7 @@ export async function logoutAction() {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes,
+    sessionCookie.attributes
   );
   redirect("/");
 }

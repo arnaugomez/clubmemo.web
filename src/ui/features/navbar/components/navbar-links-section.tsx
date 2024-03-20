@@ -1,8 +1,8 @@
-import { checkSessionProvider } from "../../auth/providers/check-session-provider";
+import { fetchSession } from "../../auth/fetch/fetch-session";
 import { NavbarLink } from "./navbar-link";
 
 export async function NavbarLinksSection() {
-  const result = await checkSessionProvider();
+  const result = await fetchSession();
   if (!result.session) return null;
 
   return (
