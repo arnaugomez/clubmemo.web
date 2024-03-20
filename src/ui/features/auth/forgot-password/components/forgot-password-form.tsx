@@ -76,10 +76,13 @@ interface ConfirmDialogProps {
   email: string;
 }
 export function ConfirmDialog({ email }: ConfirmDialogProps) {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <Dialog open>
-      <DialogContent className="sm:max-w-[425px]" onClose={() => router.push("/")}>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onClose={() => router.push("/")}
+      >
         <DialogHeader>
           <DialogTitle>Correo enviado</DialogTitle>
           <DialogDescription>

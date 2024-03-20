@@ -106,10 +106,13 @@ interface ConfirmDialogProps {
   email: string;
 }
 export function ConfirmDialog({ email }: ConfirmDialogProps) {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <Dialog open>
-      <DialogContent onClose={() => router.push("/auth/login")} className="sm:max-w-[425px]">
+      <DialogContent
+        onClose={() => router.push("/auth/login")}
+        className="sm:max-w-[425px]"
+      >
         <DialogHeader>
           <DialogTitle>Contraseña modificada</DialogTitle>
           <DialogDescription>
