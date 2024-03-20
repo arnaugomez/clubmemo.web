@@ -1,8 +1,8 @@
-import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
+import { fetchSession } from "@/src/ui/features/auth/fetch/fetch-session";
 import { redirect } from "next/navigation";
 
 async function logoutGuard() {
-  const result = await checkSessionProvider();
+  const result = await fetchSession();
   if (result.session) {
     if (result.user.isEmailVerified) {
       redirect("/home");
