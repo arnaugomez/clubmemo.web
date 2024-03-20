@@ -10,6 +10,7 @@
     "gruntfuggly.todo-tree",
     "vivaxy.vscode-conventional-commits",
     "sleistner.vscode-fileutils",
-    "bierner.github-markdown-preview"
+    "bierner.github-markdown-preview",
+    "vitest.explorer"
   ]
 }
