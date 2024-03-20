@@ -3,12 +3,13 @@
     "dbaeumer.vscode-eslint",
     "github.vscode-pull-request-github",
     "esbenp.prettier-vscode",
-    "natqe.reload",
     "bradlc.vscode-tailwindcss",
     "actboy168.tasks",
     "codezombiech.gitignore",
     "formulahendry.auto-rename-tag",
     "gruntfuggly.todo-tree",
-    "vivaxy.vscode-conventional-commits"
+    "vivaxy.vscode-conventional-commits",
+    "sleistner.vscode-fileutils",
+    "bierner.github-markdown-preview"
   ]
 }
