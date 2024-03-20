@@ -10,6 +10,7 @@ import {
 } from "../shadcn/ui/form";
 import { Input } from "../shadcn/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../shadcn/ui/input-otp";
+import { PasswordInput } from "../input/password-input";
 
 interface InputFormFieldProps {
   name: string;
@@ -35,6 +36,32 @@ export function InputFormField({
           <FormControl>
             <Input
               type={type}
+              placeholder={placeholder}
+              autoComplete={autoComplete}
+              {...field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function PasswordInputFormField({
+  label,
+  name,
+  placeholder,
+  autoComplete,
+}: InputFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <PasswordInput
               placeholder={placeholder}
               autoComplete={autoComplete}
               {...field}
