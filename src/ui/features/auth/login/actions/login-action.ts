@@ -17,7 +17,7 @@ export async function loginAction(data: LoginWithPasswordModel) {
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes
+      sessionCookie.attributes,
     );
   } catch (e) {
     if (
