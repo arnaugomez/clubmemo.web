@@ -1,7 +1,7 @@
 "use server";
 
 import { locator } from "@/src/core/app/locator";
-import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
+import { fetchSession } from "@/src/ui/features/auth/fetch/fetch-session";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -11,7 +11,7 @@ interface VerifyEmailActionViewModel {
 }
 
 export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
-  const { user } = await checkSessionProvider();
+  const { user } = await fetchSession();
   if (!user) {
     return ActionResponse.formGlobalError("sessionExpired");
   }
@@ -20,7 +20,7 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
     await locator.EmailVerificationCodesRepository();
   const isValid = await emailVerificationCodesRepository.verify(
     user.id.toString(),
-    code,
+    code
   );
   if (!isValid) {
     return ActionResponse.formError({
@@ -36,7 +36,7 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes,
+    sessionCookie.attributes
   );
 
   redirect(`/home`);
