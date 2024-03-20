@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { resetPasswordAction } from "../actions/reset-password-action";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z
   .object({
@@ -105,9 +106,13 @@ interface ConfirmDialogProps {
   email: string;
 }
 export function ConfirmDialog({ email }: ConfirmDialogProps) {
+  const router = useRouter();
   return (
     <Dialog open>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        onClose={() => router.push("/auth/login")}
+        className="sm:max-w-[425px]"
+      >
         <DialogHeader>
           <DialogTitle>Contraseña modificada</DialogTitle>
           <DialogDescription>
