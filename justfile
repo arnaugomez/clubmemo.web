@@ -28,4 +28,7 @@ setup:
     just install
     just install-git-hooks
 
+test:
+    ./nvm-exec.sh pnpm test
+
 alias i := install

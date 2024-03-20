@@ -17,8 +17,8 @@ export function Footer() {
           href="https://raw.githubusercontent.com/arnaugomez/clubmemo.web/main/LICENSE.txt"
         >
           Licencia de uso EUPL
-        </a>{" "}
-        -{" "}
+        </a>
+        {" - "}
         <a className="hover:underline" href="">
           Política de privacidad
         </a>
