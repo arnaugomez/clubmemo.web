@@ -23,7 +23,7 @@ import { forgotPasswordAction } from "../actions/forgot-password-action";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 
 const FormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().max(254),
 });
 
 export function ForgotPasswordForm() {

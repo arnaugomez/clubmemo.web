@@ -23,7 +23,7 @@ import { resetPasswordAction } from "../actions/reset-password-action";
 
 const FormSchema = z
   .object({
-    password: z.string().min(8),
+    password: z.string().min(8).max(256),
     repeatPassword: z.string(),
   })
   .superRefine(({ password, repeatPassword }, ctx) => {
