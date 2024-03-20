@@ -1,4 +1,4 @@
-import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
+import { fetchSession } from "@/src/ui/features/auth/fetch/fetch-session";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Button } from "../../../components/shadcn/ui/button";
@@ -31,12 +31,12 @@ export function Navbar() {
 }
 
 async function NavbarTitle() {
-  const result = await checkSessionProvider();
+  const result = await fetchSession();
   return result.session ? <Link href="/home">clubmemo</Link> : "clubmemo";
 }
 
 async function UserSection() {
-  const result = await checkSessionProvider();
+  const result = await fetchSession();
   if (!result.session || !result.user.isEmailVerified) {
     return (
       <Button variant="outline" asChild>
