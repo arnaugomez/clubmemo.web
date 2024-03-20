@@ -31,7 +31,7 @@ async function handleVerificationCodeExpirationDate() {
     const emailService = await locator.EmailService();
     await emailService.sendVerificationCode(
       user.email,
-      newVerificationCode.code
+      newVerificationCode.code,
     );
     return true;
   }

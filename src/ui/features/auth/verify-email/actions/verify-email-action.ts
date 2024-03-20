@@ -20,7 +20,7 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
     await locator.EmailVerificationCodesRepository();
   const isValid = await emailVerificationCodesRepository.verify(
     user.id.toString(),
-    code
+    code,
   );
   if (!isValid) {
     return ActionResponse.formError({
@@ -36,7 +36,7 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
 
   redirect(`/home`);
