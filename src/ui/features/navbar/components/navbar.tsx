@@ -1,22 +1,38 @@
 import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "../../../components/shadcn/ui/button";
 import { textStyles } from "../../../styles/text-styles";
 import { cn } from "../../../utils/shadcn";
+import { NavbarLinksSection } from "./navbar-links-section";
 import { NavbarUserSection } from "./navbar-user-section";
 
-export async function Navbar() {
-  const result = await checkSessionProvider();
+export function Navbar() {
   return (
     <header className="sticky top-0">
       <nav className="h-16 flex justify-between items-center px-6 border-slate-200 border-b-[1px] bg-white">
-        <div className={cn(textStyles.logo, "text-slate-700")}>
-          {result.session ? <Link href="/home">clubmemo</Link> : "clubmemo"}
+        <span className={cn(textStyles.logo, "text-slate-700")}>
+          <Suspense fallback="clubmemo">
+            <NavbarTitle />
+          </Suspense>
+        </span>
+
+        <div className="flex items-center space-x-8">
+          <Suspense>
+            <NavbarLinksSection />
+          </Suspense>
+          <Suspense>
+            <UserSection />
+          </Suspense>
         </div>
-        <UserSection />
       </nav>
     </header>
   );
+}
+
+async function NavbarTitle() {
+  const result = await checkSessionProvider();
+  return result.session ? <Link href="/home">clubmemo</Link> : "clubmemo";
 }
 
 async function UserSection() {
