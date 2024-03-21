@@ -11,6 +11,8 @@
     "vivaxy.vscode-conventional-commits",
     "sleistner.vscode-fileutils",
     "bierner.github-markdown-preview",
-    "vitest.explorer"
+    "vitest.explorer",
+    "ms-playwright.playwright",
+    "github.vscode-github-actions"
   ]
 }
