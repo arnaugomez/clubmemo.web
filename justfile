@@ -28,7 +28,12 @@ setup:
     just install
     just install-git-hooks
 
+# Run unit tests
 test:
     ./nvm-exec.sh pnpm test
+
+# Run end-to-end tests
+e2e *args:
+    ./nvm-exec.sh pnpm exec playwright test {{ args }}
 
 alias i := install
