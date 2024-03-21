@@ -7,5 +7,7 @@ export const textStyles = {
   p: "text-base font-normal leading-7",
   base: "text-base font-normal",
   lead: "text-xl text-muted-foreground",
+  large: "text-lg font-semibold",
+  small: "text-sm font-medium leading-none",
   muted: "text-sm text-muted-foreground",
 };
