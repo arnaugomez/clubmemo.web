@@ -21,9 +21,4 @@ export function NavbarUserSection() {
       <span className="sr-only">Página de perfil</span>
     </Link>
   );
-  // return (
-  //   <AsyncButton onClick={() => logoutAction()} variant="outline">
-  //     Logout
-  //   </AsyncButton>
-  // );
 }
