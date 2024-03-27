@@ -37,7 +37,7 @@ function SettingsPageLoaded({ user }: SettingsPageLoadedProps) {
           <div className="h-12" />
           <SettingsChangePasswordSection />
           <div className="h-12" />
-          <SettingsDeleteUserSection />
+          <SettingsDeleteUserSection email={user.email} />
         </div>
       </div>
     </main>

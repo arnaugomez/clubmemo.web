@@ -7,7 +7,6 @@ import {
   UserDoesNotExistError,
 } from "@/src/core/auth/domain/errors/auth-errors";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
-import { redirect } from "next/navigation";
 import { fetchSession } from "../../auth/fetch/fetch-session";
 
 interface DeleteUserActionModel {
@@ -19,13 +18,6 @@ export async function deleteUserAction(data: DeleteUserActionModel) {
   try {
     const { user } = await fetchSession();
     if (!user) throw new UserDoesNotExistError();
-    const userId = user.id;
-
-    await locator.AuthService().checkPasswordIsCorrect({
-      userId,
-      password: data.password,
-    });
-
     if (data.confirmation != user.email)
       return ActionResponse.formError({
         name: "confirmation",
@@ -33,8 +25,14 @@ export async function deleteUserAction(data: DeleteUserActionModel) {
         type: "invalidConfirmation",
       });
 
-    const deleteUserUseCase = await authLocator.DeleteUserUseCase();
+    const userId = user.id;
 
+    await locator.AuthService().checkPasswordIsCorrect({
+      userId,
+      password: data.password,
+    });
+
+    const deleteUserUseCase = await authLocator.DeleteUserUseCase();
     await deleteUserUseCase.execute(userId);
   } catch (e) {
     if (e instanceof UserDoesNotExistError) {
@@ -51,5 +49,4 @@ export async function deleteUserAction(data: DeleteUserActionModel) {
       return ActionResponse.formGlobalError("general");
     }
   }
-  redirect(`/`);
 }
