@@ -1,10 +1,10 @@
-import { Document } from "mongodb";
+import { Collection, Document } from "mongodb";
 
 export type CollectionType<TSchema extends Document = Document> = {
   name: string;
-  tschema?: TSchema;
+  type: Collection<TSchema>;
 };
 
 export const collection = <TSchema extends Document = Document>(
   name: string,
-): CollectionType<TSchema> => ({ name });
+): CollectionType<TSchema> => ({ name }) as CollectionType<TSchema>;

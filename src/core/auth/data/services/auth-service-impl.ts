@@ -16,6 +16,7 @@ import {
 } from "../../domain/errors/auth-errors";
 import {
   AuthService,
+  CheckPasswordModel,
   LoginWithPasswordModel,
   SignupWithPasswordModel,
   SignupWithPasswordResultModel,
@@ -184,6 +185,23 @@ export class AuthServiceImpl implements AuthService {
       { _id: new ObjectId(userId) },
       { $set: { hashed_password } },
     );
+  }
+
+  async checkPasswordIsCorrect(input: CheckPasswordModel): Promise<void> {
+    const existingUser = await this.usersCollection.findOne({
+      _id: new ObjectId(input.userId),
+    });
+    if (!existingUser) {
+      throw new UserDoesNotExistError();
+    }
+
+    const passwordIsCorrect = await this.passwordHashingAlgorithm.verify(
+      existingUser.hashed_password,
+      input.password,
+    );
+    if (!passwordIsCorrect) {
+      throw new IncorrectPasswordError();
+    }
   }
 
   private get passwordHashingAlgorithm(): PasswordHashingAlgorithm {
