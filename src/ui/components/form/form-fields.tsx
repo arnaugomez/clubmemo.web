@@ -18,6 +18,7 @@ interface InputFormFieldProps {
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
   autoComplete?: HTMLInputAutoCompleteAttribute;
+  onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void;
 }
 
 export function InputFormField({
@@ -26,6 +27,7 @@ export function InputFormField({
   placeholder,
   type,
   autoComplete,
+  onPaste,
 }: InputFormFieldProps) {
   return (
     <FormField
@@ -38,6 +40,7 @@ export function InputFormField({
               type={type}
               placeholder={placeholder}
               autoComplete={autoComplete}
+              onPaste={onPaste}
               {...field}
             />
           </FormControl>

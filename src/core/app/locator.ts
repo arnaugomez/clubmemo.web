@@ -1,4 +1,4 @@
-import singleton from "memoize-one";
+import memoizeOne from "memoize-one";
 import { AuthServiceImpl } from "../auth/data/services/auth-service-impl";
 import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
@@ -11,8 +11,8 @@ import { EmailService } from "./domain/interfaces/email-service";
 import { EnvService } from "./domain/interfaces/env-service";
 import { MongoService } from "./domain/interfaces/mongo-service";
 
-type Dependency<T> = () => T;
-type Lazy<T> = () => Promise<T>;
+export type Dependency<T> = () => T;
+export type Lazy<T> = () => Promise<T>;
 
 interface Locator {
   EnvService: Dependency<EnvService>;
@@ -25,6 +25,8 @@ interface Locator {
   UsersRepository: Lazy<UsersRepository>;
   ProfilesRepository: Lazy<ProfilesRepository>;
 }
+
+export const singleton = memoizeOne;
 
 /**
  * A simple service locator for dependency injection.
