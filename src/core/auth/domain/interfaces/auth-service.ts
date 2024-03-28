@@ -50,4 +50,6 @@ export interface AuthService {
   updatePassword(input: UpdatePasswordModel): Promise<void>;
 
   checkPasswordIsCorrect(input: CheckPasswordModel): Promise<void>;
+
+  resetSessions(userId: string): Promise<Cookie>;
 }

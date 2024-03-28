@@ -155,7 +155,7 @@ export class AuthServiceImpl implements AuthService {
     });
     const userId = result.insertedId;
 
-    const session = await this.lucia.createSession(result.insertedId, {});
+    const session = await this.lucia.createSession(userId, {});
     const sessionCookie = this.lucia.createSessionCookie(session.id);
     return {
       userId: userId.toString(),
@@ -170,10 +170,7 @@ export class AuthServiceImpl implements AuthService {
       { $set: { isEmailVerified: true } },
     );
 
-    await this.lucia.invalidateUserSessions(_id);
-    const session = await this.lucia.createSession(_id, {});
-
-    return this.lucia.createSessionCookie(session.id);
+    return this.resetSessions(userId);
   }
 
   async updatePassword({
@@ -202,6 +199,13 @@ export class AuthServiceImpl implements AuthService {
     if (!passwordIsCorrect) {
       throw new IncorrectPasswordError();
     }
+  }
+
+  async resetSessions(userId: string): Promise<Cookie> {
+    const _id = new ObjectId(userId);
+    await this.lucia.invalidateUserSessions(_id);
+    const session = await this.lucia.createSession(_id, {});
+    return this.lucia.createSessionCookie(session.id);
   }
 
   private get passwordHashingAlgorithm(): PasswordHashingAlgorithm {
