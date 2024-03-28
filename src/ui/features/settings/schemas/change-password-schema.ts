@@ -2,12 +2,11 @@ import { z } from "zod";
 
 export const ChangePasswordSchema = z
   .object({
-    password: z.string(),
-    newPassword: z.string().min(8).max(256),
-    repeatNewPassword: z.string(),
+    password: z.string().min(8).max(256),
+    repeatPassword: z.string(),
   })
-  .superRefine(({ newPassword, repeatNewPassword }, ctx) => {
-    if (newPassword !== repeatNewPassword) {
+  .superRefine(({ password, repeatPassword }, ctx) => {
+    if (password !== repeatPassword) {
       ctx.addIssue({
         path: ["repeatNewPassword"],
         code: "custom",
