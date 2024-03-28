@@ -6,6 +6,7 @@ interface ProfileModelData {
   bio?: string;
   picture?: string;
   backgroundPicture?: string;
+  isPublic: boolean;
 }
 
 export class ProfileModel {
@@ -31,5 +32,8 @@ export class ProfileModel {
   }
   get backgroundPicture() {
     return this.data.backgroundPicture;
+  }
+  get isPublic() {
+    return this.data.isPublic;
   }
 }
