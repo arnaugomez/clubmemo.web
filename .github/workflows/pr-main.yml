@@ -6,14 +6,14 @@ jobs:
   test:
     name: Checks
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: Git checkout
         uses: actions/checkout@v4
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Install dependencies with pnpm
         run: |
