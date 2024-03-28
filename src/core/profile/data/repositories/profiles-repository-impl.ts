@@ -13,7 +13,6 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
   constructor(mongoService: MongoService) {
     this.collection = mongoService.collection(profilesCollection);
   }
-
   async create(userId: string): Promise<void> {
     await this.collection.insertOne({ userId: new ObjectId(userId) });
   }
@@ -24,6 +23,16 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
 
   async getByUserId(userId: string): Promise<ProfileModel | null> {
     const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
+    return doc && new ProfileDocTransformer(doc).toDomain();
+  }
+
+  async get(id: string): Promise<ProfileModel | null> {
+    const doc = await this.collection.findOne({ _id: new ObjectId(id) });
+    return doc && new ProfileDocTransformer(doc).toDomain();
+  }
+
+  async getByHandle(handle: string): Promise<ProfileModel | null> {
+    const doc = await this.collection.findOne({ handle });
     return doc && new ProfileDocTransformer(doc).toDomain();
   }
 }
