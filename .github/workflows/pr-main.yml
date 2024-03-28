@@ -1,0 +1,33 @@
+name: Run CI checks before PR to main branch
+on:
+  pull_request:
+    branches: ["main"]
+jobs:
+  test:
+    name: Checks
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Git checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies with pnpm
+        run: |
+          corepack enable
+          pnpm i
+
+      - name: Check types with TypeScript
+        run: pnpm check-types
+
+      - name: Lint with ESLint
+        run: pnpm lint
+
+      - name: Check format with Prettier
+        run: pnpm check-format
+
+      - name: Run unit tests with Vitest
+        run: pnpm test:unit
