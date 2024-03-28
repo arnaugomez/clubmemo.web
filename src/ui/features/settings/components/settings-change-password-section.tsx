@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { changePasswordAction } from "../actions/change-password-action";
 import { ChangePasswordSchema } from "../schemas/change-password-schema";
@@ -52,7 +53,8 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
     resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
       password: "",
-      repeatPassword: "",
+      newPassword: "",
+      repeatNewPassword: "",
     },
   });
 
@@ -62,7 +64,7 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
         router.push("/home");
-        // TODO: show success alert
+        toast.success("Contraseña cambiada con éxito");
       }
       handler.setErrors();
     } catch (error) {
@@ -90,15 +92,22 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
           <form onSubmit={onSubmit}>
             <div>
               <PasswordInputFormField
-                label="Nueva contraseña"
+                label="Tu contraseña actual"
                 name="password"
+                placeholder="Tu contraseña"
+                autoComplete="current-password"
+              />
+              <div className="h-4" />
+              <PasswordInputFormField
+                label="Nueva contraseña"
+                name="newPassword"
                 placeholder="Tu nueva contraseña"
                 autoComplete="new-password"
               />
               <div className="h-4" />
               <PasswordInputFormField
                 label="Repetir contraseña"
-                name="repeatPassword"
+                name="repeatNewPassword"
                 placeholder="Tu nueva contraseña"
                 autoComplete="new-password"
               />

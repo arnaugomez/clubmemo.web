@@ -15,7 +15,7 @@ export async function changePasswordAction(
   data: z.infer<typeof ChangePasswordSchema>,
 ) {
   try {
-    const { password } = ChangePasswordSchema.parse(data);
+    const parsed = ChangePasswordSchema.parse(data);
 
     const { user } = await fetchSession();
     if (!user) throw new UserDoesNotExistError();
@@ -24,7 +24,8 @@ export async function changePasswordAction(
     const changePasswordUseCase = await authLocator.ChangePasswordUseCase();
     const sessionCookie = await changePasswordUseCase.execute({
       userId,
-      password,
+      password: parsed.password,
+      newPassword: parsed.newPassword,
     });
 
     cookies().set(
