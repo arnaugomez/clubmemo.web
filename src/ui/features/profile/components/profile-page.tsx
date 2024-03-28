@@ -22,9 +22,14 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
   await privateProfileGuard(profile);
   return (
     <main>
-      <div className="h-40 bg-slate-200">
+      <div className="h-40 bg-slate-200 relative">
         {profile.backgroundPicture && (
-          <Image src={profile.backgroundPicture} alt="" className="h-40" />
+          <Image
+            fill={true}
+            src={profile.backgroundPicture}
+            alt=""
+            className="object-cover"
+          />
         )}
       </div>
       <div className="px-4">
