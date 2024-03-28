@@ -107,7 +107,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       >
         <DialogHeader>
           <DialogTitle>
-            Estás seguro que quieres eliminar tu usuario?
+            ¿Estás seguro que quieres eliminar tu cuenta?
           </DialogTitle>
           <DialogDescription>
             Esto eliminará todos los datos asociados a tu usuario {email},

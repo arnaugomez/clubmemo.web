@@ -18,10 +18,7 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
 
   const emailVerificationCodesRepository =
     await locator.EmailVerificationCodesRepository();
-  const isValid = await emailVerificationCodesRepository.verify(
-    user.id.toString(),
-    code,
-  );
+  const isValid = await emailVerificationCodesRepository.verify(user.id, code);
   if (!isValid) {
     return ActionResponse.formError({
       name: "code",
@@ -30,9 +27,7 @@ export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
     });
   }
 
-  const sessionCookie = await locator
-    .AuthService()
-    .verifyEmail(user.id.toString());
+  const sessionCookie = await locator.AuthService().verifyEmail(user.id);
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
