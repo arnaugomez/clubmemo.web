@@ -24,7 +24,7 @@ async function resetPasswordPageGuard(searchParams: SearchParams) {
   if (forgotPasswordCode.hasExpired) notFound();
 
   const isValid = await forgotPasswordTokensRepository.validate(
-    user.id.toString(),
+    user.id,
     searchParams.token,
   );
 
