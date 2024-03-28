@@ -5,6 +5,7 @@
   },
   "git.commandsToLog": ["push"],
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "conventionalCommits.gitmoji": false,
   "conventionalCommits.promptFooter": false,
   "conventionalCommits.promptBody": false
 }
