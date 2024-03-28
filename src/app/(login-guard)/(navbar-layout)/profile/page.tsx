@@ -10,6 +10,6 @@ export default async function MyProfilePage() {
   const profile = await profilesRepository.getByUserId(user.id);
   if (!profile) notFound();
   if (profile.handle)
-    redirect(`/profiles/${profile.handle}`, RedirectType.replace);
-  return redirect(`/profiles/id/${profile.id}`, RedirectType.replace);
+    redirect(`/profile/${profile.handle}`, RedirectType.replace);
+  return redirect(`/profile/id/${profile.id}`, RedirectType.replace);
 }

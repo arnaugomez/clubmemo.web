@@ -9,9 +9,8 @@ export default async function ProfileByIdPage({
 }) {
   const profilesRepository = await locator.ProfilesRepository();
   const profile = await profilesRepository.get(id);
-  console.log(profile);
   if (!profile) notFound();
   if (profile.handle)
-    redirect(`/profiles/${profile.handle}`, RedirectType.replace);
+    redirect(`/profile/${profile.handle}`, RedirectType.replace);
   return <ProfilePage profile={profile} />;
 }
