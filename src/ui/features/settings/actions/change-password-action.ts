@@ -12,7 +12,7 @@ import { fetchSession } from "../../auth/fetch/fetch-session";
 import { ChangePasswordSchema } from "../schemas/change-password-schema";
 
 export async function changePasswordAction(
-  data: z.infer<typeof ChangePasswordSchema>
+  data: z.infer<typeof ChangePasswordSchema>,
 ) {
   try {
     const { password } = ChangePasswordSchema.parse(data);
@@ -30,7 +30,7 @@ export async function changePasswordAction(
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes
+      sessionCookie.attributes,
     );
   } catch (e) {
     if (e instanceof UserDoesNotExistError) {
