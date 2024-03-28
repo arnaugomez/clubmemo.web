@@ -12,10 +12,10 @@ import { fetchSession } from "../../auth/fetch/fetch-session";
 import { ChangePasswordSchema } from "../schemas/change-password-schema";
 
 export async function changePasswordAction(
-  data: z.infer<typeof ChangePasswordSchema>,
+  data: z.infer<typeof ChangePasswordSchema>
 ) {
   try {
-    const parsed = ChangePasswordSchema.parse(data);
+    const { password } = ChangePasswordSchema.parse(data);
 
     const { user } = await fetchSession();
     if (!user) throw new UserDoesNotExistError();
@@ -24,14 +24,13 @@ export async function changePasswordAction(
     const changePasswordUseCase = await authLocator.ChangePasswordUseCase();
     const sessionCookie = await changePasswordUseCase.execute({
       userId,
-      password: parsed.password,
-      newPassword: parsed.newPassword,
+      password,
     });
 
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes,
+      sessionCookie.attributes
     );
   } catch (e) {
     if (e instanceof UserDoesNotExistError) {

@@ -16,6 +16,7 @@ import {
 import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -28,7 +29,7 @@ export function SettingsChangePasswordSection() {
   return (
     <>
       <SettingsSectionTitle>Mis credenciales</SettingsSectionTitle>
-      <AsyncButton onClick={() => {}} variant="secondary">
+      <AsyncButton onClick={() => setIsDialogOpen(true)} variant="secondary">
         Cambiar contraseña
       </AsyncButton>
       {isDialogOpen && (
@@ -45,12 +46,13 @@ interface ChangePasswordDialogProps {
 type FormValues = z.infer<typeof ChangePasswordSchema>;
 
 function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
+  const router = useRouter();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
       password: "",
-      newPassword: "",
-      repeatNewPassword: "",
+      repeatPassword: "",
     },
   });
 
@@ -59,8 +61,8 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
       const response = await changePasswordAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
-        onClose();
-        // TODO: Show success message
+        router.push("/home");
+        // TODO: show success alert
       }
       handler.setErrors();
     } catch (error) {
@@ -81,28 +83,22 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
           <DialogTitle>Cambiar contraseña</DialogTitle>
           <DialogDescription>
             Elige una contraseña segura para proteger tu cuenta. El cambio de
-            contraseña cerrará la sesión en el resto de dispositivos.
+            contraseña cerrará la sesión en todos los dispositivos.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>
               <PasswordInputFormField
-                label="Contraseña actual"
-                name="password"
-                placeholder="Tu contraseña"
-                autoComplete="current-password"
-              />
-              <div className="h-4" />
-              <PasswordInputFormField
                 label="Nueva contraseña"
                 name="password"
                 placeholder="Tu nueva contraseña"
                 autoComplete="new-password"
               />
+              <div className="h-4" />
               <PasswordInputFormField
                 label="Repetir contraseña"
-                name="password"
+                name="repeatPassword"
                 placeholder="Tu nueva contraseña"
                 autoComplete="new-password"
               />
