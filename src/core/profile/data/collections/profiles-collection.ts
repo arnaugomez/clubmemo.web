@@ -9,6 +9,7 @@ export interface ProfileDoc {
   bio?: string;
   picture?: string;
   backgroundPicture?: string;
+  isPublic: boolean;
 }
 
 export const profilesCollection = collection<ProfileDoc>("profiles");
@@ -25,6 +26,7 @@ export class ProfileDocTransformer {
       bio: this.doc.bio,
       picture: this.doc.picture,
       backgroundPicture: this.doc.backgroundPicture,
+      isPublic: this.doc.isPublic,
     });
   }
 }

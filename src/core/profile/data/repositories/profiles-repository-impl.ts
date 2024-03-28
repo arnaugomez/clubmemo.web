@@ -14,7 +14,10 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
     this.collection = mongoService.collection(profilesCollection);
   }
   async create(userId: string): Promise<void> {
-    await this.collection.insertOne({ userId: new ObjectId(userId) });
+    await this.collection.insertOne({
+      userId: new ObjectId(userId),
+      isPublic: false,
+    });
   }
 
   async deleteByUserId(userId: string): Promise<void> {
