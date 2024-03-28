@@ -30,7 +30,7 @@ setup:
 
 # Run unit tests
 test:
-    ./nvm-exec.sh pnpm test
+    ./nvm-exec.sh pnpm test:unit
 
 # Run end-to-end tests
 e2e *args:
