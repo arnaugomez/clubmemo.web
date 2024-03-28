@@ -11,7 +11,7 @@
     "format": "prettier . -w --check",
     "check-format": "prettier . --check",
     "check-types": "tsc --noEmit",
-    "test": "vitest"
+    "test:unit": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
