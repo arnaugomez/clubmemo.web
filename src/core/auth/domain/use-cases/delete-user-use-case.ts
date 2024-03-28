@@ -4,9 +4,9 @@ import { UsersRepository } from "../interfaces/users-repository";
 
 export class DeleteUserUseCase {
   constructor(
-    private authService: AuthService,
-    private usersRepository: UsersRepository,
-    private profilesRepository: ProfilesRepository,
+    private readonly authService: AuthService,
+    private readonly usersRepository: UsersRepository,
+    private readonly profilesRepository: ProfilesRepository,
   ) {}
 
   async execute(userId: string): Promise<void> {

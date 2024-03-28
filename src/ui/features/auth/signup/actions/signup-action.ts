@@ -13,13 +13,11 @@ export async function signupAction(data: SignupWithPasswordModel) {
       await authService.signupWithPassword(data);
 
     const profilesRepository = await locator.ProfilesRepository();
-    await profilesRepository.create(userId.toString());
+    await profilesRepository.create(userId);
 
     const emailVerificationCodesRepository =
       await locator.EmailVerificationCodesRepository();
-    const { code } = await emailVerificationCodesRepository.generate(
-      userId.toString(),
-    );
+    const { code } = await emailVerificationCodesRepository.generate(userId);
 
     const emailService = await locator.EmailService();
     await emailService.sendVerificationCode(data.email, code);
