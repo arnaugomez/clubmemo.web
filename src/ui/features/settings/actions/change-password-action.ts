@@ -45,7 +45,7 @@ export async function changePasswordAction(
       });
     } else {
       // TODO: handle ZodError
-      console.log(e);
+      console.error(e);
       return ActionResponse.formGlobalError("general");
     }
   }

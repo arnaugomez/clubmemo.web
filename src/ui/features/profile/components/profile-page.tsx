@@ -7,11 +7,12 @@ import {
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { Edit2, LinkIcon, Settings, User } from "lucide-react";
+import { LinkIcon, Settings, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { fetchSession } from "../../auth/fetch/fetch-session";
+import { EditProfileSection } from "../edit/components/edit-profile-section";
 import { privateProfileGuard } from "../guards/private-profile-guard";
 
 interface ProfilePageProps {
@@ -96,9 +97,7 @@ async function ProfileButtonsSection({ profile }: ProfilePageProps) {
           <span className="sr-only">Ajustes</span>
         </Link>
       </Button>
-      <Button variant="secondary">
-        <Edit2 className="size-4 mr-3" /> Editar
-      </Button>
+      <EditProfileSection profileData={profile.data} />
     </div>
   );
 }
