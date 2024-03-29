@@ -1,3 +1,4 @@
+"use server";
 import { locator } from "@/src/core/app/locator";
 import { UserDoesNotExistError } from "@/src/core/auth/domain/errors/auth-errors";
 import {
