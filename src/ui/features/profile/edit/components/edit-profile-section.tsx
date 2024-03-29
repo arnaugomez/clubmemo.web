@@ -4,7 +4,11 @@ import {
   ProfileModel,
   ProfileModelData,
 } from "@/src/core/profile/domain/models/profile-model";
-import { PasswordInputFormField } from "@/src/ui/components/form/form-fields";
+import {
+  InputFormField,
+  SwitchSectionFormField,
+  TextareaFormField,
+} from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
@@ -23,8 +27,7 @@ import { Edit2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { changePasswordAction } from "../../../settings/actions/change-password-action";
-import { ChangePasswordSchema } from "../../../settings/schemas/change-password-schema";
+import { editProfileAction } from "../actions/edit-profile-action";
 
 interface EditProfileSectionProps {
   profileData: ProfileModelData;
@@ -50,23 +53,37 @@ interface EditProfileDialogProps {
   onClose: () => void;
 }
 
-type FormValues = z.infer<typeof ChangePasswordSchema>;
+const EditProfileSchema = z.object({
+  displayName: z.string().trim().min(1).max(50),
+  handle: z
+    .string()
+    .min(1)
+    .max(15)
+    .regex(/^[a-zA-Z0-9_]+$/),
+  bio: z.string().max(160),
+  website: z.string().url().max(2083),
+  isPublic: z.boolean(),
+});
+
+type FormValues = z.infer<typeof EditProfileSchema>;
 
 function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
   console.log(profile);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(ChangePasswordSchema),
+    resolver: zodResolver(EditProfileSchema),
     defaultValues: {
-      password: "",
-      newPassword: "",
-      repeatNewPassword: "",
+      displayName: profile.displayName,
+      handle: profile.handle,
+      bio: profile.bio,
+      website: profile.website,
+      isPublic: profile.isPublic,
     },
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      const response = await changePasswordAction(data);
+      const response = await editProfileAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
         // TODO: refresh data
@@ -88,36 +105,48 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
         className="sm:max-w-xl"
       >
         <DialogHeader>
-          <DialogTitle>Cambiar contraseña</DialogTitle>
+          <DialogTitle>Editar perfil</DialogTitle>
           <DialogDescription>
-            Elige una contraseña segura para proteger tu cuenta. El cambio de
-            contraseña cerrará la sesión en todos los dispositivos.
+            Edita los datos de tu perfil para personalizar tu experiencia y
+            hacer que otros usuarios puedan encontrarte y conocerte mejor.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <div>
-              <PasswordInputFormField
-                label="Tu contraseña actual"
-                name="password"
-                placeholder="Tu contraseña"
-                autoComplete="current-password"
+              <InputFormField
+                label="Nombre de usuario"
+                name="displayName"
+                placeholder="Tu nombre de usuario"
+                autoComplete="username"
               />
               <div className="h-4" />
-              <PasswordInputFormField
-                label="Nueva contraseña"
-                name="newPassword"
-                placeholder="Tu nueva contraseña"
-                autoComplete="new-password"
+              <InputFormField
+                label="Identificador"
+                name="handle"
+                placeholder="Tu identificador, como en X o Instagram"
+                autoComplete="nickname"
               />
               <div className="h-4" />
-              <PasswordInputFormField
-                label="Repetir contraseña"
-                name="repeatNewPassword"
-                placeholder="Tu nueva contraseña"
-                autoComplete="new-password"
+              <SwitchSectionFormField
+                name="isPublic"
+                label="Perfil público"
+                description="Haz que tu perfil sea visible para otros usuarios"
+              />
+              <div className="h-4" />
+              <TextareaFormField
+                label="Bio"
+                name="bio"
+                placeholder="Cuéntanos algo sobre ti"
               />
               <FormGlobalErrorMessage />
+              <div className="h-4" />
+              <InputFormField
+                label="Página web"
+                name="website"
+                placeholder="Enlace a tu página web o redes sociales"
+                autoComplete="nickname"
+              />
             </div>
             <div className="h-6" />
             <DialogFooter>
