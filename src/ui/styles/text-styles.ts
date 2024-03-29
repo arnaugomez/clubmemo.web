@@ -10,4 +10,5 @@ export const textStyles = {
   large: "text-lg font-semibold",
   small: "text-sm font-medium leading-none",
   muted: "text-sm text-muted-foreground",
+  mutedLink: "text-sm text-muted-foreground hover:text-slate-700",
 };
