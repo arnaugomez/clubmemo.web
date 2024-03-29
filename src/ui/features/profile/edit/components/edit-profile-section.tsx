@@ -24,8 +24,10 @@ import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { editProfileAction } from "../actions/edit-profile-action";
 
@@ -60,23 +62,23 @@ const EditProfileSchema = z.object({
     .min(1)
     .max(15)
     .regex(/^[a-zA-Z0-9_]+$/),
-  bio: z.string().max(160),
-  website: z.string().url().max(2083),
+  bio: z.string().trim().min(0).max(255),
+  website: z.string().url().max(2083).or(z.string().max(0)),
   isPublic: z.boolean(),
 });
 
 type FormValues = z.infer<typeof EditProfileSchema>;
 
 function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
-  console.log(profile);
+  const router = useRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(EditProfileSchema),
     defaultValues: {
-      displayName: profile.displayName,
-      handle: profile.handle,
-      bio: profile.bio,
-      website: profile.website,
+      displayName: profile.displayName ?? "",
+      handle: profile.handle ?? "",
+      bio: profile.bio ?? "",
+      website: profile.website ?? "",
       isPublic: profile.isPublic,
     },
   });
@@ -86,7 +88,10 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       const response = await editProfileAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
-        // TODO: refresh data
+        toast.success("Tu perfil ha sido actualizado");
+        if (data.handle !== profile.handle) {
+          router.push(`/profile/${data.handle}`);
+        }
         onClose();
       }
       handler.setErrors();
@@ -100,10 +105,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
 
   return (
     <Dialog open>
-      <DialogContent
-        onClose={isSubmitting ? undefined : onClose}
-        className="sm:max-w-xl"
-      >
+      <DialogContent onClose={isSubmitting ? undefined : onClose}>
         <DialogHeader>
           <DialogTitle>Editar perfil</DialogTitle>
           <DialogDescription>

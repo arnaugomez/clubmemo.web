@@ -60,21 +60,19 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
             {profile.handle ? <>@{profile.handle}</> : "Sin identificador"}
           </p>
           {profile.bio && (
-            <p className={cn(textStyles.p, "pt-2")}>{profile.bio}</p>
+            <p className={cn(textStyles.p, "pt-6 whitespace-pre-line")}>
+              {profile.bio}
+            </p>
           )}
           {/* TODO: wrap into reusable link component */}
           {profile.website && (
             <a
               href={profile.website}
-              className="pt-2 flex text-muted-foreground underline hover:text-slate-900 items-center"
+              className="pt-4 flex text-muted-foreground underline hover:text-slate-900 items-center max-w-xs"
             >
               <LinkIcon className="size-4 mr-2 flex-none" />
               <span className="text-sm truncate">
-                {profile.website} Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Ea facere accusantium omnis dolorem cumque
-                animi eveniet, delectus suscipit officiis. Corrupti quod saepe
-                vero perspiciatis eveniet ut voluptas? Inventore, repellendus
-                dolore.
+                {profile.website.replace(/(^\w+:|^)\/\//, "")}
               </span>
             </a>
           )}
@@ -91,9 +89,14 @@ async function ProfileButtonsSection({ profile }: ProfilePageProps) {
   }
   return (
     <div className="flex space-x-4 items-end">
-      <Button variant="ghost" size="icon" asChild>
+      <Button
+        className="group text-slate-500 hover:text-slate-900"
+        variant="ghost"
+        size="icon"
+        asChild
+      >
         <Link href="/settings">
-          <Settings />
+          <Settings className="group-hover:animate-spin" />
           <span className="sr-only">Ajustes</span>
         </Link>
       </Button>
