@@ -101,10 +101,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
 
   return (
     <Dialog open>
-      <DialogContent
-        onClose={isSubmitting ? undefined : onClose}
-        className="sm:max-w-xl"
-      >
+      <DialogContent onClose={isSubmitting ? undefined : onClose}>
         <DialogHeader>
           <DialogTitle>
             ¿Estás seguro que quieres eliminar tu cuenta?

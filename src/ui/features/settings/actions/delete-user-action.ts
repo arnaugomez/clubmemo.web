@@ -45,7 +45,8 @@ export async function deleteUserAction(data: DeleteUserActionModel) {
         type: "invalidCredentials",
       });
     } else {
-      console.log(e);
+      // TODO: log error report
+      console.error(e);
       return ActionResponse.formGlobalError("general");
     }
   }
