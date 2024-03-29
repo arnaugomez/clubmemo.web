@@ -1,3 +1,4 @@
+import { EditProfileInputModel } from "../models/edit-profile-input-model";
 import { ProfileModel } from "../models/profile-model";
 
 export interface ProfilesRepository {
@@ -10,4 +11,6 @@ export interface ProfilesRepository {
   get(id: string): Promise<ProfileModel | null>;
 
   getByHandle(handle: string): Promise<ProfileModel | null>;
+
+  update(input: EditProfileInputModel): Promise<void>;
 }
