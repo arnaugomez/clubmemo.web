@@ -1,4 +1,4 @@
-interface ProfileModelData {
+export interface ProfileModelData {
   id: string;
   userId: string;
   displayName?: string;
@@ -11,7 +11,7 @@ interface ProfileModelData {
 }
 
 export class ProfileModel {
-  constructor(private readonly data: ProfileModelData) {}
+  constructor(readonly data: ProfileModelData) {}
 
   get id() {
     return this.data.id;
