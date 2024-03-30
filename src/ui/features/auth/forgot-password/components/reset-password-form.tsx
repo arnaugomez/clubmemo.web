@@ -1,6 +1,6 @@
 "use client";
 
-import { InputFormField } from "@/src/ui/components/form/form-fields";
+import { PasswordInputFormField } from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
@@ -16,6 +16,7 @@ import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,7 +24,7 @@ import { resetPasswordAction } from "../actions/reset-password-action";
 
 const FormSchema = z
   .object({
-    password: z.string().min(8),
+    password: z.string().min(8).max(256),
     repeatPassword: z.string(),
   })
   .superRefine(({ password, repeatPassword }, ctx) => {
@@ -71,19 +72,17 @@ export function ResetPasswordForm({ email }: Props) {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <InputFormField
+          <PasswordInputFormField
             label="Contraseña"
             name="password"
             placeholder="Tu nueva contraseña"
-            type="password"
             autoComplete="new-password"
           />
 
-          <InputFormField
+          <PasswordInputFormField
             label="Repetir contraseña"
             name="repeatPassword"
             placeholder="Repite tu nueva contraseña"
-            type="password"
             autoComplete="new-password"
           />
 
@@ -105,9 +104,13 @@ interface ConfirmDialogProps {
   email: string;
 }
 export function ConfirmDialog({ email }: ConfirmDialogProps) {
+  const router = useRouter();
   return (
     <Dialog open>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        onClose={() => router.push("/auth/login")}
+        className="sm:max-w-[425px]"
+      >
         <DialogHeader>
           <DialogTitle>Contraseña modificada</DialogTitle>
           <DialogDescription>

@@ -20,7 +20,6 @@ export async function loginAction(data: LoginWithPasswordModel) {
       sessionCookie.attributes,
     );
   } catch (e) {
-    console.log(e);
     if (
       e instanceof UserDoesNotExistError ||
       e instanceof IncorrectPasswordError
@@ -32,6 +31,8 @@ export async function loginAction(data: LoginWithPasswordModel) {
         type: "invalidCredentials",
       });
     } else {
+      // TODO: Log error
+      console.error(e);
       return ActionResponse.formGlobalError("general");
     }
   }

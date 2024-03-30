@@ -7,6 +7,16 @@
       "label": "fix",
       "type": "shell",
       "command": "just fix"
+    },
+    {
+      "label": "dev",
+      "type": "shell",
+      "command": "just dev"
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "just test"
     }
   ]
 }

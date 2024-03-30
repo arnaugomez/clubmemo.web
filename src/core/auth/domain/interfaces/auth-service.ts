@@ -21,6 +21,11 @@ export interface UpdatePasswordModel {
   password: string;
 }
 
+export interface CheckPasswordModel {
+  userId: string;
+  password: string;
+}
+
 export interface AuthService {
   validateSession(sessionId: string): Promise<CheckSessionModel>;
 
@@ -43,4 +48,8 @@ export interface AuthService {
   verifyEmail(userId: string): Promise<Cookie>;
 
   updatePassword(input: UpdatePasswordModel): Promise<void>;
+
+  checkPasswordIsCorrect(input: CheckPasswordModel): Promise<void>;
+
+  resetSessions(userId: string): Promise<Cookie>;
 }

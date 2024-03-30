@@ -16,6 +16,7 @@ import {
 } from "../../domain/errors/auth-errors";
 import {
   AuthService,
+  CheckPasswordModel,
   LoginWithPasswordModel,
   SignupWithPasswordModel,
   SignupWithPasswordResultModel,
@@ -154,7 +155,7 @@ export class AuthServiceImpl implements AuthService {
     });
     const userId = result.insertedId;
 
-    const session = await this.lucia.createSession(result.insertedId, {});
+    const session = await this.lucia.createSession(userId, {});
     const sessionCookie = this.lucia.createSessionCookie(session.id);
     return {
       userId: userId.toString(),
@@ -169,10 +170,7 @@ export class AuthServiceImpl implements AuthService {
       { $set: { isEmailVerified: true } },
     );
 
-    await this.lucia.invalidateUserSessions(_id);
-    const session = await this.lucia.createSession(_id, {});
-
-    return this.lucia.createSessionCookie(session.id);
+    return this.resetSessions(userId);
   }
 
   async updatePassword({
@@ -184,6 +182,30 @@ export class AuthServiceImpl implements AuthService {
       { _id: new ObjectId(userId) },
       { $set: { hashed_password } },
     );
+  }
+
+  async checkPasswordIsCorrect(input: CheckPasswordModel): Promise<void> {
+    const existingUser = await this.usersCollection.findOne({
+      _id: new ObjectId(input.userId),
+    });
+    if (!existingUser) {
+      throw new UserDoesNotExistError();
+    }
+
+    const passwordIsCorrect = await this.passwordHashingAlgorithm.verify(
+      existingUser.hashed_password,
+      input.password,
+    );
+    if (!passwordIsCorrect) {
+      throw new IncorrectPasswordError();
+    }
+  }
+
+  async resetSessions(userId: string): Promise<Cookie> {
+    const _id = new ObjectId(userId);
+    await this.lucia.invalidateUserSessions(_id);
+    const session = await this.lucia.createSession(_id, {});
+    return this.lucia.createSessionCookie(session.id);
   }
 
   private get passwordHashingAlgorithm(): PasswordHashingAlgorithm {

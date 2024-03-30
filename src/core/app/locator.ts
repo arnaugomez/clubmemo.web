@@ -1,4 +1,4 @@
-import singleton from "memoize-one";
+import memoizeOne from "memoize-one";
 import { AuthServiceImpl } from "../auth/data/services/auth-service-impl";
 import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
@@ -10,9 +10,10 @@ import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
 import { EmailService } from "./domain/interfaces/email-service";
 import { EnvService } from "./domain/interfaces/env-service";
 import { MongoService } from "./domain/interfaces/mongo-service";
+import { CoursesRepository } from "../courses/domain/interfaces/courses-repository";
 
-type Dependency<T> = () => T;
-type Lazy<T> = () => Promise<T>;
+export type Dependency<T> = () => T;
+export type Lazy<T> = () => Promise<T>;
 
 interface Locator {
   EnvService: Dependency<EnvService>;
@@ -23,8 +24,13 @@ interface Locator {
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
   ForgotPasswordTokensRepository: Lazy<ForgotPasswordTokensRepository>;
   UsersRepository: Lazy<UsersRepository>;
+  // Profiles
   ProfilesRepository: Lazy<ProfilesRepository>;
+  // Courses
+  CoursesRepository: Lazy<CoursesRepository>;
 }
+
+export const singleton = memoizeOne;
 
 /**
  * A simple service locator for dependency injection.
@@ -71,5 +77,13 @@ export const locator: Locator = {
       "../profile/data/repositories/profiles-repository-impl"
     );
     return new file.ProfilesRepositoryImpl(this.MongoService());
+  },
+
+  // Courses
+  async CoursesRepository() {
+    const file = await import(
+      "../courses/data/repositories/courses-repository-impl"
+    );
+    return new file.CoursesRepositoryImpl(this.MongoService());
   },
 };

@@ -4,14 +4,14 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/src/ui/components/shadcn/ui/alert";
-import { checkSessionProvider } from "@/src/ui/features/auth/providers/check-session-provider";
+import { fetchSession } from "@/src/ui/features/auth/fetch/fetch-session";
 import { VerifyEmailForm } from "@/src/ui/features/auth/verify-email/components/verify-email-form";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { Inbox, MailCheck } from "lucide-react";
 import { redirect } from "next/navigation";
 
 async function verifyEmailGuard() {
-  const result = await checkSessionProvider();
+  const result = await fetchSession();
   if (!result.session) {
     redirect("/auth/login");
   }
@@ -21,13 +21,13 @@ async function verifyEmailGuard() {
 }
 
 async function handleVerificationCodeExpirationDate() {
-  const { user } = await checkSessionProvider();
+  const { user } = await fetchSession();
   if (user == null) throw new Error("User not found");
 
   const repository = await locator.EmailVerificationCodesRepository();
-  const verificationCode = await repository.getByUserId(user.id.toString());
+  const verificationCode = await repository.getByUserId(user.id);
   if (!verificationCode || verificationCode.hasExpired) {
-    const newVerificationCode = await repository.generate(user.id.toString());
+    const newVerificationCode = await repository.generate(user.id);
     const emailService = await locator.EmailService();
     await emailService.sendVerificationCode(
       user.email,
@@ -43,7 +43,7 @@ export default async function VerifyEmailPage() {
 
   const hasExpired = await handleVerificationCodeExpirationDate();
 
-  const { user } = await checkSessionProvider();
+  const { user } = await fetchSession();
 
   return (
     <>

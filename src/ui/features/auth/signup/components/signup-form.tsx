@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { waitMilliseconds } from "@/src/core/app/utils/promises";
-import { InputFormField } from "@/src/ui/components/form/form-fields";
+import {
+  InputFormField,
+  PasswordInputFormField,
+} from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
@@ -16,8 +19,8 @@ import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
 
 const SignupFormSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  email: z.string().email().max(254),
+  password: z.string().min(8).max(256),
 });
 
 export function SignupForm() {
@@ -50,11 +53,10 @@ export function SignupForm() {
           placeholder="Tu correo electrónico"
           autoComplete="email"
         />
-        <InputFormField
+        <PasswordInputFormField
           label="Contraseña"
           name="password"
           placeholder="Tu contraseña"
-          type="password"
           autoComplete="new-password"
         />
         <FormGlobalErrorMessage />
