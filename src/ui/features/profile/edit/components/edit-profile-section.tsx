@@ -141,7 +141,6 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
                 name="bio"
                 placeholder="Cuéntanos algo sobre ti"
               />
-              <FormGlobalErrorMessage />
               <div className="h-4" />
               <InputFormField
                 label="Página web"
@@ -149,6 +148,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
                 placeholder="Enlace a tu página web o redes sociales"
                 autoComplete="nickname"
               />
+              <FormGlobalErrorMessage />
             </div>
             <div className="h-6" />
             <DialogFooter>

@@ -1,5 +1,5 @@
-import { EditProfileInputModel } from "../models/edit-profile-input-model";
 import { ProfileModel } from "../models/profile-model";
+import { UpdateProfileInputModel } from "../models/update-profile-input-model";
 
 export interface ProfilesRepository {
   create(userId: string): Promise<void>;
@@ -12,5 +12,5 @@ export interface ProfilesRepository {
 
   getByHandle(handle: string): Promise<ProfileModel | null>;
 
-  update(input: EditProfileInputModel): Promise<void>;
+  update(input: UpdateProfileInputModel): Promise<void>;
 }

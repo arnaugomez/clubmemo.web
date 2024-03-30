@@ -11,12 +11,12 @@ export default function CourseDetailPage({
   params: { id: string };
 }) {
   return (
-    <div className="size-full overflow-y-auto md:overflow-y-hidden md:flex md:divide-x-[1px] divide-slate-200">
+    <div className="size-full overflow-y-auto md:overflow-y-visible md:flex md:items-stretch md:divide-x-[1px] divide-slate-200">
       <div className="flex-none w-full md:max-w-sm lg:max-w-md xl:max-w-lg md:overflow-y-auto">
         <CourseDetailMainSection id={id} />
       </div>
       {/* TODO: create course detail cards section component */}
-      <div className="flex-1 bg-slate-100 md:overflow-y-auto">
+      <div className="flex-1 min-w-0 bg-slate-100 md:overflow-y-auto">
         <div className="h-16"></div>
         <div className="px-4">
           <div className="mx-auto max-w-prose">
@@ -33,6 +33,7 @@ export default function CourseDetailPage({
             </Link>
           </div>
         </div>
+        <div className="h-16"></div>
       </div>
     </div>
   );

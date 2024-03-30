@@ -1,4 +1,4 @@
-export interface EditProfileInputModel {
+export interface UpdateProfileInputModel {
   id: string;
 
   displayName: string;

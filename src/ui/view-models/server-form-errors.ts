@@ -17,6 +17,8 @@ const globalErrors = {
   general: "Ha ocurrido un error. Inténtalo más tarde.",
   userDoesNotExist: "El usuario no existe.",
   profileDoesNotExist: "El perfil no existe.",
+  courseDoesNotExist: "El curso no existe.",
+  cannotEditCourse: "No tienes permisos para editar este curso.",
   forgotPasswordCodeExpired: "El código de recuperación ha expirado.",
 };
 type GlobalErrorType = keyof typeof globalErrors;

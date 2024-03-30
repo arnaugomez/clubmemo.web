@@ -14,8 +14,8 @@ interface CourseDetailActionsDropdownProps {
 export function CourseDetailActionsDropdown({
   courseData,
 }: CourseDetailActionsDropdownProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const course = new CourseModel(courseData);
-  console.log(course);
   return (
     <>
       <Button variant="outline" size="icon">
