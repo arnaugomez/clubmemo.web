@@ -22,6 +22,7 @@ import {
 import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Edit2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,7 +41,7 @@ export function CourseDetailEditSection({
   return (
     <>
       <Button onClick={() => setIsOpen(true)} variant="outline">
-        Editar
+        <Edit2 className="size-4 mr-3" /> Editar
       </Button>
       {isOpen && (
         <EditCourseDialog onClose={() => setIsOpen(false)} course={course} />

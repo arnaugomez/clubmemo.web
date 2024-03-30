@@ -20,7 +20,9 @@ export default function CourseDetailPage({
         <div className="h-16"></div>
         <div className="px-4">
           <div className="mx-auto max-w-prose">
-            <h2 className={cn(textStyles.h2)}>Tarjetas de aprendizaje</h2>
+            <h2 className={cn(textStyles.h2, "text-slate-700")}>
+              Tarjetas de aprendizaje
+            </h2>
 
             {/* TODO: Extract arrow link component. link addrress is missing. */}
             <Link

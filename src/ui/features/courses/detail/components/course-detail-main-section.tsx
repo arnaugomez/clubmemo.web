@@ -47,9 +47,9 @@ export async function CourseDetailMainSection({
         <p className={cn(textStyles.p, "whitespace-pre-line")}>
           {course.description || "Este curso no tiene descripción"}
         </p>
-        <div className="h-6" />
+        <div className="h-12" />
         <Button className="w-full">Practicar</Button>
-        <div className="h-8" />
+        <div className="h-6" />
       </div>
       <CourseDetailAuthorSection course={course} />
     </>
