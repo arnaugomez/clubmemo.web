@@ -2,8 +2,8 @@ import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
 import { HandleAlreadyExistsError } from "../../domain/errors/profile-errors";
 import { ProfilesRepository } from "../../domain/interfaces/profiles-repository";
-import { EditProfileInputModel } from "../../domain/models/edit-profile-input-model";
 import { ProfileModel } from "../../domain/models/profile-model";
+import { UpdateProfileInputModel } from "../../domain/models/update-profile-input-model";
 import {
   ProfileDocTransformer,
   profilesCollection,
@@ -41,7 +41,7 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
     return doc && new ProfileDocTransformer(doc).toDomain();
   }
 
-  async update({ id, ...input }: EditProfileInputModel): Promise<void> {
+  async update({ id, ...input }: UpdateProfileInputModel): Promise<void> {
     const _id = new ObjectId(id);
     const profileWithHandle = await this.collection.findOne({
       $and: [{ handle: input.handle }, { _id: { $ne: _id } }],

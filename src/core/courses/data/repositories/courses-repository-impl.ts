@@ -4,6 +4,7 @@ import { CoursesRepository } from "../../domain/interfaces/courses-repository";
 import { CourseModel } from "../../domain/models/course-model";
 import { CreateCourseInputModel } from "../../domain/models/create-course-input-model";
 import { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
+import { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
 import {
   CourseDoc,
@@ -21,7 +22,6 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       coursePermissionsCollection,
     );
   }
-
   async create(input: CreateCourseInputModel): Promise<CourseModel> {
     const insertedCourse = {
       name: input.name,
@@ -52,5 +52,9 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     return new CourseDocTransformer(course).toDomain(
       permission?.permissionType,
     );
+  }
+
+  async update({ id, ...input }: UpdateCourseInputModel): Promise<void> {
+    await this.courses.updateOne({ _id: new ObjectId(id) }, { $set: input });
   }
 }
