@@ -31,7 +31,8 @@ export async function loginAction(data: LoginWithPasswordModel) {
         type: "invalidCredentials",
       });
     } else {
-      console.log(e);
+      // TODO: Log error
+      console.error(e);
       return ActionResponse.formGlobalError("general");
     }
   }

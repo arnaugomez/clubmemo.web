@@ -1,13 +1,12 @@
 "use server";
 import { locator } from "@/src/core/app/locator";
-import { UserDoesNotExistError } from "@/src/core/auth/domain/errors/auth-errors";
 import {
   HandleAlreadyExistsError,
   ProfileDoesNotExistError,
 } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
-import { fetchSession } from "../../../auth/fetch/fetch-session";
 import { revalidatePath } from "next/cache";
+import { fetchMyProfile } from "../../fetch/fetch-my-profile";
 
 interface EditProfileActionModel {
   displayName: string;
@@ -19,20 +18,15 @@ interface EditProfileActionModel {
 
 export async function editProfileAction(data: EditProfileActionModel) {
   try {
-    const { user } = await fetchSession();
-    if (!user) throw new UserDoesNotExistError();
-
-    const profilesRepository = await locator.ProfilesRepository();
-    const profile = await profilesRepository.getByUserId(user.id);
+    const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
 
+    const profilesRepository = await locator.ProfilesRepository();
     await profilesRepository.update({ id: profile.id, ...data });
 
-    revalidatePath("/profile");
+    revalidatePath("/");
   } catch (e) {
-    if (e instanceof UserDoesNotExistError) {
-      return ActionResponse.formGlobalError("userDoesNotExist");
-    } else if (e instanceof UserDoesNotExistError) {
+    if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");
     } else if (e instanceof HandleAlreadyExistsError) {
       return ActionResponse.formError({
