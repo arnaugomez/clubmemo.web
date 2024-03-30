@@ -21,11 +21,11 @@ export class ForgotPasswordTokensRepositoryImpl
 
   async generate(userId: string): Promise<string> {
     await this.collection.deleteMany({ userId: new ObjectId(userId) });
-    const token = generateRandomString(10, alphabet("A-Z", "0-9"));
+    const token = generateRandomString(24, alphabet("a-z", "0-9"));
     const doc = {
       userId: new ObjectId(userId),
       tokenHash: await this.hashToken(token),
-      expiresAt: createDate(new TimeSpan(15, "m")),
+      expiresAt: createDate(new TimeSpan(1, "h")),
     };
     await this.collection.insertOne(doc);
     return token;

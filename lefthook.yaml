@@ -1,7 +1,11 @@
 pre-push:
   piped: true
   commands:
-    format:
-      run: ./nvm-exec.sh pnpm check-format
+    tsc:
+      run: ./nvm-exec.sh pnpm check-types
     lint:
       run: ./nvm-exec.sh pnpm lint
+    format:
+      run: ./nvm-exec.sh pnpm check-format
+    test:
+      run: ./nvm-exec.sh pnpm exec vitest run

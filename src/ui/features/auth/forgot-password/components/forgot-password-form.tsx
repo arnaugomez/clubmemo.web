@@ -21,9 +21,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { forgotPasswordAction } from "../actions/forgot-password-action";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().max(254),
 });
 
 export function ForgotPasswordForm() {
@@ -75,9 +76,13 @@ interface ConfirmDialogProps {
   email: string;
 }
 export function ConfirmDialog({ email }: ConfirmDialogProps) {
+  const router = useRouter();
   return (
     <Dialog open>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onClose={() => router.push("/")}
+      >
         <DialogHeader>
           <DialogTitle>Correo enviado</DialogTitle>
           <DialogDescription>

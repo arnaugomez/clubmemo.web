@@ -24,8 +24,8 @@ export class EmailVerificationCodesRepositoryImpl
 
     const doc = {
       userId: new ObjectId(userId),
-      code: generateRandomString(6, alphabet("0-9")),
-      expiresAt: createDate(new TimeSpan(10, "m")),
+      code: generateRandomString(6, alphabet("a-z", "0-9")),
+      expiresAt: createDate(new TimeSpan(15, "m")),
     };
     await this.collection.insertOne(doc);
 

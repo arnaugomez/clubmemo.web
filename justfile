@@ -3,7 +3,7 @@ default:
 
 # Install dependencies
 install *deps:
-    ./nvm-exec.sh pnpm i {{ deps }}
+    ./nvm-exec.sh pnpm install {{ deps }}
 
 # Run the development server
 dev:
@@ -22,5 +22,18 @@ add-component component:
 # Install git hooks
 install-git-hooks:
     lefthook install
+
+# Set up the project for the first time
+setup:
+    just install
+    just install-git-hooks
+
+# Run unit tests
+test:
+    ./nvm-exec.sh pnpm test:unit
+
+# Run end-to-end tests
+e2e *args:
+    ./nvm-exec.sh pnpm exec playwright test {{ args }}
 
 alias i := install
