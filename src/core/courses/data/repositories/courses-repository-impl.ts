@@ -3,6 +3,7 @@ import { ObjectId, WithId } from "mongodb";
 import { CoursesRepository } from "../../domain/interfaces/courses-repository";
 import { CourseModel } from "../../domain/models/course-model";
 import { CreateCourseInputModel } from "../../domain/models/create-course-input-model";
+import { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
 import {
   CourseDoc,
@@ -32,6 +33,24 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       profileId: new ObjectId(input.profileId),
       permissionType: "own",
     });
-    return new CourseDocTransformer(insertedCourse).toDomain();
+    return new CourseDocTransformer(insertedCourse).toDomain("own");
+  }
+
+  async getDetail({
+    id,
+    profileId,
+  }: GetCourseDetailInputModel): Promise<CourseModel | null> {
+    const courseId = new ObjectId(id);
+    const [course, permission] = await Promise.all([
+      this.courses.findOne({ _id: courseId }),
+      this.coursePermissions.findOne({
+        courseId,
+        profileId: new ObjectId(profileId),
+      }),
+    ]);
+    if (!course) return null;
+    return new CourseDocTransformer(course).toDomain(
+      permission?.permissionType,
+    );
   }
 }
