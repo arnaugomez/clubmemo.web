@@ -1,4 +1,5 @@
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
 
 export interface CreateErrorInput {
   name: string;
@@ -17,6 +18,9 @@ const globalErrors = {
   general: "Ha ocurrido un error. Inténtalo más tarde.",
   userDoesNotExist: "El usuario no existe.",
   profileDoesNotExist: "El perfil no existe.",
+  courseDoesNotExist: "El curso no existe.",
+  cannotEditCourse: "No tienes permisos para editar este curso.",
+  cannotDeleteCourse: "No tienes permisos para eliminar este curso.",
   forgotPasswordCodeExpired: "El código de recuperación ha expirado.",
 };
 type GlobalErrorType = keyof typeof globalErrors;
@@ -62,7 +66,7 @@ export class FormResponseHandler<
 
   constructor(
     response: FormActionResponse<T> | undefined,
-    private readonly form: UseFormReturn<U, V, W>,
+    private readonly form?: UseFormReturn<U, V, W>,
   ) {
     this.response = response || { errors: [], data: null };
   }
@@ -76,10 +80,16 @@ export class FormResponseHandler<
 
   setErrors() {
     for (const error of this.response.errors) {
-      this.form.setError(error.name as Path<U>, {
+      this.form?.setError(error.name as Path<U>, {
         type: error.type,
         message: error.message,
       });
+    }
+  }
+
+  toastErrors() {
+    for (const error of this.response.errors) {
+      toast.error(error.message);
     }
   }
 
