@@ -57,4 +57,12 @@ export class CoursesRepositoryImpl implements CoursesRepository {
   async update({ id, ...input }: UpdateCourseInputModel): Promise<void> {
     await this.courses.updateOne({ _id: new ObjectId(id) }, { $set: input });
   }
+
+  async delete(id: string): Promise<void> {
+    const _id = new ObjectId(id);
+    await Promise.all([
+      this.courses.deleteOne({ _id }),
+      this.coursePermissions.deleteMany({ courseId: _id }),
+    ]);
+  }
 }

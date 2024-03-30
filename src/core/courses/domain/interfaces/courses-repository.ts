@@ -7,4 +7,5 @@ export interface CoursesRepository {
   create(input: CreateCourseInputModel): Promise<CourseModel>;
   getDetail(input: GetCourseDetailInputModel): Promise<CourseModel | null>;
   update(input: UpdateCourseInputModel): Promise<void>;
+  delete(id: string): Promise<void>;
 }
