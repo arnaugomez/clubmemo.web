@@ -6,8 +6,8 @@ import {
   ProfileDoesNotExistError,
 } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
-import { fetchSession } from "../../../auth/fetch/fetch-session";
 import { revalidatePath } from "next/cache";
+import { fetchSession } from "../../../auth/fetch/fetch-session";
 
 interface EditProfileActionModel {
   displayName: string;
@@ -28,7 +28,7 @@ export async function editProfileAction(data: EditProfileActionModel) {
 
     await profilesRepository.update({ id: profile.id, ...data });
 
-    revalidatePath("/profile");
+    revalidatePath("/");
   } catch (e) {
     if (e instanceof UserDoesNotExistError) {
       return ActionResponse.formGlobalError("userDoesNotExist");
