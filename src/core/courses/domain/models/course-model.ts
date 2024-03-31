@@ -37,22 +37,22 @@ export class CourseModel {
   }
 
   get canView() {
-    return this.isPublic || this.permissionType === "own";
+    return (
+      this.isPublic ||
+      this.permissionType === CoursePermissionTypeModel.Own ||
+      this.permissionType === CoursePermissionTypeModel.Edit ||
+      this.permissionType === CoursePermissionTypeModel.View
+    );
   }
 
   get canEdit() {
-    return this.permissionType === "own" || this.permissionType === "edit";
+    return (
+      this.permissionType === CoursePermissionTypeModel.Own ||
+      this.permissionType === CoursePermissionTypeModel.Edit
+    );
   }
 
   get canDelete() {
-    return this.permissionType === "own";
-  }
-
-  get canLearn() {
-    return (
-      this.permissionType === "own" ||
-      this.permissionType === "edit" ||
-      this.permissionType === "learn"
-    );
+    return this.permissionType === CoursePermissionTypeModel.Own;
   }
 }
