@@ -11,6 +11,7 @@ import {
   CourseDocTransformer,
   coursesCollection,
 } from "../collections/courses-collection";
+import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 
 export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly courses: typeof coursesCollection.type;
@@ -31,9 +32,11 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     await this.coursePermissions.insertOne({
       courseId: insertedCourse._id,
       profileId: new ObjectId(input.profileId),
-      permissionType: "own",
+      permissionType: CoursePermissionTypeModel.Own,
     });
-    return new CourseDocTransformer(insertedCourse).toDomain("own");
+    return new CourseDocTransformer(insertedCourse).toDomain(
+      CoursePermissionTypeModel.Own,
+    );
   }
 
   async getDetail({

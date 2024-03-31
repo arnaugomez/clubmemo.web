@@ -9,7 +9,7 @@ export interface CoursePermissionDoc {
   permissionType: CoursePermissionTypeModel;
 }
 export const coursePermissionsCollection =
-  collection<CoursePermissionDoc>("courses");
+  collection<CoursePermissionDoc>("coursePermissions");
 
 export class CoursePermissionDocTransformer {
   constructor(private readonly coursePermission: WithId<CoursePermissionDoc>) {}
