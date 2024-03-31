@@ -1,4 +1,5 @@
 import { CourseDetailMainSection } from "@/src/ui/features/courses/detail/components/course-detail-main-section";
+import { invalidIdGuard } from "@/src/ui/guards/invalid-id-guard";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { ArrowRight } from "lucide-react";
@@ -10,6 +11,7 @@ export default function CourseDetailPage({
   // TODO: create reusable type for id params
   params: { id: string };
 }) {
+  invalidIdGuard(id);
   return (
     <div className="size-full overflow-y-auto md:overflow-y-visible md:flex md:items-stretch md:divide-x-[1px] divide-slate-200">
       <div className="flex-none w-full md:max-w-sm lg:max-w-md xl:max-w-lg md:overflow-y-auto">
