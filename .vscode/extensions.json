@@ -13,6 +13,7 @@
     "bierner.github-markdown-preview",
     "vitest.explorer",
     "ms-playwright.playwright",
-    "github.vscode-github-actions"
+    "github.vscode-github-actions",
+    "editorconfig.editorconfig"
   ]
 }
