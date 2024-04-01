@@ -1,3 +1,4 @@
+import { HomeGreeting } from "@/src/ui/features/home/components/home-greeting";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 
@@ -5,13 +6,7 @@ export default function HomePage() {
   return (
     <main>
       <div className="h-24" />
-      <div className="px-4">
-        <div className="mx-auto max-w-prose">
-          <h1 className={cn(textStyles.h2, "mx-auto max-w-prose")}>
-            Bienvenido de nuevo, TODO
-          </h1>
-        </div>
-      </div>
+      <HomeGreeting />
 
       <div className="h-12" />
 
