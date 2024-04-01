@@ -31,6 +31,7 @@ import {
 import { useState } from "react";
 import { DeleteCourseDialog } from "../../delete/components/delete-course-dialog";
 import { UnenrollCourseDialog } from "../../enroll/components/unenroll-course-dialog";
+import { CourseFavoriteButton } from "./course-favorite-button";
 
 interface CourseDetailActionsDropdownProps {
   courseData: CourseModelData;
@@ -53,6 +54,17 @@ export function CourseDetailActionsDropdown({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-44">
+          {course.isEnrolled && (
+            <>
+              <DropdownMenuGroup>
+                <CourseFavoriteButton
+                  courseId={course.id}
+                  isFavorite={course.enrollment?.isFavorite ?? false}
+                />
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Settings2 className="mr-2 h-4 w-4" />
