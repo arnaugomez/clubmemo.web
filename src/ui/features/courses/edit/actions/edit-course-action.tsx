@@ -26,7 +26,8 @@ export async function editCourseAction(data: UpdateCourseInputModel) {
 
     await coursesRepository.update(data);
 
-    revalidatePath("/courses/");
+    revalidatePath("/courses");
+    revalidatePath("/learn");
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");

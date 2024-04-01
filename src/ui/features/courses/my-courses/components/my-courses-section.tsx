@@ -1,4 +1,3 @@
-import { locator } from "@/src/core/app/locator";
 import {
   Table,
   TableBody,
@@ -11,8 +10,8 @@ import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 import { CreateCourseButton } from "../../create/components/create-course-button";
+import { fetchMyCourses } from "../fetch/fetch-my-courses";
 
 export function MyCoursesSection() {
   return (
@@ -38,17 +37,9 @@ export function MyCoursesSection() {
 }
 
 async function MyCoursesResultsSection() {
-  const profile = await fetchMyProfile();
-  if (!profile) {
-    return <></>;
-  }
-  const coursesRepository = await locator.CoursesRepository();
-  const results = await coursesRepository.getEnrolledCourses({
-    profileId: profile?.id,
-  });
-
+  const results = await fetchMyCourses();
   return (
-    <Table >
+    <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Nombre</TableHead>
@@ -58,7 +49,9 @@ async function MyCoursesResultsSection() {
       <TableBody>
         {results.map((course) => (
           <TableRow key={course.courseId}>
-            <TableCell className={cn(textStyles.small, "hover:underline truncate")}>
+            <TableCell
+              className={cn(textStyles.small, "hover:underline truncate")}
+            >
               <Link href={`/courses/detail/${course.courseId}`}>
                 {course.name}
               </Link>
