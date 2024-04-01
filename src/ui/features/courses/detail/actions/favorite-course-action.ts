@@ -3,6 +3,7 @@
 import { locator } from "@/src/core/app/locator";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 
 interface FavoriteCourseActionModel {
@@ -13,7 +14,7 @@ interface FavoriteCourseActionModel {
 export async function favoriteCourseAction({
   courseId,
   isFavorite,
-}: FavoriteCourseActionModel): Promise<Promise<void>> {
+}: FavoriteCourseActionModel) {
   try {
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
@@ -25,13 +26,14 @@ export async function favoriteCourseAction({
       courseId,
       isFavorite,
     });
+    revalidatePath("/courses");
   } catch (error) {
     if (error instanceof ProfileDoesNotExistError) {
-      ActionResponse.formGlobalError("profileDoesNotExist");
+      return ActionResponse.formGlobalError("profileDoesNotExist");
     } else {
       // TODO: Log error
       console.error(error);
-      ActionResponse.formGlobalError("general");
+      return ActionResponse.formGlobalError("general");
     }
   }
 }
