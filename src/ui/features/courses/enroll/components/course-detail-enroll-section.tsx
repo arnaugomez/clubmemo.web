@@ -42,7 +42,7 @@ function EnrollButton({ course }: EnrollButtonProps) {
       }}
       className="w-full"
     >
-      Unirme
+      Unirme al curso
     </AsyncButton>
   );
 }
