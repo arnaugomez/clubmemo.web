@@ -16,6 +16,6 @@ export interface DeleteCourseEnrollmentInputModel {
 
 export interface CourseEnrollmentsRepository {
   create(input: CreateCourseEnrollmentInputModel): Promise<void>;
-  setFavorite(input: CreateCourseEnrollmentInputModel): Promise<void>;
+  setFavorite(input: SetCourseFavoriteInputModel): Promise<void>;
   delete(input: CreateCourseEnrollmentInputModel): Promise<void>;
 }
