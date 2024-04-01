@@ -6,6 +6,7 @@ import {
 } from "@/src/core/courses/domain/models/course-model";
 import { AsyncButton } from "@/src/ui/components/button/async-button";
 import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { useState } from "react";
 import { enrollCourseAction } from "../actions/enroll-course-action";
 
 interface CourseDetailEnrollSectionProps {
@@ -16,8 +17,15 @@ export function CourseDetailEnrollSection({
   courseData,
 }: CourseDetailEnrollSectionProps) {
   const course = new CourseModel(courseData);
+  return <EnrollButton key={course.isEnrolled.toString()} course={course} />;
+}
 
-  const isEnrolled = course.isEnrolled;
+interface EnrollButtonProps {
+  course: CourseModel;
+}
+
+function EnrollButton({ course }: EnrollButtonProps) {
+  const [isEnrolled, setIsEnrolled] = useState(course.isEnrolled);
 
   if (isEnrolled) {
     return <></>;
@@ -27,13 +35,14 @@ export function CourseDetailEnrollSection({
       onClick={async function enroll() {
         const response = await enrollCourseAction(course.id);
         const handler = new FormResponseHandler(response);
-        if (handler.hasErrors) {
-          handler.toastErrors();
+        if (!handler.hasErrors) {
+          setIsEnrolled(true);
         }
+        handler.toastErrors();
       }}
-      variant="outline"
+      className="w-full"
     >
-      Añadir
+      Unirme
     </AsyncButton>
   );
 }

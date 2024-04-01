@@ -5,7 +5,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/src/ui/components/shadcn/ui/avatar";
-import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { User } from "lucide-react";
@@ -13,6 +12,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 import { CourseDetailActionsSection } from "./course-detail-actions-section";
+import { CourseDetailMainActionsSection } from "./course-detail-main-actions-section";
 
 interface CourseDetailMainSectionProps {
   id: string;
@@ -48,7 +48,7 @@ export async function CourseDetailMainSection({
           {course.description || "Este curso no tiene descripción"}
         </p>
         <div className="h-12" />
-        <Button className="w-full">Practicar</Button>
+        <CourseDetailMainActionsSection course={course} />
         <div className="h-6" />
       </div>
       <CourseDetailAuthorSection course={course} />
