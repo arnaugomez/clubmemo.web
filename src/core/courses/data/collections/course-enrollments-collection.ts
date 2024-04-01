@@ -5,7 +5,7 @@ import { CourseEnrollmentModel } from "../../domain/models/course-enrollment-mod
 export interface CourseEnrollmentDoc {
   courseId: ObjectId;
   profileId: ObjectId;
-  isFavourite: boolean;
+  isFavorite: boolean;
 }
 export const courseEnrollmentsCollection =
   collection<CourseEnrollmentDoc>("courseEnrollments");

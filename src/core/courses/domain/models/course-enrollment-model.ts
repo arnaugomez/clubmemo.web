@@ -2,7 +2,7 @@ export interface CourseEnrollmentModelData {
   id: string;
   courseId: string;
   profileId: string;
-  isFavourite: boolean;
+  isFavorite: boolean;
 }
 
 export class CourseEnrollmentModel {
@@ -20,7 +20,7 @@ export class CourseEnrollmentModel {
     return this.data.profileId;
   }
 
-  get isFavourite() {
-    return this.data.isFavourite;
+  get isFavorite() {
+    return this.data.isFavorite;
   }
 }
