@@ -4,6 +4,7 @@ import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
 import { ForgotPasswordTokensRepository } from "../auth/domain/interfaces/forgot-password-tokens-repository";
 import { UsersRepository } from "../auth/domain/interfaces/users-repository";
+import { CourseAuthorsRepository } from "../courses/domain/interfaces/course-authors-repository";
 import { CourseEnrollmentsRepository } from "../courses/domain/interfaces/course-enrollments-repository";
 import { CoursesRepository } from "../courses/domain/interfaces/courses-repository";
 import { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
@@ -30,6 +31,7 @@ interface Locator {
   // Courses
   CoursesRepository: Lazy<CoursesRepository>;
   CourseEnrollmentsRepository: Lazy<CourseEnrollmentsRepository>;
+  CourseAuthorsRepository: Lazy<CourseAuthorsRepository>;
 }
 
 export const singleton = memoizeOne;
@@ -93,5 +95,11 @@ export const locator: Locator = {
       "../courses/data/repositories/course-enrollments-repository-impl"
     );
     return new file.CourseEnrollmentsRepositoryImpl(this.MongoService());
+  },
+  async CourseAuthorsRepository() {
+    const file = await import(
+      "../courses/data/repositories/course-authors-repository-impl"
+    );
+    return new file.CourseAuthorsRepositoryImpl(this.MongoService());
   },
 };
