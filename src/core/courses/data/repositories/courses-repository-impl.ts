@@ -108,8 +108,8 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       this.courseEnrollments.aggregate<EnrolledCourseListItemDoc>([
         {
           $match: {
-            profileId,
-            isFavorite,
+            profileId: new ObjectId(profileId),
+            isFavorite: isFavorite ?? { $exists: true },
           },
         },
         {

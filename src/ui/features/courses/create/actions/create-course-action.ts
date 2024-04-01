@@ -3,6 +3,7 @@
 import { locator } from "@/src/core/app/locator";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 
 interface CreateCourseActionModel {
@@ -18,6 +19,8 @@ export async function createCourseAction(data: CreateCourseActionModel) {
       name: data.name,
       profileId: profile.id,
     });
+    revalidatePath("/courses");
+    revalidatePath("/learn");
     return ActionResponse.formSuccess(course.data);
   } catch (e) {
     // TODO: log error report
