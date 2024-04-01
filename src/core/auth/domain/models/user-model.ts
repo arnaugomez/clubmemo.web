@@ -1,9 +1,9 @@
-import { AuthType } from "./auth-type-model";
+import { AuthTypeModel } from "./auth-type-model";
 
 interface UserModelData {
   id: string;
   email: string;
-  authTypes: AuthType[];
+  authTypes: AuthTypeModel[];
   isEmailVerified?: boolean;
 }
 

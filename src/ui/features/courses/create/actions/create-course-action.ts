@@ -5,11 +5,11 @@ import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profi
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 
-interface CreateCourseActionData {
+interface CreateCourseActionModel {
   name: string;
 }
 
-export async function createCourseAction(data: CreateCourseActionData) {
+export async function createCourseAction(data: CreateCourseActionModel) {
   try {
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();

@@ -1,1 +1,4 @@
-export type AuthType = "email"; // | "google"
+export enum AuthTypeModel {
+  Email = "email",
+  // Google = "google",
+}

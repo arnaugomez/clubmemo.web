@@ -23,12 +23,14 @@ import {
   File,
   FileCode,
   FileSpreadsheet,
+  LogOut,
   Settings2,
   Star,
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
 import { DeleteCourseDialog } from "../../delete/components/delete-course-dialog";
+import { UnenrollCourseDialog } from "../../enroll/components/unenroll-course-dialog";
 
 interface CourseDetailActionsDropdownProps {
   courseData: CourseModelData;
@@ -40,6 +42,7 @@ export function CourseDetailActionsDropdown({
   const course = new CourseModel(courseData);
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
   return (
     <>
       <DropdownMenu>
@@ -96,12 +99,32 @@ export function CourseDetailActionsDropdown({
               </DropdownMenuGroup>
             </>
           )}
+          {!course.isOwner && course.isEnrolled && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  className="text-red-700 focus:text-red-800 focus:bg-red-100 cursor-pointer"
+                  onSelect={() => setShowUnenrollDialog(true)}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Desapuntarme</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       {showDeleteDialog && (
         <DeleteCourseDialog
           course={course}
           onClose={() => setShowDeleteDialog(false)}
+        />
+      )}
+      {showUnenrollDialog && (
+        <UnenrollCourseDialog
+          course={course}
+          onClose={() => setShowUnenrollDialog(false)}
         />
       )}
     </>
