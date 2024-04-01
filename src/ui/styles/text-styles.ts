@@ -9,6 +9,7 @@ export const textStyles = {
   lead: "text-xl text-muted-foreground",
   large: "text-lg font-semibold",
   small: "text-sm font-medium leading-none",
+  tableLink: "text-sm font-medium leading-none hover:underline",
   muted: "text-sm text-muted-foreground",
   mutedLink: "text-sm text-muted-foreground hover:text-slate-700",
 };

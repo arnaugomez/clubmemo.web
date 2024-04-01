@@ -1,11 +1,19 @@
 import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { ObjectId, WithId } from "mongodb";
-import { CoursesRepository } from "../../domain/interfaces/courses-repository";
+import {
+  CoursesRepository,
+  GetEnrolledCoursesInputModel,
+} from "../../domain/interfaces/courses-repository";
 import { CourseModel } from "../../domain/models/course-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 import { CreateCourseInputModel } from "../../domain/models/create-course-input-model";
+import { EnrolledCourseListItemModel } from "../../domain/models/enrolled-course-list-item-model";
 import { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
 import { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
+import {
+  EnrolledCourseListItemDoc,
+  EnrolledCourseListItemTransformer,
+} from "../aggregations/enrolled-course-list-item-aggregation";
 import {
   CourseEnrollmentDoc,
   courseEnrollmentsCollection,
@@ -89,5 +97,48 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       this.coursePermissions.deleteMany({ courseId: _id }),
       this.courseEnrollments.deleteMany({ courseId: _id }),
     ]);
+  }
+
+  async getEnrolledCourses({
+    profileId,
+    isFavorite,
+    limit,
+  }: GetEnrolledCoursesInputModel): Promise<EnrolledCourseListItemModel[]> {
+    const aggregation =
+      this.courseEnrollments.aggregate<EnrolledCourseListItemDoc>([
+        {
+          $match: {
+            profileId: new ObjectId(profileId),
+            isFavorite: isFavorite ?? { $exists: true },
+          },
+        },
+        {
+          $limit: limit ?? 6,
+        },
+        {
+          $lookup: {
+            from: "courses",
+            localField: "courseId",
+            foreignField: "_id",
+            as: "course",
+          },
+        },
+        {
+          $unwind: "$course",
+        },
+        {
+          $project: {
+            courseId: true,
+            isFavorite: true,
+            name: "$course.name",
+            picture: "$course.picture",
+          },
+        },
+      ]);
+
+    const result = await aggregation.toArray();
+    return result.map((e) =>
+      new EnrolledCourseListItemTransformer(e).toDomain(),
+    );
   }
 }
