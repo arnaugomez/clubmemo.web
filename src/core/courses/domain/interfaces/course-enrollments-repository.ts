@@ -1,4 +1,3 @@
-
 export interface CreateCourseEnrollmentInputModel {
   courseId: string;
   profileId: string;
