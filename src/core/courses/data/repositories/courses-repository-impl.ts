@@ -46,7 +46,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     const insertedEnrollment = {
       courseId: insertedCourse._id,
       profileId: new ObjectId(input.profileId),
-      isFavourite: false,
+      isFavorite: false,
     } as WithId<CourseEnrollmentDoc>;
     await this.courseEnrollments.insertOne(insertedEnrollment);
     return new CourseDocTransformer(insertedCourse).toDomain(
