@@ -14,9 +14,10 @@ export class CourseEnrollmentDocTransformer {
   constructor(private readonly doc: WithId<CourseEnrollmentDoc>) {}
 
   toDomain(): CourseEnrollmentModel {
+    const { _id, ...rest } = this.doc;
     return new CourseEnrollmentModel({
-      ...this.doc,
-      id: this.doc._id.toString(),
+      ...rest,
+      id: _id.toString(),
       courseId: this.doc.courseId.toString(),
       profileId: this.doc.profileId.toString(),
     });

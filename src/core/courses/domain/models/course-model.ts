@@ -58,11 +58,19 @@ export class CourseModel {
   }
 
   get canDelete() {
+    return this.isOwner;
+  }
+
+  get isOwner() {
     return this.permissionType === CoursePermissionTypeModel.Own;
   }
 
   get enrollment() {
     if (!this.data.enrollment) return null;
     return new CourseEnrollmentModel(this.data.enrollment);
+  }
+
+  get isEnrolled() {
+    return Boolean(this.data.enrollment);
   }
 }

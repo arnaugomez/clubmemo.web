@@ -15,9 +15,10 @@ export class CoursePermissionDocTransformer {
   constructor(private readonly coursePermission: WithId<CoursePermissionDoc>) {}
 
   toDomain(): CoursePermissionModel {
+    const { _id, ...rest } = this.coursePermission;
     return new CoursePermissionModel({
-      ...this.coursePermission,
-      id: this.coursePermission._id.toString(),
+      ...rest,
+      id: _id.toString(),
       courseId: this.coursePermission.courseId.toString(),
       profileId: this.coursePermission.profileId.toString(),
     });
