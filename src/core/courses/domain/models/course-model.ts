@@ -1,3 +1,7 @@
+import {
+  CourseEnrollmentModel,
+  CourseEnrollmentModelData,
+} from "./course-enrollment-model";
 import { CoursePermissionTypeModel } from "./course-permission-type-model";
 
 export interface CourseModelData {
@@ -6,7 +10,8 @@ export interface CourseModelData {
   description?: string;
   picture?: string;
   isPublic: boolean;
-  permissionType?: CoursePermissionTypeModel;
+  permissionType: CoursePermissionTypeModel | null;
+  enrollment: CourseEnrollmentModelData | null;
 }
 
 export class CourseModel {
@@ -54,5 +59,10 @@ export class CourseModel {
 
   get canDelete() {
     return this.permissionType === CoursePermissionTypeModel.Own;
+  }
+
+  get enrollment() {
+    if (!this.data.enrollment) return null;
+    return new CourseEnrollmentModel(this.data.enrollment);
   }
 }
