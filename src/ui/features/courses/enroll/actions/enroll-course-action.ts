@@ -6,26 +6,24 @@ import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 
-export async function unenrollCourseAction(
-  courseId: string,
-): Promise<Promise<void>> {
+export async function enrollCourseAction(courseId: string) {
   try {
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
     const courseEnrollmentsRepository =
       await locator.CourseEnrollmentsRepository();
-    await courseEnrollmentsRepository.delete({
+    await courseEnrollmentsRepository.create({
       courseId,
       profileId: profile.id,
     });
     revalidatePath(`/courses`);
   } catch (error) {
     if (error instanceof ProfileDoesNotExistError) {
-      ActionResponse.formGlobalError("profileDoesNotExist");
+      return ActionResponse.formGlobalError("profileDoesNotExist");
     } else {
       // TODO: Log error
       console.error(error);
-      ActionResponse.formGlobalError("general");
+      return ActionResponse.formGlobalError("general");
     }
   }
 }
