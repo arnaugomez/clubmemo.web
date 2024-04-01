@@ -1,8 +1,7 @@
-import { CreateCourseButton } from "@/src/ui/features/courses/create/components/create-course-button";
+import { MyCoursesSection } from "@/src/ui/features/courses/my-courses/components/my-courses-section";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { GraduationCap } from "lucide-react";
 
 export default function LearnPage() {
   return (
@@ -10,7 +9,10 @@ export default function LearnPage() {
       <div className="h-20" />
       <div className="px-4">
         <div className="mx-auto max-w-prose">
-          <h1 className={cn(textStyles.h1, "mx-auto max-w-prose")}>Aprender</h1>
+          <h1 className={cn(textStyles.h2, "")}>
+            <GraduationCap className="inline size-8 -translate-y-1 mr-3" />
+            Aprender
+          </h1>
         </div>
       </div>
 
@@ -32,22 +34,7 @@ export default function LearnPage() {
         </div>
       </section>
       <div className="h-12" />
-      <section className="px-4">
-        <div className="mx-auto max-w-prose">
-          <div className="flex items-end">
-            <h2 className={cn(textStyles.h2, "flex-1")}>Mis cursos</h2>
-            <CreateCourseButton />
-          </div>
-          <Link
-            href="/courses"
-            className={cn(textStyles.mutedLink, "space-x-1 pt-1")}
-          >
-            <span>Ver todos</span>
-
-            <ArrowRight size={16} className="inline" />
-          </Link>
-        </div>
-      </section>
+      <MyCoursesSection />
     </main>
   );
 }

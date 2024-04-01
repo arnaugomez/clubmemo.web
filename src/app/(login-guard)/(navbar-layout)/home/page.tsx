@@ -8,7 +8,7 @@ export default function HomePage() {
       <div className="h-24" />
       <HomeGreeting />
 
-      <div className="h-12" />
+      <div className="h-6" />
 
       <section className="px-4">
         <div className="mx-auto max-w-prose">
