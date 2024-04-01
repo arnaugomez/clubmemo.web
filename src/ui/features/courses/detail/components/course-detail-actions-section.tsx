@@ -1,6 +1,6 @@
 import { CourseModel } from "@/src/core/courses/domain/models/course-model";
-import { CourseDetailActionsDropdown } from "./course-detail-actions-dropdown";
 import { CourseDetailEditSection } from "../../edit/components/edit-course-section";
+import { CourseDetailActionsDropdown } from "./course-detail-actions-dropdown";
 
 interface CourseDetailActionsSectionProps {
   course: CourseModel;
