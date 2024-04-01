@@ -113,7 +113,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           },
         },
         {
-          $limit: limit ?? 10,
+          $limit: limit ?? 6,
         },
         {
           $lookup: {
