@@ -2,27 +2,36 @@ import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { ObjectId, WithId } from "mongodb";
 import { CoursesRepository } from "../../domain/interfaces/courses-repository";
 import { CourseModel } from "../../domain/models/course-model";
+import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 import { CreateCourseInputModel } from "../../domain/models/create-course-input-model";
 import { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
 import { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
+import {
+  CourseEnrollmentDoc,
+  courseEnrollmentsCollection,
+} from "../collections/course-enrollments-collection";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
 import {
   CourseDoc,
   CourseDocTransformer,
   coursesCollection,
 } from "../collections/courses-collection";
-import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 
 export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly courses: typeof coursesCollection.type;
   private readonly coursePermissions: typeof coursePermissionsCollection.type;
+  private readonly courseEnrollments: typeof courseEnrollmentsCollection.type;
 
   constructor(mongoService: MongoService) {
     this.courses = mongoService.collection(coursesCollection);
     this.coursePermissions = mongoService.collection(
       coursePermissionsCollection,
     );
+    this.courseEnrollments = mongoService.collection(
+      courseEnrollmentsCollection,
+    );
   }
+
   async create(input: CreateCourseInputModel): Promise<CourseModel> {
     const insertedCourse = {
       name: input.name,
@@ -34,8 +43,15 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       profileId: new ObjectId(input.profileId),
       permissionType: CoursePermissionTypeModel.Own,
     });
+    const insertedEnrollment = {
+      courseId: insertedCourse._id,
+      profileId: new ObjectId(input.profileId),
+      isFavourite: false,
+    } as WithId<CourseEnrollmentDoc>;
+    await this.courseEnrollments.insertOne(insertedEnrollment);
     return new CourseDocTransformer(insertedCourse).toDomain(
       CoursePermissionTypeModel.Own,
+      insertedEnrollment,
     );
   }
 
@@ -44,16 +60,21 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     profileId,
   }: GetCourseDetailInputModel): Promise<CourseModel | null> {
     const courseId = new ObjectId(id);
-    const [course, permission] = await Promise.all([
+    const [course, permission, enrollment] = await Promise.all([
       this.courses.findOne({ _id: courseId }),
       this.coursePermissions.findOne({
+        courseId,
+        profileId: new ObjectId(profileId),
+      }),
+      this.courseEnrollments.findOne({
         courseId,
         profileId: new ObjectId(profileId),
       }),
     ]);
     if (!course) return null;
     return new CourseDocTransformer(course).toDomain(
-      permission?.permissionType,
+      permission?.permissionType ?? null,
+      enrollment,
     );
   }
 
@@ -66,6 +87,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     await Promise.all([
       this.courses.deleteOne({ _id }),
       this.coursePermissions.deleteMany({ courseId: _id }),
+      this.courseEnrollments.deleteMany({ courseId: _id }),
     ]);
   }
 }
