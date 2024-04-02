@@ -9,7 +9,7 @@ import {
 } from "@/src/ui/features/courses/my-courses/fetch/fetch-my-courses";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { Layers } from "lucide-react";
+import { BookText } from "lucide-react";
 import { Suspense } from "react";
 
 export default function CoursesPage({
@@ -27,7 +27,7 @@ export default function CoursesPage({
       <div className="px-4">
         <div className="mx-auto max-w-prose">
           <h1 className={cn(textStyles.h2)}>
-            <Layers className="inline size-8 -translate-y-1 mr-3" />
+            <BookText className="inline size-7 -translate-y-1 mr-2" />
             Mis cursos
           </h1>
         </div>

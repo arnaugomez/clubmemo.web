@@ -1,4 +1,5 @@
 import { CreateCourseCtaLarge } from "@/src/ui/features/courses/create/components/create-course-cta-large";
+import { FavoriteCoursesSection } from "@/src/ui/features/courses/favorite-courses/components/favorite-courses-section";
 import { MyCoursesPreviewSection } from "@/src/ui/features/courses/my-courses-preview/components/my-courses-preview-section";
 import { fetchMyCoursesPreview } from "@/src/ui/features/courses/my-courses-preview/fetch/fetch-my-courses-preview";
 import { textStyles } from "@/src/ui/styles/text-styles";
@@ -38,13 +39,7 @@ async function LearnPageContent() {
         </div>
       </section>
       <div className="h-12" />
-      <section className="px-4">
-        <div className="mx-auto max-w-prose">
-          <h2 className={cn(textStyles.h3, "mx-auto max-w-prose")}>
-            Favoritos
-          </h2>
-        </div>
-      </section>
+      <FavoriteCoursesSection />
       <div className="h-12" />
       <MyCoursesPreviewSection />
     </>
