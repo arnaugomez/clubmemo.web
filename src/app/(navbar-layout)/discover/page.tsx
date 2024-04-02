@@ -16,7 +16,6 @@ export default async function DiscoverPage() {
             <Compass className="inline size-8 -translate-y-1 mr-3" />
             Explorar cursos
           </h1>
-          <div className="h-10 bg-red-50" />
         </div>
       </div>
       <div className="h-10" />
