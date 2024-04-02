@@ -50,7 +50,6 @@ async function CoursesPageContent({ page }: CoursesPageContentProps) {
   }
 
   const arg: FetchMyCoursesPaginationModel = { page };
-  console.log(arg.page);
 
   return (
     <>
@@ -86,7 +85,6 @@ async function CoursesPagePagination({ arg }: CoursesPagePaginationProps) {
 }
 
 function Fallback() {
-  console.log("render fallback");
   return (
     <div className="px-4">
       <div className="mx-auto max-w-prose">Loading........</div>

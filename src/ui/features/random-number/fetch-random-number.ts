@@ -7,7 +7,6 @@ import { waitMilliseconds } from "../../../core/app/utils/promises";
 // unstable_cache is used by the Next.js framework to cache the result of the promise until the next revalidation.
 
 const fetchRandomNumber1 = cache(async () => {
-  console.log("fetching random number");
   await waitMilliseconds(2000);
   return Math.random();
 });

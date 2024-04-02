@@ -23,7 +23,7 @@ export class MongoServiceImpl implements MongoService {
       new MongoClient(envService.mongodbUrl, {
         serverApi: {
           version: ServerApiVersion.v1,
-          strict: true,
+          // strict: true,
           deprecationErrors: true,
         },
       });
