@@ -1,3 +1,4 @@
+import { Button } from "@/src/ui/components/shadcn/ui/button";
 import {
   Table,
   TableBody,
@@ -8,6 +9,7 @@ import {
 } from "@/src/ui/components/shadcn/ui/table";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
+import { Bookmark, Play } from "lucide-react";
 import Link from "next/link";
 import {
   FetchMyCoursesPaginationModel,
@@ -26,7 +28,8 @@ export async function MyCoursesTable({ arg }: MyCoursesTableProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Nombre</TableHead>
-              <TableHead className="w-[100px] text-right">Favorito</TableHead>
+              <TableHead className="w-[110px] text-center">Destacado</TableHead>
+              <TableHead className="w-[80px] text-center">Practicar</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -39,8 +42,21 @@ export async function MyCoursesTable({ arg }: MyCoursesTableProps) {
                     {course.name}
                   </Link>
                 </TableCell>
-                <TableCell className="text-right">
-                  {course.isFavorite ? "Sí" : "No"}
+                <TableCell className="text-center">
+                  <Bookmark
+                    fill={course.isFavorite ? "currentColor" : "transparent"}
+                    className="mx-auto size-5"
+                  />
+                </TableCell>
+                <TableCell className="py-0 text-center">
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link
+                      href={`/courses/detail/${course.courseId}/practice`}
+                      className="text-slate-700"
+                    >
+                      <Play className="size-5" />
+                    </Link>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
