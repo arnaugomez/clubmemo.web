@@ -58,7 +58,7 @@ async function CoursesPageContent({ page }: CoursesPageContentProps) {
         <div className="mx-auto max-w-prose">
           <div className="flex">
             <div className="flex-1"></div>
-            <CreateCourseButton variant="secondary" size="sm" />
+            <CreateCourseButton size="sm" />
           </div>
         </div>
       </div>
@@ -79,7 +79,7 @@ interface CoursesPagePaginationProps {
 }
 
 async function CoursesPagePagination({ arg }: CoursesPagePaginationProps) {
-  const { count } = await fetchMyCoursesPagination(arg);
+  const { totalCount: count } = await fetchMyCoursesPagination(arg);
   const pageSize = 10;
 
   return <PaginationSection resultsCount={count} pageSize={pageSize} />;
