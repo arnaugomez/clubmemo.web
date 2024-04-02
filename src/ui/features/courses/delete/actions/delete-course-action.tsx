@@ -6,8 +6,8 @@ import {
 } from "@/src/core/courses/domain/errors/course-errors";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
-import { revalidatePath } from "next/cache";
 
 export async function deleteCourseAction(id: string) {
   try {
@@ -21,8 +21,10 @@ export async function deleteCourseAction(id: string) {
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canDelete) throw new CannotDeleteCourseError();
     await coursesRepository.delete(id);
+
     revalidatePath("/courses");
     revalidatePath("/learn");
+    revalidateTag("hasCourses");
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");
