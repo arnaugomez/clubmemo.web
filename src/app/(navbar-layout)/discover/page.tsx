@@ -1,9 +1,20 @@
 import { locator } from "@/src/core/app/locator";
+import { DiscoverFiltersSection } from "@/src/ui/features/discover/components/discover-filters-section";
+import { DiscoverLoadingSkeletons } from "@/src/ui/features/discover/components/discover-loading-skeletons";
+import { DiscoverResultsSection } from "@/src/ui/features/discover/components/discover-results-section";
+import { fetchDiscoverCourses } from "@/src/ui/features/discover/fetch/fetch-discover-courses";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { Compass } from "lucide-react";
+import { Compass, SearchX } from "lucide-react";
+import { Suspense } from "react";
 
-export default async function DiscoverPage() {
+export default async function DiscoverPage({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+  };
+}) {
   const coursesRepository = await locator.CoursesRepository();
   coursesRepository.getDiscoverCourses({});
   return (
@@ -16,10 +27,38 @@ export default async function DiscoverPage() {
             <Compass className="inline size-8 -translate-y-1 mr-3" />
             Explorar cursos
           </h1>
+          <div className="h-8" />
+          <DiscoverFiltersSection />
+          <div className="h-6"></div>
+          <Suspense
+            key={searchParams?.query}
+            fallback={<DiscoverLoadingSkeletons />}
+          >
+            <DiscoverPageContent query={searchParams?.query} />
+          </Suspense>
         </div>
       </div>
-      <div className="h-10" />
-      {/* <LearnPageContent /> */}
     </main>
+  );
+}
+
+interface DiscoverPageContentProps {
+  query?: string;
+}
+
+async function DiscoverPageContent({ query }: DiscoverPageContentProps) {
+  const results = await fetchDiscoverCourses({ query });
+  if (results.length === 0) {
+    return <DiscoverEmptyState />;
+  }
+  return <DiscoverResultsSection results={results.map((e) => e.data)} />;
+}
+function DiscoverEmptyState() {
+  return (
+    <div className="h-64 flex flex-col items-center justify-center">
+      <SearchX className="size-6 text-slate-500" />
+      <div className="h-3"></div>
+      <p className={textStyles.muted}>No hay resultados</p>
+    </div>
   );
 }
