@@ -13,4 +13,6 @@ const cached = cache(async function () {
   });
 });
 
-export const fetchHasCourses = unstable_cache(cached);
+export const fetchHasCourses = unstable_cache(cached, ["hasCourses"], {
+  tags: ["hasCourses"],
+});
