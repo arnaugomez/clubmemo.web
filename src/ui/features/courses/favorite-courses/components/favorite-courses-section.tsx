@@ -73,10 +73,10 @@ function FavoriteCourseCard({ course }: FavoriteCourseCardProps) {
 
 function FavoriteCoursesLoadingSection() {
   return (
-    <div className="h-48 grid sm:grid-cols-2 grid-cols-3 gap-4">
+    <div className="h-48 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       <Skeleton className="h-48 rounded-lg" />
       <Skeleton className="h-48 rounded-lg" />
-      <Skeleton className="h-48 sm:hidden rounded-lg" />
+      <Skeleton className="h-48 hidden md:block rounded-lg" />
     </div>
   );
 }
