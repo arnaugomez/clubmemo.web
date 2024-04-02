@@ -1,8 +1,11 @@
 import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
+import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
 import { ObjectId, WithId } from "mongodb";
 import {
   CoursesRepository,
-  GetEnrolledCoursesInputModel,
+  GetHasCoursesInputModel,
+  GetMyCoursesInputModel,
+  GetMyCoursesPaginationInputModel,
 } from "../../domain/interfaces/courses-repository";
 import { CourseModel } from "../../domain/models/course-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
@@ -39,7 +42,6 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       courseEnrollmentsCollection,
     );
   }
-
   async create(input: CreateCourseInputModel): Promise<CourseModel> {
     const insertedCourse = {
       name: input.name,
@@ -99,11 +101,11 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     ]);
   }
 
-  async getEnrolledCourses({
+  async getMyCourses({
     profileId,
     isFavorite,
     limit,
-  }: GetEnrolledCoursesInputModel): Promise<EnrolledCourseListItemModel[]> {
+  }: GetMyCoursesInputModel): Promise<EnrolledCourseListItemModel[]> {
     const aggregation =
       this.courseEnrollments.aggregate<EnrolledCourseListItemDoc>([
         {
@@ -113,7 +115,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           },
         },
         {
-          $limit: limit ?? 6,
+          $limit: limit ?? 10,
         },
         {
           $lookup: {
@@ -140,5 +142,70 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     return result.map((e) =>
       new EnrolledCourseListItemTransformer(e).toDomain(),
     );
+  }
+  async getMyCoursesPagination({
+    profileId,
+    isFavorite,
+    page = 1,
+    pageSize = 10,
+  }: GetMyCoursesPaginationInputModel): Promise<
+    PaginationModel<EnrolledCourseListItemModel>
+  > {
+    const skip = (page - 1) * pageSize;
+    const limit = pageSize;
+
+    const aggregation = this.courseEnrollments.aggregate([
+      {
+        $match: {
+          profileId: new ObjectId(profileId),
+          isFavorite: isFavorite ?? { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "courseId",
+          foreignField: "_id",
+          as: "course",
+        },
+      },
+      {
+        $unwind: "$course",
+      },
+      {
+        $facet: {
+          metadata: [{ $count: "totalCount" }],
+          data: [
+            { $skip: skip },
+            { $limit: limit },
+            {
+              $project: {
+                courseId: true,
+                isFavorite: true,
+                name: "$course.name",
+                picture: "$course.picture",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
+    const result = await aggregation.toArray();
+    console.log(result);
+    return {
+      count: 1000,
+      results: [],
+    };
+  }
+
+  async getHasCourses(input: GetHasCoursesInputModel) {
+    const result = await this.courseEnrollments.findOne(
+      {
+        profileId: new ObjectId(input.profileId),
+      },
+      { projection: { _id: 1 } },
+    );
+    return Boolean(result);
   }
 }

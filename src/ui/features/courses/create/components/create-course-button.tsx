@@ -5,13 +5,14 @@ import { CreateCourseDialog } from "./create-course-dialog";
 
 interface CreateCourseButtonProps {
   variant?: ButtonProps["variant"];
+  size?: ButtonProps["size"];
 }
 
-export function CreateCourseButton({ variant }: CreateCourseButtonProps) {
+export function CreateCourseButton(props: CreateCourseButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Button variant={variant} onClick={() => setIsOpen(true)}>
+      <Button {...props} onClick={() => setIsOpen(true)}>
         Nuevo curso
       </Button>
 

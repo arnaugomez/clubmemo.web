@@ -1,17 +1,23 @@
-import { cache } from "react";
-
-import { EnrolledCourseListItemModel } from "@/src/core/courses/domain/models/enrolled-course-list-item-model";
-import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
+import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
 import { locator } from "@/src/core/app/locator";
+import { EnrolledCourseListItemModel } from "@/src/core/courses/domain/models/enrolled-course-list-item-model";
+import { cache } from "react";
+import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 
-export const fetchMyCourses = cache(
-  async (): Promise<EnrolledCourseListItemModel[]> => {
-    const profile = await fetchMyProfile();
-    if (!profile) return [];
+export interface FetchMyCoursesPaginationModel {
+  page: number;
+}
 
-    const coursesRepository = await locator.CoursesRepository();
-    return await coursesRepository.getEnrolledCourses({
-      profileId: profile?.id,
-    });
-  },
-);
+export const fetchMyCoursesPagination = cache(async function ({
+  page,
+}: FetchMyCoursesPaginationModel): Promise<
+  PaginationModel<EnrolledCourseListItemModel>
+> {
+  const profile = await fetchMyProfile();
+  if (!profile) return { results: [], count: 0 };
+  const coursesRepository = await locator.CoursesRepository();
+  return await coursesRepository.getMyCoursesPagination({
+    profileId: profile.id,
+    page,
+  });
+});

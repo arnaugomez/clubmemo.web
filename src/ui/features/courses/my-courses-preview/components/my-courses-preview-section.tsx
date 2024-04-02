@@ -11,9 +11,9 @@ import { cn } from "@/src/ui/utils/shadcn";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { CreateCourseButton } from "../../create/components/create-course-button";
-import { fetchMyCourses } from "../fetch/fetch-my-courses";
+import { fetchMyCoursesPreview } from "../fetch/fetch-my-courses-preview";
 
-export function MyCoursesSection() {
+export function MyCoursesPreviewSection() {
   return (
     <section className="px-4">
       <div className="mx-auto max-w-prose">
@@ -37,7 +37,7 @@ export function MyCoursesSection() {
 }
 
 async function MyCoursesResultsSection() {
-  const results = await fetchMyCourses();
+  const results = await fetchMyCoursesPreview();
   return (
     <Table>
       <TableHeader>
