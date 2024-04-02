@@ -3,7 +3,7 @@
 import { locator } from "@/src/core/app/locator";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 
 export async function unenrollCourseAction(courseId: string) {
@@ -17,6 +17,8 @@ export async function unenrollCourseAction(courseId: string) {
       profileId: profile.id,
     });
     revalidatePath(`/courses`);
+    revalidatePath(`/learn`);
+    revalidateTag("hasCourses");
   } catch (error) {
     if (error instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");

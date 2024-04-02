@@ -1,3 +1,4 @@
+import { Button } from "@/src/ui/components/shadcn/ui/button";
 import {
   Table,
   TableBody,
@@ -8,18 +9,18 @@ import {
 } from "@/src/ui/components/shadcn/ui/table";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Bookmark, Play } from "lucide-react";
 import Link from "next/link";
 import { CreateCourseButton } from "../../create/components/create-course-button";
-import { fetchMyCourses } from "../fetch/fetch-my-courses";
+import { fetchMyCoursesPreview } from "../fetch/fetch-my-courses-preview";
 
-export function MyCoursesSection() {
+export function MyCoursesPreviewSection() {
   return (
     <section className="px-4">
       <div className="mx-auto max-w-prose">
         <div className="flex items-end">
           <h2 className={cn(textStyles.h2, "flex-1")}>Mis cursos</h2>
-          <CreateCourseButton />
+          <CreateCourseButton size="sm" />
         </div>
         {/* TODO: create reusable ocmponent for the link */}
         <Link
@@ -37,13 +38,14 @@ export function MyCoursesSection() {
 }
 
 async function MyCoursesResultsSection() {
-  const results = await fetchMyCourses();
+  const results = await fetchMyCoursesPreview();
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Nombre</TableHead>
-          <TableHead className="w-[100px] text-right">Favorito</TableHead>
+          <TableHead className="w-[110px] text-center">Destacado</TableHead>
+          <TableHead className="w-[80px] text-right">Practicar</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -56,8 +58,21 @@ async function MyCoursesResultsSection() {
                 {course.name}
               </Link>
             </TableCell>
-            <TableCell className="text-right">
-              {course.isFavorite ? "Sí" : "No"}
+            <TableCell className="text-center">
+              <Bookmark
+                fill={course.isFavorite ? "currentColor" : "transparent"}
+                className="mx-auto size-5"
+              />
+            </TableCell>
+            <TableCell className="py-0 text-center">
+              <Button variant="ghost" size="sm" asChild>
+                <Link
+                  href={`/courses/detail/${course.courseId}/practice`}
+                  className="text-slate-700"
+                >
+                  <Play className="size-5" />
+                </Link>
+              </Button>
             </TableCell>
           </TableRow>
         ))}
