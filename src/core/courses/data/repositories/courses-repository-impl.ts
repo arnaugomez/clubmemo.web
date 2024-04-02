@@ -7,6 +7,7 @@ import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
 import { ObjectId, WithId } from "mongodb";
 import {
   CoursesRepository,
+  GetDiscoverCoursesInputModel,
   GetHasCoursesInputModel,
   GetMyCoursesInputModel,
   GetMyCoursesPaginationInputModel,
@@ -14,9 +15,14 @@ import {
 import { CourseModel } from "../../domain/models/course-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 import { CreateCourseInputModel } from "../../domain/models/create-course-input-model";
+import { DiscoverCourseModel } from "../../domain/models/discover-course-model";
 import { EnrolledCourseListItemModel } from "../../domain/models/enrolled-course-list-item-model";
 import { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
 import { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
+import {
+  DiscoverCourseDoc,
+  DiscoverCourseTransformer,
+} from "../aggregations/discover-course-aggregation";
 import {
   EnrolledCourseListItemDoc,
   EnrolledCourseListItemTransformer,
@@ -217,5 +223,70 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       { projection: { _id: 1 } },
     );
     return Boolean(result);
+  }
+
+  async getDiscoverCourses({
+    limit = 12,
+    paginationToken,
+    query,
+  }: GetDiscoverCoursesInputModel): Promise<DiscoverCourseModel[]> {
+    const aggregation = this.courses.aggregate<DiscoverCourseDoc>([
+      ...(query
+        ? [
+            {
+              $search: {
+                index: "courses",
+                compound: {
+                  should: [
+                    {
+                      autocomplete: {
+                        query,
+                        path: "name",
+                      },
+                    },
+                    {
+                      autocomplete: {
+                        query,
+                        path: "description",
+                      },
+                    },
+                  ],
+                  minimumShouldMatch: 1,
+                },
+                searchAfter: paginationToken,
+              },
+            },
+          ]
+        : [
+            {
+              $search: {
+                index: "courses",
+                exists: {
+                  path: "name",
+                },
+                searchAfter: paginationToken,
+              },
+            },
+          ]),
+      {
+        $match: {
+          isPublic: false,
+        },
+      },
+      { $limit: limit },
+      {
+        $project: {
+          id: "$_id",
+          name: true,
+          description: true,
+          picture: true,
+          // TODO pagination token
+          paginationToken: { $meta: "searchSequenceToken" },
+        },
+      },
+    ]);
+
+    const result = await aggregation.toArray();
+    return result.map((data) => new DiscoverCourseTransformer(data).toDomain());
   }
 }
