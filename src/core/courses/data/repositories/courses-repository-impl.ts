@@ -1,3 +1,7 @@
+import {
+  PaginationFacet,
+  PaginationFacetTransformer,
+} from "@/src/core/app/data/services/facets/pagination-facet";
 import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
 import { ObjectId, WithId } from "mongodb";
@@ -154,7 +158,9 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     const skip = (page - 1) * pageSize;
     const limit = pageSize;
 
-    const aggregation = this.courseEnrollments.aggregate([
+    const aggregation = this.courseEnrollments.aggregate<
+      PaginationFacet<EnrolledCourseListItemDoc>
+    >([
       {
         $match: {
           profileId: new ObjectId(profileId),
@@ -175,7 +181,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       {
         $facet: {
           metadata: [{ $count: "totalCount" }],
-          data: [
+          results: [
             { $skip: skip },
             { $limit: limit },
             {
@@ -189,14 +195,18 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           ],
         },
       },
+      {
+        $unwind: "$metadata",
+      },
     ]);
 
-    const result = await aggregation.toArray();
-    console.log(result);
-    return {
-      count: 1000,
-      results: [],
-    };
+    const result = await aggregation.tryNext();
+    if (!result) {
+      return PaginationModel.empty();
+    }
+    return new PaginationFacetTransformer(result).toDomain((data) =>
+      new EnrolledCourseListItemTransformer(data).toDomain(),
+    );
   }
 
   async getHasCourses(input: GetHasCoursesInputModel) {

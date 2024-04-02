@@ -1,4 +1,23 @@
-export interface PaginationModel<T> {
+export interface PaginationModelData<T> {
   results: T[];
-  count: number;
+  totalCount: number;
+}
+
+export class PaginationModel<T> {
+  constructor(public readonly data: PaginationModelData<T>) {}
+
+  get results() {
+    return this.data.results;
+  }
+
+  get totalCount() {
+    return this.data.totalCount;
+  }
+
+  static empty<T>(): PaginationModel<T> {
+    return new PaginationModel<T>({
+      results: [],
+      totalCount: 0,
+    });
+  }
 }

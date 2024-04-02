@@ -14,7 +14,7 @@ export const fetchMyCoursesPagination = cache(async function ({
   PaginationModel<EnrolledCourseListItemModel>
 > {
   const profile = await fetchMyProfile();
-  if (!profile) return { results: [], count: 0 };
+  if (!profile) return PaginationModel.empty();
   const coursesRepository = await locator.CoursesRepository();
   return await coursesRepository.getMyCoursesPagination({
     profileId: profile.id,
