@@ -1,5 +1,6 @@
 import { CourseModel } from "@/src/core/courses/domain/models/course-model";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
+import Link from "next/link";
 import { CourseDetailEnrollSection } from "../../enroll/components/course-detail-enroll-section";
 
 interface CourseDetailMainActionsSectionProps {
@@ -17,7 +18,11 @@ export function CourseDetailMainActionsSection({
           courseData={course.data}
         />
       )}
-      {course.isEnrolled && <Button className="w-full">Practicar</Button>}
+      {course.isEnrolled && (
+        <Button className="w-full" asChild>
+          <Link href={`/courses/detail/${course.id}/practice`}>Practicar</Link>
+        </Button>
+      )}
     </div>
   );
 }

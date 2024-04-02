@@ -27,6 +27,7 @@ export async function favoriteCourseAction({
       isFavorite,
     });
     revalidatePath("/courses");
+    revalidatePath("/learn");
   } catch (error) {
     if (error instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");

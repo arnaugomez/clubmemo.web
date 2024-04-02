@@ -1,6 +1,7 @@
 import { CreateCourseCtaLarge } from "@/src/ui/features/courses/create/components/create-course-cta-large";
-import { MyCoursesSection } from "@/src/ui/features/courses/my-courses/components/my-courses-section";
-import { fetchMyCourses } from "@/src/ui/features/courses/my-courses/fetch/fetch-my-courses";
+import { FavoriteCoursesSection } from "@/src/ui/features/courses/favorite-courses/components/favorite-courses-section";
+import { MyCoursesPreviewSection } from "@/src/ui/features/courses/my-courses-preview/components/my-courses-preview-section";
+import { fetchMyCoursesPreview } from "@/src/ui/features/courses/my-courses-preview/fetch/fetch-my-courses-preview";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { GraduationCap } from "lucide-react";
@@ -24,7 +25,7 @@ export default async function LearnPage() {
 }
 
 async function LearnPageContent() {
-  const courses = await fetchMyCourses();
+  const courses = await fetchMyCoursesPreview();
   if (courses.length === 0) {
     return <CreateCourseCtaLarge />;
   }
@@ -38,15 +39,9 @@ async function LearnPageContent() {
         </div>
       </section>
       <div className="h-12" />
-      <section className="px-4">
-        <div className="mx-auto max-w-prose">
-          <h2 className={cn(textStyles.h3, "mx-auto max-w-prose")}>
-            Favoritos
-          </h2>
-        </div>
-      </section>
+      <FavoriteCoursesSection />
       <div className="h-12" />
-      <MyCoursesSection />
+      <MyCoursesPreviewSection />
     </>
   );
 }
