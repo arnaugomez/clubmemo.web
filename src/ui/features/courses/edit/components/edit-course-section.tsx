@@ -120,16 +120,16 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
                 placeholder="De qué trata el curso"
               />
               <div className="h-4" />
+              <TagsFormField
+                label="Etiquetas del curso"
+                name="tags"
+                placeholder="Sus temas, asignaturas..."
+              />
+              <div className="h-4" />
               <SwitchSectionFormField
                 name="isPublic"
                 label="Curso público"
                 description="Haz que el curso sea visible para otros usuarios"
-              />
-              <div className="h-4" />
-              <TagsFormField
-                label="Etiquetas"
-                name="tags"
-                placeholder="Los temas principales del curso"
               />
               <FormGlobalErrorMessage />
             </div>
