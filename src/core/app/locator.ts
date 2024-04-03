@@ -8,6 +8,7 @@ import { CourseAuthorsRepository } from "../courses/domain/interfaces/course-aut
 import { CourseEnrollmentsRepository } from "../courses/domain/interfaces/course-enrollments-repository";
 import { CoursesRepository } from "../courses/domain/interfaces/courses-repository";
 import { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
+import { TagsRepository } from "../tags/domain/interfaces/tags-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
 import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
 import { EmailService } from "./domain/interfaces/email-service";
@@ -32,6 +33,7 @@ interface Locator {
   CoursesRepository: Lazy<CoursesRepository>;
   CourseEnrollmentsRepository: Lazy<CourseEnrollmentsRepository>;
   CourseAuthorsRepository: Lazy<CourseAuthorsRepository>;
+  TagsRepository: Lazy<TagsRepository>;
 }
 
 export const singleton = memoizeOne;
@@ -101,5 +103,11 @@ export const locator: Locator = {
       "../courses/data/repositories/course-authors-repository-impl"
     );
     return new file.CourseAuthorsRepositoryImpl(this.MongoService());
+  },
+
+  // Tags
+  async TagsRepository() {
+    const file = await import("../tags/data/repositories/tags-repository-impl");
+    return new file.TagsRepositoryImpl(this.MongoService());
   },
 };

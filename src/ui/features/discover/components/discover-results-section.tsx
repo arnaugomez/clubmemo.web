@@ -100,7 +100,7 @@ interface DiscoverCourseCardProps {
   course: DiscoverCourseModel;
 }
 
-export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
+function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
   return (
     <Card className="h-64 overflow-clip">
       <div className="relative h-24 bg-slate-300">
@@ -117,9 +117,7 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
           {course.description || "Sin descripción"}
         </p>
         <div className="h-1"></div>
-        <p className={cn(textStyles.muted, "truncate")}>
-          #clubmemo #test #matematicas #hello
-        </p>
+        <DiscoverCourseCardTags tags={course.tags} />
         <div className="h-4"></div>
         <div className="flex space-x-3 justify-end">
           <Button size="sm" variant={"secondary"}>
@@ -133,4 +131,16 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
       </div>
     </Card>
   );
+}
+
+interface DiscoverCourseCardTagsProps {
+  tags: string[];
+}
+
+function DiscoverCourseCardTags({ tags }: DiscoverCourseCardTagsProps) {
+  function getText() {
+    if (tags.length) return tags.map((tag) => `#${tag}`).join(" ");
+    return "Sin etiquetas";
+  }
+  return <p className={cn(textStyles.muted, "truncate")}>{getText()}</p>;
 }

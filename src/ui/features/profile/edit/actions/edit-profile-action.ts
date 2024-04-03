@@ -1,9 +1,9 @@
 "use server";
-import { locator } from "@/src/core/app/locator";
 import {
   HandleAlreadyExistsError,
   ProfileDoesNotExistError,
 } from "@/src/core/profile/domain/errors/profile-errors";
+import { profileLocator } from "@/src/core/profile/profile-locator";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../fetch/fetch-my-profile";
@@ -14,6 +14,7 @@ interface EditProfileActionModel {
   bio: string;
   website: string;
   isPublic: boolean;
+  tags: string[];
 }
 
 export async function editProfileAction(data: EditProfileActionModel) {
@@ -21,8 +22,8 @@ export async function editProfileAction(data: EditProfileActionModel) {
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
 
-    const profilesRepository = await locator.ProfilesRepository();
-    await profilesRepository.update({ id: profile.id, ...data });
+    const updateProfileUseCase = await profileLocator.UpdateProfileUseCase();
+    await updateProfileUseCase.execute({ id: profile.id, ...data });
 
     revalidatePath("/");
   } catch (e) {

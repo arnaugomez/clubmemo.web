@@ -1,6 +1,6 @@
 "use server";
 import { waitMilliseconds } from "@/src/core/app/utils/promises";
-import { authLocator } from "@/src/core/auth/domain/auth-locator";
+import { authLocator } from "@/src/core/auth/auth-locator";
 import {
   IncorrectPasswordError,
   UserDoesNotExistError,

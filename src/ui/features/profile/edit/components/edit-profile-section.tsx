@@ -7,6 +7,7 @@ import {
 import {
   InputFormField,
   SwitchSectionFormField,
+  TagsFormField,
   TextareaFormField,
 } from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
@@ -65,6 +66,7 @@ const EditProfileSchema = z.object({
   bio: z.string().trim().min(0).max(255),
   website: z.string().url().max(2083).or(z.string().max(0)),
   isPublic: z.boolean(),
+  tags: z.array(z.string().trim().min(1).max(50)).max(10),
 });
 
 type FormValues = z.infer<typeof EditProfileSchema>;
@@ -80,6 +82,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       bio: profile.bio ?? "",
       website: profile.website ?? "",
       isPublic: profile.isPublic,
+      tags: profile.tags,
     },
   });
 
@@ -140,6 +143,12 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
                 label="Bio"
                 name="bio"
                 placeholder="Cuéntanos algo sobre ti"
+              />
+              <div className="h-4" />
+              <TagsFormField
+                label="Etiquetas"
+                name="tags"
+                placeholder="Tus intereses, asignaturas..."
               />
               <div className="h-4" />
               <InputFormField

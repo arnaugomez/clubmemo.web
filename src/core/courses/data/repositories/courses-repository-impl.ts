@@ -280,7 +280,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           name: true,
           description: true,
           picture: true,
-          // TODO pagination token
+          tags: true,
           paginationToken: { $meta: "searchSequenceToken" },
         },
       },

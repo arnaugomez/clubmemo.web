@@ -4,6 +4,7 @@ export interface DiscoverCourseModelData {
   description?: string;
   picture?: string;
   paginationToken: string;
+  tags?: string[];
 }
 
 export class DiscoverCourseModel {
@@ -23,6 +24,10 @@ export class DiscoverCourseModel {
 
   get picture() {
     return this.data.picture;
+  }
+
+  get tags() {
+    return this.data.tags ?? [];
   }
 
   get paginationToken() {
