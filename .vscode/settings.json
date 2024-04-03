@@ -8,5 +8,13 @@
   "conventionalCommits.gitmoji": false,
   "conventionalCommits.promptFooter": false,
   "conventionalCommits.promptBody": false,
-  "conventionalCommits.scopes": ["app", "auth", "courses", "profile", "tags"]
+  "conventionalCommits.scopes": [
+    "app",
+    "auth",
+    "courses",
+    "profile",
+    "tags",
+    "flashcards",
+    "notes"
+  ]
 }
