@@ -12,6 +12,7 @@ export interface CourseDoc {
   description?: string;
   picture?: string;
   isPublic: boolean;
+  tags?: string[];
 }
 export const coursesCollection = collection<CourseDoc>("courses");
 
