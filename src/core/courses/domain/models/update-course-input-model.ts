@@ -3,4 +3,5 @@ export interface UpdateCourseInputModel {
   name: string;
   description: string;
   isPublic: boolean;
+  tags: string[];
 }

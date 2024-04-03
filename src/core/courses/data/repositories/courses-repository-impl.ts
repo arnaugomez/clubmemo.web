@@ -242,12 +242,34 @@ export class CoursesRepositoryImpl implements CoursesRepository {
                       autocomplete: {
                         query,
                         path: "name",
+                        fuzzy: {
+                          maxEdits: 2,
+                          prefixLength: 0,
+                          maxExpansions: 50,
+                        },
+                        score: { boost: { value: 3 } },
                       },
                     },
                     {
                       autocomplete: {
                         query,
                         path: "description",
+                        fuzzy: {
+                          maxEdits: 2,
+                          prefixLength: 0,
+                          maxExpansions: 50,
+                        },
+                      },
+                    },
+                    {
+                      text: {
+                        query,
+                        path: "tags",
+                        fuzzy: {
+                          maxEdits: 2,
+                          prefixLength: 0,
+                          maxExpansions: 50,
+                        },
                       },
                     },
                   ],
