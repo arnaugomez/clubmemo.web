@@ -1,17 +1,23 @@
 "use client";
 
+import { waitMilliseconds } from "@/src/core/app/utils/promises";
 import {
   DiscoverCourseModel,
   DiscoverCourseModelData,
 } from "@/src/core/courses/domain/models/discover-course-model";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Card } from "@/src/ui/components/shadcn/ui/card";
+import { Skeleton } from "@/src/ui/components/shadcn/ui/skeleton";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { Plus } from "lucide-react";
+import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { Plus, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { paginateDiscoverAction } from "../actions/paginate-discover-action";
 
 interface DiscoverResultsSectionProps {
   results: DiscoverCourseModelData[];
@@ -20,21 +26,73 @@ interface DiscoverResultsSectionProps {
 export function DiscoverResultsSection({
   results: initialResults,
 }: DiscoverResultsSectionProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query")?.trim() ?? "";
   const [results, setResults] = useState(() =>
     initialResults.map((e) => new DiscoverCourseModel(e)),
   );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [canLoadMore, setCanLoadMore] = useState(initialResults.length === 12);
+  const { ref, inView } = useInView();
+
+  const loadMore = useCallback(async () => {
+    if (!canLoadMore) return;
+
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const result = await paginateDiscoverAction({
+      query,
+      paginationToken: results[results.length - 1].paginationToken,
+    });
+    const handler = new FormResponseHandler(result);
+
+    if (handler.hasErrors) {
+      handler.toastErrors();
+      await waitMilliseconds(1500);
+    } else if (handler.data) {
+      setResults(
+        results.concat(handler.data.map((e) => new DiscoverCourseModel(e))),
+      );
+      setCanLoadMore(handler.data.length === 12);
+    }
+
+    setIsLoading(false);
+  }, [canLoadMore, isLoading, query, results]);
+
+  useEffect(() => {
+    if (!inView) return;
+    loadMore();
+  }, [inView, loadMore]);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {results.map((course) => (
-        <DiscoverCourseCard course={course} key={course.id} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {results.map((course) => (
+          <DiscoverCourseCard course={course} key={course.id} />
+        ))}
+        {canLoadMore && (
+          <div key="inView" ref={ref}>
+            <Skeleton key="inView" className="h-64 rounded-lg" />
+          </div>
+        )}
+        {canLoadMore &&
+          Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-64 rounded-lg" />
+          ))}
+      </div>
+      {!canLoadMore && (
+        <>
+          <div className="flex justify-center pt-16">
+            <Search className={cn(textStyles.muted, "size-5")} />
+          </div>
+          <div className="h-4"></div>
+          <p className={cn(textStyles.muted, "text-center text-sm")}>
+            No hay más resultados
+          </p>
+        </>
+      )}
+    </>
   );
 }
 

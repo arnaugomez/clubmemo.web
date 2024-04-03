@@ -13,7 +13,6 @@ export function DiscoverFiltersSection() {
 
   const handleSearch = useDebouncedCallback((text: string) => {
     const query = text.trim();
-    console.log(`Searching... ${query}`);
 
     const params = new URLSearchParams(searchParams);
     if (query) {

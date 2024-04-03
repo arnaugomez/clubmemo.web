@@ -24,7 +24,7 @@ export class DiscoverCourseModel {
   get picture() {
     return this.data.picture;
   }
-  
+
   get paginationToken() {
     return this.data.paginationToken;
   }
