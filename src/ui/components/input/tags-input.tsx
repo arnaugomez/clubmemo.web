@@ -48,8 +48,10 @@ export default function TagsInput({
       isValidNewOption={(inputValue) => /^[a-zA-Z0-9-_ ]+$/.test(inputValue)}
       isMulti
       loadOptions={loadExistingTags}
+      defaultOptions
       loadingMessage={() => "Cargando..."}
       placeholder={placeholder}
+      allowCreateWhileLoading
     />
   );
 }

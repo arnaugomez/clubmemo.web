@@ -66,7 +66,7 @@ const EditProfileSchema = z.object({
   bio: z.string().trim().min(0).max(255),
   website: z.string().url().max(2083).or(z.string().max(0)),
   isPublic: z.boolean(),
-  tags: z.array(z.string().trim().min(1).max(50)),
+  tags: z.array(z.string().trim().min(1).max(50)).max(10),
 });
 
 type FormValues = z.infer<typeof EditProfileSchema>;
@@ -145,17 +145,17 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
                 placeholder="Cuéntanos algo sobre ti"
               />
               <div className="h-4" />
+              <TagsFormField
+                label="Etiquetas"
+                name="tags"
+                placeholder="Tus intereses, asignaturas..."
+              />
+              <div className="h-4" />
               <InputFormField
                 label="Página web"
                 name="website"
                 placeholder="Enlace a tu página web o redes sociales"
                 autoComplete="nickname"
-              />
-              <div className="h-4" />
-              <TagsFormField
-                label="Etiquetas"
-                name="tags"
-                placeholder="Tus intereses, habilidades o asignaturas"
               />
               <FormGlobalErrorMessage />
             </div>

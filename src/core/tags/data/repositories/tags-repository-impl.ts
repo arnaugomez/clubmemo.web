@@ -16,10 +16,11 @@ export class TagsRepositoryImpl implements TagsRepository {
         { ordered: false },
       );
     } catch (e) {
-      console.log(e);
+      // TODO: handle "element already exists" error
     }
   }
   async getSuggestions(query?: string): Promise<string[]> {
+    console.log("query", query);
     const cursor = this.tags.find(
       query ? { name: { $regex: `^${query}`, $options: "i" } } : {},
       {
