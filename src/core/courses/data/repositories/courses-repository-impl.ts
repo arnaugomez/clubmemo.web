@@ -266,7 +266,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
                         query,
                         path: "tags",
                         fuzzy: {
-                          maxEdits: 2,  
+                          maxEdits: 2,
                           prefixLength: 0,
                           maxExpansions: 50,
                         },
