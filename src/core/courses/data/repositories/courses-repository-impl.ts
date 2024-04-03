@@ -270,7 +270,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           ]),
       {
         $match: {
-          isPublic: false,
+          isPublic: true,
         },
       },
       { $limit: limit },
