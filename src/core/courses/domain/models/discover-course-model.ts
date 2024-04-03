@@ -3,6 +3,7 @@ export interface DiscoverCourseModelData {
   name: string;
   description?: string;
   picture?: string;
+  paginationToken: string;
 }
 
 export class DiscoverCourseModel {
@@ -22,5 +23,9 @@ export class DiscoverCourseModel {
 
   get picture() {
     return this.data.picture;
+  }
+  
+  get paginationToken() {
+    return this.data.paginationToken;
   }
 }

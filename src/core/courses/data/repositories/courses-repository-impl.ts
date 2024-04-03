@@ -230,7 +230,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     paginationToken,
     query,
   }: GetDiscoverCoursesInputModel): Promise<DiscoverCourseModel[]> {
-    const aggregation = this.courses.aggregate<DiscoverCourseDoc>([
+    const aggregation = this.courses.aggregate<WithId<DiscoverCourseDoc>>([
       ...(query
         ? [
             {
@@ -276,7 +276,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       { $limit: limit },
       {
         $project: {
-          id: "$_id",
+          _id: true,
           name: true,
           description: true,
           picture: true,

@@ -1,20 +1,21 @@
-import { ObjectId } from "mongodb";
+import { WithId } from "mongodb";
 import { DiscoverCourseModel } from "../../domain/models/discover-course-model";
 
 export interface DiscoverCourseDoc {
-  id: ObjectId;
   name: string;
   description?: string;
   picture?: string;
+  paginationToken: string;
 }
 
 export class DiscoverCourseTransformer {
-  constructor(private readonly doc: DiscoverCourseDoc) {}
+  constructor(private readonly doc: WithId<DiscoverCourseDoc>) {}
 
   toDomain() {
+    const { _id, ...rest } = this.doc;
     return new DiscoverCourseModel({
-      ...this.doc,
-      id: this.doc.id.toString(),
+      ...rest,
+      id: _id.toString(),
     });
   }
 }
