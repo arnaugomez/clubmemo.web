@@ -30,6 +30,7 @@ export class ProfileDocTransformer {
       backgroundPicture: this.doc.backgroundPicture,
       website: this.doc.website,
       isPublic: this.doc.isPublic,
+      tags: this.doc.tags,
     });
   }
 }
