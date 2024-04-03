@@ -12,6 +12,7 @@ export interface CourseModelData {
   isPublic: boolean;
   permissionType: CoursePermissionTypeModel | null;
   enrollment: CourseEnrollmentModelData | null;
+  tags?: string[];
 }
 
 export class CourseModel {
@@ -39,6 +40,10 @@ export class CourseModel {
 
   get permissionType() {
     return this.data.permissionType;
+  }
+
+  get tags() {
+    return this.data.tags ?? [];
   }
 
   get canView() {

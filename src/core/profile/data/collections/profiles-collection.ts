@@ -11,6 +11,7 @@ export interface ProfileDoc {
   backgroundPicture?: string;
   website?: string;
   isPublic: boolean;
+  tags?: string[];
 }
 
 export const profilesCollection = collection<ProfileDoc>("profiles");
