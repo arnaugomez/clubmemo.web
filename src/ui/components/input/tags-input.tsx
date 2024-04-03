@@ -1,7 +1,8 @@
 "use client";
-import { waitMilliseconds } from "@/src/core/app/utils/promises";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import { toast } from "sonner";
+import { getTagSuggestionsAction } from "../../features/tags/actions/get-tag-suggestions-action";
+import { ActionResponseHandler } from "../../view-models/action-response-handler";
 
 interface TagsInputProps {
   name: string;
@@ -23,9 +24,11 @@ export default function TagsInput({
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const query = text.trim();
-      await waitMilliseconds(2000);
-      const fetchedOptions = initialOptions;
-      return fetchedOptions.map((tag) => ({ value: tag, label: tag }));
+      const response = await getTagSuggestionsAction({ query });
+      const handler = new ActionResponseHandler(response);
+      handler.toastErrors();
+
+      return handler.data?.map((tag) => ({ value: tag, label: tag })) ?? [];
     } catch (e) {
       console.error(e);
       toast.error("Error al cargar etiquetas");
@@ -42,11 +45,8 @@ export default function TagsInput({
         onChange(selectedOptions.map((option) => option.value));
       }}
       createOptionPosition="first"
-      isValidNewOption={(inputValue, _, accessors) =>
-        /^[a-zA-Z0-9-_ ]+$/.test(inputValue) &&
-        !accessors.some(
-          (option) => "value" in option && option.value === inputValue,
-        )
+      isValidNewOption={
+        (inputValue) => /^[a-zA-Z0-9-_ ]+$/.test(inputValue)
       }
       isMulti
       loadOptions={loadExistingTags}
@@ -55,7 +55,3 @@ export default function TagsInput({
     />
   );
 }
-
-const initialOptions = Array.from({ length: 100 }).map((_, index) =>
-  index.toString(),
-);
