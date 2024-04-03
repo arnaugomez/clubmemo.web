@@ -6,4 +6,5 @@ export interface UpdateProfileInputModel {
   bio: string;
   website: string;
   isPublic: boolean;
+  tags: string[];
 }

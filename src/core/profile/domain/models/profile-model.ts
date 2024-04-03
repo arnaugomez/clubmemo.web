@@ -8,6 +8,7 @@ export interface ProfileModelData {
   backgroundPicture?: string;
   website?: string;
   isPublic: boolean;
+  tags?: string[];
 }
 
 export class ProfileModel {
@@ -39,5 +40,8 @@ export class ProfileModel {
   }
   get isPublic() {
     return this.data.isPublic;
+  }
+  get tags() {
+    return this.data.tags ?? [];
   }
 }

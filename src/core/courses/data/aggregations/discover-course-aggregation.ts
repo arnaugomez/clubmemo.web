@@ -6,6 +6,7 @@ export interface DiscoverCourseDoc {
   description?: string;
   picture?: string;
   paginationToken: string;
+  tags?: string[];
 }
 
 export class DiscoverCourseTransformer {
