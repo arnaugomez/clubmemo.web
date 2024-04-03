@@ -1,6 +1,6 @@
 "use server";
 
-import { locator } from "@/src/core/app/locator";
+import { coursesLocator } from "@/src/core/courses/courses-locator";
 import {
   CannotEditCourseError,
   CourseDoesNotExistError,
@@ -16,15 +16,8 @@ export async function editCourseAction(data: UpdateCourseInputModel) {
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
 
-    const coursesRepository = await locator.CoursesRepository();
-    const course = await coursesRepository.getDetail({
-      id: data.id,
-      profileId: profile.id,
-    });
-    if (!course) throw new CourseDoesNotExistError();
-    if (!course.canEdit) throw new CannotEditCourseError();
-
-    await coursesRepository.update(data);
+    const updateCourseUseCase = await coursesLocator.UpdateCourseUseCase();
+    await updateCourseUseCase.execute(data, profile);
 
     revalidatePath("/courses");
     revalidatePath("/learn");
