@@ -1,6 +1,7 @@
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { HTMLInputAutoCompleteAttribute, HTMLInputTypeAttribute } from "react";
 import { PasswordInput } from "../input/password-input";
+import TagsInput from "../input/tags-input";
 import {
   FormControl,
   FormDescription,
@@ -167,6 +168,40 @@ export function SwitchSectionFormField({
           <FormControl>
             <Switch checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>
+        </FormItem>
+      )}
+    />
+  );
+}
+
+interface TagsFormFieldProps {
+  name: string;
+  label: string;
+  placeholder?: string;
+}
+
+export function TagsFormField({
+  label,
+  name,
+  placeholder,
+}: TagsFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <TagsInput
+              name={name}
+              id={field.name}
+              placeholder={placeholder}
+              label={label}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />
