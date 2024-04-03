@@ -26,6 +26,9 @@ export function DiscoverFiltersSection() {
   return (
     <div className="flex space-x-4">
       <Input
+        type="search"
+        name="search"
+        placeholder="Buscar cursos"
         className="flex-1"
         defaultValue={query}
         onChange={(e) => handleSearch(e.target.value)}
