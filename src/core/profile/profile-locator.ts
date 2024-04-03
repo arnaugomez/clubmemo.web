@@ -1,4 +1,3 @@
-
 import { Lazy, locator } from "../app/locator";
 import { UpdateProfileUseCase } from "./domain/use-cases/update-profile-use-case";
 

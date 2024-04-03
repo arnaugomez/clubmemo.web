@@ -5,6 +5,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
+import { TagsSection } from "../../../tags/components/tags-section";
 import { CourseDetailActionsSection } from "./course-detail-actions-section";
 import { CourseDetailAuthorsSection } from "./course-detail-authors-section";
 import { CourseDetailMainActionsSection } from "./course-detail-main-actions-section";
@@ -42,6 +43,7 @@ export async function CourseDetailMainSection({
         <p className={cn(textStyles.p, "whitespace-pre-line")}>
           {course.description || "Este curso no tiene descripción"}
         </p>
+        <TagsSection tags={course.tags} variant="secondary" />
         <div className="h-12" />
         <CourseDetailMainActionsSection course={course} />
         <div className="h-6" />

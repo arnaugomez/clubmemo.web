@@ -45,7 +45,9 @@ export default function TagsInput({
         onChange(selectedOptions.map((option) => option.value));
       }}
       createOptionPosition="first"
-      isValidNewOption={(inputValue) => /^[a-zA-Z0-9-_ ]+$/.test(inputValue)}
+      isValidNewOption={(inputValue) =>
+        inputValue.length <= 50 && /^[a-zA-Z0-9-_ ]+$/.test(inputValue)
+      }
       isMulti
       loadOptions={loadExistingTags}
       defaultOptions
