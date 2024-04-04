@@ -30,5 +30,5 @@ export const notesLocator: NotesLocator = {
       await locator.CoursesRepository(),
       await locator.NotesRepository(),
     );
-  }
+  },
 };

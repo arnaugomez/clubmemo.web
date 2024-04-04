@@ -18,7 +18,7 @@ export class CreateNoteUseCase {
 
   async execute({
     profileId,
-    createNoteInput
+    createNoteInput,
   }: CreateNoteUseCaseInputModel): Promise<NoteModel> {
     const course = await this.coursesRepository.getDetail({
       id: createNoteInput.courseId,
