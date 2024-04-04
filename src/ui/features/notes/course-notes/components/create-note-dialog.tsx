@@ -86,7 +86,7 @@ export function CreateNoteDialog({
               <TextareaFormField
                 label="Revés"
                 name="back"
-                placeholder="Escribe la respuesta, definición o explicación"
+                placeholder="La respuesta, definición o explicación"
               />
               <FormGlobalErrorMessage />
             </div>
