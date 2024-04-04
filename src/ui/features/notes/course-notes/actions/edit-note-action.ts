@@ -20,7 +20,7 @@ export async function editNoteAction(data: EditNoteActionModel) {
 
     const updateNoteUseCase = await notesLocator.UpdateNoteUseCase();
     await updateNoteUseCase.execute({
-     updateNoteInput: values,
+      updateNoteInput: values,
       profileId: profile.id,
     });
 
