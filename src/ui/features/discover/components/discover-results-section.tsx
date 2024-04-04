@@ -8,9 +8,9 @@ import {
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Card } from "@/src/ui/components/shadcn/ui/card";
 import { Skeleton } from "@/src/ui/components/shadcn/ui/skeleton";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { Plus, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

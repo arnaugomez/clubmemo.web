@@ -1,7 +1,7 @@
 "use server";
 
 import { GetNotesInputModel } from "@/src/core/notes/domain/models/get-notes-input-model";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { fetchCourseNotes } from "../fetch/fetch-course-notes";
 
 export async function paginateNotesAction(input: GetNotesInputModel) {

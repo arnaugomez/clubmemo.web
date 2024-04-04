@@ -2,7 +2,7 @@
 import { locator } from "@/src/core/app/locator";
 import { UserAlreadyExistsError } from "@/src/core/auth/domain/errors/auth-errors";
 import { SignupWithPasswordModel } from "@/src/core/auth/domain/interfaces/auth-service";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
