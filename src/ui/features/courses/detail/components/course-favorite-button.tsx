@@ -1,5 +1,5 @@
 import { DropdownMenuItem } from "@/src/ui/components/shadcn/ui/dropdown-menu";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { Bookmark } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { favoriteCourseAction } from "../actions/favorite-course-action";

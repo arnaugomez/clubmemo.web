@@ -5,7 +5,7 @@ import {
   CourseModelData,
 } from "@/src/core/courses/domain/models/course-model";
 import { AsyncButton } from "@/src/ui/components/button/async-button";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { useState } from "react";
 import { enrollCourseAction } from "../actions/enroll-course-action";
 

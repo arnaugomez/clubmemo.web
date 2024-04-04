@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { InputFormField } from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
+import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import {
   Dialog,
@@ -16,12 +17,11 @@ import {
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { forgotPasswordAction } from "../actions/forgot-password-action";
-import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
-import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   email: z.string().email().max(254),

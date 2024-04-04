@@ -2,7 +2,7 @@
 import AsyncCreatableSelect from "react-select/async-creatable";
 import { toast } from "sonner";
 import { getTagSuggestionsAction } from "../../features/tags/actions/get-tag-suggestions-action";
-import { ActionResponseHandler } from "../../view-models/action-response-handler";
+import { ActionResponseHandler } from "../../models/action-response-handler";
 
 interface TagsInputProps {
   name: string;
