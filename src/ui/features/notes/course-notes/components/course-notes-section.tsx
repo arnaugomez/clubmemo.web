@@ -2,9 +2,13 @@ import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import { CourseNotesProvider } from "../contexts/course-notes-context";
+import { fetchCourseNotes } from "../fetch/fetch-course-notes";
 import { CourseNotesEmptyState } from "./course-notes-empty-state";
+import { CourseNotesLoadingSkeletons } from "./course-notes-loading-skeletons";
 import { CreateNoteButton } from "./create-note-button";
+import { CourseNotesResultsSection } from "./course-notes-results-section";
 
 interface CourseNotesSectionProps {
   courseId: string;
@@ -36,15 +40,33 @@ export function CourseNotesSection({ courseId }: CourseNotesSectionProps) {
               <ArrowRight size={16} className="inline" />
             </Link>
           </div>
-          <div className="h-8"></div>
-          <div className="px-4">
-            <div className="mx-auto max-w-prose">
-              <CourseNotesEmptyState courseId={courseId} />
-            </div>
+          <div className="h-6"></div>
+          <div className="mx-auto max-w-prose">
+            <Suspense fallback={<CourseNotesLoadingSkeletons />}>
+              <CourseNotesContent courseId={courseId} />
+            </Suspense>
           </div>
         </CourseNotesProvider>
       </div>
       <div className="h-16"></div>
     </>
+  );
+}
+
+interface CourseNotesContentProps {
+  courseId: string;
+}
+
+async function CourseNotesContent({ courseId }: CourseNotesContentProps) {
+  const pagination = await fetchCourseNotes({ courseId });
+
+  if (pagination.results.length === 0) {
+    return <CourseNotesEmptyState courseId={courseId} />;
+  }
+  return (
+    <CourseNotesResultsSection
+      courseId={courseId}
+      initialData={pagination.toData((e) => e.data)}
+    />
   );
 }
