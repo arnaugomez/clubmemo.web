@@ -3,8 +3,8 @@ import { cn } from "@/src/ui/utils/shadcn";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { CourseNotesProvider } from "../contexts/course-notes-context";
-import { CourseNotesCreateNoteButton } from "./course-notes-create-note-button";
 import { CourseNotesEmptyState } from "./course-notes-empty-state";
+import { CreateNoteButton } from "./create-note-button";
 
 interface CourseNotesSectionProps {
   courseId: string;
@@ -23,7 +23,7 @@ export function CourseNotesSection({ courseId }: CourseNotesSectionProps) {
               >
                 Tarjetas de aprendizaje
               </h2>
-              <CourseNotesCreateNoteButton courseId={courseId} />
+              <CreateNoteButton courseId={courseId} />
             </div>
 
             {/* TODO: Extract arrow link component. link addrress is missing. */}

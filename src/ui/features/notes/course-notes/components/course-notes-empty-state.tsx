@@ -9,7 +9,7 @@ import {
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { Layers, Sparkles, SquarePen, Upload } from "lucide-react";
-import { CourseNotesCreateNoteButton } from "./course-notes-create-note-button";
+import { CreateNoteButton } from "./create-note-button";
 
 interface CourseNotesEmptyStateProps {
   courseId: string;
@@ -46,9 +46,9 @@ export function CourseNotesEmptyState({
           </CardHeader>
           <div className="h-4"></div>
           <CardFooter>
-            <CourseNotesCreateNoteButton courseId={courseId} className="w-full">
+            <CreateNoteButton courseId={courseId} className="w-full">
               Empezar
-            </CourseNotesCreateNoteButton>
+            </CreateNoteButton>
           </CardFooter>
         </Card>
         <Card>
