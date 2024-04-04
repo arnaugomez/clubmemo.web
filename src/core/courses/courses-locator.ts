@@ -1,5 +1,5 @@
 import { Lazy, locator } from "../app/locator";
-import { UpdateCourseUseCase } from "./domain/use-cases/update-course-use-case";
+import type { UpdateCourseUseCase } from "./domain/use-cases/update-course-use-case";
 
 interface CoursesLocator {
   UpdateCourseUseCase: Lazy<UpdateCourseUseCase>;
