@@ -14,6 +14,7 @@ import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
 import { EmailService } from "./domain/interfaces/email-service";
 import { EnvService } from "./domain/interfaces/env-service";
 import { MongoService } from "./domain/interfaces/mongo-service";
+import { NotesRepository } from "../notes/domain/interfaces/notes-repository";
 
 export type Dependency<T> = () => T;
 export type Lazy<T> = () => Promise<T>;
@@ -34,6 +35,7 @@ interface Locator {
   CourseEnrollmentsRepository: Lazy<CourseEnrollmentsRepository>;
   CourseAuthorsRepository: Lazy<CourseAuthorsRepository>;
   TagsRepository: Lazy<TagsRepository>;
+  NotesRepository: Lazy<NotesRepository>;
 }
 
 export const singleton = memoizeOne;
@@ -109,5 +111,12 @@ export const locator: Locator = {
   async TagsRepository() {
     const file = await import("../tags/data/repositories/tags-repository-impl");
     return new file.TagsRepositoryImpl(this.MongoService());
+  },
+  // Notes
+  async NotesRepository() {
+    const file = await import(
+      "../notes/data/repositories/notes-repository-impl"
+    );
+    return new file.NotesRepositoryImpl(this.MongoService());
   },
 };

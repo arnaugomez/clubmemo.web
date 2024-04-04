@@ -1,6 +1,6 @@
 import { Lazy, locator } from "../app/locator";
-import { ChangePasswordUseCase } from "./domain/use-cases/change-password-use-case";
-import { DeleteUserUseCase } from "./domain/use-cases/delete-user-use-case";
+import type { ChangePasswordUseCase } from "./domain/use-cases/change-password-use-case";
+import type { DeleteUserUseCase } from "./domain/use-cases/delete-user-use-case";
 
 interface AuthLocator {
   DeleteUserUseCase: Lazy<DeleteUserUseCase>;

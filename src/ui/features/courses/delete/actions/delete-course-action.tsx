@@ -3,7 +3,7 @@ import { locator } from "@/src/core/app/locator";
 import {
   CannotDeleteCourseError,
   CourseDoesNotExistError,
-} from "@/src/core/courses/domain/errors/course-errors";
+} from "@/src/core/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
 import { revalidatePath, revalidateTag } from "next/cache";
