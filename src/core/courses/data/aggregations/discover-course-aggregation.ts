@@ -5,7 +5,6 @@ export interface DiscoverCourseDoc {
   name: string;
   description?: string;
   picture?: string;
-  paginationToken: string;
   tags?: string[];
 }
 

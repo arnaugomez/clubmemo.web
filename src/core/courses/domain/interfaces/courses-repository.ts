@@ -1,4 +1,5 @@
 import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
+import { TokenPaginationModel } from "@/src/core/app/domain/models/token-pagination-model";
 import { CourseModel } from "../models/course-model";
 import { CreateCourseInputModel } from "../models/create-course-input-model";
 import { DiscoverCourseModel } from "../models/discover-course-model";
@@ -23,8 +24,13 @@ export interface GetMyCoursesPaginationInputModel {
 }
 
 export interface GetDiscoverCoursesInputModel {
-  paginationToken?: string;
   query?: string;
+  paginationToken?: string;
+  limit?: number;
+}
+export interface GetCoursesByAuthorInputModel {
+  authorId: string;
+  paginationToken?: string;
   limit?: number;
 }
 
@@ -46,5 +52,9 @@ export interface CoursesRepository {
 
   getDiscoverCourses(
     input: GetDiscoverCoursesInputModel,
-  ): Promise<DiscoverCourseModel[]>;
+  ): Promise<TokenPaginationModel<DiscoverCourseModel>>;
+
+  getCoursesByAuthor(
+    input: GetCoursesByAuthorInputModel,
+  ): Promise<TokenPaginationModel<DiscoverCourseModel>>;
 }
