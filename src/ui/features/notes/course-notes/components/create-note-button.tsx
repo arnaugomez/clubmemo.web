@@ -18,7 +18,7 @@ export function CreateNoteButton({
   return (
     <>
       <Button {...rest} onClick={() => setShowDialog(true)}>
-        {children || "Nueva tarjeta"}
+        {children || "Añadir"}
       </Button>
       {showDialog && (
         <CreateNoteDialog

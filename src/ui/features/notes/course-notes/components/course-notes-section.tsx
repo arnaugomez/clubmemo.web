@@ -5,10 +5,9 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { CourseNotesProvider } from "../contexts/course-notes-context";
 import { fetchCourseNotes } from "../fetch/fetch-course-notes";
-import { CourseNotesEmptyState } from "./course-notes-empty-state";
 import { CourseNotesLoadingSkeletons } from "./course-notes-loading-skeletons";
-import { CreateNoteButton } from "./create-note-button";
 import { CourseNotesResultsSection } from "./course-notes-results-section";
+import { CreateNoteButton } from "./create-note-button";
 
 interface CourseNotesSectionProps {
   courseId: string;
@@ -60,9 +59,6 @@ interface CourseNotesContentProps {
 async function CourseNotesContent({ courseId }: CourseNotesContentProps) {
   const pagination = await fetchCourseNotes({ courseId });
 
-  if (pagination.results.length === 0) {
-    return <CourseNotesEmptyState courseId={courseId} />;
-  }
   return (
     <CourseNotesResultsSection
       courseId={courseId}
