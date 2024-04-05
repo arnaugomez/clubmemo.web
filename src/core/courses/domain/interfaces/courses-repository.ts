@@ -29,7 +29,7 @@ export interface GetDiscoverCoursesInputModel {
   limit?: number;
 }
 export interface GetCoursesByAuthorInputModel {
-  authorId: string;
+  profileId: string;
   paginationToken?: string;
   limit?: number;
 }
