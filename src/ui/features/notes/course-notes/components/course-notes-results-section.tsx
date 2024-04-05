@@ -9,17 +9,17 @@ import {
   NoteModel,
   NoteModelData,
 } from "@/src/core/notes/domain/models/note-model";
-import { Card } from "@/src/ui/components/shadcn/ui/card";
-import { Separator } from "@/src/ui/components/shadcn/ui/separator";
 import { Skeleton } from "@/src/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { Search } from "lucide-react";
+import { Layers } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { paginateNotesAction } from "../actions/paginate-notes-action";
 import { useCourseNotesContext } from "../contexts/course-notes-context";
+import { CourseNoteCard } from "./course-note-card";
+import { CourseNotesEmptyState } from "./course-notes-empty-state";
 
 interface CourseNotesResultsSectionProps {
   courseId: string;
@@ -90,6 +90,10 @@ export function CourseNotesResultsSection({
     loadMore();
   }, [inView, loadMore]);
 
+  if (!results.length) {
+    return <CourseNotesEmptyState courseId={courseId} />;
+  }
+
   return (
     <>
       <div className="grid grid-cols-1 gap-4">
@@ -109,32 +113,14 @@ export function CourseNotesResultsSection({
       {!canLoadMore && (
         <>
           <div className="flex justify-center pt-16">
-            <Search className={cn(textStyles.muted, "size-5")} />
+            <Layers className={cn(textStyles.muted, "size-5")} />
           </div>
           <div className="h-4"></div>
           <p className={cn(textStyles.muted, "text-center text-sm")}>
-            No hay más resultados
+            No hay más tarjetas
           </p>
         </>
       )}
     </>
-  );
-}
-
-interface CourseNoteCardProps {
-  note: NoteModel;
-}
-
-function CourseNoteCard({ note }: CourseNoteCardProps) {
-  return (
-    <Card className="h-32 flex flex-col items-stretch overflow-clip">
-      <div className="flex-1 flex items-center px-4">
-        <h3 className="truncate font-medium">{note.front}</h3>
-      </div>
-      <Separator />
-      <div className="flex-1 flex items-center px-4">
-        <p className="truncate flex-1">{note.back || "Tarjeta sin "}</p>
-      </div>
-    </Card>
   );
 }
