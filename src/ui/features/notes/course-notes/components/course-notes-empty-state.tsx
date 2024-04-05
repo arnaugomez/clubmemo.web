@@ -9,13 +9,13 @@ import {
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { Layers, Sparkles, SquarePen, Upload } from "lucide-react";
+import { CreateNoteButton } from "./create-note-button";
 
 interface CourseNotesEmptyStateProps {
   courseId: string;
 }
 
 export function CourseNotesEmptyState({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   courseId,
 }: CourseNotesEmptyStateProps) {
   return (
@@ -46,7 +46,9 @@ export function CourseNotesEmptyState({
           </CardHeader>
           <div className="h-4"></div>
           <CardFooter>
-            <Button className="w-full">Empezar</Button>
+            <CreateNoteButton courseId={courseId} className="w-full">
+              Empezar
+            </CreateNoteButton>
           </CardFooter>
         </Card>
         <Card>

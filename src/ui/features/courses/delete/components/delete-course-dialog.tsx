@@ -1,5 +1,6 @@
 "use client";
 import { CourseModel } from "@/src/core/courses/domain/models/course-model";
+import { AsyncButton } from "@/src/ui/components/button/async-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import {
   Dialog,
@@ -9,11 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { deleteCourseAction } from "../actions/delete-course-action";
-import { AsyncButton } from "@/src/ui/components/button/async-button";
 
 interface DeleteCourseDialogProps {
   course: CourseModel;

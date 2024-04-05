@@ -4,7 +4,7 @@ import {
   ProfileDoesNotExistError,
 } from "@/src/core/profile/domain/errors/profile-errors";
 import { profileLocator } from "@/src/core/profile/profile-locator";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../fetch/fetch-my-profile";
 

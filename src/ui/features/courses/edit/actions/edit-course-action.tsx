@@ -4,10 +4,10 @@ import { coursesLocator } from "@/src/core/courses/courses-locator";
 import {
   CannotEditCourseError,
   CourseDoesNotExistError,
-} from "@/src/core/courses/domain/errors/course-errors";
+} from "@/src/core/courses/domain/models/course-errors";
 import { UpdateCourseInputModel } from "@/src/core/courses/domain/models/update-course-input-model";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 

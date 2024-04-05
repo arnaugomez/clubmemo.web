@@ -2,7 +2,7 @@
 
 import { locator } from "@/src/core/app/locator";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 

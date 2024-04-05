@@ -13,9 +13,9 @@ import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-err
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import Link from "next/link";
 import { loginAction } from "../actions/login-action";
 

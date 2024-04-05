@@ -20,4 +20,21 @@ export class PaginationModel<T> {
       totalCount: 0,
     });
   }
+
+  toData<U>(serializer: (data: T) => U): PaginationModelData<U> {
+    return {
+      ...this.data,
+      results: this.results.map(serializer),
+    };
+  }
+
+  static fromData<T, U>(
+    data: PaginationModelData<U>,
+    deserializer: (data: U) => T,
+  ): PaginationModel<T> {
+    return new PaginationModel<T>({
+      ...data,
+      results: data.results.map(deserializer),
+    });
+  }
 }
