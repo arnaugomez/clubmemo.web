@@ -3,7 +3,6 @@ export interface DiscoverCourseModelData {
   name: string;
   description?: string;
   picture?: string;
-  paginationToken: string;
   tags?: string[];
 }
 
@@ -28,9 +27,5 @@ export class DiscoverCourseModel {
 
   get tags() {
     return this.data.tags ?? [];
-  }
-
-  get paginationToken() {
-    return this.data.paginationToken;
   }
 }

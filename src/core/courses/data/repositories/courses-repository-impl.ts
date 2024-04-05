@@ -4,9 +4,11 @@ import {
 } from "@/src/core/app/data/services/facets/pagination-facet";
 import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
+import { TokenPaginationModel } from "@/src/core/app/domain/models/token-pagination-model";
 import { ObjectId, WithId } from "mongodb";
 import {
   CoursesRepository,
+  GetCoursesByAuthorInputModel,
   GetDiscoverCoursesInputModel,
   GetHasCoursesInputModel,
   GetMyCoursesInputModel,
@@ -37,6 +39,10 @@ import {
   CourseDocTransformer,
   coursesCollection,
 } from "../collections/courses-collection";
+import {
+  TokenPaginationTransformer,
+  WithPaginationToken,
+} from "../models/with-pagination-token";
 
 export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly courses: typeof coursesCollection.type;
@@ -229,8 +235,12 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     limit = 12,
     paginationToken,
     query,
-  }: GetDiscoverCoursesInputModel): Promise<DiscoverCourseModel[]> {
-    const aggregation = this.courses.aggregate<WithId<DiscoverCourseDoc>>([
+  }: GetDiscoverCoursesInputModel): Promise<
+    TokenPaginationModel<DiscoverCourseModel>
+  > {
+    const aggregation = this.courses.aggregate<
+      WithPaginationToken<WithId<DiscoverCourseDoc>>
+    >([
       ...(query
         ? [
             {
@@ -309,6 +319,70 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     ]);
 
     const result = await aggregation.toArray();
-    return result.map((data) => new DiscoverCourseTransformer(data).toDomain());
+    return new TokenPaginationTransformer(result).toDomain((data) =>
+      new DiscoverCourseTransformer(data).toDomain(),
+    );
+  }
+
+  async getCoursesByAuthor({
+    profileId,
+    limit = 12,
+    paginationToken,
+  }: GetCoursesByAuthorInputModel): Promise<
+    TokenPaginationModel<DiscoverCourseModel>
+  > {
+    const aggregation = this.courses.aggregate<
+      WithPaginationToken<WithId<DiscoverCourseDoc>>
+    >([
+      {
+        $search: {
+          index: "courses",
+          equals: {
+            path: "isPublic",
+            value: true,
+          },
+          searchAfter: paginationToken,
+        },
+      },
+      {
+        $lookup: {
+          from: "coursePermissions",
+          localField: "_id",
+          foreignField: "courseId",
+          as: "permission",
+        },
+      },
+      {
+        $unwind: "$permission",
+      },
+      {
+        $match: {
+          "permission.profileId": new ObjectId(profileId),
+          "permission.permissionType": {
+            $in: [
+              CoursePermissionTypeModel.Own,
+              CoursePermissionTypeModel.Edit,
+            ],
+          },
+        },
+      },
+      { $limit: limit },
+      {
+        $project: {
+          _id: true,
+          name: true,
+          description: true,
+          picture: true,
+          tags: true,
+          paginationToken: { $meta: "searchSequenceToken" },
+        },
+      },
+    ]);
+
+    const result = await aggregation.toArray();
+    console.log(result);
+    return new TokenPaginationTransformer(result).toDomain((data) =>
+      new DiscoverCourseTransformer(data).toDomain(),
+    );
   }
 }

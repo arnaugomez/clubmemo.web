@@ -14,17 +14,20 @@ import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { Search } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { paginateDiscoverAction } from "../actions/paginate-discover-action";
-import { DiscoverCourseCard } from "./discover-course-card";
+import { DiscoverCourseCard } from "../../../discover/components/discover-course-card";
+import { paginateCoursesByAuthorAction } from "../actions/paginate-courses-by-author-action";
 
-interface DiscoverResultsSectionProps {
+interface ProfileCoursesResultsSectionProps {
+  profileId: string;
   data: TokenPaginationModelData<DiscoverCourseModelData>;
 }
 
-export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
+export function ProfileCoursesResultsSection({
+  data,
+  profileId,
+}: ProfileCoursesResultsSectionProps) {
   const initialPagination = useMemo(
     () =>
       TokenPaginationModel.fromData(data, (e) => new DiscoverCourseModel(e)),
@@ -32,8 +35,6 @@ export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
   );
   const paginationToken = useRef(initialPagination.token);
 
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query")?.trim() ?? "";
   const [results, setResults] = useState(initialPagination.results);
   const [isLoading, setIsLoading] = useState(false);
   const [canLoadMore, setCanLoadMore] = useState(
@@ -47,8 +48,8 @@ export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
     if (isLoading) return;
     setIsLoading(true);
 
-    const result = await paginateDiscoverAction({
-      query,
+    const result = await paginateCoursesByAuthorAction({
+      profileId,
       paginationToken: paginationToken.current,
     });
     const handler = new FormResponseHandler(result);
@@ -67,7 +68,7 @@ export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
     }
 
     setIsLoading(false);
-  }, [canLoadMore, isLoading, query, results]);
+  }, [canLoadMore, isLoading, profileId, results]);
 
   useEffect(() => {
     if (!inView) return;
