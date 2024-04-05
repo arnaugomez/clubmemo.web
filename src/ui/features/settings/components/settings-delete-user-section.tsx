@@ -16,9 +16,9 @@ import {
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

@@ -4,7 +4,7 @@ import { locator } from "@/src/core/app/locator";
 import {
   ActionResponse,
   FormActionResponse,
-} from "@/src/ui/view-models/server-form-errors";
+} from "@/src/ui/models/server-form-errors";
 
 interface GetTagSuggestionsActionModel {
   query?: string;

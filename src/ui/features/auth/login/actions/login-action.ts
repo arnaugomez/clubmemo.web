@@ -6,7 +6,7 @@ import {
   UserDoesNotExistError,
 } from "@/src/core/auth/domain/errors/auth-errors";
 import { LoginWithPasswordModel } from "@/src/core/auth/domain/interfaces/auth-service";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

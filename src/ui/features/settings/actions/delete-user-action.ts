@@ -6,7 +6,7 @@ import {
   IncorrectPasswordError,
   UserDoesNotExistError,
 } from "@/src/core/auth/domain/errors/auth-errors";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { fetchSession } from "../../auth/fetch/fetch-session";
 
 interface DeleteUserActionModel {
