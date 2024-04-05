@@ -15,6 +15,7 @@ import {
   NoteDocTransformer,
   notesCollection,
 } from "../collections/notes-collection";
+import { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";
 
 export class NotesRepositoryImpl implements NotesRepository {
   private readonly notes: typeof notesCollection.type;
@@ -22,7 +23,10 @@ export class NotesRepositoryImpl implements NotesRepository {
   constructor(mongoService: MongoService) {
     this.notes = mongoService.collection(notesCollection);
   }
-  async createNote(note: CreateNoteInputModel): Promise<NoteModel> {
+  copyAcrossCourses() {
+    throw new Error("Method not implemented.");
+  }
+  async create(note: CreateNoteInputModel): Promise<NoteModel> {
     const newNote = {
       courseId: new ObjectId(note.courseId),
       front: note.front,
@@ -33,12 +37,12 @@ export class NotesRepositoryImpl implements NotesRepository {
     return new NoteDocTransformer(newNote).toDomain();
   }
 
-  async getNote(noteId: string): Promise<NoteModel | null> {
+  async getDetail(noteId: string): Promise<NoteModel | null> {
     const note = await this.notes.findOne({ _id: new ObjectId(noteId) });
     return note && new NoteDocTransformer(note).toDomain();
   }
 
-  async updateNote(note: UpdateNoteInputModel): Promise<void> {
+  async update(note: UpdateNoteInputModel): Promise<void> {
     await this.notes.updateOne(
       { _id: new ObjectId(note.id) },
       {
@@ -50,11 +54,11 @@ export class NotesRepositoryImpl implements NotesRepository {
     );
   }
 
-  async deleteNote(noteId: string): Promise<void> {
+  async delete(noteId: string): Promise<void> {
     await this.notes.deleteOne({ _id: new ObjectId(noteId) });
   }
 
-  async getNotes({
+  async get({
     courseId,
     page = 1,
     pageSize = 10,
@@ -89,5 +93,22 @@ export class NotesRepositoryImpl implements NotesRepository {
     return new PaginationFacetTransformer(result).toDomain((data) =>
       new NoteDocTransformer(data).toDomain(),
     );
+  }
+
+  async copy({
+    sourceCourseId,
+    targetCourseId,
+  }: CopyNotesInputModel): Promise<void> {
+    const sourceCourseNotes = await this.notes
+      .find({ courseId: new ObjectId(sourceCourseId) })
+      .toArray();
+    const newNotes = sourceCourseNotes.map(({ ...note }) => {
+      return {
+        ...note,
+        _id: undefined,
+        courseId: new ObjectId(targetCourseId),
+      };
+    });
+    await this.notes.insertMany(newNotes);
   }
 }
