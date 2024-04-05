@@ -1,4 +1,3 @@
-import { locator } from "@/src/core/app/locator";
 import { DiscoverFiltersSection } from "@/src/ui/features/discover/components/discover-filters-section";
 import { DiscoverLoadingSkeletons } from "@/src/ui/features/discover/components/discover-loading-skeletons";
 import { DiscoverResultsSection } from "@/src/ui/features/discover/components/discover-results-section";
@@ -15,8 +14,6 @@ export default async function DiscoverPage({
     query?: string;
   };
 }) {
-  const coursesRepository = await locator.CoursesRepository();
-  coursesRepository.getDiscoverCourses({});
   return (
     <main>
       <div className="h-20" />

@@ -324,10 +324,65 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     );
   }
 
-  getCoursesByAuthor(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    input: GetCoursesByAuthorInputModel,
-  ): Promise<TokenPaginationModel<DiscoverCourseModel>> {
-    throw new Error("Method not implemented.");
+  async getCoursesByAuthor({
+    profileId,
+    limit = 12,
+    paginationToken,
+  }: GetCoursesByAuthorInputModel): Promise<
+    TokenPaginationModel<DiscoverCourseModel>
+  > {
+    const aggregation = this.courses.aggregate<
+      WithPaginationToken<WithId<DiscoverCourseDoc>>
+    >([
+      {
+        $search: {
+          index: "courses",
+          equals: {
+            path: "isPublic",
+            value: true,
+          },
+          searchAfter: paginationToken,
+        },
+      },
+      {
+        $lookup: {
+          from: "coursePermissions",
+          localField: "_id",
+          foreignField: "courseId",
+          as: "permission",
+        },
+      },
+      {
+        $unwind: "$permission",
+      },
+      {
+        $match: {
+          "permission.profileId": new ObjectId(profileId),
+          "permission.permissionType": {
+            $in: [
+              CoursePermissionTypeModel.Own,
+              CoursePermissionTypeModel.Edit,
+            ],
+          },
+        },
+      },
+      { $limit: limit },
+      {
+        $project: {
+          _id: true,
+          name: true,
+          description: true,
+          picture: true,
+          tags: true,
+          paginationToken: { $meta: "searchSequenceToken" },
+        },
+      },
+    ]);
+
+    const result = await aggregation.toArray();
+    console.log(result);
+    return new TokenPaginationTransformer(result).toDomain((data) =>
+      new DiscoverCourseTransformer(data).toDomain(),
+    );
   }
 }
