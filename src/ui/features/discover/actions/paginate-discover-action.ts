@@ -9,7 +9,7 @@ export async function paginateDiscoverAction(
 ) {
   try {
     const response = await fetchDiscoverCourses(input);
-    return ActionResponse.formSuccess(response.map((e) => e.data));
+    return ActionResponse.formSuccess(response);
   } catch (e) {
     // TODO: log error report
     console.error(e);

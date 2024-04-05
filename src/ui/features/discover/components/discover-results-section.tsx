@@ -15,24 +15,33 @@ import { Plus, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { paginateDiscoverAction } from "../actions/paginate-discover-action";
+import {
+  TokenPaginationModel,
+  TokenPaginationModelData,
+} from "@/src/core/app/domain/models/token-pagination-model";
 
 interface DiscoverResultsSectionProps {
-  results: DiscoverCourseModelData[];
+  data: TokenPaginationModelData<DiscoverCourseModelData>;
 }
 
-export function DiscoverResultsSection({
-  results: initialResults,
-}: DiscoverResultsSectionProps) {
+export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
+  const initialPagination = useMemo(
+    () =>
+      TokenPaginationModel.fromData(data, (e) => new DiscoverCourseModel(e)),
+    [data],
+  );
+  const paginationToken = useRef(initialPagination.token);
+
   const searchParams = useSearchParams();
   const query = searchParams.get("query")?.trim() ?? "";
-  const [results, setResults] = useState(() =>
-    initialResults.map((e) => new DiscoverCourseModel(e)),
-  );
+  const [results, setResults] = useState(initialPagination.results);
   const [isLoading, setIsLoading] = useState(false);
-  const [canLoadMore, setCanLoadMore] = useState(initialResults.length === 12);
+  const [canLoadMore, setCanLoadMore] = useState(
+    initialPagination.results.length === 12,
+  );
   const { ref, inView } = useInView();
 
   const loadMore = useCallback(async () => {
@@ -43,7 +52,7 @@ export function DiscoverResultsSection({
 
     const result = await paginateDiscoverAction({
       query,
-      paginationToken: results[results.length - 1].paginationToken,
+      paginationToken: paginationToken.current,
     });
     const handler = new FormResponseHandler(result);
 
@@ -51,10 +60,13 @@ export function DiscoverResultsSection({
       handler.toastErrors();
       await waitMilliseconds(1500);
     } else if (handler.data) {
-      setResults(
-        results.concat(handler.data.map((e) => new DiscoverCourseModel(e))),
+      const newPagination = TokenPaginationModel.fromData(
+        handler.data,
+        (e) => new DiscoverCourseModel(e),
       );
-      setCanLoadMore(handler.data.length === 12);
+      setResults(results.concat(newPagination.results));
+      setCanLoadMore(newPagination.results.length === 12);
+      paginationToken.current = newPagination.token;
     }
 
     setIsLoading(false);

@@ -47,11 +47,11 @@ interface DiscoverPageContentProps {
 }
 
 async function DiscoverPageContent({ query }: DiscoverPageContentProps) {
-  const results = await fetchDiscoverCourses({ query });
-  if (results.length === 0) {
+  const pagination = await fetchDiscoverCourses({ query });
+  if (pagination.results.length === 0) {
     return <DiscoverEmptyState />;
   }
-  return <DiscoverResultsSection results={results.map((e) => e.data)} />;
+  return <DiscoverResultsSection data={pagination} />;
 }
 function DiscoverEmptyState() {
   return (
