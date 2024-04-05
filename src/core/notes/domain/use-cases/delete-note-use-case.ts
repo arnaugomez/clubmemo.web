@@ -19,7 +19,7 @@ export class DeleteNoteUseCase {
     profileId,
     noteId,
   }: DeleteNoteUseCaseInputModel): Promise<void> {
-    const note = await this.notesRepository.getNote(noteId);
+    const note = await this.notesRepository.getDetail(noteId);
     if (!note) throw new NoteDoesNotExistError();
 
     const course = await this.coursesRepository.getDetail({
@@ -29,6 +29,6 @@ export class DeleteNoteUseCase {
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canDelete) throw new NoPermissionError();
 
-    await this.notesRepository.deleteNote(noteId);
+    await this.notesRepository.delete(noteId);
   }
 }

@@ -20,7 +20,7 @@ export class UpdateNoteUseCase {
     profileId,
     updateNoteInput,
   }: UpdateNoteUseCaseInputModel): Promise<void> {
-    const note = await this.notesRepository.getNote(updateNoteInput.id);
+    const note = await this.notesRepository.getDetail(updateNoteInput.id);
     if (!note) throw new NoteDoesNotExistError();
 
     const course = await this.coursesRepository.getDetail({
@@ -30,6 +30,6 @@ export class UpdateNoteUseCase {
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canEdit) throw new NoPermissionError();
 
-    await this.notesRepository.updateNote(updateNoteInput);
+    await this.notesRepository.update(updateNoteInput);
   }
 }

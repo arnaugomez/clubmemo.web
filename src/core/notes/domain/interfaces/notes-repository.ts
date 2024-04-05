@@ -3,11 +3,14 @@ import { CreateNoteInputModel } from "../models/create-note-input-model";
 import { GetNotesInputModel } from "../models/get-notes-input-model";
 import { NoteModel } from "../models/note-model";
 import { UpdateNoteInputModel } from "../models/update-note-input-model";
+import { CopyNotesInputModel } from "../models/copy-notes-input-model";
 
 export interface NotesRepository {
-  createNote(input: CreateNoteInputModel): Promise<NoteModel>;
-  getNote(noteId: string): Promise<NoteModel | null>;
-  updateNote(input: UpdateNoteInputModel): Promise<void>;
-  deleteNote(noteId: string): Promise<void>;
-  getNotes(input: GetNotesInputModel): Promise<PaginationModel<NoteModel>>;
+  create(input: CreateNoteInputModel): Promise<NoteModel>;
+  getDetail(noteId: string): Promise<NoteModel | null>;
+  update(input: UpdateNoteInputModel): Promise<void>;
+  delete(noteId: string): Promise<void>;
+  get(input: GetNotesInputModel): Promise<PaginationModel<NoteModel>>;
+
+  copy(input: CopyNotesInputModel): Promise<void>;
 }
