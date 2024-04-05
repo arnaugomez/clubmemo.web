@@ -3,5 +3,5 @@ import { GetNotesInputModel } from "@/src/core/notes/domain/models/get-notes-inp
 
 export async function fetchCourseNotes(input: GetNotesInputModel) {
   const notesRepository = await locator.NotesRepository();
-  return await notesRepository.getNotes(input);
+  return await notesRepository.get(input);
 }
