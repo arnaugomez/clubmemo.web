@@ -5,5 +5,6 @@ export const fetchDiscoverCourses = async (
   input: GetDiscoverCoursesInputModel,
 ) => {
   const coursesRepository = await locator.CoursesRepository();
-  return await coursesRepository.getDiscoverCourses(input);
+  const pagination = await coursesRepository.getDiscoverCourses(input);
+  return pagination.toData((e) => e.data);
 };
