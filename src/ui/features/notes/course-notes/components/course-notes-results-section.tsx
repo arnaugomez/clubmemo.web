@@ -49,9 +49,10 @@ export function CourseNotesResultsSection({
     hasSetInitialResults.current = true;
   }, [initialPagination.results, setContextResults]);
 
-  const results = contextResults.length
-    ? contextResults
-    : initialPagination.results;
+  const results =
+    hasSetInitialResults.current || contextResults.length
+      ? contextResults
+      : initialPagination.results;
 
   const loadMore = useCallback(async () => {
     if (!canLoadMore) return;
@@ -98,7 +99,20 @@ export function CourseNotesResultsSection({
     <>
       <div className="grid grid-cols-1 gap-4">
         {results.map((note) => (
-          <CourseNoteCard note={note} key={note.id} />
+          <CourseNoteCard
+            note={note}
+            key={note.id}
+            onDelete={() => {
+              setContextResults((notes) =>
+                notes.filter((n) => n.id !== note.id),
+              );
+            }}
+            onEdit={(editedNote) => {
+              setContextResults((notes) =>
+                notes.map((n) => (n.id === editedNote.id ? editedNote : n)),
+              );
+            }}
+          />
         ))}
         {canLoadMore && (
           <div key="inView" ref={ref}>
