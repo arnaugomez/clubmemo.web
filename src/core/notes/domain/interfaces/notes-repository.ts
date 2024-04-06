@@ -16,4 +16,5 @@ export interface NotesRepository {
   copy(input: CopyNotesInputModel): Promise<void>;
 
   getAllRows(courseId: string): Promise<NoteRowModel[]>;
+  createMany(courseId: string, notes: NoteRowModel[]): Promise<NoteModel[]>;
 }

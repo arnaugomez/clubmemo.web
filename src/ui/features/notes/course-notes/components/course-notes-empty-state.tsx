@@ -10,6 +10,7 @@ import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { Layers, Sparkles, SquarePen, Upload } from "lucide-react";
 import { CreateNoteButton } from "./create-note-button";
+import { ImportNotesButton } from "./import-notes-button";
 
 interface CourseNotesEmptyStateProps {
   courseId: string;
@@ -71,6 +72,7 @@ export function CourseNotesEmptyState({
           <CardHeader>
             <Upload className="size-8 mx-auto text-slate-500" />
             <div className="h-1"></div>
+
             <CardTitle className="text-center">Importar archivo</CardTitle>
             <div className="h-2"></div>
             <CardDescription className="text-center max-w-sm mx-auto">
@@ -80,7 +82,7 @@ export function CourseNotesEmptyState({
           </CardHeader>
           <div className="h-2"></div>
           <CardFooter>
-            <Button className="w-full sm:max-w-sm sm:mx-auto">Empezar</Button>
+            <ImportNotesButton courseId={courseId} />
           </CardFooter>
         </Card>
       </div>

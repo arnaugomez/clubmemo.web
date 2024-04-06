@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Import notes",
+  "description": "To import notes with a JSON file, the JSON file must comply with this schema.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "description": "The version of the JSON file. Latest version is 1.0.0",
+      "const": "1.0.0"
+    },
+    "notes": {
+      "description": "Name of the product",
+      "type": "array",
+      "prefixItems": [
+        {
+          "description": "The title (front) of the note",
+          "type": "string"
+        },
+        {
+          "description": "The content (back) of the note",
+          "type": "string"
+        }
+      ]
+    },
+    "required": ["version", "notes"]
+  }
+}
