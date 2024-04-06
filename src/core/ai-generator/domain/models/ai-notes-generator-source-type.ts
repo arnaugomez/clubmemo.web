@@ -1,4 +1,5 @@
 export enum AiNotesGeneratorSourceType {
-  pdf = "pdf",
+  file = "file",
   text = "text",
+  topic = "topic",
 }

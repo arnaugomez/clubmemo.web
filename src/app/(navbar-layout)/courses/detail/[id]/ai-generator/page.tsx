@@ -4,6 +4,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/src/ui/components/shadcn/ui/alert";
+import { GenerateAiNotesWizard } from "@/src/ui/features/generate-ai-notes/components/generate-ai-notes-wizard";
 import { fetchMyProfile } from "@/src/ui/features/profile/fetch/fetch-my-profile";
 import { invalidIdGuard } from "@/src/ui/guards/invalid-id-guard";
 import { textStyles } from "@/src/ui/styles/text-styles";
@@ -47,9 +48,10 @@ export default async function CourseAiGeneratorPage({
             <AlertTitle>Curso</AlertTitle>
             <AlertDescription>{course.name}</AlertDescription>
           </Alert>
+          <div className="h-10" />
+          <GenerateAiNotesWizard courseId={course.id} />
         </div>
       </div>
-      <div className="h-10" />
     </main>
   );
 }
