@@ -103,7 +103,7 @@ export class NotesRepositoryImpl implements NotesRepository {
     const sourceCourseNotes = await this.notes
       .find({ courseId: new ObjectId(sourceCourseId) })
       .toArray();
-    const newNotes = sourceCourseNotes.map(({ ...note }) => {
+    const newNotes = sourceCourseNotes.map((note) => {
       return {
         ...note,
         _id: undefined,
@@ -123,5 +123,24 @@ export class NotesRepositoryImpl implements NotesRepository {
         },
       )
       .toArray();
+  }
+
+  async createMany(
+    courseIdString: string,
+    notes: NoteRowModel[],
+  ): Promise<NoteModel[]> {
+    const courseId = new ObjectId(courseIdString);
+    const now = new Date();
+
+    const newNotes = notes.map((note) => {
+      now.setSeconds(now.getSeconds() + 1);
+      return {
+        ...note,
+        courseId,
+        createdAt: new Date(now),
+      } as WithId<NoteDoc>;
+    });
+    await this.notes.insertMany(newNotes);
+    return newNotes.map((note) => new NoteDocTransformer(note).toDomain());
   }
 }
