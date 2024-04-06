@@ -5,6 +5,7 @@ export interface GenerateAiNotesInputModel {
   noteTypes: AiGeneratorNoteType[];
   notesCount: number;
 }
+
 export interface AiNotesGeneratorService {
   generate(input: GenerateAiNotesInputModel): Promise<string[][]>;
 }
