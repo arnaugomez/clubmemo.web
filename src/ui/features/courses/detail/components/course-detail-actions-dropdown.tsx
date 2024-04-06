@@ -17,20 +17,13 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/src/ui/components/shadcn/ui/dropdown-menu";
-import {
-  Copy,
-  Ellipsis,
-  File,
-  LogOut,
-  Settings2,
-  Star,
-  Trash2,
-} from "lucide-react";
+import { Copy, Ellipsis, File, LogOut, Settings2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { CopyCourseDialog } from "../../copy/components/copy-course-dialog";
 import { DeleteCourseDialog } from "../../delete/components/delete-course-dialog";
 import { UnenrollCourseDialog } from "../../enroll/components/unenroll-course-dialog";
 import { CourseFavoriteButton } from "./course-favorite-button";
+import { ExportCourseAnkiButton } from "./export-course-anki-button";
 import { ExportCourseCsvButton } from "./export-course-csv-button";
 import { ExportCourseJsonButton } from "./export-course-json-button";
 
@@ -85,10 +78,7 @@ export function CourseDetailActionsDropdown({
                 <DropdownMenuSubContent>
                   <ExportCourseCsvButton course={course} />
                   <ExportCourseJsonButton course={course} />
-                  <DropdownMenuItem>
-                    <Star className="mr-2 h-4 w-4" />
-                    <span>Anki</span>
-                  </DropdownMenuItem>
+                  <ExportCourseAnkiButton course={course} />
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
