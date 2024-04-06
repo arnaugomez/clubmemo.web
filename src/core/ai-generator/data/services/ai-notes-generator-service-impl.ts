@@ -1,8 +1,8 @@
 import { EnvService } from "@/src/core/app/domain/interfaces/env-service";
 import { OpenAI } from "openai";
 import {
-  AiGenerateNotesInput,
   AiNotesGeneratorService,
+  GenerateAiNotesInputModel,
 } from "../../domain/interfaces/ai-notes-generator-service";
 import { AiGeneratorNoteType } from "../../domain/models/ai-generator-note-type";
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -20,11 +20,11 @@ export class AiNotesGeneratorServiceImpl implements AiNotesGeneratorService {
       });
     global.openaiClient = this.client;
   }
-  async generateNotes({
+  async generate({
     text,
     noteTypes,
     notesCount,
-  }: AiGenerateNotesInput): Promise<string[][]> {
+  }: GenerateAiNotesInputModel): Promise<string[][]> {
     const typesMap = {
       [AiGeneratorNoteType.qa]: "a question and the answer",
       [AiGeneratorNoteType.definition]:
