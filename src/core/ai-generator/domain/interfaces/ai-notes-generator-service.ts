@@ -1,10 +1,10 @@
 import { AiGeneratorNoteType } from "../models/ai-generator-note-type";
 
-export interface AiGenerateNotesInput {
+export interface GenerateAiNotesInputModel {
   text: string;
   noteTypes: AiGeneratorNoteType[];
   notesCount: number;
 }
 export interface AiNotesGeneratorService {
-  generateNotes(input: AiGenerateNotesInput): Promise<string[][]>;
+  generate(input: GenerateAiNotesInputModel): Promise<string[][]>;
 }
