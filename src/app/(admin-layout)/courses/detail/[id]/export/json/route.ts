@@ -44,7 +44,7 @@ export async function GET(
       });
     }
     // TODO: report error
-    console.log(e);
+    console.error(e);
     return new Response(e?.toString?.(), { status: 500 });
   }
 }

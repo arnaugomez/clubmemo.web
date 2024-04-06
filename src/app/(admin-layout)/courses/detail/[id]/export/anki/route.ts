@@ -3,7 +3,6 @@ import { locator } from "@/src/core/app/locator";
 import { CourseDoesNotExistError } from "@/src/core/courses/domain/models/course-errors";
 import { fetchMyProfile } from "@/src/ui/features/profile/fetch/fetch-my-profile";
 import { ActionResponse } from "@/src/ui/models/server-form-errors";
-import { stringify } from "csv-stringify/sync";
 
 export async function GET(
   _: Request,
@@ -20,13 +19,21 @@ export async function GET(
     if (!course.canView) throw new NoPermissionError();
     const notesRepository = await locator.NotesRepository();
     const rows = await notesRepository.getAllRows(id);
-    const csvText = stringify(rows.map((row) => [row.front, row.back]));
+    const text = rows
+      .map((row) =>
+        [row.front, row.back]
+          .map((cell) => cell.replace('"', '""'))
+          .map((cell) => `"${cell}"\t`)
+          .join(""),
+      )
+      .map((row) => row + "\n")
+      .join("");
 
-    return new Response(csvText, {
+    return new Response(text, {
       status: 200,
       headers: {
-        "Content-Type": "text/csv",
-        "Content-Disposition": "attachment; filename=data.csv",
+        "Content-Type": "text/plain",
+        "Content-Disposition": "attachment; filename=anki.txt",
       },
     });
   } catch (e) {
