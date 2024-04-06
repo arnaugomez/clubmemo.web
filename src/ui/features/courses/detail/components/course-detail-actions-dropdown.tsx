@@ -21,18 +21,18 @@ import {
   Copy,
   Ellipsis,
   File,
-  FileCode,
-  FileSpreadsheet,
   LogOut,
   Settings2,
   Star,
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { CopyCourseDialog } from "../../copy/components/copy-course-dialog";
 import { DeleteCourseDialog } from "../../delete/components/delete-course-dialog";
 import { UnenrollCourseDialog } from "../../enroll/components/unenroll-course-dialog";
 import { CourseFavoriteButton } from "./course-favorite-button";
-import { CopyCourseDialog } from "../../copy/components/copy-course-dialog";
+import { ExportCourseCsvButton } from "./export-course-csv-button";
+import { ExportCourseJsonButton } from "./export-course-json-button";
 
 interface CourseDetailActionsDropdownProps {
   courseData: CourseModelData;
@@ -83,14 +83,8 @@ export function CourseDetailActionsDropdown({
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
-                  <DropdownMenuItem>
-                    <FileSpreadsheet className="mr-2 h-4 w-4" />
-                    <span>CSV</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <FileCode className="mr-2 h-4 w-4" />
-                    <span>JSON</span>
-                  </DropdownMenuItem>
+                  <ExportCourseCsvButton course={course} />
+                  <ExportCourseJsonButton course={course} />
                   <DropdownMenuItem>
                     <Star className="mr-2 h-4 w-4" />
                     <span>Anki</span>

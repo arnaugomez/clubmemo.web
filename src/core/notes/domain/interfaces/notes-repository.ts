@@ -1,9 +1,10 @@
 import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
+import { CopyNotesInputModel } from "../models/copy-notes-input-model";
 import { CreateNoteInputModel } from "../models/create-note-input-model";
 import { GetNotesInputModel } from "../models/get-notes-input-model";
 import { NoteModel } from "../models/note-model";
+import { NoteRowModel } from "../models/note-row-model";
 import { UpdateNoteInputModel } from "../models/update-note-input-model";
-import { CopyNotesInputModel } from "../models/copy-notes-input-model";
 
 export interface NotesRepository {
   create(input: CreateNoteInputModel): Promise<NoteModel>;
@@ -13,4 +14,6 @@ export interface NotesRepository {
   get(input: GetNotesInputModel): Promise<PaginationModel<NoteModel>>;
 
   copy(input: CopyNotesInputModel): Promise<void>;
+
+  getAllRows(courseId: string): Promise<NoteRowModel[]>;
 }
