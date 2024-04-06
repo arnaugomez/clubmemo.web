@@ -6,16 +6,17 @@ import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
 import { ObjectId, WithId } from "mongodb";
 import { NotesRepository } from "../../domain/interfaces/notes-repository";
+import { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";
 import { CreateNoteInputModel } from "../../domain/models/create-note-input-model";
 import { GetNotesInputModel } from "../../domain/models/get-notes-input-model";
 import { NoteModel } from "../../domain/models/note-model";
+import { NoteRowModel } from "../../domain/models/note-row-model";
 import { UpdateNoteInputModel } from "../../domain/models/update-note-input-model";
 import {
   NoteDoc,
   NoteDocTransformer,
   notesCollection,
 } from "../collections/notes-collection";
-import { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";
 
 export class NotesRepositoryImpl implements NotesRepository {
   private readonly notes: typeof notesCollection.type;
@@ -110,5 +111,17 @@ export class NotesRepositoryImpl implements NotesRepository {
       };
     });
     await this.notes.insertMany(newNotes);
+  }
+  async getAllRows(courseId: string): Promise<NoteRowModel[]> {
+    return await this.notes
+      .find(
+        { courseId: new ObjectId(courseId) },
+        {
+          sort: { createdAt: -1 },
+          limit: 1000,
+          projection: { _id: false, front: true, back: true },
+        },
+      )
+      .toArray();
   }
 }
