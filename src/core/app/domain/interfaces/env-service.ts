@@ -13,4 +13,6 @@ export interface EnvService {
    * It prevents the hash from being cracked even if it is leaked.
    */
   readonly passwordPepper: string;
+  /** OpenAI API key */
+  readonly openaiApiKey: string;
 }

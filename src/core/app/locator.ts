@@ -1,4 +1,5 @@
 import memoizeOne from "memoize-one";
+import { AiNotesGeneratorService } from "../ai-generator/domain/interfaces/ai-notes-generator-service";
 import { AuthServiceImpl } from "../auth/data/services/auth-service-impl";
 import { AuthService } from "../auth/domain/interfaces/auth-service";
 import { EmailVerificationCodesRepository } from "../auth/domain/interfaces/email-verification-codes-repository";
@@ -7,14 +8,14 @@ import { UsersRepository } from "../auth/domain/interfaces/users-repository";
 import { CourseAuthorsRepository } from "../courses/domain/interfaces/course-authors-repository";
 import { CourseEnrollmentsRepository } from "../courses/domain/interfaces/course-enrollments-repository";
 import { CoursesRepository } from "../courses/domain/interfaces/courses-repository";
+import { NotesRepository } from "../notes/domain/interfaces/notes-repository";
 import { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
 import { TagsRepository } from "../tags/domain/interfaces/tags-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
-import { MongoServiceImpl } from "./data/services/mongodb-service-impl";
+import { MongoServiceImpl } from "./data/services/mongo-service-impl";
 import { EmailService } from "./domain/interfaces/email-service";
 import { EnvService } from "./domain/interfaces/env-service";
 import { MongoService } from "./domain/interfaces/mongo-service";
-import { NotesRepository } from "../notes/domain/interfaces/notes-repository";
 
 export type Dependency<T> = () => T;
 export type Lazy<T> = () => Promise<T>;
@@ -36,6 +37,8 @@ interface Locator {
   CourseAuthorsRepository: Lazy<CourseAuthorsRepository>;
   TagsRepository: Lazy<TagsRepository>;
   NotesRepository: Lazy<NotesRepository>;
+  // Ai Generator
+  AiNotesGeneratorService: Lazy<AiNotesGeneratorService>;
 }
 
 export const singleton = memoizeOne;
@@ -118,5 +121,12 @@ export const locator: Locator = {
       "../notes/data/repositories/notes-repository-impl"
     );
     return new file.NotesRepositoryImpl(this.MongoService());
+  },
+  // Ai Generator
+  async AiNotesGeneratorService() {
+    const file = await import(
+      "../ai-generator/data/services/ai-notes-generator-service-impl"
+    );
+    return new file.AiNotesGeneratorServiceImpl(this.EnvService());
   },
 };
