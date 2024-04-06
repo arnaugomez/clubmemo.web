@@ -20,7 +20,6 @@ export class TagsRepositoryImpl implements TagsRepository {
     }
   }
   async getSuggestions(query?: string): Promise<string[]> {
-    console.log("query", query);
     const cursor = this.tags.find(
       query ? { name: { $regex: `^${query}`, $options: "i" } } : {},
       {

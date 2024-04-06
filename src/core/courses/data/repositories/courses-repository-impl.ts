@@ -380,7 +380,6 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     ]);
 
     const result = await aggregation.toArray();
-    console.log(result);
     return new TokenPaginationTransformer(result).toDomain((data) =>
       new DiscoverCourseTransformer(data).toDomain(),
     );
