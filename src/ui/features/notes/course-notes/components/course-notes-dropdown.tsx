@@ -16,6 +16,7 @@ import { Ellipsis, Sparkle, Upload } from "lucide-react";
 import { useState } from "react";
 import { useCourseNotesContext } from "../contexts/course-notes-context";
 import { ImportNotesDialog } from "./import-notes-dialog";
+import Link from "next/link";
 
 interface CourseNotesDropdownProps {
   courseData: CourseModelData;
@@ -38,9 +39,11 @@ export function CourseNotesDropdown({ courseData }: CourseNotesDropdownProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-44">
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Sparkle className="mr-2 h-4 w-4" />
-              <span>Generador AI</span>
+            <DropdownMenuItem asChild>
+              <Link href={`/courses/detail/${course.id}/ai-generator`}>
+                <Sparkle className="mr-2 h-4 w-4" />
+                <span>Generador AI</span>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setShowImportDialog(true)}>
               <Upload className="mr-2 h-4 w-4" />

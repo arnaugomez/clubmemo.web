@@ -1,14 +1,13 @@
 "use server";
 
+import { aiGeneratorLocator } from "@/src/core/ai-generator/ai-generator-locator";
 import {
   InvalidFileFormatError,
   NoPermissionError,
 } from "@/src/core/app/domain/models/app-errors";
 import { CourseDoesNotExistError } from "@/src/core/courses/domain/models/course-errors";
-import { notesLocator } from "@/src/core/notes/notes-locator";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/models/server-form-errors";
-import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../profile/fetch/fetch-my-profile";
 import { GenerateAiNotesActionSchema } from "../generate-ai-notes/generate-ai-notes-action-schema";
 
@@ -33,7 +32,7 @@ export async function generateAiNotesAction(data: FormData) {
     }
     // TODO: extract text from pdf file
 
-    const useCase = await notesLocator.GenerateAiNotesUseCase();
+    const useCase = await aiGeneratorLocator.GenerateAiNotesUseCase();
     const result = await useCase.execute({
       profileId: profile.id,
       courseId: parsed.courseId,
@@ -42,8 +41,7 @@ export async function generateAiNotesAction(data: FormData) {
       notesCount: parsed.notesCount,
     });
 
-    revalidatePath("/courses/detail");
-    return ActionResponse.formSuccess(result.map((e) => e.data));
+    return ActionResponse.formSuccess(result);
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");
