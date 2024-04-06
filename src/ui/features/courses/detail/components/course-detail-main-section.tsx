@@ -1,30 +1,20 @@
-import { locator } from "@/src/core/app/locator";
+import { CourseModel } from "@/src/core/courses/domain/models/course-model";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 import { TagsSection } from "../../../tags/components/tags-section";
 import { CourseDetailActionsSection } from "./course-detail-actions-section";
 import { CourseDetailAuthorsSection } from "./course-detail-authors-section";
 import { CourseDetailMainActionsSection } from "./course-detail-main-actions-section";
 
 interface CourseDetailMainSectionProps {
-  id: string;
+  course: CourseModel;
 }
 
 export async function CourseDetailMainSection({
-  id,
+  course,
 }: CourseDetailMainSectionProps) {
-  const profile = await fetchMyProfile();
-  const coursesRepository = await locator.CoursesRepository();
-  const course = await coursesRepository.getDetail({
-    id,
-    profileId: profile?.id,
-  });
-  if (!course || !course.canView) notFound();
-
   return (
     <>
       <div className="h-4" />

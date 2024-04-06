@@ -1,5 +1,9 @@
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { HTMLInputAutoCompleteAttribute, HTMLInputTypeAttribute } from "react";
+import {
+  HTMLInputAutoCompleteAttribute,
+  HTMLInputTypeAttribute,
+  ReactNode,
+} from "react";
 import { PasswordInput } from "../input/password-input";
 import TagsInput from "../input/tags-input";
 import {
@@ -14,6 +18,8 @@ import { Input } from "../shadcn/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../shadcn/ui/input-otp";
 import { Switch } from "../shadcn/ui/switch";
 import { Textarea } from "../shadcn/ui/textarea";
+import { FileInput } from "../input/file-input";
+import { Accept } from "react-dropzone";
 
 interface InputFormFieldProps {
   name: string;
@@ -196,9 +202,45 @@ export function TagsFormField({
               name={name}
               id={field.name}
               placeholder={placeholder}
-              label={label}
               value={field.value}
               onChange={field.onChange}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+interface FileFormFieldProps {
+  name: string;
+  label: string;
+  accept: Accept;
+  maxSize: number;
+  fileIcon?: ReactNode;
+}
+
+export function FileFormField({
+  label,
+  name,
+  accept,
+  maxSize,
+  fileIcon,
+}: FileFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <FileInput
+              name={name}
+              id={field.name}
+              onChange={field.onChange}
+              accept={accept}
+              maxSize={maxSize}
+              fileIcon={fileIcon}
             />
           </FormControl>
           <FormMessage />

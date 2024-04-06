@@ -7,7 +7,6 @@ import { ActionResponseHandler } from "../../models/action-response-handler";
 interface TagsInputProps {
   name: string;
   id?: string;
-  label: string;
   placeholder?: string;
   value: string[];
   onChange: (value: string[]) => void;
