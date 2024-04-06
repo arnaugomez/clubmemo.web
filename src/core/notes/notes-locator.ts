@@ -3,14 +3,12 @@ import type { CreateNoteUseCase } from "./domain/use-cases/create-note-use-case"
 import type { DeleteNoteUseCase } from "./domain/use-cases/delete-note-use-case";
 import type { ImportNotesUseCase } from "./domain/use-cases/import-notes-use-case";
 import type { UpdateNoteUseCase } from "./domain/use-cases/update-note-use-case";
-import type { GenerateAiNotesUseCase } from "./domain/use-cases/generate-ai-notes-use-case";
 
 interface NotesLocator {
   CreateNoteUseCase: Lazy<CreateNoteUseCase>;
   UpdateNoteUseCase: Lazy<UpdateNoteUseCase>;
   DeleteNoteUseCase: Lazy<DeleteNoteUseCase>;
   ImportNotesUseCase: Lazy<ImportNotesUseCase>;
-  GenerateAiNotesUseCase: Lazy<GenerateAiNotesUseCase>;
 }
 
 export const notesLocator: NotesLocator = {
@@ -40,14 +38,6 @@ export const notesLocator: NotesLocator = {
     return new file.ImportNotesUseCase(
       await locator.CoursesRepository(),
       await locator.NotesRepository(),
-    );
-  },
-  GenerateAiNotesUseCase: async () => {
-    const file = await import("./domain/use-cases/generate-ai-notes-use-case");
-    return new file.GenerateAiNotesUseCase(
-      await locator.CoursesRepository(),
-      await locator.NotesRepository(),
-      await locator.AiNotesGeneratorService(),
     );
   },
 };

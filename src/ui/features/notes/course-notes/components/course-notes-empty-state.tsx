@@ -9,6 +9,7 @@ import {
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { Layers, Sparkles, SquarePen, Upload } from "lucide-react";
+import Link from "next/link";
 import { CreateNoteButton } from "./create-note-button";
 import { ImportNotesButton } from "./import-notes-button";
 
@@ -65,7 +66,11 @@ export function CourseNotesEmptyState({
           </CardHeader>
           <div className="h-4"></div>
           <CardFooter>
-            <Button className="w-full">Empezar</Button>
+            <Button className="w-full" asChild>
+              <Link href={`/courses/detail/${courseId}/ai-generator`}>
+                Empezar
+              </Link>
+            </Button>
           </CardFooter>
         </Card>
         <Card className="sm:col-span-2">
