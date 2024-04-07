@@ -42,6 +42,7 @@
     "next-themes": "^0.3.0",
     "openai": "^4.33.0",
     "oslo": "^1.2.0",
+    "pdf-text-reader": "^4.0.1",
     "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

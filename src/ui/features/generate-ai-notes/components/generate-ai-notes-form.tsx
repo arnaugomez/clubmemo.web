@@ -66,7 +66,29 @@ export function GenerateAiNotesForm({
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      const text = data.text ?? "";
+      let text = data.text ?? "";
+      if (sourceType === AiNotesGeneratorSourceType.file) {
+        if (!data.file) {
+          form.setError("file", { message: "Debes subir un archivo" });
+          return;
+        }
+        if (data.file.type.includes("txt") || data.file.type.includes("md")) {
+          text = await data.file.text();
+        } else if (data.file.type.includes("pdf")) {
+          form.setError("root.globalError", {
+            type: "global",
+            message: "No soportamos aún pdf, estamos trabajando en ello.",
+          });
+        }
+      }
+      text = text.trim().slice(0, 10_000);
+      if (!text) {
+        form.setError("root.globalError", {
+          type: "global",
+          message: "The text is empty.",
+        });
+        return;
+      }
       const response = await generateAiNotesAction({
         courseId,
         notesCount: data.notesCount,
