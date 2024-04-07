@@ -12,7 +12,7 @@ import { fetchMyProfile } from "../../profile/fetch/fetch-my-profile";
 import {
   GenerateAiNotesActionModel,
   GenerateAiNotesActionSchema,
-} from "../generate-ai-notes/generate-ai-notes-action-schema";
+} from "../schemas/generate-ai-notes-action-schema";
 
 export async function generateAiNotesAction(data: GenerateAiNotesActionModel) {
   try {

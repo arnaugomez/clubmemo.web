@@ -10,7 +10,7 @@ import { fetchMyProfile } from "../../profile/fetch/fetch-my-profile";
 import {
   GenerateAiNotesConfirmActionModel,
   GenerateAiNotesConfirmActionSchema,
-} from "../generate-ai-notes/generate-ai-notes-confirm-action-schema";
+} from "../schemas/generate-ai-notes-confirm-action-schema";
 
 export async function generateAiNotesConfirmAction(
   data: GenerateAiNotesConfirmActionModel,

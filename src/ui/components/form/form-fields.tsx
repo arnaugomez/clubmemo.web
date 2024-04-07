@@ -4,6 +4,9 @@ import {
   HTMLInputTypeAttribute,
   ReactNode,
 } from "react";
+import { Accept } from "react-dropzone";
+import { CheckboxesInput, Option } from "../input/checkboxes-input";
+import { FileInput } from "../input/file-input";
 import { PasswordInput } from "../input/password-input";
 import TagsInput from "../input/tags-input";
 import {
@@ -18,8 +21,6 @@ import { Input } from "../shadcn/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../shadcn/ui/input-otp";
 import { Switch } from "../shadcn/ui/switch";
 import { Textarea } from "../shadcn/ui/textarea";
-import { FileInput } from "../input/file-input";
-import { Accept } from "react-dropzone";
 
 interface InputFormFieldProps {
   name: string;
@@ -241,6 +242,41 @@ export function FileFormField({
               accept={accept}
               maxSize={maxSize}
               fileIcon={fileIcon}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+interface CheckboxesFormFieldProps {
+  name: string;
+  label: string;
+  description: string;
+  options: Option[];
+}
+
+export function CheckboxesFormField({
+  name,
+  label,
+  description,
+  options,
+}: CheckboxesFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <CheckboxesInput
+              label={label}
+              description={description}
+              name={field.name}
+              value={field.value}
+              onChange={field.onChange}
+              options={options}
             />
           </FormControl>
           <FormMessage />
