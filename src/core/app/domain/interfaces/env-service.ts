@@ -15,4 +15,7 @@ export interface EnvService {
   readonly passwordPepper: string;
   /** OpenAI API key */
   readonly openaiApiKey: string;
+
+  /** Whether to use a fake of the OpenAI API to save money */
+  readonly fakeOpenAiApi: boolean;
 }
