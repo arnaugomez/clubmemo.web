@@ -37,12 +37,12 @@ export function GenerateAiNotesForm({
   const CreateNoteSchema = z.object({
     text:
       sourceType === AiNotesGeneratorSourceType.file
-        ? z.string()
-        : z.string().min(1).max(10_000),
+        ? z.undefined()
+        : z.string().min(1).max(20_000),
     file:
       sourceType === AiNotesGeneratorSourceType.file
         ? z.instanceof(File)
-        : z.instanceof(File).optional(),
+        : z.undefined(),
     noteTypes: z
       .array(
         z.union([
@@ -88,39 +88,29 @@ export function GenerateAiNotesForm({
                 return;
               }
               const typedarray = new Uint8Array(event.target.result);
-              // Load PDF document
               const pdfjs = await import("pdfjs-dist");
-              pdfjs.getDocument(typedarray).promise.then(function (pdf) {
-                const numPages = pdf.numPages;
-                let text = "";
-                // Extract text from each page
-                for (let i = 1; i <= numPages; i++) {
-                  pdf
-                    .getPage(i)
-                    .then(function (page) {
-                      return page.getTextContent();
-                    })
-                    .then(function (content) {
-                      content.items.forEach(function (item) {
-                        if ("str" in item) {
-                          text += item.str + " ";
-                        }
-                      });
-                      text += "\n"; // Add newline after each page
-                    });
-                }
-                resolve(text);
-              });
+              pdfjs.GlobalWorkerOptions.workerSrc =
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs";
+              const pdf = await pdfjs.getDocument(typedarray).promise;
+
+              const numPages = pdf.numPages;
+
+              const texts = await Promise.all(
+                Array.from({ length: numPages }).map(async (_, i) => {
+                  const page = await pdf.getPage(i + 1);
+                  const content = await page.getTextContent();
+                  return content.items
+                    .map((item) => ("str" in item ? item.str : ""))
+                    .join(" ");
+                }),
+              );
+              resolve(texts.join("\n"));
             };
           });
-
-          // form.setError("root.globalError", {
-          //   type: "global",
-          //   message: "No soportamos aún pdf, estamos trabajando en ello.",
-          // });
         }
       }
-      text = text.trim().slice(0, 10_000);
+      text = text.trim().slice(0, 20_000);
+      console.log(text);
       if (!text) {
         form.setError("root.globalError", {
           type: "global",

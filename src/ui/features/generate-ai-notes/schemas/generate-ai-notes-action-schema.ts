@@ -10,7 +10,7 @@ export const GenerateAiNotesActionSchema = z.object({
     z.literal(AiNotesGeneratorSourceType.text),
     z.literal(AiNotesGeneratorSourceType.topic),
   ]),
-  text: z.string().min(1),
+  text: z.string().min(1).max(20_000),
   noteTypes: z
     .array(
       z.union([

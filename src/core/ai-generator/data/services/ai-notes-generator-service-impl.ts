@@ -57,7 +57,29 @@ The language of the flashcards should be the language of the ${textOrTopic} prov
       n: 1,
     });
     console.log(completion);
-    console.log(completion.choices[0].message.content);
-    return [["note1", "note2"]];
+    const responseText = completion.choices[0].message.content;
+    if (!responseText) {
+      // TODO: use a proper error
+      throw new Error("Failed to generate notes");
+    }
+    const response = JSON.parse(responseText);
+    return this.parseResponse(response);
+  }
+
+  private parseResponse(response: unknown): string[][] {
+    if (!response) {
+      return [];
+    }
+    if (Array.isArray(response)) {
+      return response;
+    }
+    if (typeof response === "object") {
+      for (const value of Object.values(response)) {
+        if (Array.isArray(value)) {
+          return value;
+        }
+      }
+    }
+    return [];
   }
 }
