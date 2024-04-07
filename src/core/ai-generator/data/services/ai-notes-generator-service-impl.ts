@@ -56,7 +56,6 @@ The language of the flashcards should be the language of the ${textOrTopic} prov
       response_format: { type: "json_object" },
       n: 1,
     });
-    console.log(completion);
     const responseText = completion.choices[0].message.content;
     if (!responseText) {
       // TODO: use a proper error

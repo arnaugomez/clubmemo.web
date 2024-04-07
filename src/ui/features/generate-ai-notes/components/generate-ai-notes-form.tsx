@@ -59,6 +59,7 @@ export function GenerateAiNotesForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(CreateNoteSchema),
     defaultValues: {
+      text: "",
       notesCount: 10,
       noteTypes: [AiGeneratorNoteType.qa],
     },

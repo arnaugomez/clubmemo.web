@@ -124,9 +124,17 @@ export const locator: Locator = {
   },
   // Ai Generator
   async AiNotesGeneratorService() {
+    const envService = this.EnvService();
+    if (envService.fakeOpenAiApi) {
+      const file = await import(
+        "../ai-generator/data/services/ai-notes-generator-service-fake-impl"
+      );
+      return new file.AiNotesGeneratorServiceFakeImpl();
+    }
+
     const file = await import(
       "../ai-generator/data/services/ai-notes-generator-service-impl"
     );
-    return new file.AiNotesGeneratorServiceImpl(this.EnvService());
+    return new file.AiNotesGeneratorServiceImpl(envService);
   },
 };
