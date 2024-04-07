@@ -89,9 +89,9 @@ dependencies:
   oslo:
     specifier: ^1.2.0
     version: 1.2.0
-  pdf-text-reader:
-    specifier: ^4.0.1
-    version: 4.0.1
+  pdfjs-dist:
+    specifier: ^4.0.379
+    version: 4.0.379
   prettier:
     specifier: ^3.2.5
     version: 3.2.5
@@ -6107,17 +6107,8 @@ packages:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
     dev: true
 
-  /pdf-text-reader@4.0.1:
-    resolution: {integrity: sha512-AuXTpAnZORgq6c1CblRZ6j+X6GTV1ap8iDmOd4koefXwCzqdzJjmRkXUVpuAxHdHjYji2j4kN98vJvK5PJE3PA==}
-    dependencies:
-      pdfjs-dist: 3.9.179
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: false
-
-  /pdfjs-dist@3.9.179:
-    resolution: {integrity: sha512-AZBEIAORYDaOAlM0/A4Zg465+XF3ugYDdgrVmioVvNW5tH3xs3RpGFBYOG5PM9/vLM3M/wNncsMLTgyIKdqMKg==}
+  /pdfjs-dist@4.0.379:
+    resolution: {integrity: sha512-6H0Gv1nna+wmrr3CakaKlZ4rbrL8hvGIFAgg4YcoFuGC0HC4B2DVjXEGTFjJEjLlf8nYi3C3/MYRcM5bNx0elA==}
     engines: {node: '>=18'}
     optionalDependencies:
       canvas: 2.11.2

@@ -75,10 +75,49 @@ export function GenerateAiNotesForm({
         if (data.file.type.includes("txt") || data.file.type.includes("md")) {
           text = await data.file.text();
         } else if (data.file.type.includes("pdf")) {
-          form.setError("root.globalError", {
-            type: "global",
-            message: "No soportamos aún pdf, estamos trabajando en ello.",
+          const fileReader = new FileReader();
+          fileReader.readAsArrayBuffer(data.file);
+          text = await new Promise((resolve, reject) => {
+            fileReader.onload = async (event) => {
+              if (
+                !event.target ||
+                !event.target.result ||
+                typeof event.target.result === "string"
+              ) {
+                reject(new Error("No se pudo leer el archivo"));
+                return;
+              }
+              const typedarray = new Uint8Array(event.target.result);
+              // Load PDF document
+              const pdfjs = await import("pdfjs-dist");
+              pdfjs.getDocument(typedarray).promise.then(function (pdf) {
+                const numPages = pdf.numPages;
+                let text = "";
+                // Extract text from each page
+                for (let i = 1; i <= numPages; i++) {
+                  pdf
+                    .getPage(i)
+                    .then(function (page) {
+                      return page.getTextContent();
+                    })
+                    .then(function (content) {
+                      content.items.forEach(function (item) {
+                        if ("str" in item) {
+                          text += item.str + " ";
+                        }
+                      });
+                      text += "\n"; // Add newline after each page
+                    });
+                }
+                resolve(text);
+              });
+            };
           });
+
+          // form.setError("root.globalError", {
+          //   type: "global",
+          //   message: "No soportamos aún pdf, estamos trabajando en ello.",
+          // });
         }
       }
       text = text.trim().slice(0, 10_000);
