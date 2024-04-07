@@ -8,6 +8,7 @@ import { Accept } from "react-dropzone";
 import { CheckboxesInput, Option } from "../input/checkboxes-input";
 import { FileInput } from "../input/file-input";
 import { PasswordInput } from "../input/password-input";
+import { SliderInput } from "../input/slider-input";
 import TagsInput from "../input/tags-input";
 import {
   FormControl,
@@ -277,6 +278,42 @@ export function CheckboxesFormField({
               value={field.value}
               onChange={field.onChange}
               options={options}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+interface SliderFormFieldProps {
+  name: string;
+  label: string;
+  max: number;
+  step?: number;
+}
+
+export function SliderFormField({
+  label,
+  name,
+  max,
+  step,
+}: SliderFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <div className="h-2"></div>
+          <FormControl>
+            <SliderInput
+              name={name}
+              max={max}
+              step={step}
+              value={field.value}
+              onChange={field.onChange}
             />
           </FormControl>
           <FormMessage />
