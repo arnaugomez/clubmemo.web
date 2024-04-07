@@ -11,13 +11,15 @@ export const GenerateAiNotesActionSchema = z.object({
     z.literal(AiNotesGeneratorSourceType.topic),
   ]),
   text: z.string().min(1),
-  noteTypes: z.array(
-    z.union([
-      z.literal(AiGeneratorNoteType.definition),
-      z.literal(AiGeneratorNoteType.list),
-      z.literal(AiGeneratorNoteType.qa),
-    ]),
-  ),
+  noteTypes: z
+    .array(
+      z.union([
+        z.literal(AiGeneratorNoteType.definition),
+        z.literal(AiGeneratorNoteType.list),
+        z.literal(AiGeneratorNoteType.qa),
+      ]),
+    )
+    .min(1),
   notesCount: z.number().int().positive(),
 });
 

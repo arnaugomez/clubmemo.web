@@ -2,6 +2,7 @@ import { AiGeneratorNoteType } from "@/src/core/ai-generator/domain/models/ai-ge
 import { AiNotesGeneratorSourceType } from "@/src/core/ai-generator/domain/models/ai-notes-generator-source-type";
 import { NoteRowModel } from "@/src/core/notes/domain/models/note-row-model";
 import {
+  CheckboxesFormField,
   FileFormField,
   InputFormField,
   TextareaFormField,
@@ -17,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
+import { textStyles } from "@/src/ui/styles/text-styles";
 
 interface GenerateAiNotesFormProps {
   courseId: string;
@@ -24,20 +26,6 @@ interface GenerateAiNotesFormProps {
   onGoBack: () => void;
   onSuccess: (notes: NoteRowModel[]) => void;
 }
-const CreateNoteSchema = z.object({
-  text: z.string().min(1).max(10_000).optional(),
-  file: z.instanceof(File).optional(),
-  noteTypes: z.array(
-    z.union([
-      z.literal(AiGeneratorNoteType.definition),
-      z.literal(AiGeneratorNoteType.list),
-      z.literal(AiGeneratorNoteType.qa),
-    ]),
-  ),
-  notesCount: z.number().int().positive(),
-});
-
-type FormValues = z.infer<typeof CreateNoteSchema>;
 
 export function GenerateAiNotesForm({
   courseId,
@@ -45,6 +33,28 @@ export function GenerateAiNotesForm({
   onSuccess,
   onGoBack,
 }: GenerateAiNotesFormProps) {
+  const CreateNoteSchema = z.object({
+    text:
+      sourceType === AiNotesGeneratorSourceType.file
+        ? z.string()
+        : z.string().min(1).max(10_000),
+    file:
+      sourceType === AiNotesGeneratorSourceType.file
+        ? z.instanceof(File)
+        : z.instanceof(File).optional(),
+    noteTypes: z
+      .array(
+        z.union([
+          z.literal(AiGeneratorNoteType.definition),
+          z.literal(AiGeneratorNoteType.list),
+          z.literal(AiGeneratorNoteType.qa),
+        ]),
+      )
+      .min(1),
+    notesCount: z.number().int().positive(),
+  });
+  type FormValues = z.infer<typeof CreateNoteSchema>;
+
   const form = useForm<FormValues>({
     resolver: zodResolver(CreateNoteSchema),
     defaultValues: {
@@ -53,7 +63,6 @@ export function GenerateAiNotesForm({
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmit = form.handleSubmit(async (data) => {
     try {
       const text = data.text ?? "";
@@ -83,6 +92,8 @@ export function GenerateAiNotesForm({
     <Form {...form}>
       <form onSubmit={onSubmit}>
         <div>
+          <h3 className={textStyles.h4}>Contenido de las tarjetas</h3>
+          <div className="h-4"></div>
           {sourceType === AiNotesGeneratorSourceType.file && (
             <FileFormField
               accept={{
@@ -109,6 +120,28 @@ export function GenerateAiNotesForm({
               placeholder="Sobre qué quieres generar las tarjetas"
             />
           )}
+          <div className="h-6" />
+          <h3 className={textStyles.h4}>Opciones del generador</h3>
+          <div className="h-4"></div>
+          <CheckboxesFormField
+            name="noteTypes"
+            label="Tipos de tarjeta"
+            description="¿Qué tipos de tarjetas quieres generar?"
+            options={[
+              {
+                label: "Conceptos clave y definiciones",
+                value: AiGeneratorNoteType.definition,
+              },
+              {
+                label: "Listas y clasificaciones",
+                value: AiGeneratorNoteType.list,
+              },
+              {
+                label: "Preguntas y respuestas",
+                value: AiGeneratorNoteType.qa,
+              },
+            ]}
+          />
           <div className="h-4" />
           <FormGlobalErrorMessage />
         </div>
