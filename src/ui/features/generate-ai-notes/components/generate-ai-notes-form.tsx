@@ -73,8 +73,10 @@ export function GenerateAiNotesForm({
           form.setError("file", { message: "Debes subir un archivo" });
           return;
         }
-        console.log(data.file)
-        if (data.file.type.includes("text/plain") || data.file.type.includes("md")) {
+        if (
+          data.file.type.includes("text/plain") ||
+          data.file.type.includes("md")
+        ) {
           text = await data.file.text();
         } else if (data.file.type.includes("pdf")) {
           const fileReader = new FileReader();
