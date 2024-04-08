@@ -31,8 +31,9 @@ export function GenerateAiNotesWizard({
   return (
     <GenerateAiNotesPreview
       notes={notes}
-      onSubmit={() => {
-        console.log("submit");
+      courseId={courseId}
+      onRemove={(index) => {
+        setNotes((prev) => prev.slice(0, index).concat(prev.slice(index + 1)));
       }}
       onCancel={() => {
         setNotes([]);
