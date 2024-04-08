@@ -1,7 +1,6 @@
 import { EmailService } from "../../domain/interfaces/email-service";
 
 export class EmailServiceFakeImpl implements EmailService {
-  constructor() {}
   async sendVerificationCode(
     email: string,
     verificationCode: string,
