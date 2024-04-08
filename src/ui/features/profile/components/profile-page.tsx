@@ -12,8 +12,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { fetchSession } from "../../auth/fetch/fetch-session";
+import { TagsSection } from "../../tags/components/tags-section";
 import { EditProfileSection } from "../edit/components/edit-profile-section";
 import { privateProfileGuard } from "../guards/private-profile-guard";
+import ProfileCoursesSection from "../../courses/profile-courses/components/profile-courses-section";
 
 interface ProfilePageProps {
   profile: ProfileModel;
@@ -76,6 +78,9 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
               </span>
             </a>
           )}
+          <TagsSection tags={profile.tags} />
+          <div className="h-12"></div>
+          <ProfileCoursesSection profile={profile} />
         </div>
       </div>
     </main>

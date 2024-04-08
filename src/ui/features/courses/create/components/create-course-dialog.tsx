@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";

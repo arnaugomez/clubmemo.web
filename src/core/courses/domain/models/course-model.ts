@@ -1,3 +1,7 @@
+import {
+  CourseEnrollmentModel,
+  CourseEnrollmentModelData,
+} from "./course-enrollment-model";
 import { CoursePermissionTypeModel } from "./course-permission-type-model";
 
 export interface CourseModelData {
@@ -6,7 +10,9 @@ export interface CourseModelData {
   description?: string;
   picture?: string;
   isPublic: boolean;
-  permissionType?: CoursePermissionTypeModel;
+  permissionType: CoursePermissionTypeModel | null;
+  enrollment: CourseEnrollmentModelData | null;
+  tags?: string[];
 }
 
 export class CourseModel {
@@ -36,23 +42,40 @@ export class CourseModel {
     return this.data.permissionType;
   }
 
+  get tags() {
+    return this.data.tags ?? [];
+  }
+
   get canView() {
-    return this.isPublic || this.permissionType === "own";
+    return (
+      this.isPublic ||
+      this.permissionType === CoursePermissionTypeModel.Own ||
+      this.permissionType === CoursePermissionTypeModel.Edit ||
+      this.permissionType === CoursePermissionTypeModel.View
+    );
   }
 
   get canEdit() {
-    return this.permissionType === "own" || this.permissionType === "edit";
+    return (
+      this.permissionType === CoursePermissionTypeModel.Own ||
+      this.permissionType === CoursePermissionTypeModel.Edit
+    );
   }
 
   get canDelete() {
-    return this.permissionType === "own";
+    return this.isOwner;
   }
 
-  get canLearn() {
-    return (
-      this.permissionType === "own" ||
-      this.permissionType === "edit" ||
-      this.permissionType === "learn"
-    );
+  get isOwner() {
+    return this.permissionType === CoursePermissionTypeModel.Own;
+  }
+
+  get enrollment() {
+    if (!this.data.enrollment) return null;
+    return new CourseEnrollmentModel(this.data.enrollment);
+  }
+
+  get isEnrolled() {
+    return Boolean(this.data.enrollment);
   }
 }
