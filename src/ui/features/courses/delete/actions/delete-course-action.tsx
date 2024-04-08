@@ -3,9 +3,10 @@ import { locator } from "@/src/core/app/locator";
 import {
   CannotDeleteCourseError,
   CourseDoesNotExistError,
-} from "@/src/core/courses/domain/errors/course-errors";
+} from "@/src/core/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 
 export async function deleteCourseAction(id: string) {
@@ -20,6 +21,10 @@ export async function deleteCourseAction(id: string) {
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canDelete) throw new CannotDeleteCourseError();
     await coursesRepository.delete(id);
+
+    revalidatePath("/courses");
+    revalidatePath("/learn");
+    revalidateTag("hasCourses");
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");

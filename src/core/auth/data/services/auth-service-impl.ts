@@ -22,7 +22,6 @@ import {
   SignupWithPasswordResultModel,
   UpdatePasswordModel,
 } from "../../domain/interfaces/auth-service";
-import { AuthType } from "../../domain/models/auth-type-model";
 import { CheckSessionModel } from "../../domain/models/check-session-model";
 import {
   SessionDoc,
@@ -34,11 +33,12 @@ import {
   UserDoc,
   usersCollection,
 } from "../collections/users-collection";
+import { AuthTypeModel } from "../../domain/models/auth-type-model";
 
 interface DatabaseUserAttributes {
   email: string;
   hashed_password: string;
-  authTypes: AuthType[];
+  authTypes: AuthTypeModel[];
   isEmailVerified?: boolean;
 }
 
@@ -151,7 +151,7 @@ export class AuthServiceImpl implements AuthService {
     const result = await this.usersCollection.insertOne({
       email,
       hashed_password,
-      authTypes: ["email"],
+      authTypes: [AuthTypeModel.Email],
     });
     const userId = result.insertedId;
 

@@ -13,7 +13,7 @@ import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-err
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { signupAction } from "../actions/signup-action";

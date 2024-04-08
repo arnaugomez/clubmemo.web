@@ -1,6 +1,15 @@
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { HTMLInputAutoCompleteAttribute, HTMLInputTypeAttribute } from "react";
+import {
+  HTMLInputAutoCompleteAttribute,
+  HTMLInputTypeAttribute,
+  ReactNode,
+} from "react";
+import { Accept } from "react-dropzone";
+import { CheckboxesInput, Option } from "../input/checkboxes-input";
+import { FileInput } from "../input/file-input";
 import { PasswordInput } from "../input/password-input";
+import { SliderInput } from "../input/slider-input";
+import TagsInput from "../input/tags-input";
 import {
   FormControl,
   FormDescription,
@@ -167,6 +176,147 @@ export function SwitchSectionFormField({
           <FormControl>
             <Switch checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>
+        </FormItem>
+      )}
+    />
+  );
+}
+
+interface TagsFormFieldProps {
+  name: string;
+  label: string;
+  placeholder?: string;
+}
+
+export function TagsFormField({
+  label,
+  name,
+  placeholder,
+}: TagsFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <TagsInput
+              name={name}
+              id={field.name}
+              placeholder={placeholder}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+interface FileFormFieldProps {
+  name: string;
+  label: string;
+  accept: Accept;
+  maxSize: number;
+  fileIcon?: ReactNode;
+}
+
+export function FileFormField({
+  label,
+  name,
+  accept,
+  maxSize,
+  fileIcon,
+}: FileFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <FileInput
+              name={name}
+              id={field.name}
+              onChange={field.onChange}
+              accept={accept}
+              maxSize={maxSize}
+              fileIcon={fileIcon}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+interface CheckboxesFormFieldProps {
+  name: string;
+  label: string;
+  description: string;
+  options: Option[];
+}
+
+export function CheckboxesFormField({
+  name,
+  label,
+  description,
+  options,
+}: CheckboxesFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <CheckboxesInput
+              label={label}
+              description={description}
+              name={field.name}
+              value={field.value}
+              onChange={field.onChange}
+              options={options}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+interface SliderFormFieldProps {
+  name: string;
+  label: string;
+  max: number;
+  step?: number;
+}
+
+export function SliderFormField({
+  label,
+  name,
+  max,
+  step,
+}: SliderFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <div className="h-2"></div>
+          <FormControl>
+            <SliderInput
+              name={name}
+              max={max}
+              step={step}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

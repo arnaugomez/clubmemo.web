@@ -6,7 +6,6 @@ export function RandomNumberSection() {
     <>
       <button
         onClick={async function () {
-          console.log("click");
           await randomNumberAction();
         }}
       >

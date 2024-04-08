@@ -2,7 +2,7 @@
 
 import { locator } from "@/src/core/app/locator";
 import { fetchSession } from "@/src/ui/features/auth/fetch/fetch-session";
-import { ActionResponse } from "@/src/ui/view-models/server-form-errors";
+import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

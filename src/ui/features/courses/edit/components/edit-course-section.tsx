@@ -7,8 +7,10 @@ import {
 import {
   InputFormField,
   SwitchSectionFormField,
+  TagsFormField,
   TextareaFormField,
 } from "@/src/ui/components/form/form-fields";
+import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import {
@@ -20,7 +22,7 @@ import {
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
 import { Form } from "@/src/ui/components/shadcn/ui/form";
-import { FormResponseHandler } from "@/src/ui/view-models/server-form-errors";
+import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
@@ -58,6 +60,7 @@ const EditCourseSchema = z.object({
   name: z.string().trim().min(1).max(50),
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),
+  tags: z.array(z.string().trim().min(1).max(50)).max(10),
 });
 
 type FormValues = z.infer<typeof EditCourseSchema>;
@@ -69,6 +72,7 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
       name: course.name ?? "",
       description: course.description ?? "",
       isPublic: course.isPublic,
+      tags: course.tags,
     },
   });
 
@@ -116,11 +120,18 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
                 placeholder="De qué trata el curso"
               />
               <div className="h-4" />
+              <TagsFormField
+                label="Etiquetas del curso"
+                name="tags"
+                placeholder="Sus temas, asignaturas..."
+              />
+              <div className="h-4" />
               <SwitchSectionFormField
                 name="isPublic"
                 label="Curso público"
                 description="Haz que el curso sea visible para otros usuarios"
               />
+              <FormGlobalErrorMessage />
             </div>
             <div className="h-6" />
             <DialogFooter>

@@ -1,13 +1,18 @@
 "use client";
-import { Button } from "@/src/ui/components/shadcn/ui/button";
-import { CreateCourseDialog } from "./create-course-dialog";
+import { Button, ButtonProps } from "@/src/ui/components/shadcn/ui/button";
 import { useState } from "react";
+import { CreateCourseDialog } from "./create-course-dialog";
 
-export function CreateCourseButton() {
+interface CreateCourseButtonProps {
+  variant?: ButtonProps["variant"];
+  size?: ButtonProps["size"];
+}
+
+export function CreateCourseButton(props: CreateCourseButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Button variant="secondary" onClick={() => setIsOpen(true)}>
+      <Button {...props} onClick={() => setIsOpen(true)}>
         Nuevo curso
       </Button>
 

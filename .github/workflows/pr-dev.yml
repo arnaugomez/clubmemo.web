@@ -3,8 +3,8 @@ on:
   pull_request:
     branches: ["dev"]
 jobs:
-  test:
-    name: Checks
+  ci-dev:
+    environment: test
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
@@ -31,3 +31,8 @@ jobs:
 
       - name: Run unit tests with Vitest
         run: pnpm test:unit
+        env:
+          BASE_URL: ${{vars.BASE_URL}}
+          MONGODB_URL: ${{secrets.MONGODB_URL}}
+          PASSWORD_PEPPER: ${{secrets.PASSWORD_PEPPER}}
+          SEND_EMAIL: ${{vars.SEND_EMAIL}}
