@@ -111,7 +111,6 @@ export function GenerateAiNotesForm({
         }
       }
       text = text.trim().slice(0, 20_000);
-      console.log(text);
       if (!text) {
         form.setError("root.globalError", {
           type: "global",
@@ -129,7 +128,6 @@ export function GenerateAiNotesForm({
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors && handler.data) {
         toast.success("Tarjetas generadas con éxito");
-        console.log(handler.data);
         onSuccess(handler.data);
       }
       handler.setErrors();
