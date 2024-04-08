@@ -14,5 +14,9 @@ declare namespace NodeJS {
      * It prevents the hash from being cracked even if it is leaked.
      */
     readonly PASSWORD_PEPPER: string;
+    /** OpenAI API key */
+    readonly OPENAI_API_KEY: string;
+    /** Whether to use a fake of the OpenAI API to save money */
+    readonly FAKE_OPENAI_API: string;
   }
 }

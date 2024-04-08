@@ -11,7 +11,7 @@ export class TagsRepositoryImpl implements TagsRepository {
   }
   async create(tags: string[]): Promise<void> {
     try {
-      this.tags.insertMany(
+      await this.tags.insertMany(
         tags.map((name) => ({ name })),
         { ordered: false },
       );
