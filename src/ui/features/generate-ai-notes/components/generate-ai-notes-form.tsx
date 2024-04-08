@@ -37,7 +37,7 @@ export function GenerateAiNotesForm({
   const CreateNoteSchema = z.object({
     text:
       sourceType === AiNotesGeneratorSourceType.file
-        ? z.undefined()
+        ? z.string().optional()
         : z.string().min(1).max(20_000),
     file:
       sourceType === AiNotesGeneratorSourceType.file
