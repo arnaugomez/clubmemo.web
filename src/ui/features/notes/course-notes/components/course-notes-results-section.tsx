@@ -66,7 +66,7 @@ export function CourseNotesResultsSection({
 
     const result = await paginateNotesAction({
       courseId,
-      page: Math.floor(contextResults.length / 10),
+      page: Math.floor(contextResults.length / 10) + 1,
     });
     const handler = new FormResponseHandler(result);
 
