@@ -125,6 +125,9 @@ dependencies:
   tailwindcss-animate:
     specifier: ^1.0.7
     version: 1.0.7(tailwindcss@3.4.3)
+  ts-fsrs:
+    specifier: ^3.5.3
+    version: 3.5.3
   use-debounce:
     specifier: ^10.0.0
     version: 10.0.0(react@18.2.0)
@@ -6616,6 +6619,10 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
+  /seedrandom@3.0.5:
+    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
+    dev: false
+
   /selderee@0.11.0:
     resolution: {integrity: sha512-5TF+l7p4+OsnP8BCCvSyZiSPc4x4//p5uPwK8TCnVPJYRmU2aYKMpOXvw8zM5a5JvuuCGN1jmsMwuU2W02ukfA==}
     dependencies:
@@ -7057,6 +7064,13 @@ packages:
     dependencies:
       typescript: 5.4.3
     dev: true
+
+  /ts-fsrs@3.5.3:
+    resolution: {integrity: sha512-PfcCq7hiYuUVQZHhjAhZTf7IvMYiIOqgIh51cUIkQ+lOuUJd6WRMxOP8ao1CMhXySOpAGOJjev8y4jF0gZAxDA==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      seedrandom: 3.0.5
+    dev: false
 
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
