@@ -28,7 +28,7 @@ export class CourseEnrollmentConfigModel {
   }
 
   get requestRetention() {
-    return this.data.maximumInterval ?? default_request_retention;
+    return this.data.requestRetention ?? default_request_retention;
   }
 
   get dailyNewCardsCount() {

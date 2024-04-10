@@ -26,7 +26,7 @@ export interface UpdateCourseEnrollmentConfigInputModel {
 }
 
 export interface CourseEnrollmentsRepository {
-  get(id: string): Promise<CourseEnrollmentModel| null>;
+  get(id: string): Promise<CourseEnrollmentModel | null>;
   create(input: CreateCourseEnrollmentInputModel): Promise<void>;
   setFavorite(input: SetCourseFavoriteInputModel): Promise<void>;
   delete(input: CreateCourseEnrollmentInputModel): Promise<void>;

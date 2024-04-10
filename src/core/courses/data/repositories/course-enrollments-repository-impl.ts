@@ -29,7 +29,7 @@ export class CourseEnrollmentsRepositoryImpl
       isFavorite: false,
     });
   }
-  
+
   async get(id: string): Promise<CourseEnrollmentModel | null> {
     const result = await this.collection.findOne({ _id: new ObjectId(id) });
     return result && new CourseEnrollmentDocTransformer(result).toDomain();
