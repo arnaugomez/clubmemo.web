@@ -168,7 +168,7 @@ export function SwitchSectionFormField({
     <FormField
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 space-x-4">
           <div className="space-y-0.5">
             <FormLabel className="text-base">{label}</FormLabel>
             <FormDescription>{description}</FormDescription>
@@ -292,6 +292,7 @@ interface SliderFormFieldProps {
   label: string;
   max: number;
   step?: number;
+  description?: string;
 }
 
 export function SliderFormField({
@@ -299,6 +300,7 @@ export function SliderFormField({
   name,
   max,
   step,
+  description,
 }: SliderFormFieldProps) {
   return (
     <FormField
@@ -306,6 +308,7 @@ export function SliderFormField({
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
+          {description && <FormDescription>{description}</FormDescription>}
           <div className="h-2"></div>
           <FormControl>
             <SliderInput
