@@ -25,8 +25,8 @@ export class PracticerModel {
     const reviewLog = fsrs.repeat(fsrsCard, new Date());
     const item = reviewLog[fsrsRating];
 
-    // Apply fuzz to the card due date
-    const newCard = fsrs.reschedule([item.card])[0];
+    // Apply fuzz to the card due date.
+    const newCard = fsrs.reschedule([item.card])[0] ?? item.card;
 
     return {
       card: new PracticeCardModel({
