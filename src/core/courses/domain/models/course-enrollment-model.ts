@@ -37,7 +37,7 @@ export class CourseEnrollmentModel {
     }
     return new CourseEnrollmentConfigModel(this.data.config);
   }
-  
+
   get fsrs() {
     return new FSRS(this.config.fsrsGeneratorParameters);
   }
