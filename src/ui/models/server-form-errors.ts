@@ -23,6 +23,7 @@ const globalErrors = {
   cannotEditCourse: "No tienes permisos para editar este curso.",
   cannotDeleteCourse: "No tienes permisos para eliminar este curso.",
   forgotPasswordCodeExpired: "El código de recuperación ha expirado.",
+  enrollmentDoesNotExist: "La inscripción no existe.",
 };
 type GlobalErrorType = keyof typeof globalErrors;
 

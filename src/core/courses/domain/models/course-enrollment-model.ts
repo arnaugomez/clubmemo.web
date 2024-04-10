@@ -1,8 +1,14 @@
+import {
+  CourseEnrollmentConfigModel,
+  CourseEnrollmentConfigModelData,
+} from "./course-enrollment-config-model";
+
 export interface CourseEnrollmentModelData {
   id: string;
   courseId: string;
   profileId: string;
   isFavorite: boolean;
+  config?: CourseEnrollmentConfigModelData;
 }
 
 export class CourseEnrollmentModel {
@@ -22,5 +28,12 @@ export class CourseEnrollmentModel {
 
   get isFavorite() {
     return this.data.isFavorite;
+  }
+
+  get config() {
+    if (!this.data.config) {
+      return CourseEnrollmentConfigModel.empty();
+    }
+    return new CourseEnrollmentConfigModel(this.data.config);
   }
 }

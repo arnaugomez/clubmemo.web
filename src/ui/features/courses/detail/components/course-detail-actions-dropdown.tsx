@@ -21,6 +21,7 @@ import { Copy, Ellipsis, File, LogOut, Settings2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { CopyCourseDialog } from "../../copy/components/copy-course-dialog";
 import { DeleteCourseDialog } from "../../delete/components/delete-course-dialog";
+import { EditCourseConfigDialog } from "../../edit-config/components/edit-couse-config-dialog";
 import { UnenrollCourseDialog } from "../../enroll/components/unenroll-course-dialog";
 import { CourseFavoriteButton } from "./course-favorite-button";
 import { ExportCourseAnkiButton } from "./export-course-anki-button";
@@ -39,6 +40,7 @@ export function CourseDetailActionsDropdown({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
   const [showCopyDialog, setShowCopyDialog] = useState(false);
+  const [showConfigDialog, setShowConfigDialog] = useState(false);
   return (
     <>
       <DropdownMenu>
@@ -61,10 +63,12 @@ export function CourseDetailActionsDropdown({
             </>
           )}
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Settings2 className="mr-2 h-4 w-4" />
-              <span>Ajustes</span>
-            </DropdownMenuItem>
+            {course.enrollment && (
+              <DropdownMenuItem onSelect={() => setShowConfigDialog(true)}>
+                <Settings2 className="mr-2 h-4 w-4" />
+                <span>Ajustes</span>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onSelect={() => setShowCopyDialog(true)}>
               <Copy className="mr-2 h-4 w-4" />
               <span>Copiar</span>
@@ -129,6 +133,12 @@ export function CourseDetailActionsDropdown({
         <UnenrollCourseDialog
           course={course}
           onClose={() => setShowUnenrollDialog(false)}
+        />
+      )}
+      {showConfigDialog && course.enrollment && (
+        <EditCourseConfigDialog
+          enrollment={course.enrollment}
+          onClose={() => setShowConfigDialog(false)}
         />
       )}
     </>
