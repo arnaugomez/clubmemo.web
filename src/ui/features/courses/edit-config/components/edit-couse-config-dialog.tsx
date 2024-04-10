@@ -141,7 +141,7 @@ export function EditCourseConfigDialog({
               <div className="h-4"></div>
               <SliderFormField
                 label="Cantidad diaria de tarjetas nuevas"
-                description="Cuántas tarjetas que quieres empezar a aprender cada día"
+                description="Cuántas tarjetas quieres empezar a aprender cada día"
                 name="dailyNewCardsCount"
                 max={100}
               />
