@@ -16,12 +16,12 @@ export async function editCourseConfigAction(
 ) {
   try {
     const profile = await fetchMyProfile();
-    if (!profile) return new NoPermissionError();
+    if (!profile) throw new NoPermissionError();
     const parsed = EditCourseConfigActionSchema.parse(data);
     const enrollmentsRepository = await locator.CourseEnrollmentsRepository();
     const enrollment = await enrollmentsRepository.get(parsed.enrollmentId);
-    if (!enrollment) return new EnrollmentDoesNotExistError();
-    if (enrollment.profileId !== profile.id) return new NoPermissionError();
+    if (!enrollment) throw new EnrollmentDoesNotExistError();
+    if (enrollment.profileId !== profile.id) throw new NoPermissionError();
     await enrollmentsRepository.updateConfig(parsed);
     revalidatePath(`/courses/detail`);
     return ActionResponse.formSuccess(null);
