@@ -9,7 +9,7 @@ export interface CourseEnrollmentConfigModelData {
   maximumInterval?: number;
   requestRetention?: number;
   dailyNewCardsCount?: number;
-  simplifyRatingOptions?: boolean;
+  showAdvancedRatingOptions?: boolean;
 }
 
 export class CourseEnrollmentConfigModel {
@@ -35,8 +35,8 @@ export class CourseEnrollmentConfigModel {
     return this.data.dailyNewCardsCount ?? 10;
   }
 
-  get simplifyRatingOptions() {
-    return this.data.simplifyRatingOptions ?? false;
+  get showAdvancedRatingOptions() {
+    return this.data.showAdvancedRatingOptions ?? true;
   }
 
   get fsrsGeneratorParameters() {
