@@ -1,3 +1,4 @@
+import { FSRS } from "ts-fsrs";
 import {
   CourseEnrollmentConfigModel,
   CourseEnrollmentConfigModelData,
@@ -35,5 +36,9 @@ export class CourseEnrollmentModel {
       return CourseEnrollmentConfigModel.empty();
     }
     return new CourseEnrollmentConfigModel(this.data.config);
+  }
+  
+  get fsrs() {
+    return new FSRS(this.config.fsrsGeneratorParameters);
   }
 }
