@@ -1,13 +1,13 @@
-"use client"
-import { CourseModel, CourseModelData } from "@/src/core/courses/domain/models/course-model";
-import { PracticeCardModel, PracticeCardModelData } from "@/src/core/practice/domain/models/practice-card-model";
+"use client";
+import { CourseModelData } from "@/src/core/courses/domain/models/course-model";
+import { PracticeCardModelData } from "@/src/core/practice/domain/models/practice-card-model";
 
 interface PracticeManagerProps {
   course: CourseModelData;
   cards: PracticeCardModelData[];
 }
 
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function PracticeWizard({ course, cards }: PracticeManagerProps) {
   // const newCard = PracticeCardModel.createNew({
   //   courseEnrollmentId: course.enrollment.id,
@@ -20,9 +20,5 @@ export function PracticeWizard({ course, cards }: PracticeManagerProps) {
   // const result = practicer.practice(PracticeCardRatingModel.easy);
   // console.log(result);
 
-  return (
-    <>
-
-    </>
-  );
+  return <></>;
 }

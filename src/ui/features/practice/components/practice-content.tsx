@@ -51,5 +51,7 @@ export async function PracticeContent({ course }: PracticeContentProps) {
   if (cards.length === 0) {
     return <PracticeEmptyState />;
   }
-  return <PracticeWizard course={course.data} cards={cards.map(c => c.data)} />;
+  return (
+    <PracticeWizard course={course.data} cards={cards.map((c) => c.data)} />
+  );
 }
