@@ -1,3 +1,7 @@
+import {
+  NoteModel,
+  NoteModelData,
+} from "@/src/core/notes/domain/models/note-model";
 import { Card, createEmptyCard } from "ts-fsrs";
 import {
   PracticeCardStateModel,
@@ -8,7 +12,7 @@ export interface PracticeCardModelData {
   id: string;
 
   courseEnrollmentId: string;
-  noteId: string;
+  note: NoteModelData;
 
   isNew: boolean;
 
@@ -25,18 +29,18 @@ export interface PracticeCardModelData {
 
 interface NewPracticeCardInput {
   courseEnrollmentId: string;
-  noteId: string;
+  note: NoteModel;
 }
 
 export class PracticeCardModel {
   constructor(readonly data: PracticeCardModelData) {}
 
-  static createNew({ courseEnrollmentId, noteId }: NewPracticeCardInput) {
+  static createNew({ courseEnrollmentId, note }: NewPracticeCardInput) {
     const fsrsCard = createEmptyCard();
     return new PracticeCardModel({
       id: "",
       courseEnrollmentId,
-      noteId,
+      note: note.data,
       isNew: true,
       due: fsrsCard.due,
       stability: fsrsCard.stability,
@@ -57,12 +61,12 @@ export class PracticeCardModel {
     return this.data.courseEnrollmentId;
   }
 
-  get noteId() {
-    return this.data.noteId;
-  }
-
   get isNew() {
     return this.data.isNew;
+  }
+
+  get note() {
+    return this.data.note;
   }
 
   get fsrsCard(): Card {
