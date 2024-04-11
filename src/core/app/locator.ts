@@ -9,6 +9,8 @@ import { CourseAuthorsRepository } from "../courses/domain/interfaces/course-aut
 import { CourseEnrollmentsRepository } from "../courses/domain/interfaces/course-enrollments-repository";
 import { CoursesRepository } from "../courses/domain/interfaces/courses-repository";
 import { NotesRepository } from "../notes/domain/interfaces/notes-repository";
+import { PracticeCardsRepository } from "../practice/domain/interfaces/practice-cards-repository";
+import { ReviewLogsRepository } from "../practice/domain/interfaces/review-logs-repository";
 import { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
 import { TagsRepository } from "../tags/domain/interfaces/tags-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
@@ -39,6 +41,9 @@ interface Locator {
   NotesRepository: Lazy<NotesRepository>;
   // Ai Generator
   AiNotesGeneratorService: Lazy<AiNotesGeneratorService>;
+  // Practice
+  PracticeCardsRepository: Lazy<PracticeCardsRepository>;
+  ReviewLogsRepository: Lazy<ReviewLogsRepository>;
 }
 
 export const singleton = memoizeOne;
@@ -136,5 +141,18 @@ export const locator: Locator = {
       "../ai-generator/data/services/ai-notes-generator-service-impl"
     );
     return new file.AiNotesGeneratorServiceImpl(envService);
+  },
+  // Practice
+  async PracticeCardsRepository() {
+    const file = await import(
+      "../practice/data/repositories/practice-cards-repository-impl"
+    );
+    return new file.PracticeCardsRepositoryImpl(this.MongoService());
+  },
+  async ReviewLogsRepository() {
+    const file = await import(
+      "../practice/data/repositories/review-logs-repository-impl"
+    );
+    return new file.ReviewLogsRepositoryImpl(this.MongoService());
   },
 };
