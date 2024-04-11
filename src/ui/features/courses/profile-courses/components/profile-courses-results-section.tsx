@@ -3,8 +3,8 @@
 import {
   TokenPaginationModel,
   TokenPaginationModelData,
-} from "@/src/core/app/domain/models/token-pagination-model";
-import { waitMilliseconds } from "@/src/core/app/utils/promises";
+} from "@/src/core/common/domain/models/token-pagination-model";
+import { waitMilliseconds } from "@/src/core/common/utils/promises";
 import {
   DiscoverCourseModel,
   DiscoverCourseModelData,

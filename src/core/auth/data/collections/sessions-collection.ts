@@ -1,4 +1,4 @@
-import { collection } from "@/src/core/app/utils/mongo";
+import { collection } from "@/src/core/common/utils/mongo";
 import { Session } from "lucia";
 import { ObjectId } from "mongodb";
 import { SessionModel } from "../../domain/models/check-session-model";

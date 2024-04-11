@@ -1,4 +1,4 @@
-import { collection } from "@/src/core/app/utils/mongo";
+import { collection } from "@/src/core/common/utils/mongo";
 import { RegisteredDatabaseUserAttributes, User } from "lucia";
 import { WithId } from "mongodb";
 import { UserModel } from "../../domain/models/user-model";

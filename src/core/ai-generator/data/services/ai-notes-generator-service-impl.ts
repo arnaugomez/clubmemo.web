@@ -1,4 +1,4 @@
-import { EnvService } from "@/src/core/app/domain/interfaces/env-service";
+import { EnvService } from "@/src/core/common/domain/interfaces/env-service";
 import { OpenAI } from "openai";
 import {
   AiNotesGeneratorService,

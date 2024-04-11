@@ -1,4 +1,4 @@
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { Collection, ObjectId } from "mongodb";
 import { TimeSpan, createDate } from "oslo";
 import { alphabet, generateRandomString, sha256 } from "oslo/crypto";

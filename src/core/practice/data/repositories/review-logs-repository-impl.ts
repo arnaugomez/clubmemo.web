@@ -1,12 +1,12 @@
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
+import { ObjectId } from "mongodb";
 import {
-  ReviewLogsRepository,
   GetReviewsOfNewCardsCountInputModel,
+  ReviewLogsRepository,
 } from "../../domain/interfaces/review-logs-repository";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
-import { reviewLogsCollection } from "../collections/review-logs-collection";
 import { ReviewLogModel } from "../../domain/models/review-log-model";
-import { ObjectId } from "mongodb";
+import { reviewLogsCollection } from "../collections/review-logs-collection";
 
 export class ReviewLogsRepositoryImpl implements ReviewLogsRepository {
   private readonly reviewLogs: typeof reviewLogsCollection.type;

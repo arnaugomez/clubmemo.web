@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { GetDiscoverCoursesInputModel } from "@/src/core/courses/domain/interfaces/courses-repository";
 
 export const fetchDiscoverCourses = async (

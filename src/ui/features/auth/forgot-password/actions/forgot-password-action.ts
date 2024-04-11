@@ -1,6 +1,6 @@
 "use server";
 
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { ActionResponse } from "@/src/ui/models/server-form-errors";
 
 export async function forgotPasswordAction(email: string) {
