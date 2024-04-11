@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { cache } from "react";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 

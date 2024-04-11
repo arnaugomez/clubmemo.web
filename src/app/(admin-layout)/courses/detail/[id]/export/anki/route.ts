@@ -1,5 +1,5 @@
-import { NoPermissionError } from "@/src/core/app/domain/models/app-errors";
-import { locator } from "@/src/core/app/locator";
+import { NoPermissionError } from "@/src/core/common/domain/models/app-errors";
+import { locator } from "@/src/core/common/locator";
 import { CourseDoesNotExistError } from "@/src/core/courses/domain/models/course-errors";
 import { fetchMyProfile } from "@/src/ui/features/profile/fetch/fetch-my-profile";
 import { ActionResponse } from "@/src/ui/models/server-form-errors";

@@ -1,7 +1,7 @@
 import { cache } from "react";
 
 import { ProfileModel } from "@/src/core/profile/domain/models/profile-model";
-import { locator } from "../../../../core/app/locator";
+import { locator } from "../../../../core/common/locator";
 import { fetchSession } from "../../auth/fetch/fetch-session";
 
 export const fetchMyProfile = cache(async (): Promise<ProfileModel | null> => {

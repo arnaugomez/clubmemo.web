@@ -1,4 +1,4 @@
-import { collection } from "@/src/core/app/utils/mongo";
+import { collection } from "@/src/core/common/utils/mongo";
 import { ObjectId, WithId } from "mongodb";
 import { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";

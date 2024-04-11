@@ -1,4 +1,4 @@
-import { TokenPaginationModel } from "@/src/core/app/domain/models/token-pagination-model";
+import { TokenPaginationModel } from "@/src/core/common/domain/models/token-pagination-model";
 
 export type WithPaginationToken<T extends object> = T & {
   paginationToken: string;

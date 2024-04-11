@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { PracticeContent } from "@/src/ui/features/practice/components/practice-content";
 import { fetchMyProfile } from "@/src/ui/features/profile/fetch/fetch-my-profile";
 import { invalidIdGuard } from "@/src/ui/guards/invalid-id-guard";

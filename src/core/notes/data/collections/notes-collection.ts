@@ -1,6 +1,6 @@
+import { collection } from "@/src/core/common/utils/mongo";
 import { ObjectId, WithId } from "mongodb";
 import { NoteModel } from "../../domain/models/note-model";
-import { collection } from "@/src/core/app/utils/mongo";
 
 export interface NoteDoc {
   courseId: ObjectId;

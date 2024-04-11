@@ -1,4 +1,4 @@
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { TagsRepository } from "../../domain/interfaces/tags-repository";
 import { tagsCollection } from "../collections/tags-collection";
 

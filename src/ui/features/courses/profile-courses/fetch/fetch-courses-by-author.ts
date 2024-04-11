@@ -1,5 +1,5 @@
-import { TokenPaginationModelData } from "@/src/core/app/domain/models/token-pagination-model";
-import { locator } from "@/src/core/app/locator";
+import { TokenPaginationModelData } from "@/src/core/common/domain/models/token-pagination-model";
+import { locator } from "@/src/core/common/locator";
 import { GetCoursesByAuthorInputModel } from "@/src/core/courses/domain/interfaces/courses-repository";
 import { DiscoverCourseModelData } from "@/src/core/courses/domain/models/discover-course-model";
 

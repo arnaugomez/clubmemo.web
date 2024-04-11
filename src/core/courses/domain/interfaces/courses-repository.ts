@@ -1,5 +1,5 @@
-import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
-import { TokenPaginationModel } from "@/src/core/app/domain/models/token-pagination-model";
+import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
+import { TokenPaginationModel } from "@/src/core/common/domain/models/token-pagination-model";
 import { CourseModel } from "../models/course-model";
 import { CreateCourseInputModel } from "../models/create-course-input-model";
 import { DiscoverCourseModel } from "../models/discover-course-model";

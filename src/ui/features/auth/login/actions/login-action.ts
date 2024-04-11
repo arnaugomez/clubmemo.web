@@ -1,11 +1,11 @@
 "use server";
-import { locator } from "@/src/core/app/locator";
-import { waitMilliseconds } from "@/src/core/app/utils/promises";
 import {
   IncorrectPasswordError,
   UserDoesNotExistError,
 } from "@/src/core/auth/domain/errors/auth-errors";
 import { LoginWithPasswordModel } from "@/src/core/auth/domain/interfaces/auth-service";
+import { locator } from "@/src/core/common/locator";
+import { waitMilliseconds } from "@/src/core/common/utils/promises";
 import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

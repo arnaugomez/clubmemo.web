@@ -1,10 +1,10 @@
 import {
   PaginationFacet,
   PaginationFacetTransformer,
-} from "@/src/core/app/data/services/facets/pagination-facet";
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
-import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
-import { TokenPaginationModel } from "@/src/core/app/domain/models/token-pagination-model";
+} from "@/src/core/common/data/services/facets/pagination-facet";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
+import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
+import { TokenPaginationModel } from "@/src/core/common/domain/models/token-pagination-model";
 import { ObjectId, WithId } from "mongodb";
 import {
   CoursesRepository,
