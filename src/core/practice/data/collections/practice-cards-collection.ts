@@ -1,4 +1,8 @@
 import { collection } from "@/src/core/app/utils/mongo";
+import {
+  NoteDoc,
+  NoteDocTransformer,
+} from "@/src/core/notes/data/collections/notes-collection";
 import { ObjectId, WithId } from "mongodb";
 import { PracticeCardModel } from "../../domain/models/practice-card-model";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
@@ -23,13 +27,13 @@ export const practiceCardsCollection =
 
 export class PracticeCardDocTransformer {
   constructor(private readonly doc: WithId<PracticeCardDoc>) {}
-  toDomain() {
+  toDomain(note: WithId<NoteDoc>) {
     return new PracticeCardModel({
       id: this.doc._id.toHexString(),
 
       isNew: false,
       courseEnrollmentId: this.doc.courseEnrollmentId.toHexString(),
-      noteId: this.doc.noteId.toHexString(),
+      note: new NoteDocTransformer(note).toDomain(),
 
       difficulty: this.doc.difficulty,
       due: this.doc.due,

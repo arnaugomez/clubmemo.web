@@ -19,7 +19,7 @@ export interface ReviewLogDoc {
   review: Date;
 }
 
-export const reviewLogsCollection = collection<ReviewLogDoc>("practice-cards");
+export const reviewLogsCollection = collection<ReviewLogDoc>("review-logs");
 
 export class ReviewLogDocTransformer {
   constructor(private readonly doc: WithId<ReviewLogDoc>) {}

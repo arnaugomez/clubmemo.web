@@ -1,5 +1,5 @@
 import { CourseEnrollmentModel } from "@/src/core/courses/domain/models/course-enrollment-model";
-import { Rating } from "ts-fsrs";
+import { Rating, RecordLog } from "ts-fsrs";
 import { PracticeCardModel } from "./practice-card-model";
 import {
   PracticeCardRatingModel,
@@ -13,17 +13,23 @@ interface PracticerData {
   card: PracticeCardModel;
 }
 export class PracticerModel {
+  private recordLog?: RecordLog;
   constructor(private readonly data: PracticerData) {}
 
-  practice(rating: PracticeCardRatingModel): PracticeResultModel {
+  practice() {
+    const fsrs = this.data.enrollment.fsrs;
+    const fsrsCard = this.data.card.fsrsCard;
+    this.recordLog = fsrs.repeat(fsrsCard, new Date());
+  }
+
+  rate(rating: PracticeCardRatingModel): PracticeResultModel {
+    if (!this.recordLog) throw new Error("Must practice before rate");
     const fsrsRating = new PracticeCardRatingTransformer(rating).toFsrs();
     if (fsrsRating === Rating.Manual)
       throw new Error("Manual rating is not allowed");
     const fsrs = this.data.enrollment.fsrs;
-    const fsrsCard = this.data.card.fsrsCard;
 
-    const reviewLog = fsrs.repeat(fsrsCard, new Date());
-    const item = reviewLog[fsrsRating];
+    const item = this.recordLog[fsrsRating];
 
     // Apply fuzz to the card due date.
     const newCard = fsrs.reschedule([item.card])[0] ?? item.card;
@@ -32,7 +38,7 @@ export class PracticerModel {
       card: new PracticeCardModel({
         id: this.data.card.id,
         courseEnrollmentId: this.data.card.courseEnrollmentId,
-        noteId: this.data.card.noteId,
+        note: this.data.card.note,
         isNew: this.data.card.isNew,
 
         due: newCard.due,
