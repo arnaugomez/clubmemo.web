@@ -8,6 +8,8 @@ export enum PracticeCardRatingModel {
   manual = "manual",
 }
 
+export type DaysToNextReviewModel = Record<PracticeCardRatingModel, number>;
+
 export class PracticeCardRatingTransformer {
   constructor(private readonly domain: PracticeCardRatingModel) {}
   toFsrs() {
