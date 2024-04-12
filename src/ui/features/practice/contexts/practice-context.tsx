@@ -72,7 +72,7 @@ export function PracticeProvider({
         toast.error("Error al guardar los cambios. Reintentando...");
       },
     );
-    if (card.data.scheduledDays > 0) {
+    if (card.data.scheduledDays === 0) {
       state.cards.push(card);
     }
     setState((state) => ({
