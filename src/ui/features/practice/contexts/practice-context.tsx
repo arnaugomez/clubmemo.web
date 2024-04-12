@@ -7,14 +7,8 @@ import {
 } from "@/src/core/practice/domain/models/practice-card-rating-model";
 import { PracticerModel } from "@/src/core/practice/domain/models/practicer-model";
 import { ReviewLogModel } from "@/src/core/practice/domain/models/review-log-model";
-import { ReactContextNotFoundError } from "@/src/ui/models/context-errors";
-import {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContextHook, createNullContext } from "@/src/ui/utils/context";
+import { PropsWithChildren, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useTaskQueueContext } from "./task-queue-context";
 
@@ -35,10 +29,9 @@ interface PracticeContextValue {
   daysToNextReview: DaysToNextReviewModel;
   rate: (rating: PracticeCardRatingModel) => void;
 }
-// Create the context
-const PracticeContext = createContext<PracticeContextValue | null>(null);
 
-// Create the provider component
+const PracticeContext = createNullContext<PracticeContextValue>();
+
 export function PracticeProvider({
   course,
   cards,
@@ -103,8 +96,4 @@ export function PracticeProvider({
   );
 }
 
-export function usePracticeContext() {
-  const context = useContext(PracticeContext);
-  if (!context) throw new ReactContextNotFoundError();
-  return context;
-}
+export const usePracticeContext = createContextHook(PracticeContext);
