@@ -61,12 +61,22 @@ export function PracticeProvider({
     return practicer;
   }, [course.enrollment, currentCard]);
 
-  const rate = (rating: PracticeCardRatingModel) => {
+  const rate = async (rating: PracticeCardRatingModel) => {
     const practiceResult = practicer.rate(rating);
+    try {
+      const promise = await practiceAction({
+        courseId: course.id,
+        card: practiceResult.card.data,
+        reviewLog: practiceResult.reviewLog.data,
+      });
+    } catch (e) {
+      console.error(e);
+    }
     addTask(
       practiceResult,
       async (payload, tasks) => {
         const { card, reviewLog } = payload;
+        console.log(practiceAction);
         const response = await practiceAction({
           courseId: course.id,
           card: card.data,

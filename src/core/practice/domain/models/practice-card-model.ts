@@ -73,7 +73,7 @@ export class PracticeCardModel {
   }
 
   get note() {
-    return this.data.note;
+    return new NoteModel( this.data.note);
   }
 
   get fsrsCard(): Card {
