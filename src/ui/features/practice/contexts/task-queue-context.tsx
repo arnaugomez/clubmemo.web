@@ -1,14 +1,7 @@
 "use client";
 import { waitMilliseconds } from "@/src/core/common/utils/promises";
-import { ReactContextNotFoundError } from "@/src/ui/models/context-errors";
-import {
-  PropsWithChildren,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContextHook, createNullContext } from "@/src/ui/utils/context";
+import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 
 enum Status {
   ready,
@@ -26,10 +19,8 @@ interface TaskQueueContextValue {
   hasPendingTasks: boolean;
   addTask: (fn: Task["fn"], onError: Task["onError"]) => void;
 }
-// Create the context
-const TaskQueueContext = createContext<TaskQueueContextValue | null>(null);
+const TaskQueueContext = createNullContext<TaskQueueContextValue>();
 
-// Create the provider component
 export function TaskQueueProvider({ children }: PropsWithChildren) {
   const [tasks, setTasks] = useState<Task[]>([]);
 
@@ -84,8 +75,4 @@ export function TaskQueueProvider({ children }: PropsWithChildren) {
   );
 }
 
-export function useTaskQueueContext() {
-  const context = useContext(TaskQueueContext);
-  if (!context) throw new ReactContextNotFoundError();
-  return context;
-}
+export const useTaskQueueContext = createContextHook(TaskQueueContext);
