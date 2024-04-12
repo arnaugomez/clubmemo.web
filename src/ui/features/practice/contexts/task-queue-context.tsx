@@ -24,7 +24,7 @@ interface Task {
 
 interface TaskQueueContextValue {
   hasPendingTasks: boolean;
-  addTask: (fn: () => Promise<void>) => void;
+  addTask: (fn: Task["fn"], onError: Task["onError"]) => void;
 }
 // Create the context
 const TaskQueueContext = createContext<TaskQueueContextValue | null>(null);
@@ -68,8 +68,8 @@ export function TaskQueueProvider({ children }: PropsWithChildren) {
     }
   }, [pendingTask, runTask]);
 
-  const addTask = (fn: () => Promise<void>) => {
-    setTasks((tasks) => tasks.concat({ fn, status: Status.ready }));
+  const addTask: TaskQueueContextValue["addTask"] = (fn, onError) => {
+    setTasks((tasks) => tasks.concat({ fn, onError, status: Status.ready }));
   };
 
   return (

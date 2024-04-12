@@ -1,7 +1,10 @@
 "use client";
 import { CourseModel } from "@/src/core/courses/domain/models/course-model";
 import { PracticeCardModel } from "@/src/core/practice/domain/models/practice-card-model";
-import { DaysToNextReviewModel } from "@/src/core/practice/domain/models/practice-card-rating-model";
+import {
+  DaysToNextReviewModel,
+  PracticeCardRatingModel,
+} from "@/src/core/practice/domain/models/practice-card-rating-model";
 import { PracticerModel } from "@/src/core/practice/domain/models/practicer-model";
 import { ReviewLogModel } from "@/src/core/practice/domain/models/review-log-model";
 import { ReactContextNotFoundError } from "@/src/ui/models/context-errors";
@@ -12,6 +15,8 @@ import {
   useMemo,
   useState,
 } from "react";
+import { toast } from "sonner";
+import { useTaskQueueContext } from "./task-queue-context";
 
 interface PracticeProviderProps extends PropsWithChildren {
   course: CourseModel;
@@ -26,7 +31,9 @@ type State = {
 
 interface PracticeContextValue {
   currentCard: PracticeCardModel | null;
+  progress: number;
   daysToNextReview: DaysToNextReviewModel;
+  rate: (rating: PracticeCardRatingModel) => void;
 }
 // Create the context
 const PracticeContext = createContext<PracticeContextValue | null>(null);
@@ -37,7 +44,8 @@ export function PracticeProvider({
   cards,
   children,
 }: PracticeProviderProps) {
-  const [state] = useState<State>({
+  const { addTask } = useTaskQueueContext();
+  const [state, setState] = useState<State>({
     cards,
     currentCardIndex: 0,
     reviewLogs: [],
@@ -55,10 +63,41 @@ export function PracticeProvider({
     return practicer;
   }, [course.enrollment, currentCard]);
 
-  const daysToNextReview = practicer.getDaysToNextReview();
+  const rate = (rating: PracticeCardRatingModel) => {
+    const { card, reviewLog } = practicer.rate(rating);
+    addTask(
+      async () => {
+        // save task
+      },
+      () => {
+        toast.error("Error al guardar los cambios. Reintentando...");
+      },
+    );
+    addTask(
+      async () => {},
+      () => {
+        toast.error("Error al guardar los cambios. Reintentando...");
+      },
+    );
+    if (card.data.scheduledDays > 0) {
+      state.cards.push(card);
+    }
+    setState((state) => ({
+      ...state,
+      currentCardIndex: state.currentCardIndex + 1,
+      reviewLogs: state.reviewLogs.concat(reviewLog),
+    }));
+  };
 
   return (
-    <PracticeContext.Provider value={{ currentCard, daysToNextReview }}>
+    <PracticeContext.Provider
+      value={{
+        currentCard,
+        progress: state.currentCardIndex / state.cards.length,
+        daysToNextReview: practicer.getDaysToNextReview(),
+        rate,
+      }}
+    >
       {children}
     </PracticeContext.Provider>
   );
