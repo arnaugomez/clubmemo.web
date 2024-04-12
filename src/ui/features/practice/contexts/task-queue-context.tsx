@@ -9,37 +9,42 @@ enum Status {
   done,
 }
 
-interface Task {
-  fn(): Promise<void>;
+export interface Task<T> {
+  payload: T;
+  fn(payload: T, tasks: Task<unknown>[]): Promise<void>;
   onError?: (error: unknown) => void;
   status: Status;
 }
 
 interface TaskQueueContextValue {
   hasPendingTasks: boolean;
-  addTask: (fn: Task["fn"], onError: Task["onError"]) => void;
+  addTask: <T>(
+    payload: T,
+    fn: Task<T>["fn"],
+    onError: Task<T>["onError"],
+  ) => void;
 }
 const TaskQueueContext = createNullContext<TaskQueueContextValue>();
 
 export function TaskQueueProvider({ children }: PropsWithChildren) {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task<unknown>[]>([]);
 
   const pendingTask = tasks.find((task) => task.status !== Status.done);
 
-  const setStatus = useCallback(
-    (taskFn: () => Promise<void>, status: Status) => {
-      setTasks((tasks) =>
-        tasks.map((t) => (t.fn === taskFn ? { ...t, status } : t)),
-      );
-    },
-    [],
-  );
+  const setStatus = useCallback(function <T>(
+    taskFn: Task<T>["fn"],
+    status: Status,
+  ) {
+    setTasks((tasks) =>
+      tasks.map((t) => (t.fn === taskFn ? { ...t, status } : t)),
+    );
+  }, []);
 
-  const runTask = useCallback(
-    async (task: Task) => {
+  useEffect(() => {
+    async function runTask<T>(task: Task<T>) {
       try {
         setStatus(task.fn, Status.running);
-        await task.fn();
+        await task.fn(task.payload, tasks);
         setStatus(task.fn, Status.done);
         task.status = Status.done;
         setTasks((tasks) => tasks.concat());
@@ -49,18 +54,17 @@ export function TaskQueueProvider({ children }: PropsWithChildren) {
         await waitMilliseconds(1000);
         setStatus(task.fn, Status.ready);
       }
-    },
-    [setStatus],
-  );
+    }
 
-  useEffect(() => {
     if (pendingTask && pendingTask.status === Status.ready) {
       runTask(pendingTask);
     }
-  }, [pendingTask, runTask]);
+  }, [pendingTask, setStatus, tasks]);
 
-  const addTask: TaskQueueContextValue["addTask"] = (fn, onError) => {
-    setTasks((tasks) => tasks.concat({ fn, onError, status: Status.ready }));
+  const addTask: TaskQueueContextValue["addTask"] = (payload, fn, onError) => {
+    setTasks((tasks) =>
+      tasks.concat({ payload, fn, onError, status: Status.ready }),
+    );
   };
 
   return (

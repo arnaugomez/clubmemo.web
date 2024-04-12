@@ -5,14 +5,17 @@ import {
   DaysToNextReviewModel,
   PracticeCardRatingModel,
 } from "@/src/core/practice/domain/models/practice-card-rating-model";
-import { PracticerModel } from "@/src/core/practice/domain/models/practicer-model";
+import {
+  PracticeResultModel,
+  PracticerModel,
+} from "@/src/core/practice/domain/models/practicer-model";
 import { ReviewLogModel } from "@/src/core/practice/domain/models/review-log-model";
 import { ActionResponseHandler } from "@/src/ui/models/action-response-handler";
 import { createContextHook, createNullContext } from "@/src/ui/utils/context";
 import { PropsWithChildren, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { practiceAction } from "../actions/practice-action";
-import { useTaskQueueContext } from "./task-queue-context";
+import { Task, useTaskQueueContext } from "./task-queue-context";
 
 interface PracticeProviderProps extends PropsWithChildren {
   course: CourseModel;
@@ -59,9 +62,11 @@ export function PracticeProvider({
   }, [course.enrollment, currentCard]);
 
   const rate = (rating: PracticeCardRatingModel) => {
-    const { card, reviewLog } = practicer.rate(rating);
+    const practiceResult = practicer.rate(rating);
     addTask(
-      async () => {
+      practiceResult,
+      async (payload, tasks) => {
+        const { card, reviewLog } = payload;
         const response = await practiceAction({
           courseId: course.id,
           card: card.data,
@@ -80,11 +85,16 @@ export function PracticeProvider({
                 if (item.data.provisionalId === provisionalId) {
                   item.data.id = newCard.id;
                   item.data.provisionalId = undefined;
-                  break;
                 }
               }
               return state;
             });
+            for (const task of tasks as Task<PracticeResultModel>[]) {
+              if (task.payload.card.data.provisionalId === provisionalId) {
+                task.payload.card.data.id = newCard.id;
+                task.payload.card.data.provisionalId = undefined;
+              }
+            }
           }
           reviewLog.data.id = handler.data.reviewLog.id;
           reviewLog.data.cardId = handler.data.reviewLog.cardId;
@@ -95,13 +105,13 @@ export function PracticeProvider({
       },
     );
 
-    if (card.data.scheduledDays === 0) {
-      state.cards.push(card);
+    if (practiceResult.card.data.scheduledDays === 0) {
+      state.cards.push(practiceResult.card);
     }
     setState((state) => ({
       ...state,
       currentCardIndex: state.currentCardIndex + 1,
-      reviewLogs: state.reviewLogs.concat(reviewLog),
+      reviewLogs: state.reviewLogs.concat(practiceResult.reviewLog),
     }));
   };
 

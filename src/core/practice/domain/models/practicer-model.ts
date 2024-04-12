@@ -93,7 +93,7 @@ export class PracticerModel {
   }
 }
 
-interface PracticeResultModel {
+export interface PracticeResultModel {
   card: PracticeCardModel;
   reviewLog: ReviewLogModel;
 }
