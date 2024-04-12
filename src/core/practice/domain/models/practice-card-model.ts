@@ -14,7 +14,7 @@ export interface PracticeCardModelData {
   courseEnrollmentId: string;
   note: NoteModelData;
 
-  isNew: boolean;
+  provisionalId?: number;
 
   due: Date;
   stability: number;
@@ -30,18 +30,25 @@ export interface PracticeCardModelData {
 interface NewPracticeCardInput {
   courseEnrollmentId: string;
   note: NoteModel;
+  provisionalId: number;
 }
 
 export class PracticeCardModel {
   constructor(readonly data: PracticeCardModelData) {}
 
-  static createNew({ courseEnrollmentId, note }: NewPracticeCardInput) {
+  static createNew({
+    courseEnrollmentId,
+    note,
+    provisionalId,
+  }: NewPracticeCardInput) {
     const fsrsCard = createEmptyCard();
     return new PracticeCardModel({
       id: "",
       courseEnrollmentId,
       note: note.data,
-      isNew: true,
+
+      provisionalId: provisionalId + 1,
+
       due: fsrsCard.due,
       stability: fsrsCard.stability,
       difficulty: fsrsCard.difficulty,
@@ -62,7 +69,7 @@ export class PracticeCardModel {
   }
 
   get isNew() {
-    return this.data.isNew;
+    return Boolean(this.data.provisionalId);
   }
 
   get note() {

@@ -31,7 +31,6 @@ export class PracticeCardDocTransformer {
     return new PracticeCardModel({
       id: this.doc._id.toHexString(),
 
-      isNew: false,
       courseEnrollmentId: this.doc.courseEnrollmentId.toHexString(),
       note: new NoteDocTransformer(note).toDomain(),
 

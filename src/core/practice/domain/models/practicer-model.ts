@@ -40,7 +40,8 @@ export class PracticerModel {
         id: this.data.card.id,
         courseEnrollmentId: this.data.card.courseEnrollmentId,
         note: this.data.card.note,
-        isNew: this.data.card.isNew,
+
+        provisionalId: this.data.card.data.provisionalId,
 
         due: newCard.due,
         stability: newCard.stability,

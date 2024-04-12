@@ -7,9 +7,11 @@ import {
 } from "@/src/core/practice/domain/models/practice-card-rating-model";
 import { PracticerModel } from "@/src/core/practice/domain/models/practicer-model";
 import { ReviewLogModel } from "@/src/core/practice/domain/models/review-log-model";
+import { ActionResponseHandler } from "@/src/ui/models/action-response-handler";
 import { createContextHook, createNullContext } from "@/src/ui/utils/context";
 import { PropsWithChildren, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { practiceAction } from "../actions/practice-action";
 import { useTaskQueueContext } from "./task-queue-context";
 
 interface PracticeProviderProps extends PropsWithChildren {
@@ -60,18 +62,39 @@ export function PracticeProvider({
     const { card, reviewLog } = practicer.rate(rating);
     addTask(
       async () => {
-        // save task
+        const response = await practiceAction({
+          courseId: course.id,
+          card: card.data,
+          reviewLog: reviewLog.data,
+        });
+        const handler = new ActionResponseHandler(response);
+        if (handler.hasErrors) {
+          throw new Error();
+        }
+        if (handler.data) {
+          const newCard = handler.data.card;
+          const provisionalId = card.data.provisionalId;
+          if (provisionalId) {
+            setState((state) => {
+              for (const item of state.cards) {
+                if (item.data.provisionalId === provisionalId) {
+                  item.data.id = newCard.id;
+                  item.data.provisionalId = undefined;
+                  break;
+                }
+              }
+              return state;
+            });
+          }
+          reviewLog.data.id = handler.data.reviewLog.id;
+          reviewLog.data.cardId = handler.data.reviewLog.cardId;
+        }
       },
       () => {
         toast.error("Error al guardar los cambios. Reintentando...");
       },
     );
-    addTask(
-      async () => {},
-      () => {
-        toast.error("Error al guardar los cambios. Reintentando...");
-      },
-    );
+
     if (card.data.scheduledDays === 0) {
       state.cards.push(card);
     }

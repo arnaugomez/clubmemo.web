@@ -13,6 +13,7 @@ export interface GetDueInput {
 
 export interface PracticeCardsRepository {
   create(input: PracticeCardModel): Promise<PracticeCardModel>;
+  update(input: PracticeCardModel): Promise<void>;
   getUnpracticed(input: GetUnpracticedInput): Promise<PracticeCardModel[]>;
   getDue(input: GetDueInput): Promise<PracticeCardModel[]>;
 }
