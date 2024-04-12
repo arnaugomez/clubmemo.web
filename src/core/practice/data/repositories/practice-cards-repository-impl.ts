@@ -43,6 +43,26 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     input.data.id = result.insertedId.toHexString();
     return new PracticeCardModel(input.data);
   }
+  async update(input: PracticeCardModel): Promise<void> {
+    await this.practiceCards.updateOne(
+      {
+        _id: new ObjectId(input.data.id),
+      },
+      {
+        $set: {
+          due: input.data.due,
+          stability: input.data.stability,
+          difficulty: input.data.difficulty,
+          elapsedDays: input.data.elapsedDays,
+          scheduledDays: input.data.scheduledDays,
+          reps: input.data.reps,
+          lapses: input.data.lapses,
+          state: input.data.state,
+          lastReview: input.data.lastReview,
+        },
+      },
+    );
+  }
 
   async getUnpracticed(
     input: GetUnpracticedInput,
@@ -71,10 +91,11 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
       },
     ]);
     const results = await cursor.toArray();
-    return results.map((e) => {
+    return results.map((e, i) => {
       return PracticeCardModel.createNew({
         courseEnrollmentId: input.courseEnrollmentId,
         note: new NoteDocTransformer(e).toDomain(),
+        provisionalId: i,
       });
     });
   }
