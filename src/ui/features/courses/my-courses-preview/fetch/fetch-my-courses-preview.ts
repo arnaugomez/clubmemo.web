@@ -1,6 +1,6 @@
 import { cache } from "react";
 
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { EnrolledCourseListItemModel } from "@/src/core/courses/domain/models/enrolled-course-list-item-model";
 import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 

@@ -33,6 +33,7 @@
     "clsx": "^2.1.0",
     "csv-parse": "^5.5.5",
     "csv-stringify": "^6.4.6",
+    "dayjs": "^1.11.10",
     "input-otp": "^1.2.4",
     "lucia": "^3.1.1",
     "lucide-react": "^0.364.0",

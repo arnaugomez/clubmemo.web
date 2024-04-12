@@ -1,7 +1,7 @@
 import {
   InvalidFileFormatError,
   NoPermissionError,
-} from "@/src/core/app/domain/models/app-errors";
+} from "@/src/core/common/domain/models/app-errors";
 import { CoursesRepository } from "@/src/core/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/core/courses/domain/models/course-errors";
 import { parse } from "csv-parse/sync";

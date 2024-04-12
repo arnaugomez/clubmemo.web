@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { CourseDetailMainSection } from "@/src/ui/features/courses/detail/components/course-detail-main-section";
 import { CourseNotesSection } from "@/src/ui/features/notes/course-notes/components/course-notes-section";
 import { fetchMyProfile } from "@/src/ui/features/profile/fetch/fetch-my-profile";

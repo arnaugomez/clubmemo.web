@@ -3,8 +3,8 @@
 import {
   PaginationModel,
   PaginationModelData,
-} from "@/src/core/app/domain/models/pagination-model";
-import { waitMilliseconds } from "@/src/core/app/utils/promises";
+} from "@/src/core/common/domain/models/pagination-model";
+import { waitMilliseconds } from "@/src/core/common/utils/promises";
 import {
   NoteModel,
   NoteModelData,

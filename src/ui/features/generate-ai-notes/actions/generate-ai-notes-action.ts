@@ -4,7 +4,7 @@ import { aiGeneratorLocator } from "@/src/core/ai-generator/ai-generator-locator
 import {
   InvalidFileFormatError,
   NoPermissionError,
-} from "@/src/core/app/domain/models/app-errors";
+} from "@/src/core/common/domain/models/app-errors";
 import { CourseDoesNotExistError } from "@/src/core/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
 import { ActionResponse } from "@/src/ui/models/server-form-errors";

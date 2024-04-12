@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { ResetPasswordForm } from "@/src/ui/features/auth/forgot-password/components/reset-password-form";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { notFound } from "next/navigation";

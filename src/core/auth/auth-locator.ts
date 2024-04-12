@@ -1,4 +1,4 @@
-import { Lazy, locator } from "../app/locator";
+import { Lazy, locator } from "../common/locator";
 import type { ChangePasswordUseCase } from "./domain/use-cases/change-password-use-case";
 import type { DeleteUserUseCase } from "./domain/use-cases/delete-user-use-case";
 

@@ -1,4 +1,4 @@
-import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
+import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
 import { CopyNotesInputModel } from "../models/copy-notes-input-model";
 import { CreateNoteInputModel } from "../models/create-note-input-model";
 import { GetNotesInputModel } from "../models/get-notes-input-model";

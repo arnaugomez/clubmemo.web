@@ -1,4 +1,4 @@
-import { collection } from "@/src/core/app/utils/mongo";
+import { collection } from "@/src/core/common/utils/mongo";
 import { ObjectId, WithId } from "mongodb";
 import { CoursePermissionModel } from "../../domain/models/course-permission-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";

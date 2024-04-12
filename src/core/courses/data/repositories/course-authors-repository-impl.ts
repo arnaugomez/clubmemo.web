@@ -1,13 +1,13 @@
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
+import { ObjectId } from "mongodb";
 import { CourseAuthorsRepository } from "../../domain/interfaces/course-authors-repository";
 import { CourseAuthorModel } from "../../domain/models/course-author-model";
+import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 import {
   CourseAuthorDoc,
   CourseAuthorDocTransformer,
 } from "../aggregations/course-authors-aggregation";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
-import { ObjectId } from "mongodb";
-import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 
 export class CourseAuthorsRepositoryImpl implements CourseAuthorsRepository {
   private readonly collection: typeof coursePermissionsCollection.type;

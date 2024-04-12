@@ -1,4 +1,4 @@
-import { NoPermissionError } from "@/src/core/app/domain/models/app-errors";
+import { NoPermissionError } from "@/src/core/common/domain/models/app-errors";
 import { NotesRepository } from "@/src/core/notes/domain/interfaces/notes-repository";
 import { CoursesRepository } from "../interfaces/courses-repository";
 import { CopyCourseInputModel } from "../models/copy-course-input-model";

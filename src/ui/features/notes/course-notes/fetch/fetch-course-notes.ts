@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { GetNotesInputModel } from "@/src/core/notes/domain/models/get-notes-input-model";
 
 export async function fetchCourseNotes(input: GetNotesInputModel) {

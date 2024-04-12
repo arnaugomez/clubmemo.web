@@ -1,4 +1,4 @@
-import { Lazy, locator } from "../app/locator";
+import { Lazy, locator } from "../common/locator";
 import type { CreateNoteUseCase } from "./domain/use-cases/create-note-use-case";
 import type { DeleteNoteUseCase } from "./domain/use-cases/delete-note-use-case";
 import type { ImportNotesUseCase } from "./domain/use-cases/import-notes-use-case";

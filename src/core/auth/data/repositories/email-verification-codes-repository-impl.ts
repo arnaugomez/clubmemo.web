@@ -1,5 +1,5 @@
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
-import { waitMilliseconds } from "@/src/core/app/utils/promises";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
+import { waitMilliseconds } from "@/src/core/common/utils/promises";
 import { Collection, ObjectId } from "mongodb";
 import { TimeSpan, createDate } from "oslo";
 import { alphabet, generateRandomString } from "oslo/crypto";

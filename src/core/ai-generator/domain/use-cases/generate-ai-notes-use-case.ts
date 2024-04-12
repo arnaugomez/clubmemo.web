@@ -1,5 +1,5 @@
 import { AiNotesGeneratorService } from "@/src/core/ai-generator/domain/interfaces/ai-notes-generator-service";
-import { NoPermissionError } from "@/src/core/app/domain/models/app-errors";
+import { NoPermissionError } from "@/src/core/common/domain/models/app-errors";
 import { CoursesRepository } from "@/src/core/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/core/courses/domain/models/course-errors";
 import { GenerateAiNotesUseCaseInputModel } from "@/src/core/notes/domain/models/generate-ai-notes-input-model";

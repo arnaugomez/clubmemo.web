@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { ProfilePage } from "@/src/ui/features/profile/components/profile-page";
 import { notFound } from "next/navigation";
 

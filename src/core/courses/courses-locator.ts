@@ -1,4 +1,4 @@
-import { Lazy, locator } from "../app/locator";
+import { Lazy, locator } from "../common/locator";
 import type { CopyCourseUseCase } from "./domain/use-cases/copy-course-use-case";
 import type { UpdateCourseUseCase } from "./domain/use-cases/update-course-use-case";
 

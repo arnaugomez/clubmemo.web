@@ -1,9 +1,9 @@
 import {
   PaginationFacet,
   PaginationFacetTransformer,
-} from "@/src/core/app/data/services/facets/pagination-facet";
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
-import { PaginationModel } from "@/src/core/app/domain/models/pagination-model";
+} from "@/src/core/common/data/services/facets/pagination-facet";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
+import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
 import { ObjectId, WithId } from "mongodb";
 import { NotesRepository } from "../../domain/interfaces/notes-repository";
 import { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";

@@ -1,10 +1,10 @@
 "use server";
-import { waitMilliseconds } from "@/src/core/app/utils/promises";
 import { authLocator } from "@/src/core/auth/auth-locator";
 import {
   IncorrectPasswordError,
   UserDoesNotExistError,
 } from "@/src/core/auth/domain/errors/auth-errors";
+import { waitMilliseconds } from "@/src/core/common/utils/promises";
 import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { cookies } from "next/headers";
 import { z } from "zod";
