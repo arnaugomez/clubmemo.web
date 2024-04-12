@@ -1,7 +1,3 @@
-export function PracticeProgress(){
-  return (
-    <>
-
-    </>
-  );
+export function PracticeProgress() {
+  return <></>;
 }

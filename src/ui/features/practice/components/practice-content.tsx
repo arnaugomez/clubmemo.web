@@ -6,17 +6,20 @@ import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
 import utc from "dayjs/plugin/utc";
 import { PracticeEmptyState } from "./practice-empty-state";
 import { PracticeWizard } from "./practice-wizard";
+import { CourseEnrollmentModel } from "@/src/core/courses/domain/models/course-enrollment-model";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 interface PracticeContentProps {
   course: CourseModel;
+  enrollment: CourseEnrollmentModel;
 }
 // TODO: extract use case class
-export async function PracticeContent({ course }: PracticeContentProps) {
-  const { enrollment } = course;
-  if (!enrollment) throw Error("Course enrollment is required");
+export async function PracticeContent({
+  course,
+  enrollment,
+}: PracticeContentProps) {
   const courseEnrollmentId = enrollment.id;
 
   const reviewLogsRepository = await locator.ReviewLogsRepository();

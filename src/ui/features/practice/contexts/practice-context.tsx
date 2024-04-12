@@ -1,4 +1,5 @@
 "use client";
+import { NullError } from "@/src/core/common/domain/models/app-errors";
 import { CourseModel } from "@/src/core/courses/domain/models/course-model";
 import { PracticeCardModel } from "@/src/core/practice/domain/models/practice-card-model";
 import {
@@ -49,10 +50,12 @@ export function PracticeProvider({
     reviewLogs: [],
   });
 
-  const currentCard = state.cards[state.currentCardIndex] || null;
+  const currentCard: PracticeCardModel | null =
+    state.cards[state.currentCardIndex] || null;
 
   const practicer = useMemo(() => {
-    if (!course.enrollment) throw new Error("Enrollment is required");
+    if (!course.enrollment) throw new NullError("course.enrollment");
+    if (!currentCard) return null;
     const practicer = new PracticerModel({
       card: currentCard,
       enrollment: course.enrollment,
@@ -62,24 +65,15 @@ export function PracticeProvider({
   }, [course.enrollment, currentCard]);
 
   const rate = async (rating: PracticeCardRatingModel) => {
+    if (!practicer) return;
     const practiceResult = practicer.rate(rating);
-    try {
-      const promise = await practiceAction({
-        courseId: course.id,
-        card: practiceResult.card.data,
-        reviewLog: practiceResult.reviewLog.data,
-      });
-    } catch (e) {
-      console.error(e);
-    }
     addTask(
       practiceResult,
       async (payload, tasks) => {
         const { card, reviewLog } = payload;
-        console.log(practiceAction);
         const response = await practiceAction({
           courseId: course.id,
-          card: card.data,
+          card: JSON.parse(JSON.stringify(card.data)), // I don't know why I have to do this, but otherwise the server action fails.
           reviewLog: reviewLog.data,
         });
         const handler = new ActionResponseHandler(response);
@@ -130,7 +124,9 @@ export function PracticeProvider({
       value={{
         currentCard,
         progress: state.currentCardIndex / state.cards.length,
-        daysToNextReview: practicer.getDaysToNextReview(),
+        daysToNextReview:
+          practicer?.getDaysToNextReview() ??
+          PracticerModel.emptyDaysToNextReview,
         rate,
       }}
     >

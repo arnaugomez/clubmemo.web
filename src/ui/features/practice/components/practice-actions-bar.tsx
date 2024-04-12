@@ -19,7 +19,10 @@ export function PracticeActionsBar({
   return (
     <div className="border-t-slate-200 border-t-[1px] flex-none p-4 pb-2 flex justify-center space-x-4">
       {!showBack && (
-        <ButtonWithBottomText className="max-w-xs" onClick={() => setShowBack(true)}>
+        <ButtonWithBottomText
+          className="max-w-xs"
+          onClick={() => setShowBack(true)}
+        >
           Mostrar respuesta
         </ButtonWithBottomText>
       )}
@@ -95,7 +98,9 @@ function ButtonWithBottomText({
   className,
 }: ButtonWithBottomText) {
   return (
-    <div className={cn("flex-1 max-w-24 flex flex-col items-stretch", className)}>
+    <div
+      className={cn("flex-1 max-w-24 flex flex-col items-stretch", className)}
+    >
       <Button onClick={onClick}>{children}</Button>
       <div className="h-2"></div>
       <div className={cn(textStyles.muted, "text-center")}>
