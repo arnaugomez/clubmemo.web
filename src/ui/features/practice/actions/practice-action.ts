@@ -22,7 +22,6 @@ interface PracticeActionModel {
 }
 
 export async function practiceAction(params: PracticeActionModel) {
-  console.log("Running practice action...")
   try {
     const card = new PracticeCardModel(params.card);
     const reviewLog = new ReviewLogModel(params.reviewLog);

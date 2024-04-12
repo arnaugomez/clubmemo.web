@@ -20,6 +20,6 @@ export default async function PracticePage({
     id,
     profileId: profile?.id,
   });
-  if (!course || !course.canView || !course.isEnrolled) notFound();
-  return <PracticeContent course={course} />;
+  if (!course || !course.canView || !course.enrollment) notFound();
+  return <PracticeContent course={course} enrollment={course.enrollment} />;
 }

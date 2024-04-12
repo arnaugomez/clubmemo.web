@@ -70,16 +70,19 @@ export class PracticerModel {
       }),
     };
   }
+
+  static readonly emptyDaysToNextReview = {
+    [PracticeCardRatingModel.easy]: 0,
+    [PracticeCardRatingModel.good]: 0,
+    [PracticeCardRatingModel.hard]: 0,
+    [PracticeCardRatingModel.again]: 0,
+    [PracticeCardRatingModel.manual]: 0,
+  };
   getDaysToNextReview(): DaysToNextReviewModel {
     if (!this.recordLog)
       throw new Error("Must practice before getDaysToNextReview");
-    const result: DaysToNextReviewModel = {
-      [PracticeCardRatingModel.easy]: 0,
-      [PracticeCardRatingModel.good]: 0,
-      [PracticeCardRatingModel.hard]: 0,
-      [PracticeCardRatingModel.again]: 0,
-      [PracticeCardRatingModel.manual]: 0,
-    };
+    const result: DaysToNextReviewModel = PracticerModel.emptyDaysToNextReview;
+
     for (const key of [
       Rating.Again,
       Rating.Hard,

@@ -19,6 +19,7 @@ import { TaskQueueProvider } from "../contexts/task-queue-context";
 import { PracticeActionsBar } from "./practice-actions-bar";
 import { PracticeProgress } from "./practice-progress";
 import { PracticeWizardFinish } from "./practice-wizard-finish";
+import { NullError } from "@/src/core/common/domain/models/app-errors";
 
 interface PracticeWizardProps {
   courseData: CourseModelData;
@@ -64,7 +65,7 @@ interface PracticeCardSectionProps {
 
 function PracticeCardSection({ note, course }: PracticeCardSectionProps) {
   const [showBack, setShowBack] = useState(false);
-  if (!course.enrollment) throw new Error("Enrollment is required");
+  if (!course.enrollment) throw new NullError("course.enrollment");
   return (
     <div className="size-full flex flex-col">
       <div className="flex-1 overflow-y-auto">
