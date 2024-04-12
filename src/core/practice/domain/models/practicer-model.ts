@@ -2,6 +2,7 @@ import { CourseEnrollmentModel } from "@/src/core/courses/domain/models/course-e
 import { Rating, RecordLog } from "ts-fsrs";
 import { PracticeCardModel } from "./practice-card-model";
 import {
+  DaysToNextReviewModel,
   PracticeCardRatingModel,
   PracticeCardRatingTransformer,
 } from "./practice-card-rating-model";
@@ -20,6 +21,9 @@ export class PracticerModel {
     const fsrs = this.data.enrollment.fsrs;
     const fsrsCard = this.data.card.fsrsCard;
     this.recordLog = fsrs.repeat(fsrsCard, new Date());
+    for (const item of Object.values(this.recordLog)) {
+      item.card = fsrs.reschedule([item.card])[0] ?? item.card;
+    }
   }
 
   rate(rating: PracticeCardRatingModel): PracticeResultModel {
@@ -27,12 +31,9 @@ export class PracticerModel {
     const fsrsRating = new PracticeCardRatingTransformer(rating).toFsrs();
     if (fsrsRating === Rating.Manual)
       throw new Error("Manual rating is not allowed");
-    const fsrs = this.data.enrollment.fsrs;
 
     const item = this.recordLog[fsrsRating];
-
-    // Apply fuzz to the card due date.
-    const newCard = fsrs.reschedule([item.card])[0] ?? item.card;
+    const newCard = item.card;
 
     return {
       card: new PracticeCardModel({
@@ -67,6 +68,27 @@ export class PracticerModel {
         review: item.log.review,
       }),
     };
+  }
+  getDaysToNextReview(): DaysToNextReviewModel {
+    if (!this.recordLog)
+      throw new Error("Must practice before getDaysToNextReview");
+    const result: DaysToNextReviewModel = {
+      [PracticeCardRatingModel.easy]: 0,
+      [PracticeCardRatingModel.good]: 0,
+      [PracticeCardRatingModel.hard]: 0,
+      [PracticeCardRatingModel.again]: 0,
+      [PracticeCardRatingModel.manual]: 0,
+    };
+    for (const key of [
+      Rating.Again,
+      Rating.Hard,
+      Rating.Good,
+      Rating.Easy,
+    ] as const) {
+      const domainRating = PracticeCardRatingTransformer.fromFsrs(key);
+      result[domainRating] = this.recordLog[key].card.scheduled_days;
+    }
+    return result;
   }
 }
 
