@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { fetchSession } from "@/src/ui/features/auth/fetch/fetch-session";
 import { RedirectType, notFound, redirect } from "next/navigation";
 

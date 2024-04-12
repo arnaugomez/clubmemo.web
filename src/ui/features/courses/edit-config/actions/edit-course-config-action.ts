@@ -1,7 +1,7 @@
 "use server";
 
-import { NoPermissionError } from "@/src/core/app/domain/models/app-errors";
-import { locator } from "@/src/core/app/locator";
+import { NoPermissionError } from "@/src/core/common/domain/models/app-errors";
+import { locator } from "@/src/core/common/locator";
 import { EnrollmentDoesNotExistError } from "@/src/core/courses/domain/models/enrollment-errors";
 import { ActionResponse } from "@/src/ui/models/server-form-errors";
 import { revalidatePath } from "next/cache";

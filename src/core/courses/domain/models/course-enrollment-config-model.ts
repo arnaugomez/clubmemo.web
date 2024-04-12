@@ -39,6 +39,10 @@ export class CourseEnrollmentConfigModel {
     return this.data.showAdvancedRatingOptions ?? true;
   }
 
+  get cardsPerSessionCount() {
+    return 10;
+  }
+
   get fsrsGeneratorParameters() {
     return generatorParameters({
       enable_fuzz: this.enableFuzz,

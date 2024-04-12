@@ -1,4 +1,4 @@
-import { collection } from "@/src/core/app/utils/mongo";
+import { collection } from "@/src/core/common/utils/mongo";
 import { ObjectId, WithId } from "mongodb";
 import { CourseEnrollmentModel } from "../../domain/models/course-enrollment-model";
 

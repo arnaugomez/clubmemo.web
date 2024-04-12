@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { waitMilliseconds } from "@/src/core/app/utils/promises";
+import { waitMilliseconds } from "@/src/core/common/utils/promises";
 import {
   InputFormField,
   PasswordInputFormField,

@@ -1,5 +1,5 @@
-import { EnvService } from "@/src/core/app/domain/interfaces/env-service";
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
+import { EnvService } from "@/src/core/common/domain/interfaces/env-service";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import {
   Cookie,
@@ -22,6 +22,7 @@ import {
   SignupWithPasswordResultModel,
   UpdatePasswordModel,
 } from "../../domain/interfaces/auth-service";
+import { AuthTypeModel } from "../../domain/models/auth-type-model";
 import { CheckSessionModel } from "../../domain/models/check-session-model";
 import {
   SessionDoc,
@@ -33,7 +34,6 @@ import {
   UserDoc,
   usersCollection,
 } from "../collections/users-collection";
-import { AuthTypeModel } from "../../domain/models/auth-type-model";
 
 interface DatabaseUserAttributes {
   email: string;

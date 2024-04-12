@@ -1,4 +1,4 @@
-import { locator } from "@/src/core/app/locator";
+import { locator } from "@/src/core/common/locator";
 import { CourseModel } from "@/src/core/courses/domain/models/course-model";
 import {
   Avatar,

@@ -1,4 +1,4 @@
-import { Lazy, locator } from "../app/locator";
+import { Lazy, locator } from "../common/locator";
 import { GenerateAiNotesUseCase } from "./domain/use-cases/generate-ai-notes-use-case";
 
 interface AiGeneratorLocator {

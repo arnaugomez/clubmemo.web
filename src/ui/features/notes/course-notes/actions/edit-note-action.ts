@@ -1,6 +1,6 @@
 "use server";
 
-import { NoPermissionError } from "@/src/core/app/domain/models/app-errors";
+import { NoPermissionError } from "@/src/core/common/domain/models/app-errors";
 import { CourseDoesNotExistError } from "@/src/core/courses/domain/models/course-errors";
 import { notesLocator } from "@/src/core/notes/notes-locator";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";

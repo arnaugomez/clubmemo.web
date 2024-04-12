@@ -1,11 +1,11 @@
 import { cookies } from "next/headers";
 import { cache } from "react";
 
-import { locator } from "../../../../core/app/locator";
 import {
   CheckSessionModel,
   emptyCheckSession,
 } from "../../../../core/auth/domain/models/check-session-model";
+import { locator } from "../../../../core/common/locator";
 
 export const fetchSession = cache(async (): Promise<CheckSessionModel> => {
   const authService = locator.AuthService();

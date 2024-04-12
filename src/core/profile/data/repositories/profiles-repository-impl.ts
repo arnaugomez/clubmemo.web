@@ -1,4 +1,4 @@
-import { MongoService } from "@/src/core/app/domain/interfaces/mongo-service";
+import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
 import { HandleAlreadyExistsError } from "../../domain/errors/profile-errors";
 import { ProfilesRepository } from "../../domain/interfaces/profiles-repository";
