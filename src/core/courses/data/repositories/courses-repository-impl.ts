@@ -234,28 +234,75 @@ export class CoursesRepositoryImpl implements CoursesRepository {
         },
       },
       {
-        $lookup: {
-          from: "courses",
-          localField: "courseId",
-          foreignField: "_id",
-          as: "course",
-        },
-      },
-      {
-        $unwind: "$course",
-      },
-      {
         $facet: {
           metadata: [{ $count: "totalCount" }],
           results: [
             { $skip: skip },
             { $limit: limit },
             {
+              $lookup: {
+                from: "courses",
+                localField: "courseId",
+                foreignField: "_id",
+                as: "course",
+              },
+            },
+            {
+              $unwind: "$course",
+            },
+            {
+              $lookup: {
+                from: practiceCardsCollection.name,
+                let: { courseEnrollmentId: "$_id" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                      },
+                      due: { $lte: new Date() },
+                    },
+                  },
+                ],
+                as: "practiceCards",
+              },
+            },
+            {
+              $lookup: {
+                from: reviewLogsCollection.name,
+                let: { courseEnrollmentId: "$_id" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                      },
+                      review: { $gte: this.dateTimeService.getStartOfToday() },
+                      state: PracticeCardStateModel.new,
+                    },
+                  },
+                ],
+                as: "reviewsOfNewCards",
+              },
+            },
+            {
               $project: {
                 courseId: true,
                 isFavorite: true,
                 name: "$course.name",
                 picture: "$course.picture",
+                dueCount: { $size: "$practiceCards" },
+                newCount: {
+                  $max: [
+                    {
+                      $subtract: [
+                        { $ifNull: ["$course.dailyNewCardsCount", 10] },
+                        { $size: "$reviewsOfNewCards" },
+                      ],
+                    },
+                    0,
+                  ],
+                },
               },
             },
           ],
@@ -267,6 +314,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     ]);
 
     const result = await aggregation.tryNext();
+    console.log(result);
     if (!result) {
       return PaginationModel.empty();
     }
