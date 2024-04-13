@@ -1,4 +1,3 @@
-import { Button } from "@/src/ui/components/shadcn/ui/button";
 import {
   Table,
   TableBody,
@@ -9,9 +8,10 @@ import {
 } from "@/src/ui/components/shadcn/ui/table";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { ArrowRight, Bookmark, Play } from "lucide-react";
+import { ArrowRight, Bookmark } from "lucide-react";
 import Link from "next/link";
 import { CreateCourseButton } from "../../create/components/create-course-button";
+import { PracticeCell } from "../../my-courses/components/practice-cell";
 import { fetchMyCoursesPreview } from "../fetch/fetch-my-courses-preview";
 
 export function MyCoursesPreviewSection() {
@@ -64,16 +64,7 @@ async function MyCoursesResultsSection() {
                 className="mx-auto size-5"
               />
             </TableCell>
-            <TableCell className="py-0 text-center">
-              <Button variant="ghost" size="sm" asChild>
-                <Link
-                  href={`/courses/detail/${course.courseId}/practice`}
-                  className="text-slate-700"
-                >
-                  <Play className="size-5" />
-                </Link>
-              </Button>
-            </TableCell>
+            <PracticeCell courseData={course.data} />
           </TableRow>
         ))}
       </TableBody>

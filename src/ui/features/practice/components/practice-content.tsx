@@ -40,7 +40,7 @@ export async function PracticeContent({
   const newCardsToLearn = newCards.slice(0, cardsToLearnCount);
   const dueCards = await dueCardsPromise;
   const cards = shuffle([...newCardsToLearn, ...dueCards]);
-  if (cards.length === 0) {
+  if (!cards.length) {
     return <PracticeEmptyState />;
   }
   return (

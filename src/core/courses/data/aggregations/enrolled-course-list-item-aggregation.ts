@@ -6,6 +6,8 @@ export interface EnrolledCourseListItemDoc {
   name: string;
   picture: string;
   isFavorite: boolean;
+  dueCount: number;
+  newCount: number;
 }
 
 export class EnrolledCourseListItemTransformer {

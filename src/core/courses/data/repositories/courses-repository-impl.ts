@@ -314,7 +314,6 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     ]);
 
     const result = await aggregation.tryNext();
-    console.log(result);
     if (!result) {
       return PaginationModel.empty();
     }
