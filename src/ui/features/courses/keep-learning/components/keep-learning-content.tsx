@@ -15,7 +15,7 @@ export async function KeepLearningContent() {
   const course = await coursesRepository.getKeepLearning(profile.id);
   if (!course) return <KeepLearningEmptyState />;
   return (
-    <Card className="h-64 sm:h-40 flex flex-col sm:flex-row">
+    <Card className="h-64 sm:h-40 flex flex-col sm:flex-row overflow-clip">
       <div className="flex-none sm:w-56 relative h-28 sm:h-full bg-slate-300">
         {course.picture && (
           <Image src={course.picture} layout="fill" alt="" objectFit="cover" />

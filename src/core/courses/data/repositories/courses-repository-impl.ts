@@ -193,6 +193,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
         },
         {
           $project: {
+            _id: false,
             courseId: true,
             isFavorite: true,
             name: "$course.name",
@@ -292,6 +293,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             },
             {
               $project: {
+                _id: false,
                 courseId: true,
                 isFavorite: true,
                 name: "$course.name",
