@@ -23,7 +23,7 @@ export async function MyCoursesTable({ arg }: MyCoursesTableProps) {
   const { results } = await fetchMyCoursesPagination(arg);
   return (
     <div className="px-4">
-      <div className="mx-auto max-w-prose">
+      <div className="mx-auto max-w-3xl">
         <Table>
           <TableHeader>
             <TableRow>
