@@ -2,10 +2,13 @@ import {
   PaginationFacet,
   PaginationFacetTransformer,
 } from "@/src/core/common/data/services/facets/pagination-facet";
+import { DateTimeService } from "@/src/core/common/domain/interfaces/date-time-service";
 import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
 import { TokenPaginationModel } from "@/src/core/common/domain/models/token-pagination-model";
 import { practiceCardsCollection } from "@/src/core/practice/data/collections/practice-cards-collection";
+import { reviewLogsCollection } from "@/src/core/practice/data/collections/review-logs-collection";
+import { PracticeCardStateModel } from "@/src/core/practice/domain/models/practice-card-state-model";
 import { ObjectId, WithId } from "mongodb";
 import {
   CoursesRepository,
@@ -50,7 +53,10 @@ export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly coursePermissions: typeof coursePermissionsCollection.type;
   private readonly courseEnrollments: typeof courseEnrollmentsCollection.type;
 
-  constructor(mongoService: MongoService) {
+  constructor(
+    mongoService: MongoService,
+    private readonly dateTimeService: DateTimeService,
+  ) {
     this.courses = mongoService.collection(coursesCollection);
     this.coursePermissions = mongoService.collection(
       coursePermissionsCollection,
@@ -143,6 +149,9 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           },
         },
         {
+          $unwind: "$course",
+        },
+        {
           $lookup: {
             from: practiceCardsCollection.name,
             let: { courseEnrollmentId: "$_id" },
@@ -160,7 +169,22 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           },
         },
         {
-          $unwind: "$course",
+          $lookup: {
+            from: reviewLogsCollection.name,
+            let: { courseEnrollmentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                  },
+                  review: { $gte: this.dateTimeService.getStartOfToday() },
+                  state: PracticeCardStateModel.new,
+                },
+              },
+            ],
+            as: "reviewsOfNewCards",
+          },
         },
         {
           $project: {
@@ -169,12 +193,22 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             name: "$course.name",
             picture: "$course.picture",
             dueCount: { $size: "$practiceCards" },
+            newCount: {
+              $max: [
+                {
+                  $subtract: [
+                    { $ifNull: ["$course.dailyNewCardsCount", 10] },
+                    { $size: "$reviewsOfNewCards" },
+                  ],
+                },
+                0,
+              ],
+            },
           },
         },
       ]);
 
     const result = await aggregation.toArray();
-    console.log(result);
     return result.map((e) =>
       new EnrolledCourseListItemTransformer(e).toDomain(),
     );
