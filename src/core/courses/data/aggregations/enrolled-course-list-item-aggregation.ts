@@ -15,8 +15,12 @@ export class EnrolledCourseListItemTransformer {
 
   toDomain() {
     return new EnrolledCourseListItemModel({
-      ...this.doc,
       courseId: this.doc.courseId.toString(),
+      name: this.doc.name,
+      picture: this.doc.picture,
+      isFavorite: this.doc.isFavorite,
+      dueCount: this.doc.dueCount,
+      newCount: this.doc.newCount,
     });
   }
 }
