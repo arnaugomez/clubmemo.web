@@ -17,7 +17,7 @@ import { fetchMyCoursesPreview } from "../fetch/fetch-my-courses-preview";
 export function MyCoursesPreviewSection() {
   return (
     <section className="px-4">
-      <div className="mx-auto max-w-prose">
+      <div className="mx-auto max-w-3xl">
         <div className="flex items-end">
           <h2 className={cn(textStyles.h2, "flex-1")}>Mis cursos</h2>
           <CreateCourseButton size="sm" />

@@ -25,7 +25,7 @@ export default function CoursesPage({
     <main>
       <div className="h-20" />
       <div className="px-4">
-        <div className="mx-auto max-w-prose">
+        <div className="mx-auto max-w-3xl">
           <h1 className={cn(textStyles.h2)}>
             <BookText className="inline size-7 -translate-y-1 mr-2" />
             Mis cursos
@@ -54,7 +54,7 @@ async function CoursesPageContent({ page }: CoursesPageContentProps) {
   return (
     <>
       <div className="px-4">
-        <div className="mx-auto max-w-prose">
+        <div className="mx-auto max-w-3xl">
           <div className="flex">
             <div className="flex-1"></div>
             <CreateCourseButton size="sm" />
