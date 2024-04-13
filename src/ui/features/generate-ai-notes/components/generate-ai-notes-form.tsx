@@ -12,11 +12,10 @@ import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-err
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
@@ -143,7 +142,7 @@ export function GenerateAiNotesForm({
   const isSubmitting = form.formState.isSubmitting;
 
   return (
-    <Form {...form}>
+    <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <div>
           <h3 className={textStyles.h4}>Contenido de las tarjetas</h3>
@@ -218,6 +217,6 @@ export function GenerateAiNotesForm({
           <FormSubmitButton>Enviar</FormSubmitButton>
         </DialogFooter>
       </form>
-    </Form>
+    </FormProvider>
   );
 }

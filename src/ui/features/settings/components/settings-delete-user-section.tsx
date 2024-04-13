@@ -15,14 +15,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { deleteUserAction } from "../actions/delete-user-action";
 
@@ -112,7 +111,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
             eliminados, no se podrán recuperar.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
+        <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
               <PasswordInputFormField
@@ -148,7 +147,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
               </FormSubmitButton>
             </DialogFooter>
           </form>
-        </Form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );

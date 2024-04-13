@@ -13,12 +13,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { changePasswordAction } from "../actions/change-password-action";
@@ -85,7 +84,7 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
             contraseña cerrará la sesión en todos los dispositivos.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
+        <FormProvider {...form}>
           <form onSubmit={onSubmit}>
             <div>
               <PasswordInputFormField
@@ -123,7 +122,7 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
               <FormSubmitButton>Enviar</FormSubmitButton>
             </DialogFooter>
           </form>
-        </Form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );
