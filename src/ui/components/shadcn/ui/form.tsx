@@ -6,14 +6,11 @@ import {
   ControllerProps,
   FieldPath,
   FieldValues,
-  FormProvider,
   useFormContext,
 } from "react-hook-form";
 
 import { Label } from "@/src/ui/components/shadcn/ui/label";
 import { cn } from "@/src/ui/utils/shadcn";
-
-const Form = FormProvider;
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -166,7 +163,6 @@ const FormMessage = React.forwardRef<
 FormMessage.displayName = "FormMessage";
 
 export {
-  Form,
   FormControl,
   FormDescription,
   FormField,

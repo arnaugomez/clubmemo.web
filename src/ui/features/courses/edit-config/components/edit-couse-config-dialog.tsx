@@ -14,11 +14,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { default_maximum_interval } from "ts-fsrs";
 import { z } from "zod";
@@ -87,7 +86,7 @@ export function EditCourseConfigDialog({
             necesidades.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
+        <FormProvider {...form}>
           <form onSubmit={onSubmit}>
             <div>
               <div className="h-2"></div>
@@ -160,7 +159,7 @@ export function EditCourseConfigDialog({
               <FormSubmitButton>Enviar</FormSubmitButton>
             </DialogFooter>
           </form>
-        </Form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );

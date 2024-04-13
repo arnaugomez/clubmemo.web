@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { InputFormField } from "@/src/ui/components/form/form-fields";
@@ -16,7 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -50,7 +49,7 @@ export function ForgotPasswordForm() {
 
   return (
     <>
-      <Form {...form}>
+      <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <InputFormField
             label="Correo electrónico"
@@ -66,7 +65,7 @@ export function ForgotPasswordForm() {
             <FormSubmitButton>Enviar</FormSubmitButton>
           </div>
         </form>
-      </Form>
+      </FormProvider>
       {isDialogOpen && <ConfirmDialog email={form.getValues("email")} />}
     </>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { waitMilliseconds } from "@/src/core/common/utils/promises";
@@ -9,7 +9,6 @@ import { AsyncButton } from "@/src/ui/components/button/async-button";
 import { InputOtpFormField } from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { useEffect, useRef } from "react";
 import { logoutAction } from "../../actions/logout-action";
@@ -48,7 +47,7 @@ export function VerifyEmailForm() {
   }, [code]);
 
   return (
-    <Form {...form}>
+    <FormProvider {...form}>
       <form ref={formRef} onSubmit={form.handleSubmit(onSubmit)}>
         <InputOtpFormField />
         <div className="h-2" />
@@ -65,6 +64,6 @@ export function VerifyEmailForm() {
           <FormSubmitButton>Enviar</FormSubmitButton>
         </div>
       </form>
-    </Form>
+    </FormProvider>
   );
 }

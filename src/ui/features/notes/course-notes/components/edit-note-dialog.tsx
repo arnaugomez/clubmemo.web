@@ -14,10 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { editNoteAction } from "../actions/edit-note-action";
@@ -74,7 +73,7 @@ export function EditNoteDialog({
             hacer que otros usuarios puedan encontrarlo y conocerlo mejor.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
+        <FormProvider {...form}>
           <form onSubmit={onSubmit}>
             <div>
               <InputFormField
@@ -103,7 +102,7 @@ export function EditNoteDialog({
               <FormSubmitButton>Enviar</FormSubmitButton>
             </DialogFooter>
           </form>
-        </Form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );

@@ -21,12 +21,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { editCourseAction } from "../actions/edit-course-action";
@@ -103,7 +102,7 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
             hacer que otros usuarios puedan encontrarlo y conocerlo mejor.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
+        <FormProvider {...form}>
           <form onSubmit={onSubmit}>
             <div>
               <InputFormField
@@ -146,7 +145,7 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
               <FormSubmitButton>Enviar</FormSubmitButton>
             </DialogFooter>
           </form>
-        </Form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );
