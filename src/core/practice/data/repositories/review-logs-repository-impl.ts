@@ -1,9 +1,7 @@
+import { DateTimeService } from "@/src/core/common/domain/interfaces/date-time-service";
 import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
-import {
-  GetReviewsOfNewCardsCountInputModel,
-  ReviewLogsRepository,
-} from "../../domain/interfaces/review-logs-repository";
+import { ReviewLogsRepository } from "../../domain/interfaces/review-logs-repository";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 import { ReviewLogModel } from "../../domain/models/review-log-model";
 import { reviewLogsCollection } from "../collections/review-logs-collection";
@@ -11,7 +9,10 @@ import { reviewLogsCollection } from "../collections/review-logs-collection";
 export class ReviewLogsRepositoryImpl implements ReviewLogsRepository {
   private readonly reviewLogs: typeof reviewLogsCollection.type;
 
-  constructor(mongoService: MongoService) {
+  constructor(
+    mongoService: MongoService,
+    private readonly dateTimeService: DateTimeService,
+  ) {
     this.reviewLogs = mongoService.collection(reviewLogsCollection);
   }
 
@@ -33,14 +34,12 @@ export class ReviewLogsRepositoryImpl implements ReviewLogsRepository {
     return new ReviewLogModel(input.data);
   }
 
-  async getReviewsOfNewCardsCount(
-    input: GetReviewsOfNewCardsCountInputModel,
-  ): Promise<number> {
+  async getReviewsOfNewCardsCount(courseEnrollmentId: string): Promise<number> {
     const cursor = this.reviewLogs.aggregate<{ count: number }>([
       {
         $match: {
-          courseEnrollmentId: new ObjectId(input.courseEnrollmentId),
-          review: { $gte: input.minDate },
+          courseEnrollmentId: new ObjectId(courseEnrollmentId),
+          review: { $gte: this.dateTimeService.getStartOfToday() },
           state: PracticeCardStateModel.new,
         },
       },

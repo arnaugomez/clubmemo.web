@@ -1,15 +1,9 @@
 import { locator } from "@/src/core/common/locator";
 import { shuffle } from "@/src/core/common/utils/array";
+import { CourseEnrollmentModel } from "@/src/core/courses/domain/models/course-enrollment-model";
 import { CourseModel } from "@/src/core/courses/domain/models/course-model";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
-import utc from "dayjs/plugin/utc";
 import { PracticeEmptyState } from "./practice-empty-state";
 import { PracticeWizard } from "./practice-wizard";
-import { CourseEnrollmentModel } from "@/src/core/courses/domain/models/course-enrollment-model";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 interface PracticeContentProps {
   course: CourseModel;
@@ -25,13 +19,8 @@ export async function PracticeContent({
   const reviewLogsRepository = await locator.ReviewLogsRepository();
   const practiceCardsRepository = await locator.PracticeCardsRepository();
 
-  const startOfToday = dayjs().tz("Europe/Madrid").startOf("day").toDate();
-  const newReviewsCountPromise = reviewLogsRepository.getReviewsOfNewCardsCount(
-    {
-      courseEnrollmentId,
-      minDate: startOfToday,
-    },
-  );
+  const newReviewsCountPromise =
+    reviewLogsRepository.getReviewsOfNewCardsCount(courseEnrollmentId);
   const newCardsPromise = practiceCardsRepository.getUnpracticed({
     courseEnrollmentId,
     courseId: course.id,
