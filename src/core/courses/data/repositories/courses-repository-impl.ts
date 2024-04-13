@@ -5,6 +5,7 @@ import {
 import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
 import { TokenPaginationModel } from "@/src/core/common/domain/models/token-pagination-model";
+import { practiceCardsCollection } from "@/src/core/practice/data/collections/practice-cards-collection";
 import { ObjectId, WithId } from "mongodb";
 import {
   CoursesRepository,
@@ -142,6 +143,23 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           },
         },
         {
+          $lookup: {
+            from: practiceCardsCollection.name,
+            let: { courseEnrollmentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                  },
+                  due: { $lte: new Date() },
+                },
+              },
+            ],
+            as: "practiceCards",
+          },
+        },
+        {
           $unwind: "$course",
         },
         {
@@ -150,11 +168,13 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             isFavorite: true,
             name: "$course.name",
             picture: "$course.picture",
+            dueCount: { $size: "$practiceCards" },
           },
         },
       ]);
 
     const result = await aggregation.toArray();
+    console.log(result);
     return result.map((e) =>
       new EnrolledCourseListItemTransformer(e).toDomain(),
     );
