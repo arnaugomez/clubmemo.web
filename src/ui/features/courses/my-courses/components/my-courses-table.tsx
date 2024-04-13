@@ -1,4 +1,3 @@
-import { Button } from "@/src/ui/components/shadcn/ui/button";
 import {
   Table,
   TableBody,
@@ -9,12 +8,13 @@ import {
 } from "@/src/ui/components/shadcn/ui/table";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { Bookmark, Play } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import Link from "next/link";
 import {
   FetchMyCoursesPaginationModel,
   fetchMyCoursesPagination,
 } from "../fetch/fetch-my-courses";
+import { PracticeCell } from "./practice-cell";
 
 interface MyCoursesTableProps {
   arg: FetchMyCoursesPaginationModel;
@@ -48,16 +48,8 @@ export async function MyCoursesTable({ arg }: MyCoursesTableProps) {
                     className="mx-auto size-5"
                   />
                 </TableCell>
-                <TableCell className="py-0 text-center">
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link
-                      href={`/courses/detail/${course.courseId}/practice`}
-                      className="text-slate-700"
-                    >
-                      <Play className="size-5" />
-                    </Link>
-                  </Button>
-                </TableCell>
+                {/* TODO: Extract component */}
+                <PracticeCell courseData={course.data} />
               </TableRow>
             ))}
           </TableBody>
