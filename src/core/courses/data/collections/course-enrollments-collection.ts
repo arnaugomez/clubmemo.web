@@ -13,6 +13,7 @@ export interface CourseEnrollmentConfigDoc {
 export interface CourseEnrollmentDoc {
   courseId: ObjectId;
   profileId: ObjectId;
+
   isFavorite: boolean;
   config?: CourseEnrollmentConfigDoc;
 }
@@ -23,12 +24,13 @@ export class CourseEnrollmentDocTransformer {
   constructor(private readonly doc: WithId<CourseEnrollmentDoc>) {}
 
   toDomain(): CourseEnrollmentModel {
-    const { _id, ...rest } = this.doc;
     return new CourseEnrollmentModel({
-      ...rest,
-      id: _id.toString(),
-      courseId: this.doc.courseId.toString(),
-      profileId: this.doc.profileId.toString(),
+      id: this.doc._id.toHexString(),
+      courseId: this.doc.courseId.toHexString(),
+      profileId: this.doc.profileId.toHexString(),
+
+      isFavorite: this.doc.isFavorite,
+      config: this.doc.config,
     });
   }
 }

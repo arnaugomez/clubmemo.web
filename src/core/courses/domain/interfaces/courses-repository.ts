@@ -35,6 +35,11 @@ export interface GetCoursesByAuthorInputModel {
   limit?: number;
 }
 
+export interface GetInterestingCoursesInputModel {
+  profileId: string;
+  tags: string[];
+}
+
 export interface CoursesRepository {
   create(input: CreateCourseInputModel): Promise<CourseModel>;
   getDetail(input: GetCourseDetailInputModel): Promise<CourseModel | null>;
@@ -60,4 +65,7 @@ export interface CoursesRepository {
   ): Promise<TokenPaginationModel<DiscoverCourseModel>>;
 
   getKeepLearning(profileId: string): Promise<KeepLearningModel | null>;
+  getInterestingCourses(
+    input: GetInterestingCoursesInputModel,
+  ): Promise<DiscoverCourseModel[]>;
 }
