@@ -23,7 +23,7 @@ export interface PracticeCardDoc {
 }
 
 export const practiceCardsCollection =
-  collection<PracticeCardDoc>("practice-cards");
+  collection<PracticeCardDoc>("practiceCards");
 
 export class PracticeCardDocTransformer {
   constructor(private readonly doc: WithId<PracticeCardDoc>) {}

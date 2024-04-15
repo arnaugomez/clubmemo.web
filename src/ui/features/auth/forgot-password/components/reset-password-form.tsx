@@ -12,13 +12,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { resetPasswordAction } from "../actions/reset-password-action";
 
@@ -70,7 +69,7 @@ export function ResetPasswordForm({ email }: Props) {
 
   return (
     <>
-      <Form {...form}>
+      <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <PasswordInputFormField
             label="Contraseña"
@@ -94,7 +93,7 @@ export function ResetPasswordForm({ email }: Props) {
             <FormSubmitButton>Enviar</FormSubmitButton>
           </div>
         </form>
-      </Form>
+      </FormProvider>
       {isDialogOpen && <ConfirmDialog email={email} />}
     </>
   );

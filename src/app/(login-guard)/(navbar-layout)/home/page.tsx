@@ -1,4 +1,5 @@
 import { CreateCourseCtaLarge } from "@/src/ui/features/courses/create/components/create-course-cta-large";
+import { KeepLearningSection } from "@/src/ui/features/courses/keep-learning/components/keep-learning-section";
 import { fetchHasCourses } from "@/src/ui/features/courses/my-courses/fetch/fetch-has-courses";
 import { HomeGreeting } from "@/src/ui/features/home/components/home-greeting";
 import { textStyles } from "@/src/ui/styles/text-styles";
@@ -20,13 +21,7 @@ export default async function HomePage() {
 function HomePageContent() {
   return (
     <>
-      <section className="px-4">
-        <div className="mx-auto max-w-prose">
-          <h2 className={cn(textStyles.h3, "mx-auto max-w-prose")}>
-            Sigue aprendiendo
-          </h2>
-        </div>
-      </section>
+      <KeepLearningSection />
       <div className="h-12" />
       <section className="px-4">
         <div className="mx-auto max-w-prose">

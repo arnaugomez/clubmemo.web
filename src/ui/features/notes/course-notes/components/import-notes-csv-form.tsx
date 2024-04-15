@@ -5,11 +5,10 @@ import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-err
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/ui/components/shadcn/ui/dialog";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileSpreadsheet } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { importNotesAction } from "../actions/import-notes-action";
@@ -62,7 +61,7 @@ export function ImportNotesCsvForm({
   const isSubmitting = form.formState.isSubmitting;
 
   return (
-    <Form {...form}>
+    <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <div>
           <FileFormField
@@ -89,6 +88,6 @@ export function ImportNotesCsvForm({
           <FormSubmitButton>Enviar</FormSubmitButton>
         </DialogFooter>
       </form>
-    </Form>
+    </FormProvider>
   );
 }

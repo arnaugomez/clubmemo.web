@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { waitMilliseconds } from "@/src/core/common/utils/promises";
@@ -12,7 +12,6 @@ import {
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
-import { Form } from "@/src/ui/components/shadcn/ui/form";
 import { FormResponseHandler } from "@/src/ui/models/server-form-errors";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
@@ -46,7 +45,7 @@ export function LoginForm() {
   }
 
   return (
-    <Form {...form}>
+    <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <InputFormField
           label="Correo electrónico"
@@ -76,6 +75,6 @@ export function LoginForm() {
           <FormSubmitButton>Login</FormSubmitButton>
         </div>
       </form>
-    </Form>
+    </FormProvider>
   );
 }
