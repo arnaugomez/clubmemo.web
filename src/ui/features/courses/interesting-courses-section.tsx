@@ -11,11 +11,9 @@ import { fetchInterestingCourses } from "./interesting-courses/fetch/fetch-inter
 
 export function InterestingCoursesSection() {
   return (
-    <section>
+    <section className="px-4">
       <div className="mx-auto max-w-prose">
-        <h2 className={cn(textStyles.h3, "mx-auto max-w-prose")}>
-          Te puede interesar
-        </h2>
+        <h2 className={cn(textStyles.h3)}>Te puede interesar</h2>
         <div className="h-4"></div>
         <Suspense fallback={<InterestingCoursesLoader />}>
           <InterestingCoursesContent />
@@ -27,7 +25,9 @@ export function InterestingCoursesSection() {
 
 function InterestingCoursesLoader() {
   return (
-    <div className="grid grid-cols-3 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      <Skeleton className="h-64" />
+      <Skeleton className="h-64" />
       <Skeleton className="h-64" />
     </div>
   );
@@ -37,7 +37,7 @@ async function InterestingCoursesContent() {
   const interestingCourses = await fetchInterestingCourses();
   if (!interestingCourses.length) return <InterestingCoursesEmptyState />;
   return (
-    <div className="grid grid-cols-3 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
       {interestingCourses.map((course) => (
         <DiscoverCourseCard key={course.id} course={course} />
       ))}
