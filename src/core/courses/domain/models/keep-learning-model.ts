@@ -1,14 +1,15 @@
-export interface EnrolledCourseListItemModelData {
+export interface KeepLearningModelData {
   courseId: string;
   name: string;
+  description: string;
   picture: string;
-  isFavorite: boolean;
+  tags: string[];
   dueCount: number;
   newCount: number;
 }
 
-export class EnrolledCourseListItemModel {
-  constructor(readonly data: EnrolledCourseListItemModelData) {}
+export class KeepLearningModel {
+  constructor(readonly data: KeepLearningModelData) {}
 
   get courseId() {
     return this.data.courseId;
@@ -17,13 +18,16 @@ export class EnrolledCourseListItemModel {
   get name() {
     return this.data.name;
   }
+  get description() {
+    return this.data.description;
+  }
 
   get picture() {
     return this.data.picture;
   }
 
-  get isFavorite() {
-    return this.data.isFavorite;
+  get tags() {
+    return this.data.tags;
   }
 
   get dueCount() {

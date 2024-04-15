@@ -6,6 +6,7 @@ import { DiscoverCourseModel } from "../models/discover-course-model";
 import { EnrolledCourseListItemModel } from "../models/enrolled-course-list-item-model";
 import { GetCourseDetailInputModel } from "../models/get-course-detail-input-model";
 import { UpdateCourseInputModel } from "../models/update-course-input-model";
+import { KeepLearningModel } from "../models/keep-learning-model";
 
 export interface GetMyCoursesInputModel {
   profileId: string;
@@ -57,4 +58,6 @@ export interface CoursesRepository {
   getCoursesByAuthor(
     input: GetCoursesByAuthorInputModel,
   ): Promise<TokenPaginationModel<DiscoverCourseModel>>;
+
+  getKeepLearning(profileId: string): Promise<KeepLearningModel | null>;
 }

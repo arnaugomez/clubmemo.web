@@ -2,9 +2,13 @@ import {
   PaginationFacet,
   PaginationFacetTransformer,
 } from "@/src/core/common/data/services/facets/pagination-facet";
+import { DateTimeService } from "@/src/core/common/domain/interfaces/date-time-service";
 import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
 import { TokenPaginationModel } from "@/src/core/common/domain/models/token-pagination-model";
+import { practiceCardsCollection } from "@/src/core/practice/data/collections/practice-cards-collection";
+import { reviewLogsCollection } from "@/src/core/practice/data/collections/review-logs-collection";
+import { PracticeCardStateModel } from "@/src/core/practice/domain/models/practice-card-state-model";
 import { ObjectId, WithId } from "mongodb";
 import {
   CoursesRepository,
@@ -20,6 +24,7 @@ import { CreateCourseInputModel } from "../../domain/models/create-course-input-
 import { DiscoverCourseModel } from "../../domain/models/discover-course-model";
 import { EnrolledCourseListItemModel } from "../../domain/models/enrolled-course-list-item-model";
 import { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
+import { KeepLearningModel } from "../../domain/models/keep-learning-model";
 import { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
 import {
   DiscoverCourseDoc,
@@ -29,6 +34,10 @@ import {
   EnrolledCourseListItemDoc,
   EnrolledCourseListItemTransformer,
 } from "../aggregations/enrolled-course-list-item-aggregation";
+import {
+  KeepLearningAggregationDoc,
+  KeepLearningAggregationDocTransformer,
+} from "../aggregations/keep-learning-aggregation";
 import {
   CourseEnrollmentDoc,
   courseEnrollmentsCollection,
@@ -49,7 +58,10 @@ export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly coursePermissions: typeof coursePermissionsCollection.type;
   private readonly courseEnrollments: typeof courseEnrollmentsCollection.type;
 
-  constructor(mongoService: MongoService) {
+  constructor(
+    mongoService: MongoService,
+    private readonly dateTimeService: DateTimeService,
+  ) {
     this.courses = mongoService.collection(coursesCollection);
     this.coursePermissions = mongoService.collection(
       coursePermissionsCollection,
@@ -145,11 +157,59 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           $unwind: "$course",
         },
         {
+          $lookup: {
+            from: practiceCardsCollection.name,
+            let: { courseEnrollmentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                  },
+                  due: { $lte: new Date() },
+                },
+              },
+            ],
+            as: "practiceCards",
+          },
+        },
+        {
+          $lookup: {
+            from: reviewLogsCollection.name,
+            let: { courseEnrollmentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                  },
+                  review: { $gte: this.dateTimeService.getStartOfToday() },
+                  state: PracticeCardStateModel.new,
+                },
+              },
+            ],
+            as: "reviewsOfNewCards",
+          },
+        },
+        {
           $project: {
+            _id: false,
             courseId: true,
             isFavorite: true,
             name: "$course.name",
             picture: "$course.picture",
+            dueCount: { $size: "$practiceCards" },
+            newCount: {
+              $max: [
+                {
+                  $subtract: [
+                    { $ifNull: ["$course.dailyNewCardsCount", 10] },
+                    { $size: "$reviewsOfNewCards" },
+                  ],
+                },
+                0,
+              ],
+            },
           },
         },
       ]);
@@ -180,28 +240,76 @@ export class CoursesRepositoryImpl implements CoursesRepository {
         },
       },
       {
-        $lookup: {
-          from: "courses",
-          localField: "courseId",
-          foreignField: "_id",
-          as: "course",
-        },
-      },
-      {
-        $unwind: "$course",
-      },
-      {
         $facet: {
           metadata: [{ $count: "totalCount" }],
           results: [
             { $skip: skip },
             { $limit: limit },
             {
+              $lookup: {
+                from: "courses",
+                localField: "courseId",
+                foreignField: "_id",
+                as: "course",
+              },
+            },
+            {
+              $unwind: "$course",
+            },
+            {
+              $lookup: {
+                from: practiceCardsCollection.name,
+                let: { courseEnrollmentId: "$_id" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                      },
+                      due: { $lte: new Date() },
+                    },
+                  },
+                ],
+                as: "practiceCards",
+              },
+            },
+            {
+              $lookup: {
+                from: reviewLogsCollection.name,
+                let: { courseEnrollmentId: "$_id" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                      },
+                      review: { $gte: this.dateTimeService.getStartOfToday() },
+                      state: PracticeCardStateModel.new,
+                    },
+                  },
+                ],
+                as: "reviewsOfNewCards",
+              },
+            },
+            {
               $project: {
+                _id: false,
                 courseId: true,
                 isFavorite: true,
                 name: "$course.name",
                 picture: "$course.picture",
+                dueCount: { $size: "$practiceCards" },
+                newCount: {
+                  $max: [
+                    {
+                      $subtract: [
+                        { $ifNull: ["$course.dailyNewCardsCount", 10] },
+                        { $size: "$reviewsOfNewCards" },
+                      ],
+                    },
+                    0,
+                  ],
+                },
               },
             },
           ],
@@ -382,6 +490,105 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     const result = await aggregation.toArray();
     return new TokenPaginationTransformer(result).toDomain((data) =>
       new DiscoverCourseTransformer(data).toDomain(),
+    );
+  }
+
+  async getKeepLearning(profileId: string): Promise<KeepLearningModel | null> {
+    const aggregation =
+      this.courseEnrollments.aggregate<KeepLearningAggregationDoc>([
+        {
+          $match: {
+            profileId: new ObjectId(profileId),
+          },
+        },
+        {
+          $lookup: {
+            from: "courses",
+            localField: "courseId",
+            foreignField: "_id",
+            as: "course",
+          },
+        },
+        {
+          $unwind: "$course",
+        },
+        {
+          $lookup: {
+            from: practiceCardsCollection.name,
+            let: { courseEnrollmentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                  },
+                  due: { $lte: new Date() },
+                },
+              },
+            ],
+            as: "practiceCards",
+          },
+        },
+        {
+          $lookup: {
+            from: reviewLogsCollection.name,
+            let: { courseEnrollmentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
+                  },
+                  review: { $gte: this.dateTimeService.getStartOfToday() },
+                  state: PracticeCardStateModel.new,
+                },
+              },
+            ],
+            as: "reviewsOfNewCards",
+          },
+        },
+        {
+          $project: {
+            courseId: true,
+            isFavorite: true,
+            name: "$course.name",
+            picture: "$course.picture",
+            tags: "$course.tags",
+            description: "$course.description",
+            dueCount: { $size: "$practiceCards" },
+            newCount: {
+              $max: [
+                {
+                  $subtract: [
+                    { $ifNull: ["$course.dailyNewCardsCount", 10] },
+                    { $size: "$reviewsOfNewCards" },
+                  ],
+                },
+                0,
+              ],
+            },
+          },
+        },
+        {
+          $match: {
+            $or: [{ dueCount: { $gt: 0 } }, { newCount: { $gt: 0 } }],
+          },
+        },
+        {
+          $sort: {
+            isFavorite: -1,
+            dueCount: -1,
+            newCount: -1,
+          },
+        },
+        {
+          $limit: 1,
+        },
+      ]);
+
+    const result = await aggregation.next();
+    return (
+      result && new KeepLearningAggregationDocTransformer(result).toDomain()
     );
   }
 }

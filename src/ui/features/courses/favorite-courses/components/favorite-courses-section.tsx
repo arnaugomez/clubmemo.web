@@ -1,13 +1,10 @@
-import { EnrolledCourseListItemModel } from "@/src/core/courses/domain/models/enrolled-course-list-item-model";
-import { Card } from "@/src/ui/components/shadcn/ui/card";
 import { Skeleton } from "@/src/ui/components/shadcn/ui/skeleton";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import { ArrowRight, BookmarkCheck, BookmarkX } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { BookmarkCheck, BookmarkX } from "lucide-react";
 import { Suspense } from "react";
 import { fetchFavoriteCourses } from "../fetch/fetch-favorite-courses";
+import { FavoriteCourseCard } from "./favorite-course-card";
 
 export function FavoriteCoursesSection() {
   return (
@@ -39,35 +36,6 @@ async function FavoriteCoursesContent() {
         <FavoriteCourseCard key={course.courseId} course={course} />
       ))}
     </div>
-  );
-}
-
-interface FavoriteCourseCardProps {
-  course: EnrolledCourseListItemModel;
-}
-
-function FavoriteCourseCard({ course }: FavoriteCourseCardProps) {
-  return (
-    <Card className="h-48 overflow-clip">
-      <div className="relative h-28 bg-slate-300">
-        {course.picture && (
-          <Image src={course.picture} layout="fill" alt="" objectFit="cover" />
-        )}
-      </div>
-      <div className="p-3">
-        <h3 className={cn(textStyles.h4, "hover:underline truncate")}>
-          <Link href={`/courses/detail/${course.courseId}`}>{course.name}</Link>
-        </h3>
-        <div className="h-.5"></div>
-        <Link
-          href={`/courses/detail/${course.courseId}/practice`}
-          className={cn(textStyles.muted, "group")}
-        >
-          <span className="group-hover:underline">Practicar</span>
-          <ArrowRight className="ml-1 inline size-4 -translate-y-[1px]" />
-        </Link>
-      </div>
-    </Card>
   );
 }
 

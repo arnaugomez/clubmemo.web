@@ -47,7 +47,6 @@ export function TaskQueueProvider({ children }: PropsWithChildren) {
         await task.fn(task.payload, tasks);
         setStatus(task.fn, Status.done);
         task.status = Status.done;
-        console.log("Task done");
       } catch (error) {
         task.onError?.(error);
         console.error(error);

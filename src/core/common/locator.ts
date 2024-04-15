@@ -15,6 +15,7 @@ import { ProfilesRepository } from "../profile/domain/interfaces/profiles-reposi
 import { TagsRepository } from "../tags/domain/interfaces/tags-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
 import { MongoServiceImpl } from "./data/services/mongo-service-impl";
+import { DateTimeService } from "./domain/interfaces/date-time-service";
 import { EmailService } from "./domain/interfaces/email-service";
 import { EnvService } from "./domain/interfaces/env-service";
 import { MongoService } from "./domain/interfaces/mongo-service";
@@ -26,6 +27,7 @@ interface Locator {
   EnvService: Dependency<EnvService>;
   MongoService: Dependency<MongoService>;
   EmailService: Lazy<EmailService>;
+  DateTimeService: Lazy<DateTimeService>;
   // Auth
   AuthService: Dependency<AuthService>;
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
@@ -63,6 +65,11 @@ export const locator: Locator = {
     const file = await import("./data/services/email-service-fake-impl");
     return new file.EmailServiceFakeImpl();
   },
+  DateTimeService: singleton(() =>
+    import("./data/services/date-time-service-impl").then(
+      (file) => new file.DateTimeServiceImpl(),
+    ),
+  ),
 
   // Auth
   AuthService: singleton(
@@ -100,7 +107,10 @@ export const locator: Locator = {
     const file = await import(
       "../courses/data/repositories/courses-repository-impl"
     );
-    return new file.CoursesRepositoryImpl(this.MongoService());
+    return new file.CoursesRepositoryImpl(
+      this.MongoService(),
+      await this.DateTimeService(),
+    );
   },
   async CourseEnrollmentsRepository() {
     const file = await import(
@@ -153,6 +163,9 @@ export const locator: Locator = {
     const file = await import(
       "../practice/data/repositories/review-logs-repository-impl"
     );
-    return new file.ReviewLogsRepositoryImpl(this.MongoService());
+    return new file.ReviewLogsRepositoryImpl(
+      this.MongoService(),
+      await this.DateTimeService(),
+    );
   },
 };

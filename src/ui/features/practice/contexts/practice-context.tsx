@@ -71,9 +71,12 @@ export function PracticeProvider({
       practiceResult,
       async (payload, tasks) => {
         const { card, reviewLog } = payload;
+        const cardJson = JSON.parse(JSON.stringify(card.data));
+        cardJson.due = new Date(cardJson.due);
+        cardJson.lastReview = new Date(cardJson.lastReview);
         const response = await practiceAction({
           courseId: course.id,
-          card: JSON.parse(JSON.stringify(card.data)), // I don't know why I have to do this, but otherwise the server action fails.
+          card: cardJson,
           reviewLog: reviewLog.data,
         });
         const handler = new ActionResponseHandler(response);
