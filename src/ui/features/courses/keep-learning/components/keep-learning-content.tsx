@@ -21,7 +21,7 @@ export async function KeepLearningContent() {
           <Image src={course.picture} layout="fill" alt="" objectFit="cover" />
         )}
       </div>
-      <div className="p-3 min-w-0">
+      <div className="flex-1 p-3 min-w-0">
         <h3 className={cn(textStyles.h4, "hover:underline truncate")}>
           <Link href={`/courses/detail/${course.courseId}`}>{course.name}</Link>
         </h3>
