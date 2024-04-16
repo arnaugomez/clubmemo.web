@@ -20,7 +20,10 @@ import { PracticeActionsBar } from "./practice-actions-bar";
 import { PracticeProgress } from "./practice-progress";
 import { PracticeWizardFinish } from "./practice-wizard-finish";
 import { NullError } from "@/src/core/common/domain/models/app-errors";
-import { CourseEnrollmentModel, CourseEnrollmentModelData } from "@/src/core/courses/domain/models/course-enrollment-model";
+import {
+  CourseEnrollmentModel,
+  CourseEnrollmentModelData,
+} from "@/src/core/courses/domain/models/course-enrollment-model";
 
 interface PracticeWizardProps {
   courseData: CourseModelData;
@@ -28,7 +31,11 @@ interface PracticeWizardProps {
   cardsData: PracticeCardModelData[];
 }
 
-export function PracticeWizard({ courseData, enrollmentData, cardsData }: PracticeWizardProps) {
+export function PracticeWizard({
+  courseData,
+  enrollmentData,
+  cardsData,
+}: PracticeWizardProps) {
   const course = new CourseModel(courseData);
   const enrollment = new CourseEnrollmentModel(enrollmentData);
   const cards = cardsData.map((data) => new PracticeCardModel(data));
