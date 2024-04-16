@@ -1,5 +1,5 @@
 "use client";
-import { NullError } from "@/src/core/common/domain/models/app-errors";
+import { CourseEnrollmentModel } from "@/src/core/courses/domain/models/course-enrollment-model";
 import { CourseModel } from "@/src/core/courses/domain/models/course-model";
 import { PracticeCardModel } from "@/src/core/practice/domain/models/practice-card-model";
 import {
@@ -15,11 +15,13 @@ import { ActionResponseHandler } from "@/src/ui/models/action-response-handler";
 import { createContextHook, createNullContext } from "@/src/ui/utils/context";
 import { PropsWithChildren, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { getNextPracticeCardsAction } from "../actions/get-next-practice-cards-action";
 import { practiceAction } from "../actions/practice-action";
 import { Task, useTaskQueueContext } from "./task-queue-context";
 
 interface PracticeProviderProps extends PropsWithChildren {
   course: CourseModel;
+  enrollment: CourseEnrollmentModel;
   cards: PracticeCardModel[];
 }
 
@@ -27,6 +29,7 @@ type State = {
   cards: PracticeCardModel[];
   currentCardIndex: number;
   reviewLogs: ReviewLogModel[];
+  nextCards: PracticeCardModel[];
 };
 
 interface PracticeContextValue {
@@ -34,12 +37,15 @@ interface PracticeContextValue {
   progress: number;
   daysToNextReview: DaysToNextReviewModel;
   rate: (rating: PracticeCardRatingModel) => void;
+  canStartNextPractice: boolean;
+  startNextPractice: () => void;
 }
 
 const PracticeContext = createNullContext<PracticeContextValue>();
 
 export function PracticeProvider({
   course,
+  enrollment,
   cards,
   children,
 }: PracticeProviderProps) {
@@ -48,21 +54,29 @@ export function PracticeProvider({
     cards,
     currentCardIndex: 0,
     reviewLogs: [],
+    nextCards: [],
   });
 
   const currentCard: PracticeCardModel | null =
     state.cards[state.currentCardIndex] || null;
 
   const practicer = useMemo(() => {
-    if (!course.enrollment) throw new NullError("course.enrollment");
     if (!currentCard) return null;
     const practicer = new PracticerModel({
       card: currentCard,
-      enrollment: course.enrollment,
+      enrollment,
     });
     practicer.practice();
     return practicer;
-  }, [course.enrollment, currentCard]);
+  }, [enrollment, currentCard]);
+
+  async function getNextPracticeCards() {
+    const cards = await getNextPracticeCardsAction({ courseId: course.id });
+    setState((state) => ({
+      ...state,
+      nextCards: cards.map((c) => new PracticeCardModel(c)),
+    }));
+  }
 
   const rate = async (rating: PracticeCardRatingModel) => {
     if (!practicer) return;
@@ -70,6 +84,7 @@ export function PracticeProvider({
     addTask(
       practiceResult,
       async (payload, tasks) => {
+        const { cards, currentCardIndex } = state;
         const { card, reviewLog } = payload;
         const cardJson = JSON.parse(JSON.stringify(card.data));
         cardJson.due = new Date(cardJson.due);
@@ -105,6 +120,9 @@ export function PracticeProvider({
           }
           reviewLog.data.id = handler.data.reviewLog.id;
           reviewLog.data.cardId = handler.data.reviewLog.cardId;
+          if (currentCardIndex === cards.length - 1) {
+            await getNextPracticeCards();
+          }
         }
       },
       () => {
@@ -122,6 +140,15 @@ export function PracticeProvider({
     }));
   };
 
+  function startNextPractice() {
+    setState((state) => ({
+      cards: state.nextCards,
+      currentCardIndex: 0,
+      reviewLogs: [],
+      nextCards: [],
+    }));
+  }
+
   return (
     <PracticeContext.Provider
       value={{
@@ -131,6 +158,8 @@ export function PracticeProvider({
           practicer?.getDaysToNextReview() ??
           PracticerModel.emptyDaysToNextReview,
         rate,
+        canStartNextPractice: state.nextCards.length > 0,
+        startNextPractice,
       }}
     >
       {children}
