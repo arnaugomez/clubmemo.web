@@ -37,6 +37,8 @@ interface PracticeContextValue {
   progress: number;
   daysToNextReview: DaysToNextReviewModel;
   rate: (rating: PracticeCardRatingModel) => void;
+  canStartNextPractice: boolean;
+  startNextPractice: () => void;
 }
 
 const PracticeContext = createNullContext<PracticeContextValue>();
@@ -82,7 +84,7 @@ export function PracticeProvider({
     addTask(
       practiceResult,
       async (payload, tasks) => {
-        const { cards, currentCardIndex} = state;
+        const { cards, currentCardIndex } = state;
         const { card, reviewLog } = payload;
         const cardJson = JSON.parse(JSON.stringify(card.data));
         cardJson.due = new Date(cardJson.due);
@@ -118,7 +120,7 @@ export function PracticeProvider({
           }
           reviewLog.data.id = handler.data.reviewLog.id;
           reviewLog.data.cardId = handler.data.reviewLog.cardId;
-          if(currentCardIndex === cards.length - 1) {
+          if (currentCardIndex === cards.length - 1) {
             await getNextPracticeCards();
           }
         }
@@ -138,6 +140,15 @@ export function PracticeProvider({
     }));
   };
 
+  function startNextPractice() {
+    setState((state) => ({
+      cards: state.nextCards,
+      currentCardIndex: 0,
+      reviewLogs: [],
+      nextCards: [],
+    }));
+  }
+
   return (
     <PracticeContext.Provider
       value={{
@@ -147,6 +158,8 @@ export function PracticeProvider({
           practicer?.getDaysToNextReview() ??
           PracticerModel.emptyDaysToNextReview,
         rate,
+        canStartNextPractice: state.nextCards.length > 0,
+        startNextPractice,
       }}
     >
       {children}

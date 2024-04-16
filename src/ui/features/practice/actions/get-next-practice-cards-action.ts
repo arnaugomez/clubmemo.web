@@ -20,6 +20,9 @@ export async function getNextPracticeCardsAction(
   });
   if (!course?.enrollment) return [];
 
-  const cards = await fetchPracticeCards({ course, enrollment: course.enrollment });
+  const cards = await fetchPracticeCards({
+    course,
+    enrollment: course.enrollment,
+  });
   return cards.map((c) => c.data);
 }
