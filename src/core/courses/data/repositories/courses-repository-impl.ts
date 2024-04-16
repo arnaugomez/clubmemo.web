@@ -15,6 +15,7 @@ import {
   GetCoursesByAuthorInputModel,
   GetDiscoverCoursesInputModel,
   GetHasCoursesInputModel,
+  GetInterestingCoursesInputModel,
   GetMyCoursesInputModel,
   GetMyCoursesPaginationInputModel,
 } from "../../domain/interfaces/courses-repository";
@@ -590,5 +591,56 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     return (
       result && new KeepLearningAggregationDocTransformer(result).toDomain()
     );
+  }
+
+  async getInterestingCourses(
+    input: GetInterestingCoursesInputModel,
+  ): Promise<DiscoverCourseModel[]> {
+    const cursor = this.courses.aggregate<WithId<DiscoverCourseDoc>>([
+      {
+        $match: {
+          isPublic: true,
+          tags: { $in: input.tags },
+        },
+      },
+      {
+        $lookup: {
+          from: courseEnrollmentsCollection.name,
+          let: { courseId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$courseId", "$$courseId"],
+                },
+                profileId: new ObjectId(input.profileId),
+              },
+            },
+          ],
+          as: "courseEnrollments",
+        },
+      },
+      {
+        $match: {
+          courseEnrollments: { $size: 0 },
+        },
+      },
+      {
+        $sample: {
+          size: 3,
+        },
+      },
+      {
+        $project: {
+          name: true,
+          description: true,
+          picture: true,
+          tags: true,
+        },
+      },
+    ]);
+
+    const result = await cursor.toArray();
+    return result.map((data) => new DiscoverCourseTransformer(data).toDomain());
   }
 }
