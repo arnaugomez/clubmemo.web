@@ -20,19 +20,22 @@ import { PracticeActionsBar } from "./practice-actions-bar";
 import { PracticeProgress } from "./practice-progress";
 import { PracticeWizardFinish } from "./practice-wizard-finish";
 import { NullError } from "@/src/core/common/domain/models/app-errors";
+import { CourseEnrollmentModel, CourseEnrollmentModelData } from "@/src/core/courses/domain/models/course-enrollment-model";
 
 interface PracticeWizardProps {
   courseData: CourseModelData;
+  enrollmentData: CourseEnrollmentModelData;
   cardsData: PracticeCardModelData[];
 }
 
-export function PracticeWizard({ courseData, cardsData }: PracticeWizardProps) {
+export function PracticeWizard({ courseData, enrollmentData, cardsData }: PracticeWizardProps) {
   const course = new CourseModel(courseData);
+  const enrollment = new CourseEnrollmentModel(enrollmentData);
   const cards = cardsData.map((data) => new PracticeCardModel(data));
 
   return (
     <TaskQueueProvider>
-      <PracticeProvider course={course} cards={cards}>
+      <PracticeProvider enrollment={enrollment} course={course} cards={cards}>
         <PracticeWizardContent course={course} cards={cards} />
       </PracticeProvider>
     </TaskQueueProvider>
