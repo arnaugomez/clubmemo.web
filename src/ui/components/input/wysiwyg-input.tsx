@@ -1,7 +1,10 @@
 import Placeholder from "@tiptap/extension-placeholder";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { Bold, Italic, Strikethrough } from "lucide-react";
 import { cn } from "../../utils/shadcn";
+import { Card } from "../shadcn/ui/card";
+import { Toggle } from "../shadcn/ui/toggle";
 import "./wysiwyg-input.css";
 
 interface WysiwygInputProps {
@@ -39,6 +42,42 @@ export function WysiwygInput({
   });
 
   return (
-    <EditorContent className="wysiwyg" name={name} id={id} editor={editor} />
+    <>
+      {editor && (
+        <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
+          <Card className="flex space-x-1 p-0.5">
+            <Toggle
+              type="button"
+              onPressedChange={() => editor.chain().focus().toggleBold().run()}
+              pressed={editor.isActive("bold")}
+              aria-label="Negrita"
+            >
+              <Bold className="h-4 w-4" />
+            </Toggle>
+            <Toggle
+              type="button"
+              onPressedChange={() =>
+                editor.chain().focus().toggleItalic().run()
+              }
+              pressed={editor.isActive("italic")}
+              aria-label="Cursiva"
+            >
+              <Italic className="h-4 w-4" />
+            </Toggle>
+            <Toggle
+              type="button"
+              onPressedChange={() =>
+                editor.chain().focus().toggleStrike().run()
+              }
+              pressed={editor.isActive("strike")}
+              aria-label="Rayado"
+            >
+              <Strikethrough className="h-4 w-4" />
+            </Toggle>
+          </Card>
+        </BubbleMenu>
+      )}
+      <EditorContent className="wysiwyg" name={name} id={id} editor={editor} />
+    </>
   );
 }
