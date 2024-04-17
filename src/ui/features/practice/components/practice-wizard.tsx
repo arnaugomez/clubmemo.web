@@ -15,6 +15,7 @@ import {
 } from "@/src/core/practice/domain/models/practice-card-model";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
+import DOMPurify from "dompurify";
 import { useState } from "react";
 import {
   PracticeProvider,
@@ -82,7 +83,7 @@ function PracticeCardSection({ note, course }: PracticeCardSectionProps) {
         <div className="px-4 py-8">
           <div
             className={cn(textStyles.base, "mx-auto max-w-sm font-medium")}
-            dangerouslySetInnerHTML={{ __html: note.front }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.front) }}
           ></div>
         </div>
 
@@ -90,7 +91,9 @@ function PracticeCardSection({ note, course }: PracticeCardSectionProps) {
           <div className="border-t-[1px] border-t-slate-200 px-4 py-8">
             <div
               className={cn(textStyles.base, "mx-auto max-w-sm")}
-              dangerouslySetInnerHTML={{ __html: note.back }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(note.back),
+              }}
             ></div>
           </div>
         )}
