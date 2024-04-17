@@ -158,12 +158,14 @@ interface WysiwygFormFieldProps {
   name: string;
   label: string;
   placeholder?: string;
+  isSmall?: boolean;
 }
 
 export function WysiwygFormField({
   label,
   name,
   placeholder,
+  isSmall
 }: WysiwygFormFieldProps) {
   return (
     <FormField
@@ -178,6 +180,7 @@ export function WysiwygFormField({
               name={field.name}
               value={field.value}
               placeholder={placeholder}
+              isSmall={isSmall}
             />
           </FormControl>
           <FormMessage />

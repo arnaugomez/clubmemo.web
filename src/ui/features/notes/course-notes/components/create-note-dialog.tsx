@@ -1,8 +1,5 @@
 import { NoteModel } from "@/src/core/notes/domain/models/note-model";
-import {
-  InputFormField,
-  WysiwygFormField,
-} from "@/src/ui/components/form/form-fields";
+import { WysiwygFormField } from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
@@ -76,10 +73,11 @@ export function CreateNoteDialog({
         <FormProvider {...form}>
           <form onSubmit={onSubmit}>
             <div>
-              <InputFormField
+              <WysiwygFormField
                 label="Cara"
                 name="front"
                 placeholder="La pregunta o concepto que quieres recordar"
+                isSmall
               />
               <div className="h-4" />
               <WysiwygFormField
