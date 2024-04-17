@@ -27,7 +27,7 @@ export default function CoursesPage({
       <div className="px-4">
         <div className="mx-auto max-w-3xl">
           <h1 className={cn(textStyles.h2)}>
-            <BookText className="inline size-7 -translate-y-1 mr-2" />
+            <BookText className="mr-2 inline size-7 -translate-y-1" />
             Mis cursos
           </h1>
         </div>

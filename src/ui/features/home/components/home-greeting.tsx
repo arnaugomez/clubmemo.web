@@ -7,7 +7,7 @@ export function HomeGreeting() {
     <div className="px-4">
       <div className="mx-auto max-w-prose">
         <h1 className={textStyles.h2}>
-          <Bot className="inline size-8 -translate-y-1 mr-3" />
+          <Bot className="mr-3 inline size-8 -translate-y-1" />
           Bienvenido de nuevo
           <ProfileName />
         </h1>

@@ -48,18 +48,18 @@ async function InterestingCoursesContent() {
 async function InterestingCoursesEmptyState() {
   const profile = await fetchMyProfile();
   return (
-    <div className="px-6 py-8 rounded-xl bg-slate-100 border-2 border-dashed border-slate-400">
+    <div className="rounded-xl border-2 border-dashed border-slate-400 bg-slate-100 px-6 py-8">
       <SearchX className="mx-auto size-6 text-slate-700" />
       <div className="h-2" />
-      <h3 className={cn(textStyles.h4, "text-center mx-auto max-w-sm")}>
+      <h3 className={cn(textStyles.h4, "mx-auto max-w-sm text-center")}>
         No hay resultados
       </h3>
       <div className="h-1" />
-      <p className={cn(textStyles.muted, "text-center mx-auto max-w-lg")}>
+      <p className={cn(textStyles.muted, "mx-auto max-w-lg text-center")}>
         Añade intereses a tu perfil para recibir recomendaciones personalizadas.
       </p>
       <div className="h-4" />
-      <div className="mx-auto max-w-min flex space-x-4">
+      <div className="mx-auto flex max-w-min space-x-4">
         <Button asChild>
           <Link
             href={

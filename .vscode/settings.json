@@ -18,5 +18,8 @@
     "notes",
     "ai-generator",
     "practice"
-  ]
+  ],
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

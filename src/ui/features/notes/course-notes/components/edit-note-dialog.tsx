@@ -1,7 +1,7 @@
 import { NoteModel } from "@/src/core/notes/domain/models/note-model";
 import {
   InputFormField,
-  TextareaFormField,
+  WysiwygFormField,
 } from "@/src/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/ui/components/form/form-submit-button";
@@ -82,7 +82,7 @@ export function EditNoteDialog({
                 placeholder="La pregunta o concepto que quieres recordar"
               />
               <div className="h-4" />
-              <TextareaFormField
+              <WysiwygFormField
                 label="Revés"
                 name="back"
                 placeholder="La respuesta, definición o explicación"

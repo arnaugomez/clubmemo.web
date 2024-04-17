@@ -34,12 +34,12 @@ export function CourseNotesEmptyState({
       </p>
       <div className="h-8"></div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
-            <SquarePen className="size-8 mx-auto text-slate-500" />
+            <SquarePen className="mx-auto size-8 text-slate-500" />
             <div className="h-1"></div>
-            <CardTitle className="text-center truncate">Manualmente</CardTitle>
+            <CardTitle className="truncate text-center">Manualmente</CardTitle>
             <div className="h-2"></div>
             <CardDescription className="text-center">
               Añade y edita tus tarjetas con el editor de texto avanzado.
@@ -55,9 +55,9 @@ export function CourseNotesEmptyState({
         </Card>
         <Card>
           <CardHeader>
-            <Sparkles className="size-8 mx-auto text-slate-500" />
+            <Sparkles className="mx-auto size-8 text-slate-500" />
             <div className="h-1"></div>
-            <CardTitle className="text-center truncate">Generador AI</CardTitle>
+            <CardTitle className="truncate text-center">Generador AI</CardTitle>
             <div className="h-2"></div>
             <CardDescription className="text-center">
               Sube tus apuntes en formato texto o PDF y deja que nuestra
@@ -75,12 +75,12 @@ export function CourseNotesEmptyState({
         </Card>
         <Card className="sm:col-span-2">
           <CardHeader>
-            <Upload className="size-8 mx-auto text-slate-500" />
+            <Upload className="mx-auto size-8 text-slate-500" />
             <div className="h-1"></div>
 
             <CardTitle className="text-center">Importar archivo</CardTitle>
             <div className="h-2"></div>
-            <CardDescription className="text-center max-w-sm mx-auto">
+            <CardDescription className="mx-auto max-w-sm text-center">
               Importa tarjetas de otras plataformas con un solo clic. Soportamos
               varios formatos: CSV, JSON, Anki...
             </CardDescription>

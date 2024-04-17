@@ -19,10 +19,10 @@ export function PracticeWizardFinish({ course }: PracticeWizardFinishProps) {
     return <PracticeLoadingPage />;
   }
   return (
-    <div className="size-full flex flex-col items-center justify-center px-4">
-      <PartyPopper className="size-8 text-primary-500" />
+    <div className="flex size-full flex-col items-center justify-center px-4">
+      <PartyPopper className="text-primary-500 size-8" />
       <div className="h-3"></div>
-      <p className={cn(textStyles.base, "text-center max-w-md")}>
+      <p className={cn(textStyles.base, "max-w-md text-center")}>
         Práctica completada
       </p>
       <div className="h-6"></div>
@@ -33,7 +33,7 @@ export function PracticeWizardFinish({ course }: PracticeWizardFinishProps) {
           </Button>
         </div>
       )}
-      <div className="w-full flex max-w-sm space-x-3">
+      <div className="flex w-full max-w-sm space-x-3">
         <Button variant="link" className="flex-1">
           <Link href={`/courses/detail/${course.id}`}>Volver al curso</Link>
         </Button>

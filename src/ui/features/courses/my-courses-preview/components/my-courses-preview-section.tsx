@@ -52,7 +52,7 @@ async function MyCoursesResultsSection() {
         {results.map((course) => (
           <TableRow key={course.courseId}>
             <TableCell
-              className={cn(textStyles.small, "hover:underline truncate")}
+              className={cn(textStyles.small, "truncate hover:underline")}
             >
               <Link href={`/courses/detail/${course.courseId}`}>
                 {course.name}

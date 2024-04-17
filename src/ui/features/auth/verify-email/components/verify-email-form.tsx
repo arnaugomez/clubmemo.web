@@ -53,7 +53,7 @@ export function VerifyEmailForm() {
         <div className="h-2" />
         <FormGlobalErrorMessage />
         <div className="h-6" />
-        <div className="flex space-x-6 justify-between">
+        <div className="flex justify-between space-x-6">
           <AsyncButton
             type="button"
             onClick={() => logoutAction()}

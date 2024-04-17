@@ -41,7 +41,7 @@ export function EditProfileSection({ profileData }: EditProfileSectionProps) {
   return (
     <>
       <Button onClick={() => setIsOpen(true)} variant="secondary">
-        <Edit2 className="size-4 mr-3" /> Editar
+        <Edit2 className="mr-3 size-4" /> Editar
       </Button>
       {isOpen && (
         <EditProfileDialog onClose={() => setIsOpen(false)} profile={profile} />

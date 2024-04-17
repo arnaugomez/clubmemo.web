@@ -7,7 +7,7 @@ import Link from "next/link";
 export function LandingHero() {
   return (
     <div className="py-24 md:py-36">
-      <h1 className={cn(textStyles.h1, "text-center px-8")}>
+      <h1 className={cn(textStyles.h1, "px-8 text-center")}>
         Olvídate de memorizar
       </h1>
       <div className="h-12" />
@@ -20,7 +20,7 @@ export function LandingHero() {
 
 function HeroSteps() {
   return (
-    <div className="mx-auto px-8 flex flex-col space-y-4 w-fit">
+    <div className="mx-auto flex w-fit flex-col space-y-4 px-8">
       <HeroStep text="Sube tus apuntes" icon={<FileUp />} />
       <HeroStep text="Genera flashcards con A.I." icon={<Layers />} />
       <HeroStep
@@ -47,7 +47,7 @@ function HeroStep({ text, icon }: HeroStepViewModel) {
 
 function HeroButtons() {
   return (
-    <div className="mx-auto px-8 flex space-x-8 w-fit">
+    <div className="mx-auto flex w-fit space-x-8 px-8">
       <Button variant="ghost" asChild>
         <Link href="/auth/login">Login</Link>
       </Button>

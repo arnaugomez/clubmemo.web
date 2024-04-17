@@ -10,10 +10,10 @@ interface PracticeEmptyStateProps {
 
 export function PracticeEmptyState({ courseId }: PracticeEmptyStateProps) {
   return (
-    <div className="size-full flex flex-col items-center justify-center px-4">
-      <PartyPopper className="size-8 text-primary-500" />
+    <div className="flex size-full flex-col items-center justify-center px-4">
+      <PartyPopper className="text-primary-500 size-8" />
       <div className="h-3"></div>
-      <p className={cn(textStyles.base, "text-center max-w-md")}>
+      <p className={cn(textStyles.base, "max-w-md text-center")}>
         No hay tarjetas pendientes de practicar para este curso. Ve a la sección
         &quot;Aprender&quot; para practicar otros cursos.
       </p>

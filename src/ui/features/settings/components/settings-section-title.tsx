@@ -8,7 +8,7 @@ export function SettingsSectionTitle({ children }: PropsWithChildren) {
       <h2
         className={cn(
           textStyles.h3,
-          "border-b-[1px] text-slate-600 border-b-slate-300",
+          "border-b-[1px] border-b-slate-300 text-slate-600",
         )}
       >
         {children}

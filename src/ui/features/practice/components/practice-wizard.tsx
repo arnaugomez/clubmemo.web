@@ -57,7 +57,7 @@ interface PracticeWizardContentProps {
 function PracticeWizardContent(props: PracticeWizardContentProps) {
   const { currentCard } = usePracticeContext();
   return (
-    <div className="size-full flex flex-col">
+    <div className="flex size-full flex-col">
       <PracticeProgress />
       {currentCard ? (
         <PracticeCardSection note={currentCard.note} course={props.course} />
@@ -77,17 +77,17 @@ function PracticeCardSection({ note, course }: PracticeCardSectionProps) {
   const [showBack, setShowBack] = useState(false);
   if (!course.enrollment) throw new NullError("course.enrollment");
   return (
-    <div className="size-full flex flex-col">
+    <div className="flex size-full flex-col">
       <div className="flex-1 overflow-y-auto">
         <div className="px-4 py-8">
           <div
-            className={cn(textStyles.base, "font-medium mx-auto max-w-sm")}
+            className={cn(textStyles.base, "mx-auto max-w-sm font-medium")}
             dangerouslySetInnerHTML={{ __html: note.front }}
           ></div>
         </div>
 
         {showBack && (
-          <div className="px-4 py-8 border-t-[1px] border-t-slate-200">
+          <div className="border-t-[1px] border-t-slate-200 px-4 py-8">
             <div
               className={cn(textStyles.base, "mx-auto max-w-sm")}
               dangerouslySetInnerHTML={{ __html: note.back }}

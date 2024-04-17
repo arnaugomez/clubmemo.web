@@ -24,7 +24,7 @@ export function FavoriteCourseCard({ course }: FavoriteCourseCardProps) {
         )}
       </div>
       <div className="p-3">
-        <h3 className={cn(textStyles.h4, "hover:underline truncate")}>
+        <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
           <Link href={`/courses/detail/${course.courseId}`}>{course.name}</Link>
         </h3>
         <div className="h-.5"></div>
@@ -40,7 +40,7 @@ function FavoriteCourseCardPracticeSection({
   if (!course.shouldPractice) {
     return (
       <span className={cn(textStyles.muted, "")}>
-        <Check className="size-4 inline mr-1 -translate-y-[1px]" /> Práctica
+        <Check className="mr-1 inline size-4 -translate-y-[1px]" /> Práctica
         terminada
       </span>
     );

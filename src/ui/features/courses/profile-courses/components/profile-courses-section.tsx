@@ -51,7 +51,7 @@ async function ProfileCoursesContent({
 // TODO: create reusable component (also used in discover section)
 function ProfileCoursesEmptyState() {
   return (
-    <div className="h-64 flex flex-col items-center justify-center">
+    <div className="flex h-64 flex-col items-center justify-center">
       <SearchX className="size-6 text-slate-500" />
       <div className="h-3"></div>
       <p className={textStyles.muted}>No hay resultados</p>
