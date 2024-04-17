@@ -6,8 +6,6 @@ export interface NoteDoc {
   courseId: ObjectId;
   front: string;
   back: string;
-  frontText: string;
-  backText: string;
   createdAt: Date;
 }
 
@@ -21,8 +19,6 @@ export class NoteDocTransformer {
       courseId: this.doc.courseId.toHexString(),
       front: this.doc.front,
       back: this.doc.back,
-      frontText: this.doc.frontText,
-      backText: this.doc.backText,
       createdAt: this.doc.createdAt,
     });
   }
