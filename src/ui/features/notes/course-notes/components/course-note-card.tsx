@@ -19,16 +19,16 @@ export function CourseNoteCard({
   onEdit,
 }: CourseNoteCardProps) {
   return (
-    <Card className="h-32 flex flex-col items-stretch overflow-clip">
-      <div className="flex-1 flex items-center px-4 space-x-3">
-        <h3 className="flex-1 truncate font-medium">{note.front}</h3>
+    <Card className="flex h-32 flex-col items-stretch overflow-clip">
+      <div className="flex flex-1 items-center space-x-3 px-4">
+        <h3 className="flex-1 truncate font-medium">{note.frontText}</h3>
         <EditNoteButton note={note} onSuccess={onEdit} />
 
         <DeleteNoteButton note={note} onSuccess={onDelete} />
       </div>
       <Separator />
-      <div className="flex-1 flex items-center px-4">
-        <p className="truncate flex-1">{note.back || "Tarjeta sin "}</p>
+      <div className="flex flex-1 items-center px-4">
+        <p className="flex-1 truncate">{note.backText || "Sin contenido"}</p>
       </div>
     </Card>
   );

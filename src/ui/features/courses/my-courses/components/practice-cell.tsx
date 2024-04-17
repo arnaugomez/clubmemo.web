@@ -33,7 +33,7 @@ export function PracticeCell({ courseData }: PracticeCellProps) {
       );
 
     return (
-      <div className="text-slate-700 h-9 grid place-content-center">
+      <div className="grid h-9 place-content-center text-slate-700">
         <Check className="size-5" />
       </div>
     );

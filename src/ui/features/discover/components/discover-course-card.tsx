@@ -20,7 +20,7 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
         )}
       </div>
       <div className="p-3">
-        <h3 className={cn(textStyles.h4, "hover:underline truncate")}>
+        <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
           <Link href={`/courses/detail/${course.id}`}>{course.name}</Link>
         </h3>
         <div className="h-1"></div>
@@ -30,12 +30,12 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
         <div className="h-1"></div>
         <DiscoverCourseCardTags tags={course.tags} />
         <div className="h-4"></div>
-        <div className="flex space-x-3 justify-end">
+        <div className="flex justify-end space-x-3">
           <Button size="sm" variant={"secondary"}>
             <Link href={`/courses/detail/${course.id}`}>Ver</Link>
           </Button>
           <Button size="sm">
-            <Plus className="size-5 mr-2" />
+            <Plus className="mr-2 size-5" />
             <Link href={`/courses/detail/${course.id}`}>Unirme</Link>
           </Button>
         </div>

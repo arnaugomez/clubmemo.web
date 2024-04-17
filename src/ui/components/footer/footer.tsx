@@ -5,7 +5,7 @@ import { Button } from "../shadcn/ui/button";
 
 export function Footer() {
   return (
-    <footer className="py-16 sm:py-24 px-8">
+    <footer className="px-8 py-16 sm:py-24">
       <p className={cn(textStyles.p, "text-center text-slate-600")}>
         <span className={cn(textStyles.logo)}>clubmemo </span> es un proyecto de
         Arnau Gómez
@@ -24,7 +24,7 @@ export function Footer() {
         </a>
       </p>
       <div className="h-4" />
-      <div className="flex space-x-4 justify-center text-muted-foreground">
+      <div className="flex justify-center space-x-4 text-muted-foreground">
         <Button variant="ghost" size="icon" asChild>
           <a href="https://github.com/arnaugomez/clubmemo.web">
             <Github />

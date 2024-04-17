@@ -7,15 +7,15 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="sm:flex sm:h-screen divide-slate-300 md:divide-x-[1px]">
-      <div className="gradient-animation flex-1 hidden md:block">
+    <main className="divide-slate-300 sm:flex sm:h-screen md:divide-x-[1px]">
+      <div className="gradient-animation hidden flex-1 md:block">
         <Logo />
       </div>
-      <div className="flex-1 relative sm:overflow-y-auto sm:flex">
-        <div className="md:hidden absolute">
+      <div className="relative flex-1 sm:flex sm:overflow-y-auto">
+        <div className="absolute md:hidden">
           <Logo />
         </div>
-        <div className="py-8 px-6 my-auto w-full">
+        <div className="my-auto w-full px-6 py-8">
           <div className="mx-auto max-w-80">
             <div className="h-28 sm:hidden" />
             {children}

@@ -21,7 +21,7 @@ export default async function DiscoverPage({
         <div className="mx-auto max-w-3xl">
           <h1 className={cn(textStyles.h2)}>
             {/* TODO: add cool animation to compass icon when page starts */}
-            <Compass className="inline size-8 -translate-y-1 mr-3" />
+            <Compass className="mr-3 inline size-8 -translate-y-1" />
             Explorar cursos
           </h1>
           <div className="h-8" />
@@ -52,7 +52,7 @@ async function DiscoverPageContent({ query }: DiscoverPageContentProps) {
 }
 function DiscoverEmptyState() {
   return (
-    <div className="h-64 flex flex-col items-center justify-center">
+    <div className="flex h-64 flex-col items-center justify-center">
       <SearchX className="size-6 text-slate-500" />
       <div className="h-3"></div>
       <p className={textStyles.muted}>No hay resultados</p>

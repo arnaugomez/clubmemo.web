@@ -58,7 +58,7 @@ export function ForgotPasswordForm() {
             autoComplete="email"
           />
           <FormGlobalErrorMessage />
-          <div className="flex space-x-6 justify-between">
+          <div className="flex justify-between space-x-6">
             <Button variant="ghost" asChild>
               <Link href="/auth/login">Login</Link>
             </Button>

@@ -20,19 +20,19 @@ export async function CourseDetailAuthorsSection({
   const authorsRepository = await locator.CourseAuthorsRepository();
   const authors = await authorsRepository.get(course.id);
   return (
-    <section className="px-4 pt-6 border-t-[1px] border-t-slate-200">
-      <h2 className={cn(textStyles.muted, "uppercase font-medium")}>Autores</h2>
+    <section className="border-t-[1px] border-t-slate-200 px-4 pt-6">
+      <h2 className={cn(textStyles.muted, "font-medium uppercase")}>Autores</h2>
       <div className="h-4" />
       {authors.map((author) => (
         <div className="pb-3" key={author.profileId + author.permissionType}>
-          <div className="w-full flex space-x-3 items-center py-1">
+          <div className="flex w-full items-center space-x-3 py-1">
             <Avatar className="flex-none">
               <AvatarImage src={author.picture} alt="Imagen de perfil" />
               <AvatarFallback className="text-slate-500 hover:bg-slate-200">
                 <User />
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="h-1" />
               <h3 className={cn(textStyles.small, "truncate")}>
                 <Link

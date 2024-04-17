@@ -1,4 +1,9 @@
 "use client";
+import { NullError } from "@/src/core/common/domain/models/app-errors";
+import {
+  CourseEnrollmentModel,
+  CourseEnrollmentModelData,
+} from "@/src/core/courses/domain/models/course-enrollment-model";
 import {
   CourseModel,
   CourseModelData,
@@ -19,11 +24,6 @@ import { TaskQueueProvider } from "../contexts/task-queue-context";
 import { PracticeActionsBar } from "./practice-actions-bar";
 import { PracticeProgress } from "./practice-progress";
 import { PracticeWizardFinish } from "./practice-wizard-finish";
-import { NullError } from "@/src/core/common/domain/models/app-errors";
-import {
-  CourseEnrollmentModel,
-  CourseEnrollmentModelData,
-} from "@/src/core/courses/domain/models/course-enrollment-model";
 
 interface PracticeWizardProps {
   courseData: CourseModelData;
@@ -57,7 +57,7 @@ interface PracticeWizardContentProps {
 function PracticeWizardContent(props: PracticeWizardContentProps) {
   const { currentCard } = usePracticeContext();
   return (
-    <div className="size-full flex flex-col">
+    <div className="flex size-full flex-col">
       <PracticeProgress />
       {currentCard ? (
         <PracticeCardSection note={currentCard.note} course={props.course} />
@@ -77,19 +77,21 @@ function PracticeCardSection({ note, course }: PracticeCardSectionProps) {
   const [showBack, setShowBack] = useState(false);
   if (!course.enrollment) throw new NullError("course.enrollment");
   return (
-    <div className="size-full flex flex-col">
+    <div className="flex size-full flex-col">
       <div className="flex-1 overflow-y-auto">
         <div className="px-4 py-8">
-          <div className={cn(textStyles.base, "font-medium mx-auto max-w-sm")}>
-            {note.front}
-          </div>
+          <div
+            className={cn(textStyles.base, "mx-auto max-w-sm font-medium")}
+            dangerouslySetInnerHTML={{ __html: note.front }}
+          ></div>
         </div>
 
         {showBack && (
-          <div className="px-4 py-8 border-t-[1px] border-t-slate-200">
-            <div className={cn(textStyles.base, "mx-auto max-w-sm")}>
-              {note.back}
-            </div>
+          <div className="border-t-[1px] border-t-slate-200 px-4 py-8">
+            <div
+              className={cn(textStyles.base, "mx-auto max-w-sm")}
+              dangerouslySetInnerHTML={{ __html: note.back }}
+            ></div>
           </div>
         )}
       </div>

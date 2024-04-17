@@ -13,7 +13,7 @@ export function FavoriteCoursesSection() {
         <div className="mx-auto max-w-prose">
           <h2 className={cn(textStyles.h3, "mx-auto max-w-prose")}>
             Destacados
-            <BookmarkCheck className="inline size-6 -translate-y-[2px] ml-2" />
+            <BookmarkCheck className="ml-2 inline size-6 -translate-y-[2px]" />
           </h2>
           <div className="h-4" />
           <Suspense fallback={<FavoriteCoursesLoadingSection />}>
@@ -31,7 +31,7 @@ async function FavoriteCoursesContent() {
     return <FavoriteCoursesEmptyState />;
   }
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
       {results.map((course) => (
         <FavoriteCourseCard key={course.courseId} course={course} />
       ))}
@@ -41,17 +41,17 @@ async function FavoriteCoursesContent() {
 
 function FavoriteCoursesLoadingSection() {
   return (
-    <div className="h-48 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="grid h-48 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
       <Skeleton className="h-48 rounded-lg" />
       <Skeleton className="h-48 rounded-lg" />
-      <Skeleton className="h-48 hidden md:block rounded-lg" />
+      <Skeleton className="hidden h-48 rounded-lg md:block" />
     </div>
   );
 }
 
 function FavoriteCoursesEmptyState() {
   return (
-    <div className="h-28 flex flex-col items-center justify-center">
+    <div className="flex h-28 flex-col items-center justify-center">
       <BookmarkX className="size-6 text-slate-500" />
       <div className="h-3"></div>
       <p className={textStyles.muted}>No hay resultados</p>

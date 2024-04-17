@@ -13,14 +13,14 @@ import Link from "next/link";
 export function LandingAdvantagesSection() {
   return (
     <div className="border-y-[1px] border-slate-200 bg-slate-100 py-16">
-      <h2 className={cn(textStyles.h2, "text-center px-8")}>
+      <h2 className={cn(textStyles.h2, "px-8 text-center")}>
         ¿Por qué clubmemo es tan eficiente?
       </h2>
       <div className="h-4" />
       <p
         className={cn(
           textStyles.base,
-          "mx-auto px-8 text-center max-w-prose mt-0",
+          "mx-auto mt-0 max-w-prose px-8 text-center",
         )}
       >
         Clubmemo es más eficiente que leer tus apuntes. Su método se apoya en 3
@@ -31,12 +31,12 @@ export function LandingAdvantagesSection() {
       <LandingAdvantageCards />
       <div className="h-16" />
       <p
-        className={cn(textStyles.muted, "mx-auto px-8 text-center max-w-prose")}
+        className={cn(textStyles.muted, "mx-auto max-w-prose px-8 text-center")}
       >
         Crea tu usuario en menos de 1 minuto
       </p>
       <div className="h-6" />
-      <div className="mx-auto px-8 flex space-x-8 w-fit">
+      <div className="mx-auto flex w-fit space-x-8 px-8">
         <Button asChild>
           <Link href="/auth/signup">Crear cuenta</Link>
         </Button>
@@ -73,7 +73,7 @@ function LandingAdvantageCards() {
     },
   ];
   return (
-    <div className="flex flex-col md:flex-row w-fit mx-auto space-y-8 md:space-y-0 md:space-x-8 px-8">
+    <div className="mx-auto flex w-fit flex-col space-y-8 px-8 md:flex-row md:space-x-8 md:space-y-0">
       {advantages.map((advantage, index) => (
         <LandingAdvantageCard key={index} {...advantage} />
       ))}
@@ -88,7 +88,7 @@ function LandingAdvantageCard({
 }: LandingAdvantageCardViewModel) {
   return (
     <Card className="max-w-80 flex-1">
-      <div className="pt-10 px-6">
+      <div className="px-6 pt-10">
         <div className="mx-auto w-fit">{icon}</div>
       </div>
       <CardHeader>

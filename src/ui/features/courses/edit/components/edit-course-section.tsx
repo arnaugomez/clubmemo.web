@@ -42,7 +42,7 @@ export function CourseDetailEditSection({
   return (
     <>
       <Button onClick={() => setIsOpen(true)} variant="outline">
-        <Edit2 className="size-4 mr-3" /> Editar
+        <Edit2 className="mr-3 size-4" /> Editar
       </Button>
       {isOpen && (
         <EditCourseDialog onClose={() => setIsOpen(false)} course={course} />

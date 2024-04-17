@@ -10,6 +10,7 @@ import { FileInput } from "../input/file-input";
 import { PasswordInput } from "../input/password-input";
 import { SliderInput } from "../input/slider-input";
 import TagsInput from "../input/tags-input";
+import { WysiwygInput } from "../input/wysiwyg-input";
 import {
   FormControl,
   FormDescription,
@@ -153,6 +154,42 @@ export function TextareaFormField({
   );
 }
 
+interface WysiwygFormFieldProps {
+  name: string;
+  label: string;
+  placeholder?: string;
+  isSmall?: boolean;
+}
+
+export function WysiwygFormField({
+  label,
+  name,
+  placeholder,
+  isSmall,
+}: WysiwygFormFieldProps) {
+  return (
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <WysiwygInput
+              id={field.name}
+              onChange={field.onChange}
+              name={field.name}
+              value={field.value}
+              placeholder={placeholder}
+              isSmall={isSmall}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
 interface SwitchSectionFormFieldProps {
   name: string;
   label: string;
@@ -168,7 +205,7 @@ export function SwitchSectionFormField({
     <FormField
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 space-x-4">
+        <FormItem className="flex flex-row items-center justify-between space-x-4 rounded-lg border p-4">
           <div className="space-y-0.5">
             <FormLabel className="text-base">{label}</FormLabel>
             <FormDescription>{description}</FormDescription>
