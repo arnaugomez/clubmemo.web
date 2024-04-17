@@ -164,7 +164,7 @@ export function WysiwygFormField({
   label,
   name,
   placeholder,
-}: TextareaFormFieldProps) {
+}: WysiwygFormFieldProps) {
   return (
     <FormField
       name={name}
