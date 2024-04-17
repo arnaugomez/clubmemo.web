@@ -1,8 +1,9 @@
 import {
   PaginationFacet,
   PaginationFacetTransformer,
-} from "@/src/core/common/data/services/facets/pagination-facet";
+} from "@/src/core/common/data/facets/pagination-facet";
 import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
+import { SanitizeHtmlService } from "@/src/core/common/domain/interfaces/sanitize-html-service";
 import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
 import { ObjectId, WithId } from "mongodb";
 import { NotesRepository } from "../../domain/interfaces/notes-repository";
@@ -21,7 +22,10 @@ import {
 export class NotesRepositoryImpl implements NotesRepository {
   private readonly notes: typeof notesCollection.type;
 
-  constructor(mongoService: MongoService) {
+  constructor(
+    mongoService: MongoService,
+    private readonly sanitizeHtmlService: SanitizeHtmlService,
+  ) {
     this.notes = mongoService.collection(notesCollection);
   }
   copyAcrossCourses() {
@@ -29,9 +33,8 @@ export class NotesRepositoryImpl implements NotesRepository {
   }
   async create(note: CreateNoteInputModel): Promise<NoteModel> {
     const newNote = {
+      ...this.createSanitizedNoteAttributes(note),
       courseId: new ObjectId(note.courseId),
-      front: note.front,
-      back: note.back,
       createdAt: new Date(),
     } as WithId<NoteDoc>;
     await this.notes.insertOne(newNote);
@@ -47,10 +50,7 @@ export class NotesRepositoryImpl implements NotesRepository {
     await this.notes.updateOne(
       { _id: new ObjectId(note.id) },
       {
-        $set: {
-          front: note.front,
-          back: note.back,
-        },
+        $set: this.createSanitizedNoteAttributes(note),
       },
     );
   }
@@ -134,13 +134,23 @@ export class NotesRepositoryImpl implements NotesRepository {
 
     const newNotes = notes.map((note) => {
       now.setSeconds(now.getSeconds() + 1);
-      return {
-        ...note,
+      const newNote: NoteDoc = {
         courseId,
         createdAt: new Date(now),
-      } as WithId<NoteDoc>;
+        ...this.createSanitizedNoteAttributes(note),
+      };
+      return newNote as WithId<NoteDoc>;
     });
     await this.notes.insertMany(newNotes);
     return newNotes.map((note) => new NoteDocTransformer(note).toDomain());
+  }
+
+  private createSanitizedNoteAttributes(note: { front: string; back: string }) {
+    return {
+      front: this.sanitizeHtmlService.sanitize(note.front),
+      back: this.sanitizeHtmlService.sanitize(note.back),
+      frontText: this.sanitizeHtmlService.getText(note.front),
+      backText: this.sanitizeHtmlService.getText(note.back),
+    };
   }
 }
