@@ -9,13 +9,13 @@ import { cn } from "@/src/ui/utils/shadcn";
 
 export function LandingFaq() {
   return (
-    <div className="pt-32 pb-16">
-      <h2 className={cn(textStyles.h2, "text-center px-8")}>
+    <div className="pb-16 pt-32">
+      <h2 className={cn(textStyles.h2, "px-8 text-center")}>
         Preguntas frecuentes
       </h2>
       <div className="h-8"></div>
       <div className="px-8">
-        <div className="max-w-prose mx-auto">
+        <div className="mx-auto max-w-prose">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
               <AccordionTrigger>

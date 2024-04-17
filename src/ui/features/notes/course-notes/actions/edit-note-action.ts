@@ -19,13 +19,13 @@ export async function editNoteAction(data: EditNoteActionModel) {
     if (!profile) throw new ProfileDoesNotExistError();
 
     const updateNoteUseCase = await notesLocator.UpdateNoteUseCase();
-    await updateNoteUseCase.execute({
+    const newNote = await updateNoteUseCase.execute({
       updateNoteInput: values,
       profileId: profile.id,
     });
 
     revalidatePath("/courses/detail");
-    return ActionResponse.formSuccess(null);
+    return ActionResponse.formSuccess(newNote?.data);
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");

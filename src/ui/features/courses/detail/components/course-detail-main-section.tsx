@@ -19,7 +19,7 @@ export async function CourseDetailMainSection({
     <>
       <div className="h-4" />
       <div className="px-4">
-        <div className="relative bg-slate-200 rounded-xl h-40 sm:h-52 lg:h-64 overflow-hidden">
+        <div className="relative h-40 overflow-hidden rounded-xl bg-slate-200 sm:h-52 lg:h-64">
           {course.picture && <Image fill src={course.picture} alt="" />}
           <CourseDetailActionsSection course={course} />
         </div>

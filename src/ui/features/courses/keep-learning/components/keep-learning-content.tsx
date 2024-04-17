@@ -15,14 +15,14 @@ export async function KeepLearningContent() {
   const course = await coursesRepository.getKeepLearning(profile.id);
   if (!course) return <KeepLearningEmptyState />;
   return (
-    <Card className="h-64 sm:h-40 flex flex-col sm:flex-row overflow-clip">
-      <div className="flex-none sm:w-56 relative h-28 sm:h-full bg-slate-300">
+    <Card className="flex h-64 flex-col overflow-clip sm:h-40 sm:flex-row">
+      <div className="relative h-28 flex-none bg-slate-300 sm:h-full sm:w-56">
         {course.picture && (
           <Image src={course.picture} layout="fill" alt="" objectFit="cover" />
         )}
       </div>
-      <div className="flex-1 p-3 min-w-0">
-        <h3 className={cn(textStyles.h4, "hover:underline truncate")}>
+      <div className="min-w-0 flex-1 p-3">
+        <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
           <Link href={`/courses/detail/${course.courseId}`}>{course.name}</Link>
         </h3>
         <div className="h-1"></div>
@@ -36,7 +36,7 @@ export async function KeepLearningContent() {
         <div className="h-3 sm:h-6"></div>
         <Button className="w-full" size="sm" asChild>
           <Link href={`/courses/detail/${course.courseId}/practice`}>
-            <Play className="size-4 mr-2" />
+            <Play className="mr-2 size-4" />
             Practicar
           </Link>
         </Button>
@@ -47,14 +47,14 @@ export async function KeepLearningContent() {
 
 function KeepLearningEmptyState() {
   return (
-    <section className="h-64 sm:h-40 flex flex-col justify-center items-center rounded-xl bg-slate-100 border-2 border-dashed border-slate-400 px-4">
+    <section className="flex h-64 flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-400 bg-slate-100 px-4 sm:h-40">
       <PartyPopper className="size-8 text-slate-700" />
       <div className="h-2"></div>
-      <h2 className={cn(textStyles.h3, "text-lg text-center")}>
+      <h2 className={cn(textStyles.h3, "text-center text-lg")}>
         ¡Enhorabuena! Práctica terminada.
       </h2>
       <div className="h-2"></div>
-      <p className={cn(textStyles.muted, "text-xs text-center max-w-sm")}>
+      <p className={cn(textStyles.muted, "max-w-sm text-center text-xs")}>
         Ya has terminado por hoy. Tómate un descanso o añade nuevos cursos y
         tarjetas para seguir aprendiendo.
       </p>

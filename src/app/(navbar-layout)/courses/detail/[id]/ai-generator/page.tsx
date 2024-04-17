@@ -34,7 +34,7 @@ export default async function CourseAiGeneratorPage({
       <div className="px-4">
         <div className="mx-auto max-w-prose">
           <h1 className={textStyles.h2}>
-            <Sparkles className="inline size-8 -translate-y-1 mr-3" />
+            <Sparkles className="mr-3 inline size-8 -translate-y-1" />
             Generador AI
           </h1>
           <div className="h-4"></div>

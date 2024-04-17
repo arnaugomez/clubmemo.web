@@ -59,8 +59,8 @@ export function GenerateAiNotesPreview({
             key={"note" + index}
             className="flex flex-col items-stretch overflow-clip"
           >
-            <div className="flex-1 flex px-4 py-3 space-x-3">
-              <h3 className="flex-1 font-medium py-2">{note.front}</h3>
+            <div className="flex flex-1 space-x-3 px-4 py-3">
+              <h3 className="flex-1 py-2 font-medium">{note.front}</h3>
               <Button
                 onClick={() => onRemove(index)}
                 size="icon"
@@ -70,7 +70,7 @@ export function GenerateAiNotesPreview({
               </Button>
             </div>
             <Separator />
-            <div className="flex-1 flex  px-4 py-5">
+            <div className="flex flex-1  px-4 py-5">
               <p className="flex-1">{note.back || "Tarjeta sin contenido"}</p>
             </div>
           </Card>

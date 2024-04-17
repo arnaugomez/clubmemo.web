@@ -10,7 +10,7 @@ import { NavbarUserSection } from "./navbar-user-section";
 export function Navbar() {
   return (
     <header className="h-16 flex-none">
-      <nav className="fixed top-0 inset-x-0 h-16 flex justify-between items-center px-6 border-slate-200 border-b-[1px] bg-white z-10">
+      <nav className="fixed inset-x-0 top-0 z-10 flex h-16 items-center justify-between border-b-[1px] border-slate-200 bg-white px-6">
         <span className={cn(textStyles.logo, "text-slate-700")}>
           <Suspense fallback="clubmemo">
             <NavbarTitle />

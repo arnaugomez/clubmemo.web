@@ -24,7 +24,7 @@ export function CourseNotesSection({ course }: CourseNotesSectionProps) {
           <div className="mx-auto max-w-prose">
             <div className="flex items-center space-x-2">
               <h2
-                className={cn(textStyles.h2, "text-slate-700 flex-1 truncate")}
+                className={cn(textStyles.h2, "flex-1 truncate text-slate-700")}
               >
                 Tarjetas de aprendizaje
               </h2>

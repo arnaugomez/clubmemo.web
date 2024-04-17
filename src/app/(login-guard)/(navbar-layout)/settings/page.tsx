@@ -24,11 +24,11 @@ function SettingsPageLoaded({ user }: SettingsPageLoadedProps) {
       <div className="h-24" />
       <div className="px-4">
         <div className="mx-auto max-w-prose">
-          <div className="sm:flex justify-between items-baseline">
+          <div className="items-baseline justify-between sm:flex">
             <h1 className={cn(textStyles.h2)}>Ajustes</h1>
             <div className="h-4" />
             <p className={cn(textStyles.p, "italic")}>
-              <User size={17} className="inline mr-1 mb-[1px]" />
+              <User size={17} className="mb-[1px] mr-1 inline" />
               {user.email}
             </p>
           </div>

@@ -1,7 +1,7 @@
 import {
   PaginationFacet,
   PaginationFacetTransformer,
-} from "@/src/core/common/data/services/facets/pagination-facet";
+} from "@/src/core/common/data/facets/pagination-facet";
 import { DateTimeService } from "@/src/core/common/domain/interfaces/date-time-service";
 import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";

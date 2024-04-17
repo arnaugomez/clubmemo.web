@@ -14,7 +14,7 @@ export default async function LearnPage() {
       <div className="px-4">
         <div className="mx-auto max-w-prose">
           <h1 className={cn(textStyles.h2, "")}>
-            <GraduationCap className="inline size-8 -translate-y-1 mr-3" />
+            <GraduationCap className="mr-3 inline size-8 -translate-y-1" />
             Aprender
           </h1>
         </div>
