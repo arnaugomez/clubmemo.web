@@ -19,7 +19,6 @@ import { DateTimeService } from "./domain/interfaces/date-time-service";
 import { EmailService } from "./domain/interfaces/email-service";
 import { EnvService } from "./domain/interfaces/env-service";
 import { MongoService } from "./domain/interfaces/mongo-service";
-import { SanitizeHtmlService } from "./domain/interfaces/sanitize-html-service";
 
 export type Dependency<T> = () => T;
 export type Lazy<T> = () => Promise<T>;
@@ -29,7 +28,6 @@ interface Locator {
   MongoService: Dependency<MongoService>;
   EmailService: Lazy<EmailService>;
   DateTimeService: Lazy<DateTimeService>;
-  SanitizeHtmlService: Lazy<SanitizeHtmlService>;
 
   // Auth
   AuthService: Dependency<AuthService>;
@@ -71,11 +69,6 @@ export const locator: Locator = {
   DateTimeService: singleton(() =>
     import("./data/services/date-time-service-impl").then(
       (file) => new file.DateTimeServiceImpl(),
-    ),
-  ),
-  SanitizeHtmlService: singleton(() =>
-    import("./data/services/sanitize-html-service-impl").then(
-      (file) => new file.SanitizeHtmlServiceImpl(),
     ),
   ),
 
@@ -143,10 +136,7 @@ export const locator: Locator = {
     const file = await import(
       "../notes/data/repositories/notes-repository-impl"
     );
-    return new file.NotesRepositoryImpl(
-      this.MongoService(),
-      await this.SanitizeHtmlService(),
-    );
+    return new file.NotesRepositoryImpl(this.MongoService());
   },
   // Ai Generator
   async AiNotesGeneratorService() {
