@@ -1,7 +1,8 @@
 import Placeholder from "@tiptap/extension-placeholder";
+import Underline from "@tiptap/extension-underline";
 import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Bold, Italic, Strikethrough } from "lucide-react";
+import { Bold, Italic, Strikethrough, UnderlineIcon } from "lucide-react";
 import { cn } from "../../utils/shadcn";
 import { Card } from "../shadcn/ui/card";
 import { Toggle } from "../shadcn/ui/toggle";
@@ -34,7 +35,7 @@ export function WysiwygInput({
         ),
       },
     },
-    extensions: [StarterKit, Placeholder.configure({ placeholder })],
+    extensions: [StarterKit, Underline, Placeholder.configure({ placeholder })],
     content: value,
     onUpdate({ editor }) {
       onChange(editor.getHTML());
@@ -52,7 +53,7 @@ export function WysiwygInput({
               pressed={editor.isActive("bold")}
               aria-label="Negrita"
             >
-              <Bold className="h-4 w-4" />
+              <Bold className="size-4" />
             </Toggle>
             <Toggle
               type="button"
@@ -62,7 +63,17 @@ export function WysiwygInput({
               pressed={editor.isActive("italic")}
               aria-label="Cursiva"
             >
-              <Italic className="h-4 w-4" />
+              <Italic className="size-4" />
+            </Toggle>
+            <Toggle
+              type="button"
+              onPressedChange={() =>
+                editor.chain().focus().toggleUnderline().run()
+              }
+              pressed={editor.isActive("strike")}
+              aria-label="Rayado"
+            >
+              <UnderlineIcon className="size-4" />
             </Toggle>
             <Toggle
               type="button"
@@ -72,8 +83,28 @@ export function WysiwygInput({
               pressed={editor.isActive("strike")}
               aria-label="Rayado"
             >
-              <Strikethrough className="h-4 w-4" />
+              <Strikethrough className="size-4" />
             </Toggle>
+            {/* <Toggle
+              type="button"
+              onPressedChange={() =>
+                editor.chain().focus().toggleBulletList().run()
+              }
+              pressed={editor.isActive("list")}
+              aria-label="Lista de puntos"
+            >
+              <List className="size-4" />
+            </Toggle>
+            <Toggle
+              type="button"
+              onPressedChange={() =>
+                editor.chain().focus().toggleOrderedList().run()
+              }
+              pressed={editor.isActive("list")}
+              aria-label="Lista numerada"
+            >
+              <ListOrdered className="size-4" />
+            </Toggle> */}
           </Card>
         </BubbleMenu>
       )}
