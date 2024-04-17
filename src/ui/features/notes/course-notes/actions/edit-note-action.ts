@@ -25,7 +25,7 @@ export async function editNoteAction(data: EditNoteActionModel) {
     });
 
     revalidatePath("/courses/detail");
-    return ActionResponse.formSuccess(newNote.data);
+    return ActionResponse.formSuccess(newNote?.data);
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");
