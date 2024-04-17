@@ -18,5 +18,13 @@ declare namespace NodeJS {
     readonly OPENAI_API_KEY: string;
     /** Whether to use a fake of the OpenAI API to save money */
     readonly FAKE_OPENAI_API: string;
+
+    readonly AWS_REGION: string;
+
+    readonly AWS_BUCKET_NAME: string;
+
+    readonly AWS_ACCESS_KEY_ID: string;
+
+    readonly AWS_SECRET_ACCESS_KEY: string;
   }
 }

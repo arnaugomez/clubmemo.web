@@ -18,16 +18,14 @@ export class MongoServiceImpl implements MongoService {
   readonly db: Db;
 
   constructor(envService: EnvService) {
-    this.client =
-      global.mongoClient ??
-      new MongoClient(envService.mongodbUrl, {
-        serverApi: {
-          version: ServerApiVersion.v1,
-          // strict: true,
-          deprecationErrors: true,
-        },
-      });
-    global.mongoClient = this.client;
+    global.mongoClient ??= new MongoClient(envService.mongodbUrl, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        // strict: true,
+        deprecationErrors: true,
+      },
+    });
+    this.client = global.mongoClient;
     this.db = this.client.db();
   }
 

@@ -18,4 +18,8 @@ export interface EnvService {
 
   /** Whether to use a fake of the OpenAI API to save money */
   readonly fakeOpenAiApi: boolean;
+
+  readonly awsRegion: string;
+
+  readonly awsBucketName: string;
 }
