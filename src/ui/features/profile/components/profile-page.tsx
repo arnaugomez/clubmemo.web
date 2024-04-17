@@ -25,7 +25,7 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
   await privateProfileGuard(profile);
   return (
     <main>
-      <div className="h-40 bg-slate-200 relative">
+      <div className="relative h-40 bg-slate-200">
         {profile.backgroundPicture && (
           <Image
             fill={true}
@@ -38,8 +38,8 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
       <div className="px-4">
         <div className="mx-auto max-w-prose">
           <div className="flex justify-between">
-            <div className="h-14 relative">
-              <div className="absolute bottom-0 left-0 size-28 grid place-items-center bg-white rounded-full">
+            <div className="relative h-14">
+              <div className="absolute bottom-0 left-0 grid size-28 place-items-center rounded-full bg-white">
                 <Avatar className="size-[104px]">
                   <AvatarImage src={profile.picture} alt="Imagen de perfil" />
                   <AvatarFallback className="text-slate-400">
@@ -62,7 +62,7 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
             {profile.handle ? <>@{profile.handle}</> : "Sin identificador"}
           </p>
           {profile.bio && (
-            <p className={cn(textStyles.p, "pt-6 whitespace-pre-line")}>
+            <p className={cn(textStyles.p, "whitespace-pre-line pt-6")}>
               {profile.bio}
             </p>
           )}
@@ -70,10 +70,10 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
           {profile.website && (
             <a
               href={profile.website}
-              className="pt-4 flex text-muted-foreground underline hover:text-slate-900 items-center max-w-xs"
+              className="flex max-w-xs items-center pt-4 text-muted-foreground underline hover:text-slate-900"
             >
-              <LinkIcon className="size-4 mr-2 flex-none" />
-              <span className="text-sm truncate">
+              <LinkIcon className="mr-2 size-4 flex-none" />
+              <span className="truncate text-sm">
                 {profile.website.replace(/(^\w+:|^)\/\//, "")}
               </span>
             </a>
@@ -93,7 +93,7 @@ async function ProfileButtonsSection({ profile }: ProfilePageProps) {
     return null;
   }
   return (
-    <div className="flex space-x-4 items-end">
+    <div className="flex items-end space-x-4">
       <Button
         className="group text-slate-500 hover:text-slate-900"
         variant="ghost"

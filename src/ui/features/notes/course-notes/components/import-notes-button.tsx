@@ -16,7 +16,7 @@ export function ImportNotesButton({ courseId }: ImportNotesButtonProps) {
     <>
       <Button
         onClick={() => setIsDialogOpen(true)}
-        className="w-full sm:max-w-sm sm:mx-auto"
+        className="w-full sm:mx-auto sm:max-w-sm"
       >
         Empezar
       </Button>

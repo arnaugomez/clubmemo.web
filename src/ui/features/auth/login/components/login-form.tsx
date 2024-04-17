@@ -68,7 +68,7 @@ export function LoginForm() {
         </p>
         <FormGlobalErrorMessage />
         <div className="h-6" />
-        <div className="flex space-x-6 justify-between">
+        <div className="flex justify-between space-x-6">
           <Button variant="ghost" asChild>
             <Link href="/auth/signup">Nuevo usuario</Link>
           </Button>

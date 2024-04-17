@@ -92,7 +92,7 @@ export function CourseDetailActionsDropdown({
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  className="text-red-700 focus:text-red-800 focus:bg-red-100 cursor-pointer"
+                  className="cursor-pointer text-red-700 focus:bg-red-100 focus:text-red-800"
                   onSelect={() => setShowDeleteDialog(true)}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -106,7 +106,7 @@ export function CourseDetailActionsDropdown({
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  className="text-red-700 focus:text-red-800 focus:bg-red-100 cursor-pointer"
+                  className="cursor-pointer text-red-700 focus:bg-red-100 focus:text-red-800"
                   onSelect={() => setShowUnenrollDialog(true)}
                 >
                   <LogOut className="mr-2 h-4 w-4" />

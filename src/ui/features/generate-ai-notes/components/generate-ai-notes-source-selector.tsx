@@ -22,10 +22,10 @@ export function GenerateAiNotesSourceSelector({
     <>
       <p className={cn(textStyles.muted, "text-center")}>Elige un generador</p>
       <div className="h-4"></div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card>
           <CardHeader>
-            <Upload className="size-8 mx-auto text-slate-500" />
+            <Upload className="mx-auto size-8 text-slate-500" />
             <div className="h-1"></div>
             <CardTitle className="text-center">Subir archivo</CardTitle>
             <div className="h-2"></div>
@@ -45,7 +45,7 @@ export function GenerateAiNotesSourceSelector({
         </Card>
         <Card>
           <CardHeader>
-            <SquarePen className="size-8 mx-auto text-slate-500" />
+            <SquarePen className="mx-auto size-8 text-slate-500" />
             <div className="h-1"></div>
             <CardTitle className="text-center">Pegar texto</CardTitle>
             <div className="h-2"></div>
@@ -65,7 +65,7 @@ export function GenerateAiNotesSourceSelector({
         </Card>
         <Card>
           <CardHeader>
-            <BookType className="size-8 mx-auto text-slate-500" />
+            <BookType className="mx-auto size-8 text-slate-500" />
             <div className="h-1"></div>
 
             <CardTitle className="text-center">Temático</CardTitle>

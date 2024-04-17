@@ -23,11 +23,11 @@ export default async function CourseDetailPage({
   if (!course || !course.canView) notFound();
 
   return (
-    <div className="size-full overflow-y-auto md:overflow-y-visible md:flex md:items-stretch md:divide-x-[1px] divide-slate-200">
-      <div className="flex-none w-full md:max-w-sm lg:max-w-md xl:max-w-lg md:overflow-y-auto">
+    <div className="size-full divide-slate-200 overflow-y-auto md:flex md:items-stretch md:divide-x-[1px] md:overflow-y-visible">
+      <div className="w-full flex-none md:max-w-sm md:overflow-y-auto lg:max-w-md xl:max-w-lg">
         <CourseDetailMainSection course={course} />
       </div>
-      <div className="flex-1 min-w-0 bg-slate-100 md:overflow-y-auto">
+      <div className="min-w-0 flex-1 bg-slate-100 md:overflow-y-auto">
         <CourseNotesSection course={course} />
       </div>
     </div>

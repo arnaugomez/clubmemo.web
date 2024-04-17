@@ -7,7 +7,7 @@ interface TagsSectionProps {
 export function TagsSection({ tags, variant }: TagsSectionProps) {
   if (!tags.length) return null;
   return (
-    <div className="pt-6 flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 pt-6">
       {tags.map((tag) => (
         <Badge key={tag} variant={variant}>
           #{tag}

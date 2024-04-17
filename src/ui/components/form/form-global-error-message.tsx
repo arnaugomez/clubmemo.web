@@ -19,7 +19,7 @@ const FormGlobalErrorMessage = forwardRef<
     <p
       ref={ref}
       className={cn(
-        "text-sm font-medium text-destructive pt-2 pb-4",
+        "pb-4 pt-2 text-sm font-medium text-destructive",
         className,
       )}
       {...props}

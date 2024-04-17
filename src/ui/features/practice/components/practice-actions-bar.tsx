@@ -17,7 +17,7 @@ export function PracticeActionsBar({
   enrollmentConfig,
 }: PracticeActionsBarProps) {
   return (
-    <div className="border-t-slate-200 border-t-[1px] flex-none p-4 pb-2 flex justify-center space-x-4">
+    <div className="flex flex-none justify-center space-x-4 border-t-[1px] border-t-slate-200 p-4 pb-2">
       {!showBack && (
         <ButtonWithBottomText
           className="max-w-xs"
@@ -99,7 +99,7 @@ function ButtonWithBottomText({
 }: ButtonWithBottomText) {
   return (
     <div
-      className={cn("flex-1 max-w-24 flex flex-col items-stretch", className)}
+      className={cn("flex max-w-24 flex-1 flex-col items-stretch", className)}
     >
       <Button onClick={onClick}>{children}</Button>
       <div className="h-2"></div>

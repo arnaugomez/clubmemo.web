@@ -38,7 +38,7 @@ export function SettingsDeleteUserSection({
       <h2
         className={cn(
           textStyles.h3,
-          "text-red-700 border-b-[1px] border-b-red-300",
+          "border-b-[1px] border-b-red-300 text-red-700",
         )}
       >
         Zona de peligro
