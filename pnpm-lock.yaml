@@ -59,6 +59,9 @@ dependencies:
   '@tiptap/extension-placeholder':
     specifier: ^2.3.0
     version: 2.3.0(@tiptap/core@2.3.0)(@tiptap/pm@2.3.0)
+  '@tiptap/extension-underline':
+    specifier: ^2.3.0
+    version: 2.3.0(@tiptap/core@2.3.0)
   '@tiptap/pm':
     specifier: ^2.3.0
     version: 2.3.0
@@ -3177,6 +3180,14 @@ packages:
 
   /@tiptap/extension-text@2.3.0(@tiptap/core@2.3.0):
     resolution: {integrity: sha512-zkudl0TyKRy/8vHtyo5dMzjBRD0HEUnsS8YOsjR4xwQq5EYUXleRgM1s6lb6Yms2sLUAZRWdDddoQ686iq4zQg==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.3.0(@tiptap/pm@2.3.0)
+    dev: false
+
+  /@tiptap/extension-underline@2.3.0(@tiptap/core@2.3.0):
+    resolution: {integrity: sha512-vmmcwCPmWqGKYHZevz50+bxrpHyiu5y6YZweAE476hn8Mud6vYg7RpkXgW8bjkCOky6UA51uelslSc0XrLE6uw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:

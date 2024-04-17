@@ -32,6 +32,7 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tiptap/extension-placeholder": "^2.3.0",
+    "@tiptap/extension-underline": "^2.3.0",
     "@tiptap/pm": "^2.3.0",
     "@tiptap/react": "^2.3.0",
     "@tiptap/starter-kit": "^2.3.0",
