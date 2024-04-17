@@ -14,12 +14,10 @@ declare module global {
 export class AiNotesGeneratorServiceImpl implements AiNotesGeneratorService {
   private readonly client: OpenAI;
   constructor(envService: EnvService) {
-    this.client =
-      global.openaiClient ??
-      new OpenAI({
-        apiKey: envService.openaiApiKey,
-      });
-    global.openaiClient = this.client;
+    global.openaiClient ??= new OpenAI({
+      apiKey: envService.openaiApiKey,
+    });
+    this.client = global.openaiClient;
   }
   async generate({
     text,

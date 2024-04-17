@@ -8,4 +8,6 @@ export class EnvServiceImpl implements EnvService {
   readonly passwordPepper = process.env.PASSWORD_PEPPER;
   readonly openaiApiKey = process.env.OPENAI_API_KEY;
   readonly fakeOpenAiApi = process.env.FAKE_OPENAI_API === "true";
+  readonly awsRegion = process.env.AWS_REGION;
+  readonly awsBucketName = process.env.AWS_BUCKET_NAME;
 }

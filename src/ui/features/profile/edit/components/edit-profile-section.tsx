@@ -30,6 +30,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { editProfileAction } from "../actions/edit-profile-action";
+import { editProfileUploadAction } from "../actions/edit-profile-upload-action";
 
 interface EditProfileSectionProps {
   profileData: ProfileModelData;
@@ -87,6 +88,10 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
+      const response1 = await editProfileUploadAction({
+        contentType: "image/png",
+      });
+      console.log(response1);
       const response = await editProfileAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
