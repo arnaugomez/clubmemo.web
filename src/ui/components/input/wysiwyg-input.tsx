@@ -70,8 +70,8 @@ export function WysiwygInput({
               onPressedChange={() =>
                 editor.chain().focus().toggleUnderline().run()
               }
-              pressed={editor.isActive("strike")}
-              aria-label="Rayado"
+              pressed={editor.isActive("underline")}
+              aria-label="Subrayar"
             >
               <UnderlineIcon className="size-4" />
             </Toggle>
@@ -81,7 +81,7 @@ export function WysiwygInput({
                 editor.chain().focus().toggleStrike().run()
               }
               pressed={editor.isActive("strike")}
-              aria-label="Rayado"
+              aria-label="Tachar"
             >
               <Strikethrough className="size-4" />
             </Toggle>
