@@ -4,6 +4,7 @@ import { CourseDoesNotExistError } from "@/src/core/courses/domain/models/course
 import { NotesRepository } from "../interfaces/notes-repository";
 import { NoteDoesNotExistError } from "../models/notes-errors";
 import { UpdateNoteInputModel } from "../models/update-note-input-model";
+import { NoteModel } from "../models/note-model";
 
 interface UpdateNoteUseCaseInputModel {
   profileId: string;
@@ -19,7 +20,7 @@ export class UpdateNoteUseCase {
   async execute({
     profileId,
     updateNoteInput,
-  }: UpdateNoteUseCaseInputModel): Promise<void> {
+  }: UpdateNoteUseCaseInputModel): Promise<NoteModel | null> {
     const note = await this.notesRepository.getDetail(updateNoteInput.id);
     if (!note) throw new NoteDoesNotExistError();
 
@@ -31,5 +32,6 @@ export class UpdateNoteUseCase {
     if (!course.canEdit) throw new NoPermissionError();
 
     await this.notesRepository.update(updateNoteInput);
+    return await this.notesRepository.getDetail(updateNoteInput.id);
   }
 }

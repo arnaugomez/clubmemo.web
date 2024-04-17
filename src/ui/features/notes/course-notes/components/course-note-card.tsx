@@ -21,14 +21,14 @@ export function CourseNoteCard({
   return (
     <Card className="h-32 flex flex-col items-stretch overflow-clip">
       <div className="flex-1 flex items-center px-4 space-x-3">
-        <h3 className="flex-1 truncate font-medium">{note.front}</h3>
+        <h3 className="flex-1 truncate font-medium">{note.frontText}</h3>
         <EditNoteButton note={note} onSuccess={onEdit} />
 
         <DeleteNoteButton note={note} onSuccess={onDelete} />
       </div>
       <Separator />
       <div className="flex-1 flex items-center px-4">
-        <p className="truncate flex-1">{note.back || "Tarjeta sin "}</p>
+        <p className="truncate flex-1">{note.backText || "Sin contenido"}</p>
       </div>
     </Card>
   );

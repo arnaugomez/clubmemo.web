@@ -50,9 +50,9 @@ export function EditNoteDialog({
     try {
       const response = await editNoteAction({ id: note.id, ...data });
       const handler = new FormResponseHandler(response, form);
-      if (!handler.hasErrors) {
+      if (!handler.hasErrors && handler.data) {
         toast.success("La tarjeta ha sido actualizada");
-        onSuccess(new NoteModel({ ...note.data, ...data }));
+        onSuccess(new NoteModel(handler.data));
       }
       handler.setErrors();
     } catch (error) {

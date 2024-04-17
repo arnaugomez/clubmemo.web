@@ -1,4 +1,4 @@
-import { PaginationModel } from "../../../domain/models/pagination-model";
+import { PaginationModel } from "../../domain/models/pagination-model";
 
 export interface PaginationFacet<T> {
   metadata: {
