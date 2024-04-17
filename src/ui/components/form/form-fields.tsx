@@ -165,7 +165,7 @@ export function WysiwygFormField({
   label,
   name,
   placeholder,
-  isSmall
+  isSmall,
 }: WysiwygFormFieldProps) {
   return (
     <FormField
