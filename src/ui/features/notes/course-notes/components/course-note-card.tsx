@@ -2,7 +2,7 @@ import { NoteModel } from "@/src/core/notes/domain/models/note-model";
 import { Button } from "@/src/ui/components/shadcn/ui/button";
 import { Card } from "@/src/ui/components/shadcn/ui/card";
 import { Separator } from "@/src/ui/components/shadcn/ui/separator";
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 import { Edit2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { DeleteNoteDialog } from "./delete-note-dialog";

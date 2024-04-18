@@ -20,12 +20,7 @@ export function FavoriteCourseCard({ course }: FavoriteCourseCardProps) {
     <Card className="h-48 overflow-clip">
       <div className="relative h-28 bg-slate-300">
         {course.picture && (
-          <Image
-            src={course.picture}
-            layout="fill"
-            alt=""
-            className="object-cover"
-          />
+          <Image src={course.picture} alt="" fill className="object-cover" />
         )}
       </div>
       <div className="p-3">

@@ -15,7 +15,7 @@ import {
 } from "@/src/core/practice/domain/models/practice-card-model";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 import { useState } from "react";
 import {
   PracticeProvider,
