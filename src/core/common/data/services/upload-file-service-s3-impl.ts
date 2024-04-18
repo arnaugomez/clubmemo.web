@@ -26,7 +26,7 @@ export class UploadFileServiceS3Impl implements UploadFileService {
       Bucket: this.envService.awsBucketName,
       Key: key,
       Conditions: [
-        ["content-length-range", 0, 10485760], // up to 10 MB
+        ["content-length-range", 0, 5 * 1024 * 1024], // up to 5 MB
         ["starts-with", "$Content-Type", contentType],
       ],
       Fields: {
