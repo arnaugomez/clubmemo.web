@@ -5,6 +5,7 @@ import {
   ProfileModelData,
 } from "@/src/core/profile/domain/models/profile-model";
 import {
+  FileFormField,
   InputFormField,
   SwitchSectionFormField,
   TagsFormField,
@@ -67,6 +68,8 @@ const EditProfileSchema = z.object({
   website: z.string().url().max(2083).or(z.string().max(0)),
   isPublic: z.boolean(),
   tags: z.array(z.string().trim().min(1).max(50)).max(10),
+  picture: z.string().or(z.instanceof(File)).optional(),
+  backgroundPicture: z.string().or(z.instanceof(File)).optional(),
 });
 
 type FormValues = z.infer<typeof EditProfileSchema>;
@@ -83,6 +86,8 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       website: profile.website ?? "",
       isPublic: profile.isPublic,
       tags: profile.tags,
+      picture: profile.picture,
+      backgroundPicture: profile.backgroundPicture,
     },
   });
 
@@ -121,7 +126,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...form}>
-          <form onSubmit={onSubmit}>
+          <form className="min-w-0" onSubmit={onSubmit}>
             <div>
               <InputFormField
                 label="Nombre de usuario"
@@ -160,6 +165,28 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
                 name="website"
                 placeholder="Enlace a tu página web o redes sociales"
                 autoComplete="nickname"
+              />
+              <div className="h-4" />
+              <FileFormField
+                label="Imagen de perfil"
+                name="picture"
+                accept={{
+                  "image/png": [".png"],
+                  "image/jpeg": [".jpeg", ".jpg"],
+                }}
+                isImage
+                maxSize={5 * 1024 * 1024}
+              />
+              <div className="h-4" />
+              <FileFormField
+                label="Imagen de fondo"
+                name="backgroundPicture"
+                accept={{
+                  "image/png": [".png"],
+                  "image/jpeg": [".jpeg", ".jpg"],
+                }}
+                isImage
+                maxSize={5 * 1024 * 1024}
               />
               <FormGlobalErrorMessage />
             </div>

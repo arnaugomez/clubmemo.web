@@ -257,6 +257,7 @@ interface FileFormFieldProps {
   accept: Accept;
   maxSize: number;
   fileIcon?: ReactNode;
+  isImage?: boolean;
 }
 
 export function FileFormField({
@@ -265,6 +266,7 @@ export function FileFormField({
   accept,
   maxSize,
   fileIcon,
+  isImage,
 }: FileFormFieldProps) {
   return (
     <FormField
@@ -274,6 +276,8 @@ export function FileFormField({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <FileInput
+              value={field.value}
+              isImage={isImage}
               name={name}
               id={field.name}
               onChange={field.onChange}
