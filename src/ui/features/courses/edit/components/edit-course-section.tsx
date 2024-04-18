@@ -5,6 +5,7 @@ import {
   CourseModelData,
 } from "@/src/core/courses/domain/models/course-model";
 import {
+  FileFormField,
   InputFormField,
   SwitchSectionFormField,
   TagsFormField,
@@ -28,6 +29,7 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { editCourseUploadAction } from "../../../course/edit/actions/edit-course-upload-action";
 import { editCourseAction } from "../actions/edit-course-action";
 
 interface CourseDetailEditSectionProps {
@@ -60,6 +62,7 @@ const EditCourseSchema = z.object({
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),
   tags: z.array(z.string().trim().min(1).max(50)).max(10),
+  picture: z.string().or(z.instanceof(File)).optional(),
 });
 
 type FormValues = z.infer<typeof EditCourseSchema>;
@@ -72,10 +75,45 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
       description: course.description ?? "",
       isPublic: course.isPublic,
       tags: course.tags,
+      picture: course.picture,
     },
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
+    const uploadActionResponse = await editCourseUploadAction({
+      courseId: course.id,
+      pictureContentType: data.picture instanceof File ? data.picture.type : "",
+      uploadPicture: data.picture instanceof File,
+    });
+    const uploadActionHandler = new FormResponseHandler(
+      uploadActionResponse,
+      form,
+    );
+    if (uploadActionHandler.hasErrors) {
+      uploadActionHandler.setErrors();
+      return;
+    }
+    if (uploadActionHandler.data) {
+      if (uploadActionHandler.data.picture && data.picture instanceof File) {
+        const { url, fields } = uploadActionHandler.data.picture;
+
+        const formData = new FormData();
+        Object.entries(fields).forEach(([key, value]) => {
+          formData.append(key, value as string);
+        });
+        formData.append("file", data.picture);
+
+        const uploadResponse = await fetch(url, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (uploadResponse.ok) {
+          data.picture = url + fields.key;
+        }
+      }
+    }
+
     try {
       const response = await editCourseAction({ id: course.id, ...data });
       const handler = new FormResponseHandler(response, form);
@@ -103,7 +141,7 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...form}>
-          <form onSubmit={onSubmit}>
+          <form className="min-w-0" onSubmit={onSubmit}>
             <div>
               <InputFormField
                 label="Nombre del curso"
@@ -129,6 +167,17 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
                 name="isPublic"
                 label="Curso público"
                 description="Haz que el curso sea visible para otros usuarios"
+              />
+              <div className="h-4" />
+              <FileFormField
+                label="Imagen del curso"
+                name="picture"
+                accept={{
+                  "image/png": [".png"],
+                  "image/jpeg": [".jpeg", ".jpg"],
+                }}
+                isImage
+                maxSize={5 * 1024 * 1024}
               />
               <FormGlobalErrorMessage />
             </div>
