@@ -18,12 +18,7 @@ export async function KeepLearningContent() {
     <Card className="flex h-64 flex-col overflow-clip sm:h-40 sm:flex-row">
       <div className="relative h-28 flex-none bg-slate-300 sm:h-full sm:w-56">
         {course.picture && (
-          <Image
-            src={course.picture}
-            layout="fill"
-            alt=""
-            className="object-cover"
-          />
+          <Image src={course.picture} fill alt="" className="object-cover" />
         )}
       </div>
       <div className="min-w-0 flex-1 p-3">

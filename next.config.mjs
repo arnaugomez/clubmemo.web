@@ -6,6 +6,8 @@ const nextConfig = {
     // Necessary for pdfjs-dist library to work in Next.js
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
+    // Do not bundle canvas package
+    config.externals.push("canvas");
     return config;
   },
   images: {
