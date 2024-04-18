@@ -8,12 +8,17 @@ const nextConfig = {
     config.resolve.alias.encoding = false;
     return config;
   },
-  // TODO: set up images domain (S3?)
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "placehold.co",
+        hostname: "clubmemo-staging.s3.eu-south-2.amazonaws.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "clubmemo-production.s3.eu-south-2.amazonaws.com",
         port: "",
         pathname: "/**",
       },

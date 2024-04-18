@@ -2,60 +2,66 @@
 
 import { PresignedUrlModelData } from "@/src/core/common/domain/models/presigned-url-model";
 import { locator } from "@/src/core/common/locator";
+import {
+  CannotEditCourseError,
+  CourseDoesNotExistError,
+} from "@/src/core/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/core/profile/domain/errors/profile-errors";
 import {
   ActionResponse,
   FormActionResponse,
 } from "@/src/ui/models/server-form-errors";
-import { fetchMyProfile } from "../../fetch/fetch-my-profile";
+import { fetchMyProfile } from "../../../profile/fetch/fetch-my-profile";
 
-interface EditProfileUploadActionData {
+interface EditCourseUploadActionData {
+  courseId: string;
   pictureContentType: string;
-  backgroundPictureContentType: string;
   uploadPicture: boolean;
-  uploadBackgroundPicture: boolean;
 }
 
-interface EditProfileUploadActionResult {
+interface EditCourseUploadActionResult {
   picture?: PresignedUrlModelData;
-  backgroundPicture?: PresignedUrlModelData;
 }
 
-export async function editProfileUploadAction({
+export async function editCourseUploadAction({
+  courseId,
   pictureContentType,
-  backgroundPictureContentType,
   uploadPicture,
-  uploadBackgroundPicture,
-}: EditProfileUploadActionData): Promise<
-  FormActionResponse<EditProfileUploadActionResult | null>
+}: EditCourseUploadActionData): Promise<
+  FormActionResponse<EditCourseUploadActionResult | null>
 > {
   try {
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
+    const coursesRepository = await locator.CoursesRepository();
+    const course = await coursesRepository.getDetail({
+      id: courseId,
+      profileId: profile.id,
+    });
+    if (!course) throw new CourseDoesNotExistError();
+    if (course.canEdit === false) throw new CannotEditCourseError();
+
     const uploadFileService = await locator.UploadFileService();
 
-    const [picture, backgroundPicture] = await Promise.all([
+    const [picture] = await Promise.all([
       uploadPicture
         ? uploadFileService.generatePresignedUrl({
             key: `profile/picture/${profile.id}`,
             contentType: pictureContentType,
           })
         : null,
-      uploadBackgroundPicture
-        ? uploadFileService.generatePresignedUrl({
-            key: `profile/backgroundPicture/${profile.id}`,
-            contentType: backgroundPictureContentType,
-          })
-        : null,
     ]);
 
     return ActionResponse.formSuccess({
       picture: picture?.data,
-      backgroundPicture: backgroundPicture?.data,
     });
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");
+    } else if (e instanceof CourseDoesNotExistError) {
+      return ActionResponse.formGlobalError("courseDoesNotExist");
+    } else if (e instanceof CannotEditCourseError) {
+      return ActionResponse.formGlobalError("cannotEditCourse");
     } else {
       // TODO: log error report
       console.error(e);

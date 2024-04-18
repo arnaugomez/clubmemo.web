@@ -93,10 +93,66 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      const response1 = await editProfileUploadAction({
-        contentType: "image/png",
+      const uploadActionResponse = await editProfileUploadAction({
+        pictureContentType:
+          data.picture instanceof File ? data.picture.type : "",
+        backgroundPictureContentType:
+          data.backgroundPicture instanceof File
+            ? data.backgroundPicture.type
+            : "",
+        uploadPicture: data.picture instanceof File,
+        uploadBackgroundPicture: data.backgroundPicture instanceof File,
       });
-      console.log(response1);
+      const uploadActionHandler = new FormResponseHandler(
+        uploadActionResponse,
+        form,
+      );
+      if (uploadActionHandler.hasErrors) {
+        uploadActionHandler.setErrors();
+        return;
+      }
+      if (uploadActionHandler.data) {
+        if (uploadActionHandler.data.picture && data.picture instanceof File) {
+          const { url, fields } = uploadActionHandler.data.picture;
+
+          const formData = new FormData();
+          Object.entries(fields).forEach(([key, value]) => {
+            formData.append(key, value as string);
+          });
+          formData.append("file", data.picture);
+
+          const uploadResponse = await fetch(url, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (uploadResponse.ok) {
+            data.picture = url + fields.key;
+          }
+        }
+        if (
+          uploadActionHandler.data.backgroundPicture &&
+          data.backgroundPicture instanceof File
+        ) {
+          const { url, fields } = uploadActionHandler.data.backgroundPicture;
+
+          const formData = new FormData();
+          Object.entries(fields).forEach(([key, value]) => {
+            formData.append(key, value as string);
+          });
+          formData.append("file", data.backgroundPicture);
+
+          const uploadResponse = await fetch(url, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (uploadResponse.ok) {
+            data.backgroundPicture = url + fields.key;
+          }
+        }
+      }
+
       const response = await editProfileAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {

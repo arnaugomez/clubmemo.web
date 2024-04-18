@@ -4,8 +4,8 @@ import { Card } from "@/src/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/ui/styles/text-styles";
 import { cn } from "@/src/ui/utils/shadcn";
 import { Plus } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 interface DiscoverCourseCardProps {
   course: DiscoverCourseModel;
@@ -16,7 +16,12 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
     <Card className="h-64 overflow-clip">
       <div className="relative h-24 bg-slate-300">
         {course.picture && (
-          <Image src={course.picture} layout="fill" alt="" objectFit="cover" />
+          <Image
+            src={course.picture}
+            layout="fill"
+            alt=""
+            className="object-cover"
+          />
         )}
       </div>
       <div className="p-3">
