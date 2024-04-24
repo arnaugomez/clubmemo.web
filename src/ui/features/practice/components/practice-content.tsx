@@ -8,7 +8,6 @@ interface PracticeContentProps {
   course: CourseModel;
   enrollment: CourseEnrollmentModel;
 }
-// TODO: extract use case class
 export async function PracticeContent({
   course,
   enrollment,

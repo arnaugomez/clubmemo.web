@@ -39,7 +39,7 @@ export class PracticerModel {
       card: new PracticeCardModel({
         id: this.data.card.id,
         courseEnrollmentId: this.data.card.courseEnrollmentId,
-        note: this.data.card.note,
+        note: this.data.card.note.data,
 
         provisionalId: this.data.card.data.provisionalId,
 

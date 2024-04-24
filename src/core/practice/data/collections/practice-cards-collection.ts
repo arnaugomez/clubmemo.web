@@ -29,10 +29,10 @@ export class PracticeCardDocTransformer {
   constructor(private readonly doc: WithId<PracticeCardDoc>) {}
   toDomain(note: WithId<NoteDoc>) {
     return new PracticeCardModel({
-      id: this.doc._id.toHexString(),
+      id: this.doc._id.toString(),
 
-      courseEnrollmentId: this.doc.courseEnrollmentId.toHexString(),
-      note: new NoteDocTransformer(note).toDomain(),
+      courseEnrollmentId: this.doc.courseEnrollmentId.toString(),
+      note: new NoteDocTransformer(note).toDomain().data,
 
       difficulty: this.doc.difficulty,
       due: this.doc.due,

@@ -1,3 +1,4 @@
+import { DateTimeService } from "@/src/core/common/domain/interfaces/date-time-service";
 import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import {
   NoteDoc,
@@ -21,7 +22,10 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
   private readonly practiceCards: typeof practiceCardsCollection.type;
   private readonly notes: typeof notesCollection.type;
 
-  constructor(mongoService: MongoService) {
+  constructor(
+    mongoService: MongoService,
+    private readonly dateTimeService: DateTimeService,
+  ) {
     this.practiceCards = mongoService.collection(practiceCardsCollection);
     this.notes = mongoService.collection(notesCollection);
   }
@@ -29,7 +33,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
   async create(input: PracticeCardModel): Promise<PracticeCardModel> {
     const result = await this.practiceCards.insertOne({
       courseEnrollmentId: new ObjectId(input.data.courseEnrollmentId),
-      noteId: new ObjectId(input.note.id),
+      noteId: new ObjectId(input.note.data.id),
       due: input.data.due,
       stability: input.data.stability,
       difficulty: input.data.difficulty,
@@ -40,7 +44,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
       state: input.data.state,
       lastReview: input.data.lastReview,
     });
-    input.data.id = result.insertedId.toHexString();
+    input.data.id = result.insertedId.toString();
     return new PracticeCardModel(input.data);
   }
   async update(input: PracticeCardModel): Promise<void> {
@@ -105,7 +109,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
       {
         $match: {
           courseEnrollmentId: new ObjectId(input.courseEnrollmentId),
-          due: { $lte: new Date() },
+          due: { $lte: this.dateTimeService.getStartOfTomorrow() },
         },
       },
       { $limit: input.limit },
@@ -132,7 +136,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
       {
         $match: {
           courseEnrollmentId: new ObjectId(courseEnrollmentId),
-          due: { $lte: new Date() },
+          due: { $lte: this.dateTimeService.getStartOfTomorrow() },
         },
       },
       {
