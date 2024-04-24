@@ -167,7 +167,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
                   $expr: {
                     $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
                   },
-                  due: { $lte: new Date() },
+                  due: { $lte: this.dateTimeService.getStartOfTomorrow() },
                 },
               },
             ],
@@ -267,7 +267,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
                       $expr: {
                         $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
                       },
-                      due: { $lte: new Date() },
+                      due: { $lte: this.dateTimeService.getStartOfTomorrow() },
                     },
                   },
                 ],
@@ -523,7 +523,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
                   $expr: {
                     $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
                   },
-                  due: { $lte: new Date() },
+                  due: { $lte: this.dateTimeService.getStartOfTomorrow() },
                 },
               },
             ],

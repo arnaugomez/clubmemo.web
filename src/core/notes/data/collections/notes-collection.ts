@@ -15,8 +15,8 @@ export class NoteDocTransformer {
   constructor(private readonly doc: WithId<NoteDoc>) {}
   toDomain() {
     return new NoteModel({
-      id: this.doc._id.toHexString(),
-      courseId: this.doc.courseId.toHexString(),
+      id: this.doc._id.toString(),
+      courseId: this.doc.courseId.toString(),
       front: this.doc.front,
       back: this.doc.back,
       createdAt: this.doc.createdAt,

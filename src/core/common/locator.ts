@@ -165,7 +165,10 @@ export const locator: Locator = {
     const file = await import(
       "../practice/data/repositories/practice-cards-repository-impl"
     );
-    return new file.PracticeCardsRepositoryImpl(this.MongoService());
+    return new file.PracticeCardsRepositoryImpl(
+      this.MongoService(),
+      await this.DateTimeService(),
+    );
   },
   async ReviewLogsRepository() {
     const file = await import(

@@ -15,7 +15,7 @@ export class KeepLearningAggregationDocTransformer {
   constructor(private readonly doc: KeepLearningAggregationDoc) {}
   toDomain() {
     return new KeepLearningModel({
-      courseId: this.doc.courseId.toHexString(),
+      courseId: this.doc.courseId.toString(),
       name: this.doc.name,
       description: this.doc.description,
       picture: this.doc.picture,

@@ -4,6 +4,7 @@ import {
 } from "@/src/core/common/data/facets/pagination-facet";
 import { MongoService } from "@/src/core/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/core/common/domain/models/pagination-model";
+import { practiceCardsCollection } from "@/src/core/practice/data/collections/practice-cards-collection";
 import { ObjectId, WithId } from "mongodb";
 import { NotesRepository } from "../../domain/interfaces/notes-repository";
 import { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";
@@ -20,9 +21,11 @@ import {
 
 export class NotesRepositoryImpl implements NotesRepository {
   private readonly notes: typeof notesCollection.type;
+  private readonly practiceCards: typeof practiceCardsCollection.type;
 
   constructor(mongoService: MongoService) {
     this.notes = mongoService.collection(notesCollection);
+    this.practiceCards = mongoService.collection(practiceCardsCollection);
   }
   copyAcrossCourses() {
     throw new Error("Method not implemented.");
@@ -56,7 +59,10 @@ export class NotesRepositoryImpl implements NotesRepository {
   }
 
   async delete(noteId: string): Promise<void> {
-    await this.notes.deleteOne({ _id: new ObjectId(noteId) });
+    await Promise.all([
+      this.notes.deleteOne({ _id: new ObjectId(noteId) }),
+      this.practiceCards.deleteMany({ noteId: new ObjectId(noteId) }),
+    ]);
   }
 
   async get({

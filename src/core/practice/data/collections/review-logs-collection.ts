@@ -25,9 +25,9 @@ export class ReviewLogDocTransformer {
   constructor(private readonly doc: WithId<ReviewLogDoc>) {}
   toDomain() {
     return new ReviewLogModel({
-      id: this.doc._id.toHexString(),
-      cardId: this.doc.cardId.toHexString(),
-      courseEnrollmentId: this.doc.courseEnrollmentId.toHexString(),
+      id: this.doc._id.toString(),
+      cardId: this.doc.cardId.toString(),
+      courseEnrollmentId: this.doc.courseEnrollmentId.toString(),
 
       difficulty: this.doc.difficulty,
       due: this.doc.due,

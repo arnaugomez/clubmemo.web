@@ -30,7 +30,7 @@ export class ReviewLogsRepositoryImpl implements ReviewLogsRepository {
       scheduledDays: input.data.scheduledDays,
       review: input.data.review,
     });
-    input.data.id = result.insertedId.toHexString();
+    input.data.id = result.insertedId.toString();
     return new ReviewLogModel(input.data);
   }
 

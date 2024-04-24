@@ -42,9 +42,14 @@ export async function practiceAction(params: PracticeActionModel) {
     }
     const cardsRepository = await locator.PracticeCardsRepository();
     const reviewLogsRepository = await locator.ReviewLogsRepository();
+    console.log(card.note);
+    console.log(card.note.id);
+    console.log(card.note.data.id);
 
     const newCard =
-      (await cardsRepository[card.isNew ? "create" : "update"](card)) ?? card;
+      (await (card.isNew
+        ? cardsRepository.create(card)
+        : cardsRepository.update(card))) ?? card;
     reviewLog.data.cardId = newCard.id;
     const newReviewLog = await reviewLogsRepository.create(reviewLog);
     return ActionResponse.formSuccess({
