@@ -23,7 +23,7 @@ export default async function CourseDetailPage({
   if (!course || !course.canView) notFound();
 
   return (
-    <div className="size-full divide-slate-200 overflow-y-auto md:flex md:items-stretch md:divide-x-[1px] md:overflow-y-visible">
+    <div className="absolute inset-0 divide-slate-200 overflow-y-auto md:flex md:items-stretch md:divide-x-[1px] md:overflow-y-visible">
       <div className="w-full flex-none md:max-w-sm md:overflow-y-auto lg:max-w-md xl:max-w-lg">
         <CourseDetailMainSection course={course} />
       </div>
