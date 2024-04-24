@@ -25,9 +25,9 @@ export class CourseEnrollmentDocTransformer {
 
   toDomain(): CourseEnrollmentModel {
     return new CourseEnrollmentModel({
-      id: this.doc._id.toHexString(),
-      courseId: this.doc.courseId.toHexString(),
-      profileId: this.doc.profileId.toHexString(),
+      id: this.doc._id.toString(),
+      courseId: this.doc.courseId.toString(),
+      profileId: this.doc.profileId.toString(),
 
       isFavorite: this.doc.isFavorite,
       config: this.doc.config,
