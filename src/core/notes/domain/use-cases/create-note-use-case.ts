@@ -26,6 +26,7 @@ export class CreateNoteUseCase {
     });
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canEdit) throw new NoPermissionError();
+
     return await this.notesRepository.create(createNoteInput);
   }
 }

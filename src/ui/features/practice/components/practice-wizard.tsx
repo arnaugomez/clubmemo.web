@@ -40,6 +40,7 @@ export function PracticeWizard({
   const course = new CourseModel(courseData);
   const enrollment = new CourseEnrollmentModel(enrollmentData);
   const cards = cardsData.map((data) => new PracticeCardModel(data));
+  console.log(cards);
 
   return (
     <TaskQueueProvider>

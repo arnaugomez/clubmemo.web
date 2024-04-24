@@ -10,4 +10,8 @@ export class DateTimeServiceImpl implements DateTimeService {
   getStartOfToday(): Date {
     return dayjs().tz("Europe/Madrid").startOf("day").toDate();
   }
+
+  getStartOfTomorrow(): Date {
+    return dayjs().tz("Europe/Madrid").add(1, "day").startOf("day").toDate();
+  }
 }
