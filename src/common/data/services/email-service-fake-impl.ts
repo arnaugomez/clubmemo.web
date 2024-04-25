@@ -5,6 +5,7 @@ export class EmailServiceFakeImpl implements EmailService {
     email: string,
     verificationCode: string,
   ): Promise<void> {
+    // eslint-disable-next-line no-console
     console.table({ email, verificationCode });
   }
 
@@ -12,6 +13,7 @@ export class EmailServiceFakeImpl implements EmailService {
     email: string,
     forgotPasswordCode: string,
   ): Promise<void> {
+    // eslint-disable-next-line no-console
     console.table({ email, forgotPasswordCode });
   }
 }
