@@ -6,8 +6,11 @@ const nextConfig = {
     // Necessary for pdfjs-dist library to work in Next.js
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
+    config.experiments.topLevelAwait = true;
+    config.experiments = { ...config.experiments, topLevelAwait: true }
     // Do not bundle canvas package
     config.externals.push("canvas");
+
     return config;
   },
   images: {
@@ -26,7 +29,12 @@ const nextConfig = {
       },
     ],
   },
-  experimental: { outputFileTracingExcludes: { "**/*": ["**canvas**"] } },
+  experimental: {
+    outputFileTracingExcludes: {
+      // Exclude canvas library in Vercel serverless functions. That way, the size of the serverless function remains below 50MB.
+      "**/*": ["**canvas**"],
+    },
+  },
 };
 
 export default nextConfig;
