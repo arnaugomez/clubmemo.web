@@ -3,9 +3,14 @@ import { InterestingCoursesSection } from "@/src/courses/ui/interesting-courses-
 import { KeepLearningSection } from "@/src/courses/ui/keep-learning/components/keep-learning-section";
 import { fetchHasCourses } from "@/src/courses/ui/my-courses/fetch/fetch-has-courses";
 import { HomeGreeting } from "@/src/home/ui/components/home-greeting";
+import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 
 export default async function HomePage() {
-  const hasCourses = await fetchHasCourses();
+  const profile = await fetchMyProfile();
+  if (!profile) {
+    return null;
+  }
+  const hasCourses = await fetchHasCourses(profile.id);
   return (
     <main>
       <div className="h-24" />
