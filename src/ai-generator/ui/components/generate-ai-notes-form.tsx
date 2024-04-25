@@ -93,7 +93,7 @@ export function GenerateAiNotesForm({
               const typedarray = new Uint8Array(event.target.result);
               const pdfjs = await import("pdfjs-dist");
               pdfjs.GlobalWorkerOptions.workerSrc =
-                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs";
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.1.392/pdf.worker.min.mjs";
               const pdf = await pdfjs.getDocument(typedarray).promise;
 
               const numPages = pdf.numPages;
