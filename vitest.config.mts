@@ -12,6 +12,7 @@ export default defineConfig(() => {
     test: {
       environment: "jsdom",
       include: [
+        "./app/**/*.{test,spec}.{ts,tsx}",
         "./src/**/*.{test,spec}.{ts,tsx}",
         "./test/**/*.{test,spec}.{ts,tsx}",
       ],

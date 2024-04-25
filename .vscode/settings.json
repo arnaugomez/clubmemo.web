@@ -9,13 +9,17 @@
   "conventionalCommits.promptFooter": false,
   "conventionalCommits.promptBody": false,
   "conventionalCommits.scopes": [
-    "app",
     "auth",
     "courses",
     "profile",
     "tags",
     "flashcards",
     "notes",
-    "ai-generator"
-  ]
+    "ai-generator",
+    "practice",
+    "common"
+  ],
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
