@@ -7,7 +7,7 @@ const nextConfig = {
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
     config.experiments.topLevelAwait = true;
-    config.experiments = { ...config.experiments, topLevelAwait: true }
+    config.experiments = { ...config.experiments, topLevelAwait: true };
     // Do not bundle canvas package
     config.externals.push("canvas");
 
