@@ -26,6 +26,7 @@ const nextConfig = {
       },
     ],
   },
+  experimental: { outputFileTracingExcludes: { "**/*": ["**canvas**"] } },
 };
 
 export default nextConfig;
