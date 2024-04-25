@@ -9,6 +9,7 @@ import {
   FetchMyCoursesPaginationModel,
   fetchMyCoursesPagination,
 } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
+import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import { BookText } from "lucide-react";
 import { Suspense } from "react";
 
@@ -43,7 +44,11 @@ interface CoursesPageContentProps {
 }
 
 async function CoursesPageContent({ page }: CoursesPageContentProps) {
-  const hasCourses = await fetchHasCourses();
+  const profile = await fetchMyProfile();
+  if (!profile) {
+    return null;
+  }
+  const hasCourses = await fetchHasCourses(profile.id);
 
   if (!hasCourses) {
     return <CreateCourseCtaLarge />;
