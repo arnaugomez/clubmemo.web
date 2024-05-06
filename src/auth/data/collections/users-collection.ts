@@ -1,6 +1,6 @@
 import { collection } from "@/src/common/data/utils/mongo";
-import { RegisteredDatabaseUserAttributes, User } from "lucia";
-import { WithId } from "mongodb";
+import type { RegisteredDatabaseUserAttributes, User } from "lucia";
+import type { WithId } from "mongodb";
 import { UserModel } from "../../domain/models/user-model";
 
 export interface UserDoc extends RegisteredDatabaseUserAttributes {}

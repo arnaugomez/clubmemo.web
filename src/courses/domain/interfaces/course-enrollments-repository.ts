@@ -1,4 +1,4 @@
-import { CourseEnrollmentModel } from "../models/course-enrollment-model";
+import type { CourseEnrollmentModel } from "../models/course-enrollment-model";
 
 export interface CreateCourseEnrollmentInputModel {
   courseId: string;

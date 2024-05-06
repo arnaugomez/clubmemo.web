@@ -1,11 +1,11 @@
-import { ProfileModel } from "@/src/profile/domain/models/profile-model";
-import { TagsRepository } from "@/src/tags/domain/interfaces/tags-repository";
-import { CoursesRepository } from "../interfaces/courses-repository";
+import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
+import type { TagsRepository } from "@/src/tags/domain/interfaces/tags-repository";
+import type { CoursesRepository } from "../interfaces/courses-repository";
 import {
   CannotEditCourseError,
   CourseDoesNotExistError,
 } from "../models/course-errors";
-import { UpdateCourseInputModel } from "../models/update-course-input-model";
+import type { UpdateCourseInputModel } from "../models/update-course-input-model";
 
 export class UpdateCourseUseCase {
   constructor(

@@ -1,4 +1,4 @@
-import { WithId } from "mongodb";
+import type { WithId } from "mongodb";
 import { DiscoverCourseModel } from "../../domain/models/discover-course-model";
 
 export interface DiscoverCourseDoc {

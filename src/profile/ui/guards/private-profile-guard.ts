@@ -1,4 +1,4 @@
-import { ProfileModel } from "@/src/profile/domain/models/profile-model";
+import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { notFound } from "next/navigation";
 import { fetchSession } from "../../../auth/ui/fetch/fetch-session";
 

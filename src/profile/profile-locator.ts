@@ -1,4 +1,5 @@
-import { Lazy, locator } from "../common/locator";
+import type { Lazy} from "../common/locator";
+import { locator } from "../common/locator";
 import type { UpdateProfileUseCase } from "./domain/use-cases/update-profile-use-case";
 
 interface ProfileLocator {

@@ -1,7 +1,7 @@
-import { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
-import { ReviewLogsRepository } from "../../domain/interfaces/review-logs-repository";
+import type { ReviewLogsRepository } from "../../domain/interfaces/review-logs-repository";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 import { ReviewLogModel } from "../../domain/models/review-log-model";
 import { reviewLogsCollection } from "../collections/review-logs-collection";

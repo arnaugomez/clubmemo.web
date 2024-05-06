@@ -13,9 +13,10 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/src/common/ui/components/shadcn/ui/dropdown-menu";
+import type {
+  CourseModelData} from "@/src/courses/domain/models/course-model";
 import {
-  CourseModel,
-  CourseModelData,
+  CourseModel
 } from "@/src/courses/domain/models/course-model";
 import { Copy, Ellipsis, File, LogOut, Settings2, Trash2 } from "lucide-react";
 import { useState } from "react";

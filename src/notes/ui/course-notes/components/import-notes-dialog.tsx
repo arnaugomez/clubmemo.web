@@ -11,7 +11,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/src/common/ui/components/shadcn/ui/tabs";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
+import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import { useState } from "react";
 import { ImportNotesAnkiForm } from "./import-notes-anki-form";
 import { ImportNotesCsvForm } from "./import-notes-csv-form";

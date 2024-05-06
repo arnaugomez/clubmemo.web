@@ -6,7 +6,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/avatar";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { User } from "lucide-react";
 import Link from "next/link";
 

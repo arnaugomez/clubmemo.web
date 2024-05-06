@@ -2,9 +2,10 @@
 
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
+import type {
+  CourseModelData} from "@/src/courses/domain/models/course-model";
 import {
-  CourseModel,
-  CourseModelData,
+  CourseModel
 } from "@/src/courses/domain/models/course-model";
 import { useState } from "react";
 import { enrollCourseAction } from "../actions/enroll-course-action";

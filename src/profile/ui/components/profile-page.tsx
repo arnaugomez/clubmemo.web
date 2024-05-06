@@ -6,7 +6,7 @@ import {
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { ProfileModel } from "@/src/profile/domain/models/profile-model";
+import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { LinkIcon, Settings, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

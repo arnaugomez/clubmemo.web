@@ -2,15 +2,15 @@ import {
   InvalidFileFormatError,
   NoPermissionError,
 } from "@/src/common/domain/models/app-errors";
-import { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
+import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { parse } from "csv-parse/sync";
 import { z } from "zod";
-import { NotesRepository } from "../interfaces/notes-repository";
+import type { NotesRepository } from "../interfaces/notes-repository";
 import { ImportNotesTypeModel } from "../models/import-note-type-model";
-import { ImportNotesInputModel } from "../models/import-notes-input-model";
-import { NoteModel } from "../models/note-model";
-import { NoteRowModel } from "../models/note-row-model";
+import type { ImportNotesInputModel } from "../models/import-notes-input-model";
+import type { NoteModel } from "../models/note-model";
+import type { NoteRowModel } from "../models/note-row-model";
 
 export class ImportNotesUseCase {
   constructor(

@@ -1,4 +1,4 @@
-import { ImportNotesTypeModel } from "./import-note-type-model";
+import type { ImportNotesTypeModel } from "./import-note-type-model";
 
 export interface ImportNotesInputModel {
   profileId: string;

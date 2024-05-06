@@ -1,7 +1,7 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
-import { EnvService } from "../../domain/interfaces/env-service";
-import {
+import type { EnvService } from "../../domain/interfaces/env-service";
+import type {
   GeneratePresignedUrlInputModel,
   UploadFileService,
 } from "../../domain/interfaces/upload-file-service";

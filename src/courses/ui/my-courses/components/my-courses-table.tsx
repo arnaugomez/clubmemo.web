@@ -10,8 +10,9 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { Bookmark } from "lucide-react";
 import Link from "next/link";
+import type {
+  FetchMyCoursesPaginationModel} from "../fetch/fetch-my-courses";
 import {
-  FetchMyCoursesPaginationModel,
   fetchMyCoursesPagination,
 } from "../fetch/fetch-my-courses";
 import { PracticeCell } from "./practice-cell";

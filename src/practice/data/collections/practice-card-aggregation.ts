@@ -1,7 +1,8 @@
-import { NoteDoc } from "@/src/notes/data/collections/notes-collection";
-import { WithId } from "mongodb";
+import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
+import type { WithId } from "mongodb";
+import type {
+  PracticeCardDoc} from "./practice-cards-collection";
 import {
-  PracticeCardDoc,
   PracticeCardDocTransformer,
 } from "./practice-cards-collection";
 

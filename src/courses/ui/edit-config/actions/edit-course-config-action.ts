@@ -6,8 +6,9 @@ import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { EnrollmentDoesNotExistError } from "@/src/courses/domain/models/enrollment-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
+import type {
+  EditCourseConfigActionModel} from "../schema/edit-course-config-action-schema";
 import {
-  EditCourseConfigActionModel,
   EditCourseConfigActionSchema,
 } from "../schema/edit-course-config-action-schema";
 

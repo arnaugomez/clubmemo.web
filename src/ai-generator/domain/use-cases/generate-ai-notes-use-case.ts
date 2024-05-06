@@ -1,9 +1,9 @@
-import { AiNotesGeneratorService } from "@/src/ai-generator/domain/interfaces/ai-notes-generator-service";
+import type { AiNotesGeneratorService } from "@/src/ai-generator/domain/interfaces/ai-notes-generator-service";
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
+import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
-import { GenerateAiNotesUseCaseInputModel } from "@/src/notes/domain/models/generate-ai-notes-input-model";
-import { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
+import type { GenerateAiNotesUseCaseInputModel } from "@/src/notes/domain/models/generate-ai-notes-input-model";
+import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 
 export class GenerateAiNotesUseCase {
   constructor(

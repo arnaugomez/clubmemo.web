@@ -2,8 +2,9 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 
 import { locator } from "../../../common/locator";
+import type {
+  CheckSessionModel} from "../../domain/models/check-session-model";
 import {
-  CheckSessionModel,
   emptyCheckSession,
 } from "../../domain/models/check-session-model";
 

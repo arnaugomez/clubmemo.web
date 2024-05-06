@@ -1,10 +1,11 @@
 "use server";
 
-import { PresignedUrlModelData } from "@/src/common/domain/models/presigned-url-model";
+import type { PresignedUrlModelData } from "@/src/common/domain/models/presigned-url-model";
 import { locator } from "@/src/common/locator";
+import type {
+  FormActionResponse} from "@/src/common/ui/models/server-form-errors";
 import {
-  ActionResponse,
-  FormActionResponse,
+  ActionResponse
 } from "@/src/common/ui/models/server-form-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../fetch/fetch-my-profile";

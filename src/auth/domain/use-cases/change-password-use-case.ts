@@ -1,5 +1,5 @@
-import { Cookie } from "lucia";
-import { AuthService } from "../interfaces/auth-service";
+import type { Cookie } from "lucia";
+import type { AuthService } from "../interfaces/auth-service";
 
 interface ChangePasswordInputModel {
   userId: string;

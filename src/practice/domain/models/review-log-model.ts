@@ -1,5 +1,5 @@
-import { PracticeCardRatingModel } from "./practice-card-rating-model";
-import { PracticeCardStateModel } from "./practice-card-state-model";
+import type { PracticeCardRatingModel } from "./practice-card-rating-model";
+import type { PracticeCardStateModel } from "./practice-card-state-model";
 
 export interface ReviewLogModelData {
   id: string;

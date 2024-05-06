@@ -1,6 +1,6 @@
-import { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
-import { TagsRepository } from "@/src/tags/domain/interfaces/tags-repository";
-import { UpdateProfileInputModel } from "../models/update-profile-input-model";
+import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
+import type { TagsRepository } from "@/src/tags/domain/interfaces/tags-repository";
+import type { UpdateProfileInputModel } from "../models/update-profile-input-model";
 
 export class UpdateProfileUseCase {
   constructor(

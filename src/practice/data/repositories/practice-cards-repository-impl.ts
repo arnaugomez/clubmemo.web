@@ -1,19 +1,22 @@
-import { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type {
+  NoteDoc} from "@/src/notes/data/collections/notes-collection";
 import {
-  NoteDoc,
   NoteDocTransformer,
   notesCollection,
 } from "@/src/notes/data/collections/notes-collection";
-import { ObjectId, WithId } from "mongodb";
-import {
+import type { WithId } from "mongodb";
+import { ObjectId } from "mongodb";
+import type {
   GetDueInput,
   GetUnpracticedInput,
   PracticeCardsRepository,
 } from "../../domain/interfaces/practice-cards-repository";
 import { PracticeCardModel } from "../../domain/models/practice-card-model";
+import type {
+  PracticeCardAggregationDoc} from "../collections/practice-card-aggregation";
 import {
-  PracticeCardAggregationDoc,
   PracticeCardAggregationDocTransformer,
 } from "../collections/practice-card-aggregation";
 import { practiceCardsCollection } from "../collections/practice-cards-collection";

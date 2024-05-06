@@ -1,5 +1,5 @@
-import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { fetchPracticeCards } from "../fetch/fetch-practice-cards";
 import { PracticeEmptyState } from "./practice-empty-state";
 import { PracticeWizard } from "./practice-wizard";

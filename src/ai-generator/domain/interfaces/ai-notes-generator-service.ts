@@ -1,5 +1,5 @@
-import { AiGeneratorNoteType } from "../models/ai-generator-note-type";
-import { AiNotesGeneratorSourceType } from "../models/ai-notes-generator-source-type";
+import type { AiGeneratorNoteType } from "../models/ai-generator-note-type";
+import type { AiNotesGeneratorSourceType } from "../models/ai-notes-generator-source-type";
 
 export interface GenerateAiNotesInputModel {
   text: string;

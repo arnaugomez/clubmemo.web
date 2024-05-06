@@ -1,6 +1,6 @@
-import { EnvService } from "@/src/common/domain/interfaces/env-service";
+import type { EnvService } from "@/src/common/domain/interfaces/env-service";
 import { OpenAI } from "openai";
-import {
+import type {
   AiNotesGeneratorService,
   GenerateAiNotesInputModel,
 } from "../../domain/interfaces/ai-notes-generator-service";

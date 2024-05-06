@@ -7,7 +7,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/tooltip";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
+import type { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
 import { ArrowRight, Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

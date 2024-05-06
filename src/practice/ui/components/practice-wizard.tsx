@@ -2,18 +2,21 @@
 import { NullError } from "@/src/common/domain/models/app-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
+import type {
+  CourseEnrollmentModelData} from "@/src/courses/domain/models/course-enrollment-model";
 import {
-  CourseEnrollmentModel,
-  CourseEnrollmentModelData,
+  CourseEnrollmentModel
 } from "@/src/courses/domain/models/course-enrollment-model";
+import type {
+  CourseModelData} from "@/src/courses/domain/models/course-model";
 import {
-  CourseModel,
-  CourseModelData,
+  CourseModel
 } from "@/src/courses/domain/models/course-model";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
+import type { NoteModel } from "@/src/notes/domain/models/note-model";
+import type {
+  PracticeCardModelData} from "@/src/practice/domain/models/practice-card-model";
 import {
-  PracticeCardModel,
-  PracticeCardModelData,
+  PracticeCardModel
 } from "@/src/practice/domain/models/practice-card-model";
 import DOMPurify from "isomorphic-dompurify";
 import { useState } from "react";

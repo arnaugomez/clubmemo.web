@@ -1,7 +1,7 @@
 import { shuffle } from "@/src/common/domain/utils/array";
 import { locator } from "@/src/common/locator";
-import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 
 interface FetchPracticeCardsInput {
   course: CourseModel;

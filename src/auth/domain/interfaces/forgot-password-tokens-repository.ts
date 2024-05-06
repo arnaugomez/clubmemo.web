@@ -1,4 +1,4 @@
-import { ForgotPasswordTokenModel } from "../models/forgot-password-token-model";
+import type { ForgotPasswordTokenModel } from "../models/forgot-password-token-model";
 
 export interface ForgotPasswordTokensRepository {
   generate(userId: string): Promise<string>;

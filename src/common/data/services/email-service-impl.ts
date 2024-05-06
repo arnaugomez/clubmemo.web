@@ -1,6 +1,6 @@
 import { Resend } from "resend";
-import { EmailService } from "../../domain/interfaces/email-service";
-import { EnvService } from "../../domain/interfaces/env-service";
+import type { EmailService } from "../../domain/interfaces/email-service";
+import type { EnvService } from "../../domain/interfaces/env-service";
 
 export class EmailServiceImpl implements EmailService {
   private readonly resend;

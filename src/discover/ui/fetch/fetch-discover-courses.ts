@@ -1,5 +1,5 @@
 import { locator } from "@/src/common/locator";
-import { GetDiscoverCoursesInputModel } from "@/src/courses/domain/interfaces/courses-repository";
+import type { GetDiscoverCoursesInputModel } from "@/src/courses/domain/interfaces/courses-repository";
 
 export const fetchDiscoverCourses = async (
   input: GetDiscoverCoursesInputModel,

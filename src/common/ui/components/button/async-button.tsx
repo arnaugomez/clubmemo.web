@@ -1,6 +1,7 @@
 import { Loader2 } from "lucide-react";
 import { forwardRef, useState } from "react";
-import { Button, ButtonProps } from "../shadcn/ui/button";
+import type { ButtonProps } from "../shadcn/ui/button";
+import { Button } from "../shadcn/ui/button";
 
 const AsyncButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, onClick, ...props }, ref) => {

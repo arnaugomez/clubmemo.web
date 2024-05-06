@@ -1,4 +1,4 @@
-import { CoursePermissionTypeModel } from "./course-permission-type-model";
+import type { CoursePermissionTypeModel } from "./course-permission-type-model";
 
 interface CoursePermissionModelData {
   id: string;

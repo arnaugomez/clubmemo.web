@@ -1,5 +1,5 @@
-import { Cookie } from "lucia";
-import { CheckSessionModel } from "../models/check-session-model";
+import type { Cookie } from "lucia";
+import type { CheckSessionModel } from "../models/check-session-model";
 
 export interface LoginWithPasswordModel {
   email: string;

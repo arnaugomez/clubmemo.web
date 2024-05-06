@@ -1,5 +1,5 @@
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
-import { TagsRepository } from "../../domain/interfaces/tags-repository";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { TagsRepository } from "../../domain/interfaces/tags-repository";
 import { tagsCollection } from "../collections/tags-collection";
 
 export class TagsRepositoryImpl implements TagsRepository {

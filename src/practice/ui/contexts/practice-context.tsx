@@ -4,23 +4,26 @@ import {
   createContextHook,
   createNullContext,
 } from "@/src/common/ui/utils/context";
-import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { PracticeCardModel } from "@/src/practice/domain/models/practice-card-model";
-import {
+import type {
   DaysToNextReviewModel,
   PracticeCardRatingModel,
 } from "@/src/practice/domain/models/practice-card-rating-model";
+import type {
+  PracticeResultModel} from "@/src/practice/domain/models/practicer-model";
 import {
-  PracticeResultModel,
   PracticerModel,
 } from "@/src/practice/domain/models/practicer-model";
-import { ReviewLogModel } from "@/src/practice/domain/models/review-log-model";
-import { PropsWithChildren, useMemo, useState } from "react";
+import type { ReviewLogModel } from "@/src/practice/domain/models/review-log-model";
+import type { PropsWithChildren} from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { getNextPracticeCardsAction } from "../actions/get-next-practice-cards-action";
 import { practiceAction } from "../actions/practice-action";
-import { Task, useTaskQueueContext } from "./task-queue-context";
+import type { Task} from "./task-queue-context";
+import { useTaskQueueContext } from "./task-queue-context";
 
 interface PracticeProviderProps extends PropsWithChildren {
   course: CourseModel;

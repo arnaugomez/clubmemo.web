@@ -1,5 +1,5 @@
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import Link from "next/link";
 import { CourseDetailEnrollSection } from "../../enroll/components/course-detail-enroll-section";
 

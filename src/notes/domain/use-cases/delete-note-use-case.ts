@@ -1,7 +1,7 @@
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
+import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
-import { NotesRepository } from "../interfaces/notes-repository";
+import type { NotesRepository } from "../interfaces/notes-repository";
 import { NoteDoesNotExistError } from "../models/notes-errors";
 
 interface DeleteNoteUseCaseInputModel {

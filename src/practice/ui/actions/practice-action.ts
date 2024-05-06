@@ -4,13 +4,15 @@ import { NoPermissionError } from "@/src/common/domain/models/app-errors";
 import { locator } from "@/src/common/locator";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
+import type {
+  PracticeCardModelData} from "@/src/practice/domain/models/practice-card-model";
 import {
-  PracticeCardModel,
-  PracticeCardModelData,
+  PracticeCardModel
 } from "@/src/practice/domain/models/practice-card-model";
+import type {
+  ReviewLogModelData} from "@/src/practice/domain/models/review-log-model";
 import {
-  ReviewLogModel,
-  ReviewLogModelData,
+  ReviewLogModel
 } from "@/src/practice/domain/models/review-log-model";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../../profile/ui/fetch/fetch-my-profile";

@@ -1,5 +1,5 @@
-import { ProfileModel } from "../models/profile-model";
-import { UpdateProfileInputModel } from "../models/update-profile-input-model";
+import type { ProfileModel } from "../models/profile-model";
+import type { UpdateProfileInputModel } from "../models/update-profile-input-model";
 
 export interface ProfilesRepository {
   create(userId: string): Promise<void>;

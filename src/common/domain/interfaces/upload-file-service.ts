@@ -1,4 +1,4 @@
-import { PresignedUrlModel } from "../models/presigned-url-model";
+import type { PresignedUrlModel } from "../models/presigned-url-model";
 
 export interface GeneratePresignedUrlInputModel {
   key: string;

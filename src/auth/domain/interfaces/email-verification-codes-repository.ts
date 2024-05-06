@@ -1,4 +1,4 @@
-import { EmailVerificationCodeModel } from "../models/email-verification-code-model";
+import type { EmailVerificationCodeModel } from "../models/email-verification-code-model";
 
 export interface EmailVerificationCodesRepository {
   generate(userId: string): Promise<EmailVerificationCodeModel>;

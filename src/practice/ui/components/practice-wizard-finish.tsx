@@ -2,7 +2,7 @@ import PracticeLoadingPage from "@/app/(admin-layout)/courses/detail/[id]/practi
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { PartyPopper } from "lucide-react";
 import Link from "next/link";
 import { usePracticeContext } from "../contexts/practice-context";

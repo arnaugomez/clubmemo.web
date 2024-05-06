@@ -1,6 +1,6 @@
-import { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
-import { AuthService } from "../interfaces/auth-service";
-import { UsersRepository } from "../interfaces/users-repository";
+import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
+import type { AuthService } from "../interfaces/auth-service";
+import type { UsersRepository } from "../interfaces/users-repository";
 
 export class DeleteUserUseCase {
   constructor(

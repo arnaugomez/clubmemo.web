@@ -1,9 +1,9 @@
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import { NotesRepository } from "@/src/notes/domain/interfaces/notes-repository";
-import { CoursesRepository } from "../interfaces/courses-repository";
-import { CopyCourseInputModel } from "../models/copy-course-input-model";
+import type { NotesRepository } from "@/src/notes/domain/interfaces/notes-repository";
+import type { CoursesRepository } from "../interfaces/courses-repository";
+import type { CopyCourseInputModel } from "../models/copy-course-input-model";
 import { CourseDoesNotExistError } from "../models/course-errors";
-import { CourseModel } from "../models/course-model";
+import type { CourseModel } from "../models/course-model";
 
 export class CopyCourseUseCase {
   constructor(

@@ -1,6 +1,7 @@
+import type {
+  CourseEnrollmentModelData} from "./course-enrollment-model";
 import {
-  CourseEnrollmentModel,
-  CourseEnrollmentModelData,
+  CourseEnrollmentModel
 } from "./course-enrollment-model";
 import { CoursePermissionTypeModel } from "./course-permission-type-model";
 

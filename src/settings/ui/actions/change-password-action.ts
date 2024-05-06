@@ -7,7 +7,7 @@ import {
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { cookies } from "next/headers";
-import { z } from "zod";
+import type { z } from "zod";
 import { fetchSession } from "../../../auth/ui/fetch/fetch-session";
 import { ChangePasswordSchema } from "../schemas/change-password-schema";
 
