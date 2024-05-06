@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import type { ObjectId } from "mongodb";
 import { EnrolledCourseListItemModel } from "../../domain/models/enrolled-course-list-item-model";
 
 export interface EnrolledCourseListItemDoc {

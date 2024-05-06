@@ -1,7 +1,7 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { DiscoverLoadingSkeletons } from "@/src/discover/ui/components/discover-loading-skeletons";
-import { ProfileModel } from "@/src/profile/domain/models/profile-model";
+import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { SearchX } from "lucide-react";
 import { Suspense } from "react";
 import { fetchCoursesByAuthor } from "../fetch/fetch-courses-by-author";

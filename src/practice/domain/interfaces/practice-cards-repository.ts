@@ -1,4 +1,4 @@
-import { PracticeCardModel } from "../models/practice-card-model";
+import type { PracticeCardModel } from "../models/practice-card-model";
 
 export interface GetUnpracticedInput {
   courseId: string;

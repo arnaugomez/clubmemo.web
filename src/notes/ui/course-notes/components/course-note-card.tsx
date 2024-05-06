@@ -1,7 +1,7 @@
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import { Separator } from "@/src/common/ui/components/shadcn/ui/separator";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
+import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import DOMPurify from "isomorphic-dompurify";
 import { Edit2, Trash2 } from "lucide-react";
 import { useState } from "react";

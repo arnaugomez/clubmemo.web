@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import type { ObjectId } from "mongodb";
 import { KeepLearningModel } from "../../domain/models/keep-learning-model";
 
 export interface KeepLearningAggregationDoc {

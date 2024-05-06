@@ -1,7 +1,8 @@
 import { FSRS } from "ts-fsrs";
+import type {
+  CourseEnrollmentConfigModelData} from "./course-enrollment-config-model";
 import {
-  CourseEnrollmentConfigModel,
-  CourseEnrollmentConfigModelData,
+  CourseEnrollmentConfigModel
 } from "./course-enrollment-config-model";
 
 export interface CourseEnrollmentModelData {

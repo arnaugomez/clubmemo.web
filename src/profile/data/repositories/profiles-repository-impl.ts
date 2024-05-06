@@ -1,9 +1,9 @@
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
 import { HandleAlreadyExistsError } from "../../domain/errors/profile-errors";
-import { ProfilesRepository } from "../../domain/interfaces/profiles-repository";
-import { ProfileModel } from "../../domain/models/profile-model";
-import { UpdateProfileInputModel } from "../../domain/models/update-profile-input-model";
+import type { ProfilesRepository } from "../../domain/interfaces/profiles-repository";
+import type { ProfileModel } from "../../domain/models/profile-model";
+import type { UpdateProfileInputModel } from "../../domain/models/update-profile-input-model";
 import {
   ProfileDocTransformer,
   profilesCollection,

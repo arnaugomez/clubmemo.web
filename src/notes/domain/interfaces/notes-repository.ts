@@ -1,10 +1,10 @@
-import { PaginationModel } from "@/src/common/domain/models/pagination-model";
-import { CopyNotesInputModel } from "../models/copy-notes-input-model";
-import { CreateNoteInputModel } from "../models/create-note-input-model";
-import { GetNotesInputModel } from "../models/get-notes-input-model";
-import { NoteModel } from "../models/note-model";
-import { NoteRowModel } from "../models/note-row-model";
-import { UpdateNoteInputModel } from "../models/update-note-input-model";
+import type { PaginationModel } from "@/src/common/domain/models/pagination-model";
+import type { CopyNotesInputModel } from "../models/copy-notes-input-model";
+import type { CreateNoteInputModel } from "../models/create-note-input-model";
+import type { GetNotesInputModel } from "../models/get-notes-input-model";
+import type { NoteModel } from "../models/note-model";
+import type { NoteRowModel } from "../models/note-row-model";
+import type { UpdateNoteInputModel } from "../models/update-note-input-model";
 
 export interface NotesRepository {
   create(input: CreateNoteInputModel): Promise<NoteModel>;

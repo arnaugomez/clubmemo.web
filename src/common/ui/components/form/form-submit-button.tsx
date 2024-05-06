@@ -1,7 +1,8 @@
 import { Loader2 } from "lucide-react";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { useFormState } from "react-hook-form";
-import { Button, ButtonProps } from "../shadcn/ui/button";
+import type { ButtonProps } from "../shadcn/ui/button";
+import { Button } from "../shadcn/ui/button";
 
 interface FormSubmitButtonProps extends PropsWithChildren, ButtonProps {}
 

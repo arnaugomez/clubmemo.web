@@ -1,6 +1,6 @@
 import { collection } from "@/src/common/data/utils/mongo";
-import { Session } from "lucia";
-import { ObjectId } from "mongodb";
+import type { Session } from "lucia";
+import type { ObjectId } from "mongodb";
 import { SessionModel } from "../../domain/models/check-session-model";
 
 export interface SessionDoc {

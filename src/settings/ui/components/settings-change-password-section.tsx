@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import type { z } from "zod";
 import { changePasswordAction } from "../actions/change-password-action";
 import { ChangePasswordSchema } from "../schemas/change-password-schema";
 import { SettingsSectionTitle } from "./settings-section-title";

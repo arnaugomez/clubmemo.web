@@ -3,7 +3,7 @@ import {
   IncorrectPasswordError,
   UserDoesNotExistError,
 } from "@/src/auth/domain/errors/auth-errors";
-import { LoginWithPasswordModel } from "@/src/auth/domain/interfaces/auth-service";
+import type { LoginWithPasswordModel } from "@/src/auth/domain/interfaces/auth-service";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { locator } from "@/src/common/locator";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";

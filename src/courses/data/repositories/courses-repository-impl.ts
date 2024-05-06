@@ -1,16 +1,18 @@
+import type {
+  PaginationFacet} from "@/src/common/data/facets/pagination-facet";
 import {
-  PaginationFacet,
   PaginationFacetTransformer,
 } from "@/src/common/data/facets/pagination-facet";
-import { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
-import { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
+import type { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
 import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
 import { reviewLogsCollection } from "@/src/practice/data/collections/review-logs-collection";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
-import { ObjectId, WithId } from "mongodb";
-import {
+import type { WithId } from "mongodb";
+import { ObjectId } from "mongodb";
+import type {
   CoursesRepository,
   GetCoursesByAuthorInputModel,
   GetDiscoverCoursesInputModel,
@@ -19,39 +21,45 @@ import {
   GetMyCoursesInputModel,
   GetMyCoursesPaginationInputModel,
 } from "../../domain/interfaces/courses-repository";
-import { CourseModel } from "../../domain/models/course-model";
+import type { CourseModel } from "../../domain/models/course-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
-import { CreateCourseInputModel } from "../../domain/models/create-course-input-model";
-import { DiscoverCourseModel } from "../../domain/models/discover-course-model";
-import { EnrolledCourseListItemModel } from "../../domain/models/enrolled-course-list-item-model";
-import { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
-import { KeepLearningModel } from "../../domain/models/keep-learning-model";
-import { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
+import type { CreateCourseInputModel } from "../../domain/models/create-course-input-model";
+import type { DiscoverCourseModel } from "../../domain/models/discover-course-model";
+import type { EnrolledCourseListItemModel } from "../../domain/models/enrolled-course-list-item-model";
+import type { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
+import type { KeepLearningModel } from "../../domain/models/keep-learning-model";
+import type { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
+import type {
+  DiscoverCourseDoc} from "../aggregations/discover-course-aggregation";
 import {
-  DiscoverCourseDoc,
   DiscoverCourseTransformer,
 } from "../aggregations/discover-course-aggregation";
+import type {
+  EnrolledCourseListItemDoc} from "../aggregations/enrolled-course-list-item-aggregation";
 import {
-  EnrolledCourseListItemDoc,
   EnrolledCourseListItemTransformer,
 } from "../aggregations/enrolled-course-list-item-aggregation";
+import type {
+  KeepLearningAggregationDoc} from "../aggregations/keep-learning-aggregation";
 import {
-  KeepLearningAggregationDoc,
   KeepLearningAggregationDocTransformer,
 } from "../aggregations/keep-learning-aggregation";
+import type {
+  CourseEnrollmentDoc} from "../collections/course-enrollments-collection";
 import {
-  CourseEnrollmentDoc,
   courseEnrollmentsCollection,
 } from "../collections/course-enrollments-collection";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
+import type {
+  CourseDoc} from "../collections/courses-collection";
 import {
-  CourseDoc,
   CourseDocTransformer,
   coursesCollection,
 } from "../collections/courses-collection";
+import type {
+  WithPaginationToken} from "../models/with-pagination-token";
 import {
-  TokenPaginationTransformer,
-  WithPaginationToken,
+  TokenPaginationTransformer
 } from "../models/with-pagination-token";
 
 export class CoursesRepositoryImpl implements CoursesRepository {

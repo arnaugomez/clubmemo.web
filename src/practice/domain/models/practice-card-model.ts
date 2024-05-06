@@ -1,7 +1,10 @@
-import { NoteModel, NoteModelData } from "@/src/notes/domain/models/note-model";
-import { Card, createEmptyCard } from "ts-fsrs";
+import type { NoteModelData } from "@/src/notes/domain/models/note-model";
+import { NoteModel } from "@/src/notes/domain/models/note-model";
+import type { Card} from "ts-fsrs";
+import { createEmptyCard } from "ts-fsrs";
+import type {
+  PracticeCardStateModel} from "./practice-card-state-model";
 import {
-  PracticeCardStateModel,
   PracticeCardStateTransformer,
 } from "./practice-card-state-model";
 

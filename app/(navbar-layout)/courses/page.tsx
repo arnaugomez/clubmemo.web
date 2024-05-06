@@ -5,8 +5,9 @@ import { CreateCourseButton } from "@/src/courses/ui/create/components/create-co
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
 import { MyCoursesTable } from "@/src/courses/ui/my-courses/components/my-courses-table";
 import { fetchHasCourses } from "@/src/courses/ui/my-courses/fetch/fetch-has-courses";
+import type {
+  FetchMyCoursesPaginationModel} from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import {
-  FetchMyCoursesPaginationModel,
   fetchMyCoursesPagination,
 } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";

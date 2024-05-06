@@ -1,5 +1,6 @@
-import { Lazy, locator } from "../common/locator";
-import { GenerateAiNotesUseCase } from "./domain/use-cases/generate-ai-notes-use-case";
+import type { Lazy} from "../common/locator";
+import { locator } from "../common/locator";
+import type { GenerateAiNotesUseCase } from "./domain/use-cases/generate-ai-notes-use-case";
 
 interface AiGeneratorLocator {
   GenerateAiNotesUseCase: Lazy<GenerateAiNotesUseCase>;

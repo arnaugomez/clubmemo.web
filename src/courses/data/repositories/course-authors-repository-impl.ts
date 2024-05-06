@@ -1,10 +1,11 @@
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
-import { CourseAuthorsRepository } from "../../domain/interfaces/course-authors-repository";
-import { CourseAuthorModel } from "../../domain/models/course-author-model";
+import type { CourseAuthorsRepository } from "../../domain/interfaces/course-authors-repository";
+import type { CourseAuthorModel } from "../../domain/models/course-author-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
+import type {
+  CourseAuthorDoc} from "../aggregations/course-authors-aggregation";
 import {
-  CourseAuthorDoc,
   CourseAuthorDocTransformer,
 } from "../aggregations/course-authors-aggregation";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";

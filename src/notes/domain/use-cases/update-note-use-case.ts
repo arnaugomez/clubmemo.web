@@ -1,10 +1,10 @@
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
+import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
-import { NotesRepository } from "../interfaces/notes-repository";
-import { NoteModel } from "../models/note-model";
+import type { NotesRepository } from "../interfaces/notes-repository";
+import type { NoteModel } from "../models/note-model";
 import { NoteDoesNotExistError } from "../models/notes-errors";
-import { UpdateNoteInputModel } from "../models/update-note-input-model";
+import type { UpdateNoteInputModel } from "../models/update-note-input-model";
 
 interface UpdateNoteUseCaseInputModel {
   profileId: string;

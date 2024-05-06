@@ -1,6 +1,6 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import Image from "next/image";
 import { Suspense } from "react";
 import { TagsSection } from "../../../../tags/ui/components/tags-section";

@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { GetDiscoverCoursesInputModel } from "@/src/courses/domain/interfaces/courses-repository";
+import type { GetDiscoverCoursesInputModel } from "@/src/courses/domain/interfaces/courses-repository";
 import { fetchDiscoverCourses } from "../fetch/fetch-discover-courses";
 
 export async function paginateDiscoverAction(

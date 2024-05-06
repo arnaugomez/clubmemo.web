@@ -1,11 +1,12 @@
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import {
+import type {
   HTMLInputAutoCompleteAttribute,
   HTMLInputTypeAttribute,
   ReactNode,
 } from "react";
-import { Accept } from "react-dropzone";
-import { CheckboxesInput, Option } from "../input/checkboxes-input";
+import type { Accept } from "react-dropzone";
+import type { Option } from "../input/checkboxes-input";
+import { CheckboxesInput } from "../input/checkboxes-input";
 import { FileInput } from "../input/file-input";
 import { PasswordInput } from "../input/password-input";
 import { SliderInput } from "../input/slider-input";

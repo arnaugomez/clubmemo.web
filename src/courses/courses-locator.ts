@@ -1,6 +1,7 @@
-import { Lazy, locator } from "../common/locator";
+import type { Lazy} from "../common/locator";
+import { locator } from "../common/locator";
 import type { CopyCourseUseCase } from "./domain/use-cases/copy-course-use-case";
-import { GetInterestingCoursesUseCase } from "./domain/use-cases/get-interesting-courses-use-case";
+import type { GetInterestingCoursesUseCase } from "./domain/use-cases/get-interesting-courses-use-case";
 import type { UpdateCourseUseCase } from "./domain/use-cases/update-course-use-case";
 
 interface CoursesLocator {

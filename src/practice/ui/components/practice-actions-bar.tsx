@@ -1,9 +1,9 @@
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { CourseEnrollmentConfigModel } from "@/src/courses/domain/models/course-enrollment-config-model";
+import type { CourseEnrollmentConfigModel } from "@/src/courses/domain/models/course-enrollment-config-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { usePracticeContext } from "../contexts/practice-context";
 
 interface PracticeActionsBarProps {

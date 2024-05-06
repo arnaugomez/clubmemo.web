@@ -1,7 +1,7 @@
 import { collection } from "@/src/common/data/utils/mongo";
-import { ObjectId, WithId } from "mongodb";
-import { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
-import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
+import type { ObjectId, WithId } from "mongodb";
+import type { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
+import type { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 import { ReviewLogModel } from "../../domain/models/review-log-model";
 
 export interface ReviewLogDoc {

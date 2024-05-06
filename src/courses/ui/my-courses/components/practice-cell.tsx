@@ -7,9 +7,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/src/common/ui/components/shadcn/ui/tooltip";
+import type {
+  EnrolledCourseListItemModelData} from "@/src/courses/domain/models/enrolled-course-list-item-model";
 import {
-  EnrolledCourseListItemModel,
-  EnrolledCourseListItemModelData,
+  EnrolledCourseListItemModel
 } from "@/src/courses/domain/models/enrolled-course-list-item-model";
 import { Check, Play } from "lucide-react";
 import Link from "next/link";

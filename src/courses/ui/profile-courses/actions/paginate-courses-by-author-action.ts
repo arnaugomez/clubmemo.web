@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { GetCoursesByAuthorInputModel } from "@/src/courses/domain/interfaces/courses-repository";
+import type { GetCoursesByAuthorInputModel } from "@/src/courses/domain/interfaces/courses-repository";
 import { fetchCoursesByAuthor } from "../fetch/fetch-courses-by-author";
 
 export async function paginateCoursesByAuthorAction(

@@ -9,8 +9,9 @@ import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../../profile/ui/fetch/fetch-my-profile";
+import type {
+  GenerateAiNotesActionModel} from "../schemas/generate-ai-notes-action-schema";
 import {
-  GenerateAiNotesActionModel,
   GenerateAiNotesActionSchema,
 } from "../schemas/generate-ai-notes-action-schema";
 

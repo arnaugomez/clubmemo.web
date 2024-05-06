@@ -1,9 +1,10 @@
 "use server";
 
 import { locator } from "@/src/common/locator";
+import type {
+  FormActionResponse} from "@/src/common/ui/models/server-form-errors";
 import {
-  ActionResponse,
-  FormActionResponse,
+  ActionResponse
 } from "@/src/common/ui/models/server-form-errors";
 
 interface GetTagSuggestionsActionModel {

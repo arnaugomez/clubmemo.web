@@ -7,8 +7,9 @@ import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-erro
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../profile/ui/fetch/fetch-my-profile";
+import type {
+  GenerateAiNotesConfirmActionModel} from "../schemas/generate-ai-notes-confirm-action-schema";
 import {
-  GenerateAiNotesConfirmActionModel,
   GenerateAiNotesConfirmActionSchema,
 } from "../schemas/generate-ai-notes-confirm-action-schema";
 

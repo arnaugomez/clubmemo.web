@@ -6,7 +6,7 @@ import {
   CannotEditCourseError,
   CourseDoesNotExistError,
 } from "@/src/courses/domain/models/course-errors";
-import { UpdateCourseInputModel } from "@/src/courses/domain/models/update-course-input-model";
+import type { UpdateCourseInputModel } from "@/src/courses/domain/models/update-course-input-model";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";

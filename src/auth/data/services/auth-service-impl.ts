@@ -1,20 +1,22 @@
-import { EnvService } from "@/src/common/domain/interfaces/env-service";
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { EnvService } from "@/src/common/domain/interfaces/env-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
-import {
+import type {
   Cookie,
-  Lucia,
   PasswordHashingAlgorithm,
-  RegisteredDatabaseUserAttributes,
+  RegisteredDatabaseUserAttributes} from "lucia";
+import {
+  Lucia
 } from "lucia";
-import { Collection, ObjectId, WithId } from "mongodb";
+import type { Collection, WithId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { Argon2id } from "oslo/password";
 import {
   IncorrectPasswordError,
   UserAlreadyExistsError,
   UserDoesNotExistError,
 } from "../../domain/errors/auth-errors";
-import {
+import type {
   AuthService,
   CheckPasswordModel,
   LoginWithPasswordModel,
@@ -23,15 +25,17 @@ import {
   UpdatePasswordModel,
 } from "../../domain/interfaces/auth-service";
 import { AuthTypeModel } from "../../domain/models/auth-type-model";
-import { CheckSessionModel } from "../../domain/models/check-session-model";
+import type { CheckSessionModel } from "../../domain/models/check-session-model";
+import type {
+  SessionDoc} from "../collections/sessions-collection";
 import {
-  SessionDoc,
   SessionTransformer,
   sessionsCollection,
 } from "../collections/sessions-collection";
+import type {
+  UserDoc} from "../collections/users-collection";
 import {
   LuciaUserTransformer,
-  UserDoc,
   usersCollection,
 } from "../collections/users-collection";
 

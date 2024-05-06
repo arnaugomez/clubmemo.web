@@ -2,7 +2,7 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { DiscoverCourseModel } from "@/src/courses/domain/models/discover-course-model";
+import type { DiscoverCourseModel } from "@/src/courses/domain/models/discover-course-model";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

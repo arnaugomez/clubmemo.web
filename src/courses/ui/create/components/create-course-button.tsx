@@ -1,7 +1,8 @@
 "use client";
+import type {
+  ButtonProps} from "@/src/common/ui/components/shadcn/ui/button";
 import {
-  Button,
-  ButtonProps,
+  Button
 } from "@/src/common/ui/components/shadcn/ui/button";
 import { useState } from "react";
 import { CreateCourseDialog } from "./create-course-dialog";

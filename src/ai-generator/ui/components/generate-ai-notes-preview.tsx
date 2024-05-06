@@ -5,7 +5,7 @@ import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { Separator } from "@/src/common/ui/components/shadcn/ui/separator";
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
+import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

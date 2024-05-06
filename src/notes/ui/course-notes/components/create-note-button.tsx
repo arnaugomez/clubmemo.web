@@ -1,9 +1,10 @@
 "use client";
+import type {
+  ButtonProps} from "@/src/common/ui/components/shadcn/ui/button";
 import {
-  Button,
-  ButtonProps,
+  Button
 } from "@/src/common/ui/components/shadcn/ui/button";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
+import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import { useState } from "react";
 import { useCourseNotesContext } from "../contexts/course-notes-context";
 import { CreateNoteDialog } from "./create-note-dialog";

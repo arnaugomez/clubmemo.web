@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { FormActionResponse } from "./server-form-errors";
+import type { FormActionResponse } from "./server-form-errors";
 
 export class ActionResponseHandler<T> {
   private readonly response: FormActionResponse<T>;

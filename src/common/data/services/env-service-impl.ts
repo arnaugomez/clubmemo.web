@@ -1,4 +1,4 @@
-import { EnvService } from "../../domain/interfaces/env-service";
+import type { EnvService } from "../../domain/interfaces/env-service";
 
 export class EnvServiceImpl implements EnvService {
   readonly mongodbUrl = process.env.MONGODB_URL;

@@ -7,8 +7,9 @@ import { notesLocator } from "@/src/notes/notes-locator";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
+import type {
+  DeleteNoteActionModel} from "../schemas/delete-note-action-schema";
 import {
-  DeleteNoteActionModel,
   DeleteNoteActionSchema,
 } from "../schemas/delete-note-action-schema";
 

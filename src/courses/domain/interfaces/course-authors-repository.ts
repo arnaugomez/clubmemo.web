@@ -1,4 +1,4 @@
-import { CourseAuthorModel } from "../models/course-author-model";
+import type { CourseAuthorModel } from "../models/course-author-model";
 
 export interface CourseAuthorsRepository {
   get(courseId: string): Promise<CourseAuthorModel[]>;

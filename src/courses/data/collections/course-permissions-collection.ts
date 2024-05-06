@@ -1,7 +1,7 @@
 import { collection } from "@/src/common/data/utils/mongo";
-import { ObjectId, WithId } from "mongodb";
+import type { ObjectId, WithId } from "mongodb";
 import { CoursePermissionModel } from "../../domain/models/course-permission-model";
-import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
+import type { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 
 export interface CoursePermissionDoc {
   courseId: ObjectId;

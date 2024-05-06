@@ -15,7 +15,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
+import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";

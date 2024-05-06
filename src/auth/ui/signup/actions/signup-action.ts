@@ -1,6 +1,6 @@
 "use server";
 import { UserAlreadyExistsError } from "@/src/auth/domain/errors/auth-errors";
-import { SignupWithPasswordModel } from "@/src/auth/domain/interfaces/auth-service";
+import type { SignupWithPasswordModel } from "@/src/auth/domain/interfaces/auth-service";
 import { locator } from "@/src/common/locator";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { cookies } from "next/headers";

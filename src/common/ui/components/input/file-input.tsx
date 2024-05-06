@@ -1,6 +1,8 @@
 import { FileIcon, Upload } from "lucide-react";
-import { PropsWithChildren, ReactNode, useCallback } from "react";
-import { Accept, useDropzone } from "react-dropzone";
+import type { PropsWithChildren, ReactNode} from "react";
+import { useCallback } from "react";
+import type { Accept} from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { textStyles } from "../../styles/text-styles";
 import { cn } from "../../utils/shadcn";
 

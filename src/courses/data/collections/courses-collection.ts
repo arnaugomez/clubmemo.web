@@ -1,9 +1,10 @@
 import { collection } from "@/src/common/data/utils/mongo";
-import { WithId } from "mongodb";
+import type { WithId } from "mongodb";
 import { CourseModel } from "../../domain/models/course-model";
-import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
+import type { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
+import type {
+  CourseEnrollmentDoc} from "./course-enrollments-collection";
 import {
-  CourseEnrollmentDoc,
   CourseEnrollmentDocTransformer,
 } from "./course-enrollments-collection";
 

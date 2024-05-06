@@ -1,4 +1,4 @@
-import { AuthTypeModel } from "./auth-type-model";
+import type { AuthTypeModel } from "./auth-type-model";
 
 interface UserModelData {
   id: string;

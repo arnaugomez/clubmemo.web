@@ -1,20 +1,23 @@
+import type {
+  PaginationFacet} from "@/src/common/data/facets/pagination-facet";
 import {
-  PaginationFacet,
   PaginationFacetTransformer,
 } from "@/src/common/data/facets/pagination-facet";
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
-import { ObjectId, WithId } from "mongodb";
-import { NotesRepository } from "../../domain/interfaces/notes-repository";
-import { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";
-import { CreateNoteInputModel } from "../../domain/models/create-note-input-model";
-import { GetNotesInputModel } from "../../domain/models/get-notes-input-model";
-import { NoteModel } from "../../domain/models/note-model";
-import { NoteRowModel } from "../../domain/models/note-row-model";
-import { UpdateNoteInputModel } from "../../domain/models/update-note-input-model";
+import type { WithId } from "mongodb";
+import { ObjectId } from "mongodb";
+import type { NotesRepository } from "../../domain/interfaces/notes-repository";
+import type { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";
+import type { CreateNoteInputModel } from "../../domain/models/create-note-input-model";
+import type { GetNotesInputModel } from "../../domain/models/get-notes-input-model";
+import type { NoteModel } from "../../domain/models/note-model";
+import type { NoteRowModel } from "../../domain/models/note-row-model";
+import type { UpdateNoteInputModel } from "../../domain/models/update-note-input-model";
+import type {
+  NoteDoc} from "../collections/notes-collection";
 import {
-  NoteDoc,
   NoteDocTransformer,
   notesCollection,
 } from "../collections/notes-collection";

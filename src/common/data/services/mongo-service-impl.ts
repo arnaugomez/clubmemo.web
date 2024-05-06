@@ -1,13 +1,14 @@
-import {
+import type {
   Collection,
   Db,
-  Document,
+  Document} from "mongodb";
+import {
   MongoClient,
   ServerApiVersion,
 } from "mongodb";
-import { EnvService } from "../../domain/interfaces/env-service";
-import { MongoService } from "../../domain/interfaces/mongo-service";
-import { CollectionType } from "../utils/mongo";
+import type { EnvService } from "../../domain/interfaces/env-service";
+import type { MongoService } from "../../domain/interfaces/mongo-service";
+import type { CollectionType } from "../utils/mongo";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare module global {
   let mongoClient: MongoClient;

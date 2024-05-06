@@ -1,15 +1,17 @@
 "use client";
 
+import type {
+  PaginationModelData} from "@/src/common/domain/models/pagination-model";
 import {
-  PaginationModel,
-  PaginationModelData,
+  PaginationModel
 } from "@/src/common/domain/models/pagination-model";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { NoteModel, NoteModelData } from "@/src/notes/domain/models/note-model";
+import type { NoteModelData } from "@/src/notes/domain/models/note-model";
+import { NoteModel } from "@/src/notes/domain/models/note-model";
 import { Layers } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";

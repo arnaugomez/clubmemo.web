@@ -1,4 +1,4 @@
-import { UserModel } from "@/src/auth/domain/models/user-model";
+import type { UserModel } from "@/src/auth/domain/models/user-model";
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
