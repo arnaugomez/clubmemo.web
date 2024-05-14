@@ -2,11 +2,8 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 
 import { locator } from "../../../common/locator";
-import type {
-  CheckSessionModel} from "../../domain/models/check-session-model";
-import {
-  emptyCheckSession,
-} from "../../domain/models/check-session-model";
+import type { CheckSessionModel } from "../../domain/models/check-session-model";
+import { emptyCheckSession } from "../../domain/models/check-session-model";
 
 export const fetchSession = cache(async (): Promise<CheckSessionModel> => {
   const authService = locator.AuthService();

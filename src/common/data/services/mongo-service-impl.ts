@@ -1,11 +1,5 @@
-import type {
-  Collection,
-  Db,
-  Document} from "mongodb";
-import {
-  MongoClient,
-  ServerApiVersion,
-} from "mongodb";
+import type { Collection, Db, Document } from "mongodb";
+import { MongoClient, ServerApiVersion } from "mongodb";
 import type { EnvService } from "../../domain/interfaces/env-service";
 import type { MongoService } from "../../domain/interfaces/mongo-service";
 import type { CollectionType } from "../utils/mongo";

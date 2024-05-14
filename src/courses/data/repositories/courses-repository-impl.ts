@@ -1,8 +1,5 @@
-import type {
-  PaginationFacet} from "@/src/common/data/facets/pagination-facet";
-import {
-  PaginationFacetTransformer,
-} from "@/src/common/data/facets/pagination-facet";
+import type { PaginationFacet } from "@/src/common/data/facets/pagination-facet";
+import { PaginationFacetTransformer } from "@/src/common/data/facets/pagination-facet";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
 import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
@@ -29,38 +26,22 @@ import type { EnrolledCourseListItemModel } from "../../domain/models/enrolled-c
 import type { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
 import type { KeepLearningModel } from "../../domain/models/keep-learning-model";
 import type { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
-import type {
-  DiscoverCourseDoc} from "../aggregations/discover-course-aggregation";
-import {
-  DiscoverCourseTransformer,
-} from "../aggregations/discover-course-aggregation";
-import type {
-  EnrolledCourseListItemDoc} from "../aggregations/enrolled-course-list-item-aggregation";
-import {
-  EnrolledCourseListItemTransformer,
-} from "../aggregations/enrolled-course-list-item-aggregation";
-import type {
-  KeepLearningAggregationDoc} from "../aggregations/keep-learning-aggregation";
-import {
-  KeepLearningAggregationDocTransformer,
-} from "../aggregations/keep-learning-aggregation";
-import type {
-  CourseEnrollmentDoc} from "../collections/course-enrollments-collection";
-import {
-  courseEnrollmentsCollection,
-} from "../collections/course-enrollments-collection";
+import type { DiscoverCourseDoc } from "../aggregations/discover-course-aggregation";
+import { DiscoverCourseTransformer } from "../aggregations/discover-course-aggregation";
+import type { EnrolledCourseListItemDoc } from "../aggregations/enrolled-course-list-item-aggregation";
+import { EnrolledCourseListItemTransformer } from "../aggregations/enrolled-course-list-item-aggregation";
+import type { KeepLearningAggregationDoc } from "../aggregations/keep-learning-aggregation";
+import { KeepLearningAggregationDocTransformer } from "../aggregations/keep-learning-aggregation";
+import type { CourseEnrollmentDoc } from "../collections/course-enrollments-collection";
+import { courseEnrollmentsCollection } from "../collections/course-enrollments-collection";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
-import type {
-  CourseDoc} from "../collections/courses-collection";
+import type { CourseDoc } from "../collections/courses-collection";
 import {
   CourseDocTransformer,
   coursesCollection,
 } from "../collections/courses-collection";
-import type {
-  WithPaginationToken} from "../models/with-pagination-token";
-import {
-  TokenPaginationTransformer
-} from "../models/with-pagination-token";
+import type { WithPaginationToken } from "../models/with-pagination-token";
+import { TokenPaginationTransformer } from "../models/with-pagination-token";
 
 export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly courses: typeof coursesCollection.type;

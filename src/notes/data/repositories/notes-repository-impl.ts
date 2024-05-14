@@ -1,8 +1,5 @@
-import type {
-  PaginationFacet} from "@/src/common/data/facets/pagination-facet";
-import {
-  PaginationFacetTransformer,
-} from "@/src/common/data/facets/pagination-facet";
+import type { PaginationFacet } from "@/src/common/data/facets/pagination-facet";
+import { PaginationFacetTransformer } from "@/src/common/data/facets/pagination-facet";
 import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
@@ -15,8 +12,7 @@ import type { GetNotesInputModel } from "../../domain/models/get-notes-input-mod
 import type { NoteModel } from "../../domain/models/note-model";
 import type { NoteRowModel } from "../../domain/models/note-row-model";
 import type { UpdateNoteInputModel } from "../../domain/models/update-note-input-model";
-import type {
-  NoteDoc} from "../collections/notes-collection";
+import type { NoteDoc } from "../collections/notes-collection";
 import {
   NoteDocTransformer,
   notesCollection,

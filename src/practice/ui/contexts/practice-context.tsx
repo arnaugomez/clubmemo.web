@@ -11,18 +11,15 @@ import type {
   DaysToNextReviewModel,
   PracticeCardRatingModel,
 } from "@/src/practice/domain/models/practice-card-rating-model";
-import type {
-  PracticeResultModel} from "@/src/practice/domain/models/practicer-model";
-import {
-  PracticerModel,
-} from "@/src/practice/domain/models/practicer-model";
+import type { PracticeResultModel } from "@/src/practice/domain/models/practicer-model";
+import { PracticerModel } from "@/src/practice/domain/models/practicer-model";
 import type { ReviewLogModel } from "@/src/practice/domain/models/review-log-model";
-import type { PropsWithChildren} from "react";
+import type { PropsWithChildren } from "react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { getNextPracticeCardsAction } from "../actions/get-next-practice-cards-action";
 import { practiceAction } from "../actions/practice-action";
-import type { Task} from "./task-queue-context";
+import type { Task } from "./task-queue-context";
 import { useTaskQueueContext } from "./task-queue-context";
 
 interface PracticeProviderProps extends PropsWithChildren {

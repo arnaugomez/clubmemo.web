@@ -8,11 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/src/common/ui/components/shadcn/ui/dropdown-menu";
-import type {
-  CourseModelData} from "@/src/courses/domain/models/course-model";
-import {
-  CourseModel
-} from "@/src/courses/domain/models/course-model";
+import type { CourseModelData } from "@/src/courses/domain/models/course-model";
+import { CourseModel } from "@/src/courses/domain/models/course-model";
 import { Ellipsis, Sparkle, Upload } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

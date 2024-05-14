@@ -6,11 +6,8 @@ import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-erro
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
-import type {
-  CopyCourseActionModel} from "../schemas/copy-course-action-schema";
-import {
-  CopyCourseActionSchema,
-} from "../schemas/copy-course-action-schema";
+import type { CopyCourseActionModel } from "../schemas/copy-course-action-schema";
+import { CopyCourseActionSchema } from "../schemas/copy-course-action-schema";
 
 export async function copyCourseAction(data: CopyCourseActionModel) {
   try {
