@@ -2,11 +2,8 @@
 
 import type { PresignedUrlModelData } from "@/src/common/domain/models/presigned-url-model";
 import { locator } from "@/src/common/locator";
-import type {
-  FormActionResponse} from "@/src/common/ui/models/server-form-errors";
-import {
-  ActionResponse
-} from "@/src/common/ui/models/server-form-errors";
+import type { FormActionResponse } from "@/src/common/ui/models/server-form-errors";
+import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import {
   CannotEditCourseError,
   CourseDoesNotExistError,

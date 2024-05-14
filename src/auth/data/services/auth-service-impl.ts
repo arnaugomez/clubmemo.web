@@ -4,10 +4,9 @@ import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import type {
   Cookie,
   PasswordHashingAlgorithm,
-  RegisteredDatabaseUserAttributes} from "lucia";
-import {
-  Lucia
+  RegisteredDatabaseUserAttributes,
 } from "lucia";
+import { Lucia } from "lucia";
 import type { Collection, WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import { Argon2id } from "oslo/password";
@@ -26,14 +25,12 @@ import type {
 } from "../../domain/interfaces/auth-service";
 import { AuthTypeModel } from "../../domain/models/auth-type-model";
 import type { CheckSessionModel } from "../../domain/models/check-session-model";
-import type {
-  SessionDoc} from "../collections/sessions-collection";
+import type { SessionDoc } from "../collections/sessions-collection";
 import {
   SessionTransformer,
   sessionsCollection,
 } from "../collections/sessions-collection";
-import type {
-  UserDoc} from "../collections/users-collection";
+import type { UserDoc } from "../collections/users-collection";
 import {
   LuciaUserTransformer,
   usersCollection,

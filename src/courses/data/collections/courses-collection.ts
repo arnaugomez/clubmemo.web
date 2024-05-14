@@ -2,11 +2,8 @@ import { collection } from "@/src/common/data/utils/mongo";
 import type { WithId } from "mongodb";
 import { CourseModel } from "../../domain/models/course-model";
 import type { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
-import type {
-  CourseEnrollmentDoc} from "./course-enrollments-collection";
-import {
-  CourseEnrollmentDocTransformer,
-} from "./course-enrollments-collection";
+import type { CourseEnrollmentDoc } from "./course-enrollments-collection";
+import { CourseEnrollmentDocTransformer } from "./course-enrollments-collection";
 
 export interface CourseDoc {
   name: string;

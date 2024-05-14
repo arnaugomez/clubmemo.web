@@ -2,8 +2,7 @@ import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-e
 import type { RecordLog } from "ts-fsrs";
 import { Rating } from "ts-fsrs";
 import { PracticeCardModel } from "./practice-card-model";
-import type {
-  DaysToNextReviewModel} from "./practice-card-rating-model";
+import type { DaysToNextReviewModel } from "./practice-card-rating-model";
 import {
   PracticeCardRatingModel,
   PracticeCardRatingTransformer,

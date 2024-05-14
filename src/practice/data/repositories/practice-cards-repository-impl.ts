@@ -1,7 +1,6 @@
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
 import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
-import type {
-  NoteDoc} from "@/src/notes/data/collections/notes-collection";
+import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
 import {
   NoteDocTransformer,
   notesCollection,
@@ -14,11 +13,8 @@ import type {
   PracticeCardsRepository,
 } from "../../domain/interfaces/practice-cards-repository";
 import { PracticeCardModel } from "../../domain/models/practice-card-model";
-import type {
-  PracticeCardAggregationDoc} from "../collections/practice-card-aggregation";
-import {
-  PracticeCardAggregationDocTransformer,
-} from "../collections/practice-card-aggregation";
+import type { PracticeCardAggregationDoc } from "../collections/practice-card-aggregation";
+import { PracticeCardAggregationDocTransformer } from "../collections/practice-card-aggregation";
 import { practiceCardsCollection } from "../collections/practice-cards-collection";
 
 export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {

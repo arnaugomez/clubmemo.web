@@ -3,11 +3,8 @@ import { ObjectId } from "mongodb";
 import type { CourseAuthorsRepository } from "../../domain/interfaces/course-authors-repository";
 import type { CourseAuthorModel } from "../../domain/models/course-author-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
-import type {
-  CourseAuthorDoc} from "../aggregations/course-authors-aggregation";
-import {
-  CourseAuthorDocTransformer,
-} from "../aggregations/course-authors-aggregation";
+import type { CourseAuthorDoc } from "../aggregations/course-authors-aggregation";
+import { CourseAuthorDocTransformer } from "../aggregations/course-authors-aggregation";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
 
 export class CourseAuthorsRepositoryImpl implements CourseAuthorsRepository {

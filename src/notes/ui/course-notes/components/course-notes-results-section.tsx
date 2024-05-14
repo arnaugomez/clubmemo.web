@@ -1,10 +1,7 @@
 "use client";
 
-import type {
-  PaginationModelData} from "@/src/common/domain/models/pagination-model";
-import {
-  PaginationModel
-} from "@/src/common/domain/models/pagination-model";
+import type { PaginationModelData } from "@/src/common/domain/models/pagination-model";
+import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";

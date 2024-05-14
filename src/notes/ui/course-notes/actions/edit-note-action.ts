@@ -7,11 +7,8 @@ import { notesLocator } from "@/src/notes/notes-locator";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
-import type {
-  EditNoteActionModel} from "../schemas/edit-note-action-schema";
-import {
-  EditNoteActionSchema,
-} from "../schemas/edit-note-action-schema";
+import type { EditNoteActionModel } from "../schemas/edit-note-action-schema";
+import { EditNoteActionSchema } from "../schemas/edit-note-action-schema";
 
 export async function editNoteAction(data: EditNoteActionModel) {
   try {

@@ -19,11 +19,8 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import type {
-  CourseModelData} from "@/src/courses/domain/models/course-model";
-import {
-  CourseModel
-} from "@/src/courses/domain/models/course-model";
+import type { CourseModelData } from "@/src/courses/domain/models/course-model";
+import { CourseModel } from "@/src/courses/domain/models/course-model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
