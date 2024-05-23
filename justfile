@@ -9,6 +9,14 @@ install *deps:
 dev:
     ./nvm-exec.sh pnpm run dev
 
+# Compile and build the project
+build:
+    ./nvm-exec.sh pnpm run build
+
+# Start production server
+start:
+    ./nvm-exec.sh pnpm run start
+
 # Apply automatic fixes
 fix:
     ./nvm-exec.sh pnpm format
@@ -35,5 +43,6 @@ test:
 # Run end-to-end tests
 e2e *args:
     ./nvm-exec.sh pnpm exec playwright test {{ args }}
+
 
 alias i := install
