@@ -9,5 +9,6 @@ export interface FileUploadService {
     input: GeneratePresignedUrlInputModel,
   ): Promise<PresignedUrlModel>;
 
+  /** Does not throw an error if the file does not exist */
   deleteFile(key: string): Promise<void>;
 }
