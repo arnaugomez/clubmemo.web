@@ -1,6 +1,5 @@
 "use server";
 
-import type { PresignedUrlModelData } from "@/src/common/domain/models/presigned-url-model";
 import { locator } from "@/src/common/locator";
 import type { FormActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
@@ -8,6 +7,7 @@ import {
   CannotEditCourseError,
   CourseDoesNotExistError,
 } from "@/src/courses/domain/models/course-errors";
+import type { PresignedUrlModel } from "@/src/file-upload/domain/models/presigned-url-model";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 
@@ -18,7 +18,7 @@ interface EditCourseUploadActionData {
 }
 
 interface EditCourseUploadActionResult {
-  picture?: PresignedUrlModelData;
+  picture?: PresignedUrlModel;
 }
 
 export async function editCourseUploadAction({
@@ -39,19 +39,19 @@ export async function editCourseUploadAction({
     if (!course) throw new CourseDoesNotExistError();
     if (course.canEdit === false) throw new CannotEditCourseError();
 
-    const uploadFileService = await locator.UploadFileService();
+    const fileUploadService = await locator.FileUploadService();
 
     const [picture] = await Promise.all([
       uploadPicture
-        ? uploadFileService.generatePresignedUrl({
+        ? fileUploadService.generatePresignedUrl({
             key: `profile/picture/${profile.id}`,
             contentType: pictureContentType,
           })
-        : null,
+        : undefined,
     ]);
 
     return ActionResponse.formSuccess({
-      picture: picture?.data,
+      picture,
     });
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {

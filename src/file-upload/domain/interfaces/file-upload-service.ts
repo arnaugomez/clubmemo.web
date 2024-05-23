@@ -4,9 +4,10 @@ export interface GeneratePresignedUrlInputModel {
   key: string;
   contentType: string;
 }
-
-export interface UploadFileService {
+export interface FileUploadService {
   generatePresignedUrl(
     input: GeneratePresignedUrlInputModel,
   ): Promise<PresignedUrlModel>;
+
+  deleteFile(key: string): Promise<void>;
 }
