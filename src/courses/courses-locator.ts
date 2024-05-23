@@ -16,6 +16,7 @@ export const coursesLocator: CoursesLocator = {
     return new file.UpdateCourseUseCase(
       await locator.TagsRepository(),
       await locator.CoursesRepository(),
+      await locator.FileUploadsRepository(),
     );
   },
   CopyCourseUseCase: async () => {

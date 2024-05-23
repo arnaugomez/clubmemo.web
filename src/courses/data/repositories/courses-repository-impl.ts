@@ -107,7 +107,18 @@ export class CoursesRepositoryImpl implements CoursesRepository {
   }
 
   async update({ id, ...input }: UpdateCourseInputModel): Promise<void> {
-    await this.courses.updateOne({ _id: new ObjectId(id) }, { $set: input });
+    await this.courses.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          description: input.description,
+          isPublic: input.isPublic,
+          name: input.name,
+          picture: input.picture,
+          tags: input.tags,
+        },
+      },
+    );
   }
 
   async delete(id: string): Promise<void> {

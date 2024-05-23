@@ -1,3 +1,4 @@
+import type { FileUploadsRepository } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
 import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import type { TagsRepository } from "@/src/tags/domain/interfaces/tags-repository";
 import type { CoursesRepository } from "../interfaces/courses-repository";
@@ -11,6 +12,7 @@ export class UpdateCourseUseCase {
   constructor(
     private readonly tagsRepository: TagsRepository,
     private readonly coursesRepository: CoursesRepository,
+    private readonly fileUploadsRepository: FileUploadsRepository,
   ) {}
 
   async execute(
@@ -23,6 +25,10 @@ export class UpdateCourseUseCase {
     });
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canEdit) throw new CannotEditCourseError();
+
+    if (input.picture && input.picture !== course.picture) {
+      await this.fileUploadsRepository.setCurrent(input.picture);
+    }
 
     await Promise.all([
       this.tagsRepository.create(input.tags),
