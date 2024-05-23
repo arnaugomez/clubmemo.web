@@ -14,6 +14,8 @@ interface EditProfileActionModel {
   bio: string;
   website: string;
   isPublic: boolean;
+  picture?: string;
+  backgroundPicture?: string;
   tags: string[];
 }
 

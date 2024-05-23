@@ -1,9 +1,9 @@
 "use server";
 
-import type { PresignedUrlModelData } from "@/src/common/domain/models/presigned-url-model";
 import { locator } from "@/src/common/locator";
 import type { FormActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
+import type { CreateFileUploadOutputModel } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../fetch/fetch-my-profile";
 
@@ -15,8 +15,8 @@ interface EditProfileUploadActionData {
 }
 
 interface EditProfileUploadActionResult {
-  picture?: PresignedUrlModelData;
-  backgroundPicture?: PresignedUrlModelData;
+  picture?: CreateFileUploadOutputModel;
+  backgroundPicture?: CreateFileUploadOutputModel;
 }
 
 export async function editProfileUploadAction({
@@ -30,26 +30,28 @@ export async function editProfileUploadAction({
   try {
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
-    const uploadFileService = await locator.UploadFileService();
+    const repository = await locator.FileUploadsRepository();
 
     const [picture, backgroundPicture] = await Promise.all([
       uploadPicture
-        ? uploadFileService.generatePresignedUrl({
-            key: `profile/picture/${profile.id}`,
+        ? repository.create({
+            keyPrefix: `profile/picture/${profile.id}`,
+            fileName: "picture",
             contentType: pictureContentType,
           })
-        : null,
+        : undefined,
       uploadBackgroundPicture
-        ? uploadFileService.generatePresignedUrl({
-            key: `profile/backgroundPicture/${profile.id}`,
+        ? repository.create({
+            keyPrefix: `profile/background-picture/${profile.id}`,
+            fileName: "background-picture",
             contentType: backgroundPictureContentType,
           })
-        : null,
+        : undefined,
     ]);
 
     return ActionResponse.formSuccess({
-      picture: picture?.data,
-      backgroundPicture: backgroundPicture?.data,
+      picture,
+      backgroundPicture,
     });
   } catch (e) {
     if (e instanceof ProfileDoesNotExistError) {
