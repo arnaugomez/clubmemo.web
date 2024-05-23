@@ -1,17 +1,17 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
-import type { EnvService } from "../../domain/interfaces/env-service";
+import type { EnvService } from "../../../common/domain/interfaces/env-service";
 import type {
+  FileUploadService,
   GeneratePresignedUrlInputModel,
-  UploadFileService,
-} from "../../domain/interfaces/upload-file-service";
-import { PresignedUrlModel } from "../../domain/models/presigned-url-model";
+} from "../../domain/interfaces/file-upload-service";
+import type { PresignedUrlModel } from "../../domain/models/presigned-url-model";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare module global {
   let s3Client: S3Client;
 }
 
-export class UploadFileServiceS3Impl implements UploadFileService {
+export class FileUploadServiceS3Impl implements FileUploadService {
   private readonly client: S3Client;
   constructor(private readonly envService: EnvService) {
     global.s3Client ??= new S3Client({ region: envService.awsRegion });
@@ -36,9 +36,15 @@ export class UploadFileServiceS3Impl implements UploadFileService {
       Expires: 600, // Seconds before the presigned post expires. 3600 by default.
     });
 
-    return new PresignedUrlModel({
-      url,
-      fields,
-    });
+    return { url, fields };
+  }
+
+  async deleteFile(key: string): Promise<void> {
+    await this.client.send(
+      new DeleteObjectCommand({
+        Bucket: this.envService.awsBucketName,
+        Key: key,
+      }),
+    );
   }
 }

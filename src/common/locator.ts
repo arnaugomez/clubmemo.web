@@ -8,18 +8,18 @@ import type { UsersRepository } from "../auth/domain/interfaces/users-repository
 import type { CourseAuthorsRepository } from "../courses/domain/interfaces/course-authors-repository";
 import type { CourseEnrollmentsRepository } from "../courses/domain/interfaces/course-enrollments-repository";
 import type { CoursesRepository } from "../courses/domain/interfaces/courses-repository";
+import type { FileUploadService } from "../file-upload/domain/interfaces/file-upload-service";
 import type { NotesRepository } from "../notes/domain/interfaces/notes-repository";
 import type { PracticeCardsRepository } from "../practice/domain/interfaces/practice-cards-repository";
 import type { ReviewLogsRepository } from "../practice/domain/interfaces/review-logs-repository";
+import type { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
+import type { TagsRepository } from "../tags/domain/interfaces/tags-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
 import { MongoServiceImpl } from "./data/services/mongo-service-impl";
 import type { DateTimeService } from "./domain/interfaces/date-time-service";
 import type { EmailService } from "./domain/interfaces/email-service";
 import type { EnvService } from "./domain/interfaces/env-service";
 import type { MongoService } from "./domain/interfaces/mongo-service";
-import type { UploadFileService } from "./domain/interfaces/upload-file-service";
-import type { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
-import type { TagsRepository } from "../tags/domain/interfaces/tags-repository";
 
 export type Dependency<T> = () => T;
 export type Lazy<T> = () => Promise<T>;
@@ -29,7 +29,7 @@ interface Locator {
   MongoService: Dependency<MongoService>;
   EmailService: Lazy<EmailService>;
   DateTimeService: Lazy<DateTimeService>;
-  UploadFileService: Lazy<UploadFileService>;
+  FileUploadService: Lazy<FileUploadService>;
 
   // Auth
   AuthService: Dependency<AuthService>;
@@ -73,9 +73,9 @@ export const locator: Locator = {
       (file) => new file.DateTimeServiceImpl(),
     ),
   ),
-  UploadFileService: singleton(() =>
-    import("./data/services/upload-file-service-s3-impl").then(
-      (file) => new file.UploadFileServiceS3Impl(locator.EnvService()),
+  FileUploadService: singleton(() =>
+    import("../file-upload/data/services/file-upload-service-s3-impl").then(
+      (file) => new file.FileUploadServiceS3Impl(locator.EnvService()),
     ),
   ),
 
