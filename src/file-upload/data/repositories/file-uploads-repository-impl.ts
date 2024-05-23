@@ -9,12 +9,14 @@ import { fileUploadsCollection } from "../collections/file-uploads-collection";
 
 export class FileUploadsRepositoryImpl implements FileUploadsRepository {
   private readonly fileUploads: typeof fileUploadsCollection.type;
+
   constructor(
     private readonly fileUploadService: FileUploadService,
     mongoService: MongoService,
   ) {
     this.fileUploads = mongoService.collection(fileUploadsCollection);
   }
+
   async create(
     input: CreateFileUploadInputModel,
   ): Promise<CreateFileUploadOutputModel> {
