@@ -39,24 +39,22 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
     });
 
     await this.fileUploads.deleteMany({ keyPrefix: input.keyPrefix });
+    const url = presignedUrl.url + presignedUrl.fields.key;
     await this.fileUploads.insertOne({
       key,
       keyPrefix: input.keyPrefix,
       count,
-      url: presignedUrl.url,
+      url,
       isCurrent: false,
       createdAt: new Date(),
     });
 
-    return { key, presignedUrl };
+    return { presignedUrl, url };
   }
 
-  async getUrl(key: string): Promise<string | undefined> {
-    const result = await this.fileUploads.findOne({ key });
-    return result?.url;
-  }
-
-  async setCurrent(key: string): Promise<void> {
+  async setCurrent(url: string): Promise<void> {
+    const urlObject = new URL(url);
+    const key = urlObject.pathname;
     const keyPrefix = key.split("/").slice(0, -1).join("/");
     this.fileUploads.updateMany({ keyPrefix }, { $set: { isCurrent: false } });
     this.fileUploads.updateOne({ key }, { $set: { isCurrent: true } });

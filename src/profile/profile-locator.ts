@@ -12,6 +12,7 @@ export const profileLocator: ProfileLocator = {
     return new file.UpdateProfileUseCase(
       await locator.TagsRepository(),
       await locator.ProfilesRepository(),
+      await locator.FileUploadsRepository(),
     );
   },
 };

@@ -3,7 +3,7 @@
 import { locator } from "@/src/common/locator";
 import type { FormActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import type { PresignedUrlModel } from "@/src/file-upload/domain/models/presigned-url-model";
+import type { CreateFileUploadOutputModel } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../fetch/fetch-my-profile";
 
@@ -15,8 +15,8 @@ interface EditProfileUploadActionData {
 }
 
 interface EditProfileUploadActionResult {
-  picture?: PresignedUrlModel;
-  backgroundPicture?: PresignedUrlModel;
+  picture?: CreateFileUploadOutputModel;
+  backgroundPicture?: CreateFileUploadOutputModel;
 }
 
 export async function editProfileUploadAction({
@@ -30,18 +30,20 @@ export async function editProfileUploadAction({
   try {
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
-    const fileUploadService = await locator.FileUploadService();
+    const repository = await locator.FileUploadsRepository();
 
     const [picture, backgroundPicture] = await Promise.all([
       uploadPicture
-        ? fileUploadService.generatePresignedUrl({
-            key: `profile/picture/${profile.id}`,
+        ? repository.create({
+            keyPrefix: `profile/picture/${profile.id}`,
+            fileName: "picture",
             contentType: pictureContentType,
           })
         : undefined,
       uploadBackgroundPicture
-        ? fileUploadService.generatePresignedUrl({
-            key: `profile/backgroundPicture/${profile.id}`,
+        ? repository.create({
+            keyPrefix: `profile/background-picture/${profile.id}`,
+            fileName: "background-picture",
             contentType: backgroundPictureContentType,
           })
         : undefined,

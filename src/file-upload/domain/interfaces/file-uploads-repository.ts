@@ -5,9 +5,7 @@ export interface FileUploadsRepository {
     input: CreateFileUploadInputModel,
   ): Promise<CreateFileUploadOutputModel>;
 
-  setCurrent(key: string): Promise<void>;
-
-  getUrl(key: string): Promise<string | undefined>;
+  setCurrent(url: string): Promise<void>;
 
   deleteOutdated(): Promise<void>;
 }
@@ -19,6 +17,6 @@ export interface CreateFileUploadInputModel {
 }
 
 export interface CreateFileUploadOutputModel {
-  key: string;
+  url: string;
   presignedUrl: PresignedUrlModel;
 }
