@@ -27,8 +27,8 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { editCourseUploadAction } from "../actions/edit-course-upload-action";
 import { editCourseAction } from "../actions/edit-course-action";
+import { editCourseUploadAction } from "../actions/edit-course-upload-action";
 
 interface CourseDetailEditSectionProps {
   courseData: CourseModelData;
@@ -93,7 +93,7 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
     }
     if (uploadActionHandler.data) {
       if (uploadActionHandler.data.picture && data.picture instanceof File) {
-        const { url, fields } = uploadActionHandler.data.picture;
+        const { url, fields } = uploadActionHandler.data.picture.presignedUrl;
 
         const formData = new FormData();
         Object.entries(fields).forEach(([key, value]) => {
@@ -107,13 +107,21 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
         });
 
         if (uploadResponse.ok) {
-          data.picture = url + fields.key;
+          data.picture = uploadActionHandler.data.picture.url;
         }
       }
     }
 
     try {
-      const response = await editCourseAction({ id: course.id, ...data });
+      const response = await editCourseAction({
+        id: course.id,
+        description: data.description,
+        isPublic: data.isPublic,
+        name: data.name,
+        picture: typeof data.picture === "string" ? data.picture : undefined,
+        tags: data.tags,
+      });
+
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
         toast.success("El curso ha sido actualizado");

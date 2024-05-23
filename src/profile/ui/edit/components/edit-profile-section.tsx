@@ -111,7 +111,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       }
       if (uploadActionHandler.data) {
         if (uploadActionHandler.data.picture && data.picture instanceof File) {
-          const { url, fields } = uploadActionHandler.data.picture;
+          const { url, fields } = uploadActionHandler.data.picture.presignedUrl;
 
           const formData = new FormData();
           Object.entries(fields).forEach(([key, value]) => {
@@ -125,14 +125,15 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
           });
 
           if (uploadResponse.ok) {
-            data.picture = url + fields.key;
+            data.picture = uploadActionHandler.data.picture.url;
           }
         }
         if (
           uploadActionHandler.data.backgroundPicture &&
           data.backgroundPicture instanceof File
         ) {
-          const { url, fields } = uploadActionHandler.data.backgroundPicture;
+          const { url, fields } =
+            uploadActionHandler.data.backgroundPicture.presignedUrl;
 
           const formData = new FormData();
           Object.entries(fields).forEach(([key, value]) => {
@@ -146,12 +147,25 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
           });
 
           if (uploadResponse.ok) {
-            data.backgroundPicture = url + fields.key;
+            data.backgroundPicture =
+              uploadActionHandler.data.backgroundPicture.url;
           }
         }
       }
 
-      const response = await editProfileAction(data);
+      const response = await editProfileAction({
+        bio: data.bio,
+        displayName: data.displayName,
+        handle: data.handle,
+        isPublic: data.isPublic,
+        picture: typeof data.picture === "string" ? data.picture : undefined,
+        backgroundPicture:
+          typeof data.backgroundPicture === "string"
+            ? data.backgroundPicture
+            : undefined,
+        tags: data.tags,
+        website: data.website,
+      });
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
         toast.success("Tu perfil ha sido actualizado");

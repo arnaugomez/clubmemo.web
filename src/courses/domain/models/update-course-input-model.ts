@@ -3,5 +3,6 @@ export interface UpdateCourseInputModel {
   name: string;
   description: string;
   isPublic: boolean;
+  picture?: string;
   tags: string[];
 }
