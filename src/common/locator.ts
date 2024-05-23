@@ -9,6 +9,7 @@ import type { CourseAuthorsRepository } from "../courses/domain/interfaces/cours
 import type { CourseEnrollmentsRepository } from "../courses/domain/interfaces/course-enrollments-repository";
 import type { CoursesRepository } from "../courses/domain/interfaces/courses-repository";
 import type { FileUploadService } from "../file-upload/domain/interfaces/file-upload-service";
+import type { FileUploadsRepository } from "../file-upload/domain/interfaces/file-uploads-repository";
 import type { NotesRepository } from "../notes/domain/interfaces/notes-repository";
 import type { PracticeCardsRepository } from "../practice/domain/interfaces/practice-cards-repository";
 import type { ReviewLogsRepository } from "../practice/domain/interfaces/review-logs-repository";
@@ -49,6 +50,8 @@ interface Locator {
   // Practice
   PracticeCardsRepository: Lazy<PracticeCardsRepository>;
   ReviewLogsRepository: Lazy<ReviewLogsRepository>;
+  // File Uploads
+  FileUploadsRepository: Lazy<FileUploadsRepository>;
 }
 
 export const singleton = memoizeOne;
@@ -177,6 +180,16 @@ export const locator: Locator = {
     return new file.ReviewLogsRepositoryImpl(
       this.MongoService(),
       await this.DateTimeService(),
+    );
+  },
+  // File Uploads
+  async FileUploadsRepository() {
+    const file = await import(
+      "../file-upload/data/repositories/file-uploads-repository-impl"
+    );
+    return new file.FileUploadsRepositoryImpl(
+      await this.FileUploadService(),
+      this.MongoService(),
     );
   },
 };
