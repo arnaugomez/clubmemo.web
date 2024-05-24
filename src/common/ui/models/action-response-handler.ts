@@ -5,18 +5,18 @@ export class ActionResponseHandler<T> {
   private readonly response: FormActionResponse<T>;
 
   constructor(response: FormActionResponse<T> | undefined) {
-    this.response = response || { errors: [], data: null };
+    this.response = response || { errors: {}, data: null };
   }
 
   get hasErrors() {
-    return this.response.errors.length > 0;
+    return Object.keys(this.response.errors.length).length > 0;
   }
   get data() {
     return this.response.data;
   }
 
   toastErrors() {
-    for (const error of this.response.errors) {
+    for (const error of Object.values(this.response.errors)) {
       toast.error(error.message);
     }
   }
