@@ -25,6 +25,6 @@ export async function forgotPasswordAction(input: ForgotPasswordActionModel) {
     const emailService = await locator.EmailService();
     await emailService.sendForgotPasswordLink(user.email, token);
   } catch (e) {
-    ActionErrorHandler.handle(e);
+    return ActionErrorHandler.handle(e);
   }
 }

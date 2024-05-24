@@ -33,7 +33,7 @@ export async function loginAction(input: LoginActionModel) {
         type: "invalidCredentials",
       });
     } else {
-      ActionErrorHandler.handle(e);
+      return ActionErrorHandler.handle(e);
     }
   }
   redirect(`/home`);
