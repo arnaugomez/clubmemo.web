@@ -40,6 +40,6 @@ export async function deleteUserAction(input: DeleteUserActionModel) {
         type: "invalidCredentials",
       });
     }
-    ActionErrorHandler.handle(e);
+    return ActionErrorHandler.handle(e);
   }
 }

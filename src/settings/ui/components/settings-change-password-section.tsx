@@ -21,7 +21,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { changePasswordAction } from "../actions/change-password-action";
-import { ChangePasswordSchema } from "../schemas/change-password-schema";
+import { ChangePasswordActionSchema } from "../schemas/change-password-action-schema";
 import { SettingsSectionTitle } from "./settings-section-title";
 
 export function SettingsChangePasswordSection() {
@@ -43,13 +43,13 @@ interface ChangePasswordDialogProps {
   onClose: () => void;
 }
 
-type FormValues = z.infer<typeof ChangePasswordSchema>;
+type FormValues = z.infer<typeof ChangePasswordActionSchema>;
 
 function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(ChangePasswordSchema),
+    resolver: zodResolver(ChangePasswordActionSchema),
     defaultValues: {
       password: "",
       newPassword: "",

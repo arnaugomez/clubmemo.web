@@ -1,5 +1,5 @@
 import { z } from "zod";
-export const ChangePasswordSchema = z
+export const ChangePasswordActionSchema = z
   .object({
     password: z.string(),
     newPassword: z.string().min(8).max(256),
@@ -14,3 +14,5 @@ export const ChangePasswordSchema = z
       });
     }
   });
+
+export type ChangePasswordActionModel = z.infer<typeof ChangePasswordActionSchema>;
