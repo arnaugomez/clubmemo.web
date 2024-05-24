@@ -31,7 +31,7 @@ function EnrollButton({ course }: EnrollButtonProps) {
   return (
     <AsyncButton
       onClick={async function enroll() {
-        const response = await enrollCourseAction(course.id);
+        const response = await enrollCourseAction({ courseId: course.id });
         const handler = new FormResponseHandler(response);
         if (!handler.hasErrors) {
           setIsEnrolled(true);
