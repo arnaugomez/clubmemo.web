@@ -1,18 +1,19 @@
 "use server";
 
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import type { GetCoursesByAuthorInputModel } from "@/src/courses/domain/interfaces/courses-repository";
 import { fetchCoursesByAuthor } from "../fetch/fetch-courses-by-author";
+import type { PaginateCoursesByAuthorActionModel } from "../schemas/paginate-courses-by-author-action-schema";
+import { PaginateCoursesByAuthorActionSchema } from "../schemas/paginate-courses-by-author-action-schema";
 
 export async function paginateCoursesByAuthorAction(
-  input: GetCoursesByAuthorInputModel,
+  input: PaginateCoursesByAuthorActionModel,
 ) {
   try {
-    const response = await fetchCoursesByAuthor(input);
+    const parsed = PaginateCoursesByAuthorActionSchema.parse(input);
+    const response = await fetchCoursesByAuthor(parsed);
     return ActionResponse.formSuccess(response);
   } catch (e) {
-    // TODO: log error report
-    console.error(e);
-    return ActionResponse.formGlobalError("general");
+    return ActionErrorHandler.handle(e);
   }
 }
