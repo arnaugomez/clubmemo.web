@@ -1,5 +1,8 @@
 import { UserDoesNotExistError } from "@/src/auth/domain/errors/auth-errors";
-import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
+import {
+  CannotEditCourseError,
+  CourseDoesNotExistError,
+} from "@/src/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { ZodError } from "zod";
 import { NoPermissionError } from "../../domain/models/app-errors";
@@ -12,6 +15,8 @@ export class ActionErrorHandler {
       return ActionResponse.formGlobalError("profileDoesNotExist");
     } else if (e instanceof CourseDoesNotExistError) {
       return ActionResponse.formGlobalError("courseDoesNotExist");
+    } else if (e instanceof CannotEditCourseError) {
+      return ActionResponse.formGlobalError("cannotEditCourse");
     } else if (e instanceof NoPermissionError) {
       return ActionResponse.formGlobalError("noPermission");
     } else if (e instanceof UserDoesNotExistError) {
