@@ -1,6 +1,7 @@
 "use server";
 
 import { locator } from "@/src/common/locator";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -26,8 +27,6 @@ export async function createCourseAction(input: CreateCourseActionModel) {
     revalidateTag("hasCourses");
     return ActionResponse.formSuccess(course.data);
   } catch (e) {
-    // TODO: log error report
-    console.error(e);
-    return ActionResponse.formGlobalError("general");
+    return ActionErrorHandler.handle(e);
   }
 }
