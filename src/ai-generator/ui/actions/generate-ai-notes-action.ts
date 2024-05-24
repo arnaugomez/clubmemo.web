@@ -14,9 +14,9 @@ import { GenerateAiNotesActionSchema } from "../schemas/generate-ai-notes-action
 
 export async function generateAiNotesAction(data: GenerateAiNotesActionModel) {
   try {
+    const parsed = GenerateAiNotesActionSchema.parse(data);
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
-    const parsed = GenerateAiNotesActionSchema.parse(data);
 
     const useCase = await aiGeneratorLocator.GenerateAiNotesUseCase();
     const result = await useCase.execute({

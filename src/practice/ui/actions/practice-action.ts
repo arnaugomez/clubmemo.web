@@ -2,32 +2,34 @@
 
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
 import { locator } from "@/src/common/locator";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
-import type { PracticeCardModelData } from "@/src/practice/domain/models/practice-card-model";
 import { PracticeCardModel } from "@/src/practice/domain/models/practice-card-model";
-import type { ReviewLogModelData } from "@/src/practice/domain/models/review-log-model";
 import { ReviewLogModel } from "@/src/practice/domain/models/review-log-model";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../../profile/ui/fetch/fetch-my-profile";
+import {
+  PracticeActionSchema,
+  type PracticeActionModel,
+} from "../schemas/practice-action-schema";
 
-interface PracticeActionModel {
-  courseId: string;
-  card: PracticeCardModelData;
-  reviewLog: ReviewLogModelData;
-}
-
-export async function practiceAction(params: PracticeActionModel) {
+export async function practiceAction(input: PracticeActionModel) {
   try {
-    const card = new PracticeCardModel(params.card);
-    const reviewLog = new ReviewLogModel(params.reviewLog);
+    const parsed = PracticeActionSchema.parse(input);
+
+    const card = new PracticeCardModel(parsed.card);
+    const reviewLog = new ReviewLogModel(parsed.reviewLog);
+
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
+
     const coursesRepository = await locator.CoursesRepository();
     const course = await coursesRepository.getDetail({
-      id: params.courseId,
+      id: parsed.courseId,
       profileId: profile.id,
     });
+
     if (!course) throw new CourseDoesNotExistError();
     if (
       !course.canView ||
@@ -49,9 +51,7 @@ export async function practiceAction(params: PracticeActionModel) {
       card: newCard.data,
       reviewLog: newReviewLog.data,
     });
-  } catch (error) {
-    // TODO: Log error
-    console.error(error);
-    return ActionResponse.formGlobalError("general");
+  } catch (e) {
+    return ActionErrorHandler.handle(e);
   }
 }
