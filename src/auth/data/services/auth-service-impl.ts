@@ -18,8 +18,8 @@ import {
 import type {
   AuthService,
   CheckPasswordModel,
-  LoginWithPasswordModel,
-  SignupWithPasswordModel,
+  LoginWithPasswordInputModel,
+  SignupWithPasswordInputModel,
   SignupWithPasswordResultModel,
   UpdatePasswordModel,
 } from "../../domain/interfaces/auth-service";
@@ -117,7 +117,7 @@ export class AuthServiceImpl implements AuthService {
   async loginWithPassword({
     email,
     password,
-  }: LoginWithPasswordModel): Promise<Cookie> {
+  }: LoginWithPasswordInputModel): Promise<Cookie> {
     const existingUser = await this.usersCollection.findOne({
       email,
     });
@@ -138,7 +138,7 @@ export class AuthServiceImpl implements AuthService {
     return this.lucia.createSessionCookie(session.id);
   }
   async signupWithPassword(
-    input: SignupWithPasswordModel,
+    input: SignupWithPasswordInputModel,
   ): Promise<SignupWithPasswordResultModel> {
     const { email, password } = input;
     const existingUser = await this.usersCollection.findOne({

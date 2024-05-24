@@ -37,8 +37,7 @@ export async function generateAiNotesAction(data: GenerateAiNotesActionModel) {
     } else if (e instanceof NoPermissionError) {
       return ActionResponse.formGlobalError("noPermission");
     } else if (e instanceof InvalidFileFormatError) {
-      return ActionResponse.formError({
-        name: "file",
+      return ActionResponse.formError("file", {
         type: "invalidFileFormat",
         message: "Invalid file format.",
       });

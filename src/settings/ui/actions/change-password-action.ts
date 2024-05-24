@@ -38,8 +38,7 @@ export async function changePasswordAction(
       return ActionResponse.formGlobalError("userDoesNotExist");
     } else if (e instanceof IncorrectPasswordError) {
       await waitMilliseconds(800); // Prevent brute-force attacks
-      return ActionResponse.formError({
-        name: "password",
+      return ActionResponse.formError("password", {
         message: "Contraseña incorrecta",
         type: "invalidCredentials",
       });

@@ -32,8 +32,7 @@ export async function editProfileAction(data: EditProfileActionModel) {
     if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");
     } else if (e instanceof HandleAlreadyExistsError) {
-      return ActionResponse.formError({
-        name: "handle",
+      return ActionResponse.formError("handle", {
         message: "El identificador ya está en uso",
         type: "handleAlreadyExists",
       });

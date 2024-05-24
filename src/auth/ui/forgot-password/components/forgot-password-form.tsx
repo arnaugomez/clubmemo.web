@@ -37,7 +37,7 @@ export function ForgotPasswordForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const response = await forgotPasswordAction(data.email);
+      const response = await forgotPasswordAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) setIsDialogOpen(true);
       handler.setErrors();

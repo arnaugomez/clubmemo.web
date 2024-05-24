@@ -1,3 +1,5 @@
+import { loginAction } from "@/src/auth/ui/login/actions/login-action";
+import type { LoginActionModel } from "@/src/auth/ui/login/schemas/login-action-schema";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
 import { InterestingCoursesSection } from "@/src/courses/ui/interesting-courses-section";
 import { KeepLearningSection } from "@/src/courses/ui/keep-learning/components/keep-learning-section";
@@ -11,6 +13,7 @@ export default async function HomePage() {
     return null;
   }
   const hasCourses = await fetchHasCourses(profile.id);
+  loginAction({ cacatua: true } as unknown as LoginActionModel);
   return (
     <main>
       <div className="h-24" />

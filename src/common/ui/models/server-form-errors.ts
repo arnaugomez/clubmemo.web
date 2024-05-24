@@ -1,14 +1,14 @@
-import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import type {
+  FieldError,
+  FieldValues,
+  Path,
+  UseFormReturn,
+} from "react-hook-form";
 import { toast } from "sonner";
-
-export interface CreateErrorInput {
-  name: string;
-  type: string;
-  message: string;
-}
+import type { ZodError } from "zod";
 
 export type FormActionResponse<T = null> = {
-  errors: CreateErrorInput[];
+  errors: Record<string, FieldError>;
   data: T | null;
 };
 
@@ -27,33 +27,50 @@ const globalErrors = {
 };
 type GlobalErrorType = keyof typeof globalErrors;
 
-export function createGlobalError(type: GlobalErrorType): CreateErrorInput {
+function createGlobalError(type: GlobalErrorType): Record<string, FieldError> {
   return {
-    name: "root.globalError",
-    type,
-    message: globalErrors[type],
+    "root.globalError": {
+      type,
+      message: globalErrors[type],
+    },
   };
 }
 
 export class ActionResponse {
   static formGlobalError(error: GlobalErrorType): FormActionResponse {
     return {
-      errors: [createGlobalError(error)],
+      errors: createGlobalError(error),
       data: null,
     };
   }
 
-  static formError(error: CreateErrorInput): FormActionResponse {
+  static formError(key: string, fieldError: FieldError): FormActionResponse {
     return {
-      errors: [error],
+      errors: {
+        [key]: fieldError,
+      },
       data: null,
     };
   }
 
   static formSuccess<T>(data: T): FormActionResponse<T> {
     return {
-      errors: [],
+      errors: {},
       data,
+    };
+  }
+
+  static formZodError(zodError: ZodError): FormActionResponse {
+    const errors: Record<string, FieldError> = {};
+    for (const issue of zodError.errors) {
+      errors[issue.path.join(".")] = {
+        type: issue.code,
+        message: issue.message,
+      };
+    }
+    return {
+      errors,
+      data: null,
     };
   }
 }
@@ -70,19 +87,19 @@ export class FormResponseHandler<
     response: FormActionResponse<T> | undefined,
     private readonly form?: UseFormReturn<U, V, W>,
   ) {
-    this.response = response || { errors: [], data: null };
+    this.response = response || { errors: {}, data: null };
   }
 
   get hasErrors() {
-    return this.response.errors.length > 0;
+    return Object.keys(this.response.errors).length > 0;
   }
   get data() {
     return this.response.data;
   }
 
   setErrors() {
-    for (const error of this.response.errors) {
-      this.form?.setError(error.name as Path<U>, {
+    for (const [name, error] of Object.entries(this.response.errors)) {
+      this.form?.setError(name as Path<U>, {
         type: error.type,
         message: error.message,
       });
@@ -90,7 +107,7 @@ export class FormResponseHandler<
   }
 
   toastErrors() {
-    for (const error of this.response.errors) {
+    for (const error of Object.values(this.response.errors)) {
       toast.error(error.message);
     }
   }
