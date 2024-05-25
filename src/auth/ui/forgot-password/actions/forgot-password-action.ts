@@ -7,8 +7,15 @@ import type { ForgotPasswordActionModel } from "../schemas/forgot-password-actio
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
 
 export async function forgotPasswordAction(input: ForgotPasswordActionModel) {
+  const IpService = await locator.IpService();
+  const ip = await IpService.getIp();
+  const rateLimitKey = `forgotPasswordAction/${ip}`;
+  const rateLimitsRepository = locator.RateLimitsRepository();
+
   try {
     const { email } = ForgotPasswordActionSchema.parse(input);
+    await rateLimitsRepository.check(rateLimitKey, 40);
+
     const usersRepository = await locator.UsersRepository();
     const user = await usersRepository.getByEmail(email);
     if (!user) {
@@ -24,6 +31,8 @@ export async function forgotPasswordAction(input: ForgotPasswordActionModel) {
 
     const emailService = await locator.EmailService();
     await emailService.sendForgotPasswordLink(user.email, token);
+
+    await rateLimitsRepository.increment(rateLimitKey);
   } catch (e) {
     return ActionErrorHandler.handle(e);
   }

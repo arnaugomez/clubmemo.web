@@ -12,6 +12,7 @@ export const aiGeneratorLocator: AiGeneratorLocator = {
     return new file.GenerateAiNotesUseCase(
       await locator.CoursesRepository(),
       await locator.AiNotesGeneratorService(),
+      locator.RateLimitsRepository(),
     );
   },
 };

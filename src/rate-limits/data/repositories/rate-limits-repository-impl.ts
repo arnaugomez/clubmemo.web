@@ -1,4 +1,5 @@
 import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import { DailyRateLimitError } from "../../domain/errors/rate-limits-errors";
 import type { RateLimitsRepository } from "../../domain/interfaces/rate-limits-repository";
 import { rateLimitsCollection } from "../collections/rate-limits-collection";
 
@@ -9,12 +10,14 @@ export class RateLimitsRepositoryImpl implements RateLimitsRepository {
     this.rateLimits = mongoService.collection(rateLimitsCollection);
   }
 
-  async getHasReachedLimit(name: string, limit = 10): Promise<boolean> {
+  async check(name: string, limit = 100): Promise<void> {
     const doc = await this.rateLimits.findOne({
       name,
       updatedAt: { $gte: this.getOneDayAgo() },
     });
-    return !doc || doc.count >= limit;
+    if (doc && doc.count >= limit) {
+      throw new DailyRateLimitError(limit);
+    }
   }
 
   async increment(name: string): Promise<void> {
