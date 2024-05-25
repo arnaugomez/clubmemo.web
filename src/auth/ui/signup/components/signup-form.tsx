@@ -1,8 +1,8 @@
 "use client";
 
+import { z } from "@/i18n/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import {
@@ -16,17 +16,12 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
+import { EmailSchema } from "@/src/common/schemas/email-schema";
+import { PasswordSchema } from "@/src/common/schemas/password-schema";
 
 const SignupFormSchema = z.object({
-  email: z.string().email().max(254),
-  password: z
-    .string()
-    .min(8)
-    .max(256)
-    .regex(/[A-Z]/)
-    .regex(/[a-z]/)
-    .regex(/[0-9]/)
-    .regex(/[`!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?~ ]/),
+  email: EmailSchema,
+  password: PasswordSchema,
 });
 
 export function SignupForm() {

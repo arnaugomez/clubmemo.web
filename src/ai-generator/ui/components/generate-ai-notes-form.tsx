@@ -1,5 +1,7 @@
+import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
+import { FileSchema } from "@/src/common/schemas/file-schema";
 import {
   CheckboxesFormField,
   FileFormField,
@@ -17,7 +19,6 @@ import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
 
 interface GenerateAiNotesFormProps {
@@ -40,7 +41,7 @@ export function GenerateAiNotesForm({
         : z.string().min(1).max(20_000),
     file:
       sourceType === AiNotesGeneratorSourceType.file
-        ? z.instanceof(File)
+        ? FileSchema
         : z.undefined(),
     noteTypes: z
       .array(

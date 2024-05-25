@@ -1,7 +1,7 @@
-import { ObjectId } from "mongodb";
-import { z } from "zod";
-import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
+import { z } from "@/i18n/zod";
+import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
+import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 
 const PracticeCardStateModelSchema = z.enum([
   PracticeCardStateModel.learning,
@@ -11,7 +11,7 @@ const PracticeCardStateModelSchema = z.enum([
 ]);
 
 export const PracticeActionSchema = z.object({
-  courseId: z.string().refine(ObjectId.isValid),
+  courseId: ObjectIdSchema,
   card: z.object({
     id: z.string(),
     courseEnrollmentId: z.string(),

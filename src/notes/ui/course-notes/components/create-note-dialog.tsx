@@ -1,3 +1,4 @@
+import { z } from "@/i18n/zod";
 import { WysiwygFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -15,7 +16,6 @@ import { NoteModel } from "@/src/notes/domain/models/note-model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { createNoteAction } from "../actions/create-note-action";
 
 interface CreateNoteDialogProps {

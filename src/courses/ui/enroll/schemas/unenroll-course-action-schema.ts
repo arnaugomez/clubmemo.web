@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";
-import { z } from "zod";
+import { z } from "@/i18n/zod";
+import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 export const UnenrollCourseActionSchema = z.object({
-  courseId: z.string().refine(ObjectId.isValid),
+  courseId: ObjectIdSchema,
 });
 
 export type UnenrollCourseActionModel = z.infer<

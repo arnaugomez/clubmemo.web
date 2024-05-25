@@ -1,5 +1,7 @@
 "use client";
 
+import { z } from "@/i18n/zod";
+import { FileSchema } from "@/src/common/schemas/file-schema";
 import {
   FileFormField,
   InputFormField,
@@ -26,7 +28,6 @@ import { Edit2 } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { editCourseAction } from "../actions/edit-course-action";
 import { editCourseUploadAction } from "../actions/edit-course-upload-action";
 
@@ -60,7 +61,7 @@ const EditCourseSchema = z.object({
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),
   tags: z.array(z.string().trim().min(1).max(50)).max(10),
-  picture: z.string().or(z.instanceof(File)).optional(),
+  picture: z.string().or(FileSchema).optional(),
 });
 
 type FormValues = z.infer<typeof EditCourseSchema>;

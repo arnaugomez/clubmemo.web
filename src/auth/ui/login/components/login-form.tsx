@@ -1,10 +1,11 @@
 "use client";
 
+import { z } from "@/i18n/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { EmailSchema } from "@/src/common/schemas/email-schema";
 import {
   InputFormField,
   PasswordInputFormField,
@@ -19,7 +20,7 @@ import Link from "next/link";
 import { loginAction } from "../actions/login-action";
 
 const FormSchema = z.object({
-  email: z.string().email().max(254),
+  email: EmailSchema,
   password: z.string(),
 });
 

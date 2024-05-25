@@ -1,5 +1,6 @@
 "use client";
 
+import { z } from "@/i18n/zod";
 import {
   InputFormField,
   PasswordInputFormField,
@@ -22,7 +23,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { deleteUserAction } from "../actions/delete-user-action";
 
 interface SettingsDeleteUserSectionProps {
