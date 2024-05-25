@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+const { AWS_BUCKET_NAME, AWS_REGION } = process.env;
+
 const nextConfig = {
   webpack(config) {
     // If you're planning to use oslo/password for hashing passwords, mark its dependencies as external to prevent it from getting bundled.
@@ -17,13 +20,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "clubmemo-staging.s3.eu-south-2.amazonaws.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "clubmemo-production.s3.eu-south-2.amazonaws.com",
+        hostname: `${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com`,
         port: "",
         pathname: "/**",
       },
