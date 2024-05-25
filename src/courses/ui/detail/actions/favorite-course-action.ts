@@ -1,21 +1,16 @@
 "use server";
 
 import { locator } from "@/src/common/locator";
-import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
+import type { FavoriteCourseActionModel } from "../schemas/favorite-course-action-schema";
+import { FavoriteCourseActionSchema } from "../schemas/favorite-course-action-schema";
 
-interface FavoriteCourseActionModel {
-  courseId: string;
-  isFavorite: boolean;
-}
-
-export async function favoriteCourseAction({
-  courseId,
-  isFavorite,
-}: FavoriteCourseActionModel) {
+export async function favoriteCourseAction(input: FavoriteCourseActionModel) {
   try {
+    const { courseId, isFavorite } = FavoriteCourseActionSchema.parse(input);
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
 
@@ -26,15 +21,10 @@ export async function favoriteCourseAction({
       courseId,
       isFavorite,
     });
+
     revalidatePath("/courses");
     revalidatePath("/learn");
-  } catch (error) {
-    if (error instanceof ProfileDoesNotExistError) {
-      return ActionResponse.formGlobalError("profileDoesNotExist");
-    } else {
-      // TODO: Log error
-      console.error(error);
-      return ActionResponse.formGlobalError("general");
-    }
+  } catch (e) {
+    return ActionErrorHandler.handle(e);
   }
 }
