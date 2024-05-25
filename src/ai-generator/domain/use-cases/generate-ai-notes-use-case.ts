@@ -4,11 +4,13 @@ import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import type { GenerateAiNotesUseCaseInputModel } from "@/src/notes/domain/models/generate-ai-notes-input-model";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
+import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
 
 export class GenerateAiNotesUseCase {
   constructor(
     private readonly coursesRepository: CoursesRepository,
     private readonly aiNotesGeneratorService: AiNotesGeneratorService,
+    private readonly rateLimitsRepository: RateLimitsRepository,
   ) {}
 
   async execute({
@@ -16,6 +18,10 @@ export class GenerateAiNotesUseCase {
     profileId,
     ...input
   }: GenerateAiNotesUseCaseInputModel): Promise<NoteRowModel[]> {
+    const rateLimitKey = `GenerateAiNotesUseCase/${profileId}`;
+
+    await this.rateLimitsRepository.check(rateLimitKey, 50);
+
     const course = await this.coursesRepository.getDetail({
       id: courseId,
       profileId,
@@ -23,6 +29,7 @@ export class GenerateAiNotesUseCase {
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canEdit) throw new NoPermissionError();
     const generated = await this.aiNotesGeneratorService.generate(input);
+    await this.rateLimitsRepository.increment(rateLimitKey);
     return generated.map(([front, back]) => ({ front, back }));
   }
 }

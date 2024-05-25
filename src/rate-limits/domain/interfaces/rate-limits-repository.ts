@@ -1,4 +1,4 @@
 export interface RateLimitsRepository {
-  getHasReachedLimit(name: string, limit?: number): Promise<boolean>;
+  check(name: string, limit?: number): Promise<void>;
   increment(name: string): Promise<void>;
 }

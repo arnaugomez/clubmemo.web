@@ -14,12 +14,15 @@ import type { NotesRepository } from "../notes/domain/interfaces/notes-repositor
 import type { PracticeCardsRepository } from "../practice/domain/interfaces/practice-cards-repository";
 import type { ReviewLogsRepository } from "../practice/domain/interfaces/review-logs-repository";
 import type { ProfilesRepository } from "../profile/domain/interfaces/profiles-repository";
+import { RateLimitsRepositoryImpl } from "../rate-limits/data/repositories/rate-limits-repository-impl";
+import type { RateLimitsRepository } from "../rate-limits/domain/interfaces/rate-limits-repository";
 import type { TagsRepository } from "../tags/domain/interfaces/tags-repository";
 import { EnvServiceImpl } from "./data/services/env-service-impl";
 import { MongoServiceImpl } from "./data/services/mongo-service-impl";
 import type { DateTimeService } from "./domain/interfaces/date-time-service";
 import type { EmailService } from "./domain/interfaces/email-service";
 import type { EnvService } from "./domain/interfaces/env-service";
+import type { IpService } from "./domain/interfaces/ip-service";
 import type { MongoService } from "./domain/interfaces/mongo-service";
 
 export type Dependency<T> = () => T;
@@ -31,6 +34,7 @@ interface Locator {
   EmailService: Lazy<EmailService>;
   DateTimeService: Lazy<DateTimeService>;
   FileUploadService: Lazy<FileUploadService>;
+  IpService: Lazy<IpService>;
 
   // Auth
   AuthService: Dependency<AuthService>;
@@ -52,6 +56,8 @@ interface Locator {
   ReviewLogsRepository: Lazy<ReviewLogsRepository>;
   // File Uploads
   FileUploadsRepository: Lazy<FileUploadsRepository>;
+  // Rate Limits
+  RateLimitsRepository: Dependency<RateLimitsRepository>;
 }
 
 export const singleton = memoizeOne;
@@ -62,6 +68,10 @@ export const singleton = memoizeOne;
 export const locator: Locator = {
   EnvService: singleton(() => new EnvServiceImpl()),
   MongoService: singleton(() => new MongoServiceImpl(locator.EnvService())),
+  IpService: singleton(async () => {
+    const file = await import("./data/services/ip-service-vercel-impl");
+    return new file.IpServiceVercelImpl();
+  }),
   async EmailService() {
     const envService = this.EnvService();
     if (envService.sendEmail) {
@@ -192,4 +202,9 @@ export const locator: Locator = {
       this.MongoService(),
     );
   },
+
+  // Rate Limits
+  RateLimitsRepository: singleton(
+    () => new RateLimitsRepositoryImpl(locator.MongoService()),
+  ),
 };

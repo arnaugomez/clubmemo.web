@@ -20,6 +20,7 @@ interface EditProfileUploadActionResult {
 export async function editProfileUploadAction(
   input: EditProfileUploadActionModel,
 ): Promise<FormActionResponse<EditProfileUploadActionResult | null>> {
+  let rateLimitKey = "";
   try {
     const {
       uploadPicture,
@@ -30,6 +31,13 @@ export async function editProfileUploadAction(
 
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
+
+    rateLimitKey = `editProfileUploadAction/${profile.id}`;
+    const rateLimitsRepository = locator.RateLimitsRepository();
+    if (uploadPicture || uploadBackgroundPicture) {
+      await rateLimitsRepository.check(rateLimitKey, 40);
+      await rateLimitsRepository.increment(rateLimitKey);
+    }
 
     const repository = await locator.FileUploadsRepository();
     const [picture, backgroundPicture] = await Promise.all([
