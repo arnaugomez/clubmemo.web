@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/i18n/zod";
 
 export const PaginateCoursesByAuthorActionSchema = z.object({
   profileId: z.string(),

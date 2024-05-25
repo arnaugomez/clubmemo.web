@@ -1,3 +1,4 @@
+import { z } from "@/i18n/zod";
 import {
   InvalidFileFormatError,
   NoPermissionError,
@@ -5,7 +6,6 @@ import {
 import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { parse } from "csv-parse/sync";
-import { z } from "zod";
 import type { NotesRepository } from "../interfaces/notes-repository";
 import { ImportNotesTypeModel } from "../models/import-note-type-model";
 import type { ImportNotesInputModel } from "../models/import-notes-input-model";

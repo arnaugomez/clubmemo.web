@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/i18n/zod";
 export const ChangePasswordActionSchema = z
   .object({
     password: z.string(),
@@ -11,6 +11,9 @@ export const ChangePasswordActionSchema = z
         path: ["repeatNewPassword"],
         code: "custom",
         message: "The passwords do not match",
+        params: {
+          i18n: "passwordsDoNotMatch",
+        },
       });
     }
   });

@@ -1,15 +1,10 @@
-import { z } from "zod";
+import { z } from "@/i18n/zod";
+import { EmailSchema } from "@/src/common/schemas/email-schema";
+import { PasswordSchema } from "@/src/common/schemas/password-schema";
 
 export const SignupActionSchema = z.object({
-  email: z.string().email().max(254),
-  password: z
-    .string()
-    .min(8)
-    .max(256)
-    .regex(/[A-Z]/)
-    .regex(/[a-z]/)
-    .regex(/[0-9]/)
-    .regex(/[`!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?~ ]/),
+  email: EmailSchema,
+  password: PasswordSchema,
 });
 
 export type SignupActionModel = z.infer<typeof SignupActionSchema>;

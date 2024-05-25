@@ -1,3 +1,4 @@
+import { z } from "@/i18n/zod";
 import {
   SliderFormField,
   SwitchSectionFormField,
@@ -20,7 +21,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { default_maximum_interval } from "ts-fsrs";
-import { z } from "zod";
 import { editCourseConfigAction } from "../actions/edit-course-config-action";
 
 const EditCourseConfigSchema = z.object({

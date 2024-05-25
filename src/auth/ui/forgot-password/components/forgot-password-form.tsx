@@ -1,9 +1,10 @@
 "use client";
 
+import { z } from "@/i18n/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 
+import { EmailSchema } from "@/src/common/schemas/email-schema";
 import { InputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -23,7 +24,7 @@ import { useState } from "react";
 import { forgotPasswordAction } from "../actions/forgot-password-action";
 
 const FormSchema = z.object({
-  email: z.string().email().max(254),
+  email: EmailSchema,
 });
 
 export function ForgotPasswordForm() {

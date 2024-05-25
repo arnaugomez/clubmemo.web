@@ -1,8 +1,8 @@
 "use client";
 
+import { z } from "@/i18n/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
