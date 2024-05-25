@@ -1,6 +1,6 @@
 "use server";
 
-import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
+import { authLocator } from "@/src/auth/auth-locator";
 import { locator } from "@/src/common/locator";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
@@ -12,7 +12,8 @@ import { VerifyEmailActionSchema } from "../schemas/verify-email-action-schema";
 export async function verifyEmailAction(input: VerifyEmailActionModel) {
   try {
     const { code } = VerifyEmailActionSchema.parse(input);
-    const { user } = await fetchSession();
+    const getSessionUseCase = authLocator.GetSessionUseCase();
+    const { user } = await getSessionUseCase.execute();
     if (!user) {
       return ActionResponse.formGlobalError("sessionExpired");
     }

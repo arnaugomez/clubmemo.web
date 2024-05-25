@@ -17,7 +17,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import Link from "next/link";
-import { loginAction } from "../actions/login-action";
+import { loginWithPasswordAction } from "../actions/login-with-password-action";
 
 const FormSchema = z.object({
   email: EmailSchema,
@@ -35,7 +35,7 @@ export function LoginForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const response = await loginAction(data);
+      const response = await loginWithPasswordAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();

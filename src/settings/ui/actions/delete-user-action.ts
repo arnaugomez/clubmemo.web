@@ -8,14 +8,14 @@ import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { locator } from "@/src/common/locator";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { fetchSession } from "../../../auth/ui/fetch/fetch-session";
 import type { DeleteUserActionModel } from "../schemas/delete-user-action-schema";
 import { DeleteUserActionSchema } from "../schemas/delete-user-action-schema";
 
 export async function deleteUserAction(input: DeleteUserActionModel) {
   try {
     const data = DeleteUserActionSchema.parse(input);
-    const { user } = await fetchSession();
+    const getSessionUseCase = authLocator.GetSessionUseCase();
+    const { user } = await getSessionUseCase.execute();
     if (!user) throw new UserDoesNotExistError();
     if (data.confirmation != user.email)
       return ActionResponse.formError("confirmation", {

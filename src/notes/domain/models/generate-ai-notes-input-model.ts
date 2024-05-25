@@ -2,6 +2,5 @@ import type { GenerateAiNotesInputModel } from "@/src/ai-generator/domain/interf
 
 export interface GenerateAiNotesUseCaseInputModel
   extends GenerateAiNotesInputModel {
-  profileId: string;
   courseId: string;
 }
