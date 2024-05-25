@@ -1,5 +1,6 @@
 import type { FileUploadsRepository } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
-import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
+import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
+import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
 import type { TagsRepository } from "@/src/tags/domain/interfaces/tags-repository";
 import type { CoursesRepository } from "../interfaces/courses-repository";
 import {
@@ -8,17 +9,18 @@ import {
 } from "../models/course-errors";
 import type { UpdateCourseInputModel } from "../models/update-course-input-model";
 
-export class UpdateCourseUseCase {
+export class EditCourseUseCase {
   constructor(
+    private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly tagsRepository: TagsRepository,
     private readonly coursesRepository: CoursesRepository,
     private readonly fileUploadsRepository: FileUploadsRepository,
   ) {}
 
-  async execute(
-    input: UpdateCourseInputModel,
-    profile: ProfileModel,
-  ): Promise<void> {
+  async execute(input: UpdateCourseInputModel): Promise<void> {
+    const profile = await this.getMyProfileUseCase.execute();
+    if (!profile) throw new ProfileDoesNotExistError();
+
     const course = await this.coursesRepository.getDetail({
       id: input.id,
       profileId: profile.id,
