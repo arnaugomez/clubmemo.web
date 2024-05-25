@@ -4,6 +4,7 @@ import { profileLocator } from "../profile/profile-locator";
 import type { CopyCourseUseCase } from "./domain/use-cases/copy-course-use-case";
 import type { CreateCourseUseCase } from "./domain/use-cases/create-course-use-case";
 import type { DeleteCourseUseCase } from "./domain/use-cases/delete-course-use-case";
+import type { EditCourseConfigUseCase } from "./domain/use-cases/edit-course-config-use-case";
 import type { EditCourseUploadUseCase } from "./domain/use-cases/edit-course-upload-use-case";
 import type { EditCourseUseCase } from "./domain/use-cases/edit-course-use-case";
 import type { FavoriteCourseUseCase } from "./domain/use-cases/favorite-course-use-case";
@@ -17,6 +18,7 @@ interface CoursesLocator {
   DeleteCourseUseCase: Lazy<DeleteCourseUseCase>;
   FavoriteCourseUseCase: Lazy<FavoriteCourseUseCase>;
   EditCourseUploadUseCase: Lazy<EditCourseUploadUseCase>;
+  EditCourseConfigUseCase: Lazy<EditCourseConfigUseCase>;
 }
 
 export const coursesLocator: CoursesLocator = {
@@ -74,6 +76,13 @@ export const coursesLocator: CoursesLocator = {
       locator.RateLimitsRepository(),
       await locator.CoursesRepository(),
       await locator.FileUploadsRepository(),
+    );
+  },
+  async EditCourseConfigUseCase() {
+    const file = await import("./domain/use-cases/edit-course-config-use-case");
+    return new file.EditCourseConfigUseCase(
+      await profileLocator.GetMyProfileUseCase(),
+      await locator.CourseEnrollmentsRepository(),
     );
   },
 };

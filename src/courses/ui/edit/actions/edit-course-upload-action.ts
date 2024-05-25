@@ -17,6 +17,7 @@ export async function editCourseUploadAction(
 ): Promise<FormActionResponse<EditCourseUploadActionResult | null>> {
   try {
     const parsed = EditCourseUploadActionSchema.parse(input);
+
     const useCase = await coursesLocator.EditCourseUploadUseCase();
     const picture = await useCase.execute(parsed);
 

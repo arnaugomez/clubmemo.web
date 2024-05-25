@@ -39,6 +39,7 @@ export const authLocator: AuthLocator = {
   DeleteUserUseCase: async () => {
     const file = await import("./domain/use-cases/delete-user-use-case");
     return new file.DeleteUserUseCase(
+      authLocator.GetSessionUseCase(),
       locator.AuthService(),
       await locator.UsersRepository(),
       await locator.ProfilesRepository(),
@@ -47,6 +48,7 @@ export const authLocator: AuthLocator = {
   ChangePasswordUseCase: async () => {
     const file = await import("./domain/use-cases/change-password-use-case");
     return new file.ChangePasswordUseCase(
+      authLocator.GetSessionUseCase(),
       locator.AuthService(),
       locator.RateLimitsRepository(),
     );
