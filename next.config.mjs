@@ -1,3 +1,5 @@
+const { AWS_BUCKET_NAME, AWS_REGION } = process.env;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack(config) {
@@ -17,13 +19,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "clubmemo-staging.s3.eu-south-2.amazonaws.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "clubmemo-production.s3.eu-south-2.amazonaws.com",
+        hostname: `${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com`,
         port: "",
         pathname: "/**",
       },
