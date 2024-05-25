@@ -27,7 +27,7 @@ export function DeleteCourseDialog({
   const router = useRouter();
   async function onDelete() {
     try {
-      const response = await deleteCourseAction(course.id);
+      const response = await deleteCourseAction({ id: course.id });
       const handler = new FormResponseHandler(response);
       if (!handler.hasErrors) {
         toast.success("Curso eliminado");

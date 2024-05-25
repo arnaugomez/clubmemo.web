@@ -1,18 +1,19 @@
 "use server";
 
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import type { GetDiscoverCoursesInputModel } from "@/src/courses/domain/interfaces/courses-repository";
 import { fetchDiscoverCourses } from "../fetch/fetch-discover-courses";
+import type { PaginateDiscoverActionModel } from "../schemas/paginate-discover-action-schema";
+import { PaginateDiscoverActionSchema } from "../schemas/paginate-discover-action-schema";
 
 export async function paginateDiscoverAction(
-  input: GetDiscoverCoursesInputModel,
+  input: PaginateDiscoverActionModel,
 ) {
   try {
-    const response = await fetchDiscoverCourses(input);
+    const parsed = PaginateDiscoverActionSchema.parse(input);
+    const response = await fetchDiscoverCourses(parsed);
     return ActionResponse.formSuccess(response);
   } catch (e) {
-    // TODO: log error report
-    console.error(e);
-    return ActionResponse.formGlobalError("general");
+    return ActionErrorHandler.handle(e);
   }
 }

@@ -1,12 +1,12 @@
 import type { Cookie } from "lucia";
 import type { CheckSessionModel } from "../models/check-session-model";
 
-export interface LoginWithPasswordModel {
+export interface LoginWithPasswordInputModel {
   email: string;
   password: string;
 }
 
-export interface SignupWithPasswordModel {
+export interface SignupWithPasswordInputModel {
   email: string;
   password: string;
 }
@@ -39,10 +39,10 @@ export interface AuthService {
 
   createBlankSessionCookie(): Cookie;
 
-  loginWithPassword(input: LoginWithPasswordModel): Promise<Cookie>;
+  loginWithPassword(input: LoginWithPasswordInputModel): Promise<Cookie>;
 
   signupWithPassword(
-    input: SignupWithPasswordModel,
+    input: SignupWithPasswordInputModel,
   ): Promise<SignupWithPasswordResultModel>;
 
   verifyEmail(userId: string): Promise<Cookie>;
