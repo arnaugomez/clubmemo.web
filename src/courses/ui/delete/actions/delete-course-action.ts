@@ -1,6 +1,6 @@
 "use server";
 import { locator } from "@/src/common/locator";
-import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import {
   CannotDeleteCourseError,
   CourseDoesNotExistError,
@@ -8,9 +8,12 @@ import {
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
+import type { DeleteCourseActionModel } from "../schemas/delete-course-action-schema";
+import { DeleteCourseActionSchema } from "../schemas/delete-course-action-schema";
 
-export async function deleteCourseAction(id: string) {
+export async function deleteCourseAction(input: DeleteCourseActionModel) {
   try {
+    const { id } = DeleteCourseActionSchema.parse(input);
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
     const coursesRepository = await locator.CoursesRepository();
@@ -26,16 +29,6 @@ export async function deleteCourseAction(id: string) {
     revalidatePath("/learn");
     revalidateTag("hasCourses");
   } catch (e) {
-    if (e instanceof ProfileDoesNotExistError) {
-      return ActionResponse.formGlobalError("profileDoesNotExist");
-    } else if (e instanceof CourseDoesNotExistError) {
-      return ActionResponse.formGlobalError("courseDoesNotExist");
-    } else if (e instanceof CannotDeleteCourseError) {
-      return ActionResponse.formGlobalError("cannotDeleteCourse");
-    } else {
-      // TODO: log error
-      console.error(e);
-      return ActionResponse.formGlobalError("general");
-    }
+    return ActionErrorHandler.handle(e);
   }
 }
