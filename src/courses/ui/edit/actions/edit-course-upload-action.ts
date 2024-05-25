@@ -24,8 +24,17 @@ export async function editCourseUploadAction(
   try {
     const { courseId, uploadPicture, pictureContentType } =
       EditCourseUploadActionSchema.parse(input);
+
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
+
+    const rateLimitKey = `editCourseUploadAction/${profile.id}`;
+    const rateLimitsRepository = locator.RateLimitsRepository();
+    if (uploadPicture) {
+      await rateLimitsRepository.check(rateLimitKey, 40);
+      await rateLimitsRepository.increment(rateLimitKey);
+    }
+
     const coursesRepository = await locator.CoursesRepository();
     const course = await coursesRepository.getDetail({
       id: courseId,

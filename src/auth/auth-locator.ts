@@ -19,6 +19,9 @@ export const authLocator: AuthLocator = {
   },
   ChangePasswordUseCase: async () => {
     const file = await import("./domain/use-cases/change-password-use-case");
-    return new file.ChangePasswordUseCase(locator.AuthService());
+    return new file.ChangePasswordUseCase(
+      locator.AuthService(),
+      locator.RateLimitsRepository(),
+    );
   },
 };

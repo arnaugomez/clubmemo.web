@@ -13,7 +13,6 @@ To set up the project in your local environment, follow the steps below:
 Make sure you have the following installed:
 
 - `nvm` to manage node versions
-- `pnpm` as package manager. To install it, enable Corepack in your node version.
 - `just` as task runner
 - `lefthook` as git hooks manager
 
