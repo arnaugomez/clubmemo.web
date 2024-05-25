@@ -5,6 +5,8 @@ import {
 } from "@/src/common/domain/models/app-errors";
 import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
+import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
+import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
 import { parse } from "csv-parse/sync";
 import type { NotesRepository } from "../interfaces/notes-repository";
 import { ImportNotesTypeModel } from "../models/import-note-type-model";
@@ -14,19 +16,22 @@ import type { NoteRowModel } from "../models/note-row-model";
 
 export class ImportNotesUseCase {
   constructor(
+    private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly coursesRepository: CoursesRepository,
     private readonly notesRepository: NotesRepository,
   ) {}
 
   async execute({
-    profileId,
     courseId,
     file,
     importType,
   }: ImportNotesInputModel): Promise<NoteModel[]> {
+    const profile = await this.getMyProfileUseCase.execute();
+    if (!profile) throw new ProfileDoesNotExistError();
+
     const course = await this.coursesRepository.getDetail({
       id: courseId,
-      profileId,
+      profileId: profile.id,
     });
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canEdit) throw new NoPermissionError();
