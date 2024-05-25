@@ -95,15 +95,18 @@ importers:
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
+      dompurify:
+        specifier: ^3.1.4
+        version: 3.1.4
       i18next:
         specifier: ^23.11.5
         version: 23.11.5
       input-otp:
         specifier: ^1.2.4
         version: 1.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      isomorphic-dompurify:
-        specifier: ^2.11.0
-        version: 2.11.0(canvas@2.11.2)
+      jsdom:
+        specifier: ^24.0.0
+        version: 24.0.0(canvas@2.11.2)
       lucia:
         specifier: ^3.2.0
         version: 3.2.0
@@ -219,9 +222,6 @@ importers:
       eslint-plugin-unused-imports:
         specifier: ^3.2.0
         version: 3.2.0(@typescript-eslint/eslint-plugin@7.10.0(@typescript-eslint/parser@7.10.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)
-      jsdom:
-        specifier: ^24.0.0
-        version: 24.0.0(canvas@2.11.2)
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
@@ -3400,10 +3400,6 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
-
-  isomorphic-dompurify@2.11.0:
-    resolution: {integrity: sha512-PNGGCbbSH7+zF45UKu4Kh+yI8hm1bWA8kIZQow4KMImnjYQtrqJA0ZmwHamYUU7+M5tQ84z7xXMWmZF/v5t5eA==}
-    engines: {node: '>=18'}
 
   iterator.prototype@1.1.2:
     resolution: {integrity: sha512-DR33HMMr8EzwuRL8Y9D3u2BMj8+RqSE850jfGu59kS7tbmPLzGkZmVSfyCFSDxuZiEY6Rzt3T2NA/qU+NwVj1w==}
@@ -8714,17 +8710,6 @@ snapshots:
   isarray@2.0.5: {}
 
   isexe@2.0.0: {}
-
-  isomorphic-dompurify@2.11.0(canvas@2.11.2):
-    dependencies:
-      '@types/dompurify': 3.0.5
-      dompurify: 3.1.4
-      jsdom: 24.0.0(canvas@2.11.2)
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
 
   iterator.prototype@1.1.2:
     dependencies:

@@ -9,7 +9,6 @@ import { CourseModel } from "@/src/courses/domain/models/course-model";
 import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import type { PracticeCardModelData } from "@/src/practice/domain/models/practice-card-model";
 import { PracticeCardModel } from "@/src/practice/domain/models/practice-card-model";
-import DOMPurify from "isomorphic-dompurify";
 import { useState } from "react";
 import {
   PracticeProvider,
@@ -77,7 +76,7 @@ function PracticeCardSection({ note, course }: PracticeCardSectionProps) {
         <div className="px-4 py-8">
           <div
             className={cn(textStyles.base, "mx-auto max-w-sm font-medium")}
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.front) }}
+            dangerouslySetInnerHTML={{ __html: note.front }}
           ></div>
         </div>
 
@@ -86,7 +85,7 @@ function PracticeCardSection({ note, course }: PracticeCardSectionProps) {
             <div
               className={cn(textStyles.base, "mx-auto max-w-sm")}
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(note.back),
+                __html: note.back,
               }}
             ></div>
           </div>
