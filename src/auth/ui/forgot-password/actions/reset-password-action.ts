@@ -1,57 +1,18 @@
 "use server";
 
-import { UserDoesNotExistError } from "@/src/auth/domain/errors/auth-errors";
-import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import { locator } from "@/src/common/locator";
+import { authLocator } from "@/src/auth/auth-locator";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
-import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import {
   ResetPasswordActionSchema,
   type ResetPasswordActionModel,
 } from "../schemas/reset-password-action-schema";
 
 export async function resetPasswordAction(input: ResetPasswordActionModel) {
-  const IpService = await locator.IpService();
-  const ip = await IpService.getIp();
-  const rateLimitKey = `resetPasswordAction/${ip}`;
-  const rateLimitsRepository = locator.RateLimitsRepository();
-
   try {
     const parsed = ResetPasswordActionSchema.parse(input);
-    await rateLimitsRepository.check(rateLimitKey);
 
-    const usersRepository = await locator.UsersRepository();
-    const user = await usersRepository.getByEmail(parsed.email);
-    if (!user) {
-      throw new UserDoesNotExistError();
-    }
-
-    const forgotPasswordCodesRepository =
-      await locator.ForgotPasswordTokensRepository();
-
-    const isValid = await forgotPasswordCodesRepository.validate(
-      user.id,
-      parsed.token,
-    );
-    if (!isValid) {
-      await rateLimitsRepository.increment(rateLimitKey);
-      throw new NoPermissionError();
-    }
-
-    const forgotPasswordCode = await forgotPasswordCodesRepository.get(user.id);
-    if (!forgotPasswordCode || forgotPasswordCode.hasExpired) {
-      return ActionResponse.formGlobalError("forgotPasswordCodeExpired");
-    }
-
-    const authService = locator.AuthService();
-    await authService.updatePassword({
-      userId: user.id,
-      password: parsed.password,
-    });
-
-    await forgotPasswordCodesRepository.delete(user.id);
-
-    await authService.invalidateUserSessions(user.id);
+    const useCase = await authLocator.ResetPasswordUseCase();
+    await useCase.execute(parsed);
   } catch (e) {
     return ActionErrorHandler.handle(e);
   }

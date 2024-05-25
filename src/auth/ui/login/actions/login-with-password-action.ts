@@ -8,14 +8,19 @@ import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { redirect } from "next/navigation";
-import type { LoginWithPasswordActionModel } from "../schemas/login-with-password-action-schema";
+import {
+  LoginWithPasswordActionSchema,
+  type LoginWithPasswordActionModel,
+} from "../schemas/login-with-password-action-schema";
 
 export async function loginWithPasswordAction(
   input: LoginWithPasswordActionModel,
 ) {
   try {
+    const parsed = LoginWithPasswordActionSchema.parse(input);
+
     const useCase = await authLocator.LoginWithPasswordUseCase();
-    await useCase.execute(input);
+    await useCase.execute(parsed);
   } catch (e) {
     if (
       e instanceof UserDoesNotExistError ||
