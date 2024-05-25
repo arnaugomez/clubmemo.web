@@ -1,7 +1,6 @@
-/** @type {import('next').NextConfig} */
-
 const { AWS_BUCKET_NAME, AWS_REGION } = process.env;
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack(config) {
     // If you're planning to use oslo/password for hashing passwords, mark its dependencies as external to prevent it from getting bundled.
