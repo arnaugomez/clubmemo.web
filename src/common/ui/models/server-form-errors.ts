@@ -1,3 +1,4 @@
+import type { DailyRateLimitError } from "@/src/rate-limits/domain/errors/rate-limits-errors";
 import type {
   FieldError,
   FieldValues,
@@ -70,6 +71,18 @@ export class ActionResponse {
     }
     return {
       errors,
+      data: null,
+    };
+  }
+
+  static formRateLimitError(error: DailyRateLimitError): FormActionResponse {
+    return {
+      errors: {
+        "root.globalError": {
+          type: "rateLimit",
+          message: `Has alcanzado el límite diario de ${error.limit} peticiones. Por favor, inténtalo más tarde.`,
+        },
+      },
       data: null,
     };
   }

@@ -13,7 +13,14 @@ import type { LoginActionModel } from "../schemas/login-action-schema";
 import { LoginActionSchema } from "../schemas/login-action-schema";
 
 export async function loginAction(input: LoginActionModel) {
+  const IpService = await locator.IpService();
+  const ip = await IpService.getIp();
+  const rateLimitKey = `loginAction/${ip}`;
+  const rateLimitsRepository = locator.RateLimitsRepository();
+
   try {
+    await rateLimitsRepository.check(rateLimitKey);
+
     const data = LoginActionSchema.parse(input);
     const sessionCookie = await locator.AuthService().loginWithPassword(data);
 
@@ -27,8 +34,9 @@ export async function loginAction(input: LoginActionModel) {
       e instanceof UserDoesNotExistError ||
       e instanceof IncorrectPasswordError
     ) {
+      await rateLimitsRepository.increment(rateLimitKey);
       await waitMilliseconds(800); // Prevent brute-force attacks
-      return ActionResponse.formError("name", {
+      return ActionResponse.formError("password", {
         message: "Credenciales inválidas",
         type: "invalidCredentials",
       });

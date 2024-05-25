@@ -11,10 +11,16 @@ import {
 } from "../schemas/reset-password-action-schema";
 
 export async function resetPasswordAction(input: ResetPasswordActionModel) {
+  const IpService = await locator.IpService();
+  const ip = await IpService.getIp();
+  const rateLimitKey = `resetPasswordAction/${ip}`;
+  const rateLimitsRepository = locator.RateLimitsRepository();
+
   try {
     const parsed = ResetPasswordActionSchema.parse(input);
-    const usersRepository = await locator.UsersRepository();
+    await rateLimitsRepository.check(rateLimitKey);
 
+    const usersRepository = await locator.UsersRepository();
     const user = await usersRepository.getByEmail(parsed.email);
     if (!user) {
       throw new UserDoesNotExistError();
@@ -28,6 +34,7 @@ export async function resetPasswordAction(input: ResetPasswordActionModel) {
       parsed.token,
     );
     if (!isValid) {
+      await rateLimitsRepository.increment(rateLimitKey);
       throw new NoPermissionError();
     }
 

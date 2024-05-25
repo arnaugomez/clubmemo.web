@@ -6,6 +6,7 @@ import {
 } from "@/src/courses/domain/models/course-errors";
 import { EnrollmentDoesNotExistError } from "@/src/courses/domain/models/enrollment-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
+import { DailyRateLimitError } from "@/src/rate-limits/domain/errors/rate-limits-errors";
 import { ZodError } from "zod";
 import { NoPermissionError } from "../../domain/models/app-errors";
 import type { FormActionResponse } from "../models/server-form-errors";
@@ -13,7 +14,9 @@ import { ActionResponse } from "../models/server-form-errors";
 
 export class ActionErrorHandler {
   static handle(e: unknown): FormActionResponse {
-    if (e instanceof ProfileDoesNotExistError) {
+    if (e instanceof DailyRateLimitError) {
+      return ActionResponse.formRateLimitError(e);
+    } else if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");
     } else if (e instanceof CourseDoesNotExistError) {
       return ActionResponse.formGlobalError("courseDoesNotExist");
