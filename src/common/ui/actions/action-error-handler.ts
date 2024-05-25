@@ -1,4 +1,8 @@
-import { UserDoesNotExistError } from "@/src/auth/domain/errors/auth-errors";
+import {
+  ForgotPasswordCodeExpiredError,
+  SessionExpiredError,
+  UserDoesNotExistError,
+} from "@/src/auth/domain/errors/auth-errors";
 import {
   CannotDeleteCourseError,
   CannotEditCourseError,
@@ -16,6 +20,8 @@ export class ActionErrorHandler {
   static handle(e: unknown): FormActionResponse {
     if (e instanceof DailyRateLimitError) {
       return ActionResponse.formRateLimitError(e);
+    } else if (e instanceof SessionExpiredError) {
+      return ActionResponse.formGlobalError("sessionExpired");
     } else if (e instanceof ProfileDoesNotExistError) {
       return ActionResponse.formGlobalError("profileDoesNotExist");
     } else if (e instanceof CourseDoesNotExistError) {
@@ -28,6 +34,8 @@ export class ActionErrorHandler {
       return ActionResponse.formGlobalError("noPermission");
     } else if (e instanceof UserDoesNotExistError) {
       return ActionResponse.formGlobalError("userDoesNotExist");
+    } else if (e instanceof ForgotPasswordCodeExpiredError) {
+      return ActionResponse.formGlobalError("forgotPasswordCodeExpired");
     } else if (e instanceof EnrollmentDoesNotExistError) {
       return ActionResponse.formGlobalError("enrollmentDoesNotExist");
     } else if (e instanceof ZodError) {

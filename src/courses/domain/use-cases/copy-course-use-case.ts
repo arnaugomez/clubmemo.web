@@ -1,7 +1,8 @@
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
 import type { NotesRepository } from "@/src/notes/domain/interfaces/notes-repository";
+import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
+import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
 import type { CoursesRepository } from "../interfaces/courses-repository";
-import type { CopyCourseInputModel } from "../models/copy-course-input-model";
 import { CourseDoesNotExistError } from "../models/course-errors";
 import type { CourseModel } from "../models/course-model";
 
@@ -9,12 +10,14 @@ export class CopyCourseUseCase {
   constructor(
     private readonly coursesRepository: CoursesRepository,
     private readonly notesRepository: NotesRepository,
+    private readonly getMyProfileUseCase: GetMyProfileUseCase,
   ) {}
 
-  async execute({
-    courseId,
-    profileId,
-  }: CopyCourseInputModel): Promise<CourseModel> {
+  async execute(courseId: string): Promise<CourseModel> {
+    const profile = await this.getMyProfileUseCase.execute();
+    if (!profile) throw new ProfileDoesNotExistError();
+    const profileId = profile.id;
+
     const course = await this.coursesRepository.getDetail({
       id: courseId,
       profileId,

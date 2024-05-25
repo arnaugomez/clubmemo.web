@@ -13,13 +13,15 @@ export async function importNotesAction(formData: FormData) {
     if (!(formData instanceof FormData))
       throw new Error("formData is not an instance of FormData.");
 
-    const profile = await fetchMyProfile();
-    if (!profile) throw new ProfileDoesNotExistError();
     const parsed = ImportNotesActionSchema.parse({
       file: formData.get("file"),
       courseId: formData.get("courseId"),
       importType: formData.get("importType"),
     });
+
+    const profile = await fetchMyProfile();
+    if (!profile) throw new ProfileDoesNotExistError();
+
     const importNotesUseCase = await notesLocator.ImportNotesUseCase();
     const result = await importNotesUseCase.execute({
       profileId: profile.id,
