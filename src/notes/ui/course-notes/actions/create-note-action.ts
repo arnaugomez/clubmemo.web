@@ -9,15 +9,15 @@ import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import type { CreateNoteActionModel } from "../schemas/create-note-action-schema";
 import { CreateNoteActionSchema } from "../schemas/create-note-action-schema";
 
-export async function createNoteAction(data: CreateNoteActionModel) {
+export async function createNoteAction(input: CreateNoteActionModel) {
   try {
-    const values = CreateNoteActionSchema.parse(data);
+    const parsed = CreateNoteActionSchema.parse(input);
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
     const createNoteUseCase = await notesLocator.CreateNoteUseCase();
 
     const note = await createNoteUseCase.execute({
-      createNoteInput: values,
+      createNoteInput: parsed,
       profileId: profile.id,
     });
 

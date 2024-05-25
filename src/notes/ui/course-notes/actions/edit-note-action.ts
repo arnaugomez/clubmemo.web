@@ -9,9 +9,10 @@ import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import type { EditNoteActionModel } from "../schemas/edit-note-action-schema";
 import { EditNoteActionSchema } from "../schemas/edit-note-action-schema";
 
-export async function editNoteAction(data: EditNoteActionModel) {
+export async function editNoteAction(input: EditNoteActionModel) {
   try {
-    const values = EditNoteActionSchema.parse(data);
+    const values = EditNoteActionSchema.parse(input);
+
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
 

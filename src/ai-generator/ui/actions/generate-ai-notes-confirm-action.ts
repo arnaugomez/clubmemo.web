@@ -2,6 +2,7 @@
 
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
 import { locator } from "@/src/common/locator";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
@@ -32,15 +33,6 @@ export async function generateAiNotesConfirmAction(
 
     return ActionResponse.formSuccess(null);
   } catch (e) {
-    if (e instanceof ProfileDoesNotExistError) {
-      return ActionResponse.formGlobalError("profileDoesNotExist");
-    } else if (e instanceof CourseDoesNotExistError) {
-      return ActionResponse.formGlobalError("courseDoesNotExist");
-    } else if (e instanceof NoPermissionError) {
-      return ActionResponse.formGlobalError("noPermission");
-    }
-    // TODO: log error report
-    console.error(e);
-    return ActionResponse.formGlobalError("general");
+    return ActionErrorHandler.handle(e);
   }
 }

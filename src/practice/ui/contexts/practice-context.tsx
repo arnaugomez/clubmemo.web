@@ -74,11 +74,18 @@ export function PracticeProvider({
   }, [enrollment, currentCard]);
 
   async function getNextPracticeCards() {
-    const cards = await getNextPracticeCardsAction({ courseId: course.id });
-    setState((state) => ({
-      ...state,
-      nextCards: cards.map((c) => new PracticeCardModel(c)),
-    }));
+    const response = await getNextPracticeCardsAction({ courseId: course.id });
+
+    const handler = new ActionResponseHandler(response);
+    handler.toastErrors();
+
+    const { data } = handler;
+    if (data) {
+      setState((state) => ({
+        ...state,
+        nextCards: data.map((c) => new PracticeCardModel(c)),
+      }));
+    }
   }
 
   const rate = async (rating: PracticeCardRatingModel) => {

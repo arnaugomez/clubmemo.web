@@ -8,9 +8,9 @@ import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import type { CopyCourseActionModel } from "../schemas/copy-course-action-schema";
 import { CopyCourseActionSchema } from "../schemas/copy-course-action-schema";
 
-export async function copyCourseAction(data: CopyCourseActionModel) {
+export async function copyCourseAction(input: CopyCourseActionModel) {
   try {
-    const parsed = CopyCourseActionSchema.parse(data);
+    const parsed = CopyCourseActionSchema.parse(input);
 
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();

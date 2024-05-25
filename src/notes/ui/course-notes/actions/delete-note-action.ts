@@ -9,9 +9,9 @@ import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import type { DeleteNoteActionModel } from "../schemas/delete-note-action-schema";
 import { DeleteNoteActionSchema } from "../schemas/delete-note-action-schema";
 
-export async function deleteNoteAction(data: DeleteNoteActionModel) {
+export async function deleteNoteAction(input: DeleteNoteActionModel) {
   try {
-    const { noteId } = DeleteNoteActionSchema.parse(data);
+    const { noteId } = DeleteNoteActionSchema.parse(input);
 
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
