@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";
-import { z } from "zod";
+import { z } from "@/i18n/zod";
+import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 export const CopyCourseActionSchema = z.object({
-  courseId: z.string().refine(ObjectId.isValid, "Invalid ObjectId"),
+  courseId: ObjectIdSchema,
 });
 
 export type CopyCourseActionModel = z.infer<typeof CopyCourseActionSchema>;

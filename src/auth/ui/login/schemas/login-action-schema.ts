@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/i18n/zod";
 
 export const LoginActionSchema = z.object({
   email: z.string(),

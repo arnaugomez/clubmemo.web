@@ -1,7 +1,8 @@
-import { z } from "zod";
+import { z } from "@/i18n/zod";
+import { EmailSchema } from "@/src/common/schemas/email-schema";
 
 export const ResetPasswordActionSchema = z.object({
-  email: z.string().email(),
+  email: EmailSchema,
   token: z.string(),
   password: z.string().min(8).max(256),
 });

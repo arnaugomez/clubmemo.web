@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/i18n/zod";
 
 export const CreateCourseActionSchema = z.object({
   name: z.string().trim().min(1).max(50),

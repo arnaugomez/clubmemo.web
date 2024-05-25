@@ -1,5 +1,6 @@
 "use client";
 
+import { z } from "@/i18n/zod";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -18,7 +19,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { resetPasswordAction } from "../actions/reset-password-action";
 
 const FormSchema = z
@@ -31,7 +31,9 @@ const FormSchema = z
       ctx.addIssue({
         path: ["repeatPassword"],
         code: "custom",
-        message: "The passwords did not match",
+        params: {
+          i18n: "passwordsDoNotMatch",
+        },
       });
     }
   });
