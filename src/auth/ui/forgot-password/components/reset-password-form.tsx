@@ -38,9 +38,10 @@ const FormSchema = z
 
 interface Props {
   email: string;
+  token: string;
 }
 
-export function ResetPasswordForm({ email }: Props) {
+export function ResetPasswordForm({ email, token }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const form = useForm({
@@ -55,6 +56,7 @@ export function ResetPasswordForm({ email }: Props) {
     try {
       const response = await resetPasswordAction({
         email,
+        token,
         password: data.password,
       });
 

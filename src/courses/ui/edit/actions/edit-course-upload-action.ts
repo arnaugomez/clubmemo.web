@@ -1,6 +1,7 @@
 "use server";
 
 import { locator } from "@/src/common/locator";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import type { FormActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import {
@@ -10,25 +11,19 @@ import {
 import type { CreateFileUploadOutputModel } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
-
-interface EditCourseUploadActionData {
-  courseId: string;
-  pictureContentType: string;
-  uploadPicture: boolean;
-}
+import type { EditCourseUploadActionModel } from "../schemas/edit-course-upload-action-schema";
+import { EditCourseUploadActionSchema } from "../schemas/edit-course-upload-action-schema";
 
 interface EditCourseUploadActionResult {
   picture?: CreateFileUploadOutputModel;
 }
 
-export async function editCourseUploadAction({
-  courseId,
-  pictureContentType,
-  uploadPicture,
-}: EditCourseUploadActionData): Promise<
-  FormActionResponse<EditCourseUploadActionResult | null>
-> {
+export async function editCourseUploadAction(
+  input: EditCourseUploadActionModel,
+): Promise<FormActionResponse<EditCourseUploadActionResult | null>> {
   try {
+    const { courseId, uploadPicture, pictureContentType } =
+      EditCourseUploadActionSchema.parse(input);
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
     const coursesRepository = await locator.CoursesRepository();
@@ -53,16 +48,6 @@ export async function editCourseUploadAction({
       picture,
     });
   } catch (e) {
-    if (e instanceof ProfileDoesNotExistError) {
-      return ActionResponse.formGlobalError("profileDoesNotExist");
-    } else if (e instanceof CourseDoesNotExistError) {
-      return ActionResponse.formGlobalError("courseDoesNotExist");
-    } else if (e instanceof CannotEditCourseError) {
-      return ActionResponse.formGlobalError("cannotEditCourse");
-    } else {
-      // TODO: log error report
-      console.error(e);
-      return ActionResponse.formGlobalError("general");
-    }
+    return ActionErrorHandler.handle(e);
   }
 }

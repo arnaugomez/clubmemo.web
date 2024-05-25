@@ -1,37 +1,37 @@
 "use server";
 
 import { locator } from "@/src/common/locator";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import type { FormActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import type { CreateFileUploadOutputModel } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { fetchMyProfile } from "../../fetch/fetch-my-profile";
-
-interface EditProfileUploadActionData {
-  pictureContentType: string;
-  backgroundPictureContentType: string;
-  uploadPicture: boolean;
-  uploadBackgroundPicture: boolean;
-}
+import {
+  EditProfileUploadActionSchema,
+  type EditProfileUploadActionModel,
+} from "../schemas/edit-profile-upload-action-schema";
 
 interface EditProfileUploadActionResult {
   picture?: CreateFileUploadOutputModel;
   backgroundPicture?: CreateFileUploadOutputModel;
 }
 
-export async function editProfileUploadAction({
-  pictureContentType,
-  backgroundPictureContentType,
-  uploadPicture,
-  uploadBackgroundPicture,
-}: EditProfileUploadActionData): Promise<
-  FormActionResponse<EditProfileUploadActionResult | null>
-> {
+export async function editProfileUploadAction(
+  input: EditProfileUploadActionModel,
+): Promise<FormActionResponse<EditProfileUploadActionResult | null>> {
   try {
+    const {
+      uploadPicture,
+      pictureContentType,
+      uploadBackgroundPicture,
+      backgroundPictureContentType,
+    } = EditProfileUploadActionSchema.parse(input);
+
     const profile = await fetchMyProfile();
     if (!profile) throw new ProfileDoesNotExistError();
-    const repository = await locator.FileUploadsRepository();
 
+    const repository = await locator.FileUploadsRepository();
     const [picture, backgroundPicture] = await Promise.all([
       uploadPicture
         ? repository.create({
@@ -54,12 +54,6 @@ export async function editProfileUploadAction({
       backgroundPicture,
     });
   } catch (e) {
-    if (e instanceof ProfileDoesNotExistError) {
-      return ActionResponse.formGlobalError("profileDoesNotExist");
-    } else {
-      // TODO: log error report
-      console.error(e);
-      return ActionResponse.formGlobalError("general");
-    }
+    return ActionErrorHandler.handle(e);
   }
 }

@@ -38,8 +38,8 @@ export default async function ResetPasswordPage({
 }) {
   await resetPasswordPageGuard(searchParams);
 
-  const { email } = searchParams;
-  if (!email) return notFound();
+  const { email, token } = searchParams;
+  if (!email || !token) return notFound();
 
   return (
     <>
@@ -47,7 +47,7 @@ export default async function ResetPasswordPage({
       <div className="h-2"></div>
       <p>Entra una nueva contraseña para el usuario {email}</p>
       <div className="h-6"></div>
-      <ResetPasswordForm email={email} />
+      <ResetPasswordForm email={email} token={token} />
     </>
   );
 }
