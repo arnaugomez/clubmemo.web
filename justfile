@@ -33,6 +33,7 @@ install-git-hooks:
 
 # Set up the project for the first time
 setup:
+    ./nvm-exec.sh corepack enable
     just install
     just install-git-hooks
 
