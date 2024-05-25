@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";
-import { z } from "zod";
+import { z } from "@/i18n/zod";
+import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 export const EditCourseActionSchema = z.object({
-  id: z.string().refine(ObjectId.isValid),
+  id: ObjectIdSchema,
   name: z.string().trim().min(1).max(50),
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),

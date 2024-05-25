@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";
-import { z } from "zod";
+import { z } from "@/i18n/zod";
+import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 export const GenerateAiNotesConfirmActionSchema = z.object({
-  courseId: z.string().refine(ObjectId.isValid),
+  courseId: ObjectIdSchema,
   notes: z.array(
     z.object({
       front: z.string(),

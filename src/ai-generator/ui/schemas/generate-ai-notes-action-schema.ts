@@ -1,10 +1,10 @@
+import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
-import { ObjectId } from "mongodb";
-import { z } from "zod";
+import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 export const GenerateAiNotesActionSchema = z.object({
-  courseId: z.string().refine(ObjectId.isValid),
+  courseId: ObjectIdSchema,
   sourceType: z.union([
     z.literal(AiNotesGeneratorSourceType.file),
     z.literal(AiNotesGeneratorSourceType.text),

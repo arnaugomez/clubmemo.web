@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/i18n/zod";
 
 export const PaginateDiscoverActionSchema = z.object({
   query: z.string().optional(),
