@@ -112,8 +112,6 @@ export class FormResponseHandler<
 
   setErrors() {
     for (const [name, error] of Object.entries(this.response.errors)) {
-      console.log({ name, error });
-      console.log(this.form);
       this.form?.setError(name as Path<U>, {
         type: error.type,
         message: error.message,
