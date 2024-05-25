@@ -1,9 +1,6 @@
 "use server";
 import { authLocator } from "@/src/auth/auth-locator";
-import {
-  IncorrectPasswordError,
-  UserDoesNotExistError,
-} from "@/src/auth/domain/errors/auth-errors";
+import { IncorrectPasswordError } from "@/src/auth/domain/errors/auth-errors";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
@@ -15,14 +12,8 @@ export async function changePasswordAction(input: ChangePasswordActionModel) {
   try {
     const parsed = ChangePasswordActionSchema.parse(input);
 
-    const getSessionUseCase = authLocator.GetSessionUseCase();
-    const { user } = await getSessionUseCase.execute();
-    if (!user) throw new UserDoesNotExistError();
-    const userId = user.id;
-
     const changePasswordUseCase = await authLocator.ChangePasswordUseCase();
     const sessionCookie = await changePasswordUseCase.execute({
-      userId,
       password: parsed.password,
       newPassword: parsed.newPassword,
     });
