@@ -1,12 +1,13 @@
 "use server";
 
-import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { locator } from "@/src/common/locator";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { authLocator } from "../../auth-locator";
 
 export async function logoutAction() {
-  const { session } = await fetchSession();
+  const getSessionUseCase = authLocator.GetSessionUseCase();
+  const { session } = await getSessionUseCase.execute();
   if (!session) {
     redirect("/");
   }

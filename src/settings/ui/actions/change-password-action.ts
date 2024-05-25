@@ -8,7 +8,6 @@ import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { cookies } from "next/headers";
-import { fetchSession } from "../../../auth/ui/fetch/fetch-session";
 import type { ChangePasswordActionModel } from "../schemas/change-password-action-schema";
 import { ChangePasswordActionSchema } from "../schemas/change-password-action-schema";
 
@@ -16,7 +15,8 @@ export async function changePasswordAction(input: ChangePasswordActionModel) {
   try {
     const parsed = ChangePasswordActionSchema.parse(input);
 
-    const { user } = await fetchSession();
+    const getSessionUseCase = authLocator.GetSessionUseCase();
+    const { user } = await getSessionUseCase.execute();
     if (!user) throw new UserDoesNotExistError();
     const userId = user.id;
 

@@ -4,10 +4,13 @@ import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import type { GenerateAiNotesUseCaseInputModel } from "@/src/notes/domain/models/generate-ai-notes-input-model";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
+import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
+import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
 
 export class GenerateAiNotesUseCase {
   constructor(
+    private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly coursesRepository: CoursesRepository,
     private readonly aiNotesGeneratorService: AiNotesGeneratorService,
     private readonly rateLimitsRepository: RateLimitsRepository,
@@ -15,9 +18,12 @@ export class GenerateAiNotesUseCase {
 
   async execute({
     courseId,
-    profileId,
     ...input
   }: GenerateAiNotesUseCaseInputModel): Promise<NoteRowModel[]> {
+    const profile = await this.getMyProfileUseCase.execute();
+    if (!profile) throw new ProfileDoesNotExistError();
+    const profileId = profile.id;
+
     const rateLimitKey = `GenerateAiNotesUseCase/${profileId}`;
 
     await this.rateLimitsRepository.check(rateLimitKey, 50);
