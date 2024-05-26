@@ -1,5 +1,6 @@
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { locator } from "@/src/common/locator";
+import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 import { RedirectType, notFound, redirect } from "next/navigation";
 
 export default async function MyProfilePage() {
@@ -9,7 +10,5 @@ export default async function MyProfilePage() {
   const profilesRepository = await locator.ProfilesRepository();
   const profile = await profilesRepository.getByUserId(user.id);
   if (!profile) notFound();
-  if (profile.handle)
-    redirect(`/profile/${profile.handle}`, RedirectType.replace);
-  return redirect(`/profile/id/${profile.id}`, RedirectType.replace);
+  redirect(getProfilePagePath(profile), RedirectType.replace);
 }
