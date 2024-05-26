@@ -1,6 +1,5 @@
-import { ResetPasswordForm } from "@/src/auth/ui/forgot-password/components/reset-password-form";
+import { ResetPasswordPageLoaded } from "@/src/auth/ui/forgot-password/pages/reset-password-page-loaded";
 import { locator } from "@/src/common/locator";
-import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { notFound } from "next/navigation";
 
 interface SearchParams {
@@ -41,13 +40,5 @@ export default async function ResetPasswordPage({
   const { email, token } = searchParams;
   if (!email || !token) return notFound();
 
-  return (
-    <>
-      <h1 className={textStyles.h2}>Nueva contraseña</h1>
-      <div className="h-2"></div>
-      <p>Entra una nueva contraseña para el usuario {email}</p>
-      <div className="h-6"></div>
-      <ResetPasswordForm email={email} token={token} />
-    </>
-  );
+  return <ResetPasswordPageLoaded email={email} token={token} />;
 }
