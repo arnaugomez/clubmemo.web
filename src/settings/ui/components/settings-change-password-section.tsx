@@ -1,6 +1,5 @@
 "use client";
 
-import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -29,9 +28,9 @@ export function SettingsChangePasswordSection() {
   return (
     <>
       <SettingsSectionTitle>Mis credenciales</SettingsSectionTitle>
-      <AsyncButton onClick={() => setIsDialogOpen(true)} variant="secondary">
+      <Button onClick={() => setIsDialogOpen(true)} variant="secondary">
         Cambiar contraseña
-      </AsyncButton>
+      </Button>
       {isDialogOpen && (
         <ChangePasswordDialog onClose={() => setIsDialogOpen(false)} />
       )}
