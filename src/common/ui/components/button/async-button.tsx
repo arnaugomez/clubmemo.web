@@ -4,7 +4,9 @@ import type { ButtonProps } from "../shadcn/ui/button";
 import { Button } from "../shadcn/ui/button";
 
 interface AsyncButtonProps extends ButtonProps {
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => Promise<void>;
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => Promise<void>;
 }
 
 const AsyncButton = forwardRef<HTMLButtonElement, AsyncButtonProps>(
