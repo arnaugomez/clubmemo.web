@@ -20,7 +20,6 @@ export default async function DiscoverPage({
       <div className="px-4">
         <div className="mx-auto max-w-3xl">
           <h1 className={cn(textStyles.h2)}>
-            {/* TODO: add cool animation to compass icon when page starts */}
             <Compass className="mr-3 inline size-8 -translate-y-1" />
             Explorar cursos
           </h1>
