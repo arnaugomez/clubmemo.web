@@ -15,7 +15,11 @@ import { ZodError } from "zod";
 import { NoPermissionError } from "../../domain/models/app-errors";
 import type { FormActionResponse } from "../models/server-form-errors";
 import { ActionResponse } from "../models/server-form-errors";
-import { AiGeneratorEmptyMessageError, AiGeneratorError, AiGeneratorRateLimitError } from "@/src/ai-generator/domain/errors/ai-generator-errors";
+import {
+  AiGeneratorEmptyMessageError,
+  AiGeneratorError,
+  AiGeneratorRateLimitError,
+} from "@/src/ai-generator/domain/errors/ai-generator-errors";
 
 export class ActionErrorHandler {
   static handle(e: unknown): FormActionResponse {

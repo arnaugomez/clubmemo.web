@@ -5,7 +5,7 @@ interface SearchEmptyStateProps {
   icon?: React.ReactNode;
 }
 
-export function SearchEmptyState({icon}: SearchEmptyStateProps) {
+export function SearchEmptyState({ icon }: SearchEmptyStateProps) {
   return (
     <div className="flex h-64 flex-col items-center justify-center">
       {icon || <SearchX className="size-6 text-slate-500" />}

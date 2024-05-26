@@ -33,7 +33,7 @@ interface State {
   currentCardIndex: number;
   reviewLogs: ReviewLogModel[];
   nextCards: PracticeCardModel[];
-};
+}
 
 interface PracticeContextValue {
   currentCard: PracticeCardModel | null;
