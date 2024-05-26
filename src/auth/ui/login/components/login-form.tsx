@@ -1,11 +1,9 @@
 "use client";
 
-import { z } from "@/i18n/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
-import { EmailSchema } from "@/src/common/schemas/email-schema";
 import {
   InputFormField,
   PasswordInputFormField,
@@ -18,22 +16,19 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import Link from "next/link";
 import { loginWithPasswordAction } from "../actions/login-with-password-action";
-
-const FormSchema = z.object({
-  email: EmailSchema,
-  password: z.string(),
-});
+import type { LoginWithPasswordActionModel } from "../schemas/login-with-password-action-schema";
+import { LoginWithPasswordActionSchema } from "../schemas/login-with-password-action-schema";
 
 export function LoginForm() {
   const form = useForm({
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(LoginWithPasswordActionSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: LoginWithPasswordActionModel) {
     try {
       const response = await loginWithPasswordAction(data);
       const handler = new FormResponseHandler(response, form);

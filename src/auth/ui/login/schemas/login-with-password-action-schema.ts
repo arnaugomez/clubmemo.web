@@ -1,7 +1,8 @@
 import { z } from "@/i18n/zod";
+import { EmailSchema } from "@/src/common/schemas/email-schema";
 
 export const LoginWithPasswordActionSchema = z.object({
-  email: z.string(),
+  email: EmailSchema,
   password: z.string(),
 });
 
