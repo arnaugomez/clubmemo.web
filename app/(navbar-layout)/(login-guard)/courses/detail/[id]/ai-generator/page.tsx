@@ -6,6 +6,7 @@ import {
   AlertTitle,
 } from "@/src/common/ui/components/shadcn/ui/alert";
 import { invalidIdGuard } from "@/src/common/ui/guards/invalid-id-guard";
+import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import { GraduationCap, Sparkles } from "lucide-react";
@@ -13,10 +14,7 @@ import { notFound } from "next/navigation";
 
 export default async function CourseAiGeneratorPage({
   params: { id },
-}: {
-  // TODO: create reusable type for id params
-  params: { id: string };
-}) {
+}: PropsWithIdParam) {
   invalidIdGuard(id);
 
   const profile = await fetchMyProfile();

@@ -1,13 +1,11 @@
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
 import { locator } from "@/src/common/locator";
-import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
+import { ApiErrorHandler } from "@/src/common/ui/api/api-error-handler";
+import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 
-export async function GET(
-  _: Request,
-  { params: { id } }: { params: { id: string } },
-) {
+export async function GET(_: Request, { params: { id } }: PropsWithIdParam) {
   try {
     const profile = await fetchMyProfile();
     const coursesRepository = await locator.CoursesRepository();
@@ -37,18 +35,6 @@ export async function GET(
       },
     });
   } catch (e) {
-    if (e instanceof CourseDoesNotExistError) {
-      return Response.json(
-        ActionResponse.formGlobalError("profileDoesNotExist"),
-        { status: 404 },
-      );
-    } else if (e instanceof NoPermissionError) {
-      return Response.json(ActionResponse.formGlobalError("noPermission"), {
-        status: 403,
-      });
-    }
-    // TODO: report error
-    console.error(e);
-    return new Response(e?.toString?.(), { status: 500 });
+    return ApiErrorHandler.handle(e);
   }
 }
