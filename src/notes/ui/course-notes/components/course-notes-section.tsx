@@ -34,7 +34,6 @@ export function CourseNotesSection({ course }: CourseNotesSectionProps) {
           </div>
           <div className="h-6"></div>
           <div className="mx-auto max-w-prose">
-            <CourseNotesLoadingSkeletons />
             <Suspense fallback={<CourseNotesLoadingSkeletons />}>
               <CourseNotesLoader courseId={course.id} />
             </Suspense>
