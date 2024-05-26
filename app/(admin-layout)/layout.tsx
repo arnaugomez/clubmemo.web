@@ -6,9 +6,9 @@ export default async function NavbarLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="flex h-dvh flex-col">
+    <div className="flex h-dvh flex-col">
       <Navbar />
-      <div className="relative min-h-0 flex-1">{children}</div>
-    </main>
+      <main className="relative min-h-0 flex-1">{children}</main>
+    </div>
   );
 }
