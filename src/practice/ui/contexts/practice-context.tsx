@@ -96,13 +96,9 @@ export function PracticeProvider({
       async (payload, tasks) => {
         const { cards, currentCardIndex } = state;
         const { card, reviewLog } = payload;
-        const cardJson = JSON.parse(JSON.stringify(card.data));
-        cardJson.due = new Date(cardJson.due);
-        cardJson.lastReview = new Date(cardJson.lastReview);
-        cardJson.note.createdAt = new Date(cardJson.note.createdAt);
         const response = await practiceAction({
           courseId: course.id,
-          card: cardJson,
+          card: card.data,
           reviewLog: reviewLog.data,
         });
         const handler = new ActionResponseHandler(response);
