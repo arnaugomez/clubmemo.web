@@ -17,15 +17,15 @@ import { useCourseNotesContext } from "../contexts/course-notes-context";
 import { CourseNoteCard } from "./course-note-card";
 import { CourseNotesEmptyState } from "./course-notes-empty-state";
 
-interface CourseNotesResultsSectionProps {
+interface CourseNotesLoadedProps {
   courseId: string;
   initialData: PaginationModelData<NoteModelData>;
 }
 
-export function CourseNotesResultsSection({
+export function CourseNotesLoaded({
   courseId,
   initialData,
-}: CourseNotesResultsSectionProps) {
+}: CourseNotesLoadedProps) {
   const initialPagination = useMemo(
     () => PaginationModel.fromData(initialData, (e) => new NoteModel(e)),
     [initialData],

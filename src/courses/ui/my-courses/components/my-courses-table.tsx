@@ -46,7 +46,6 @@ export async function MyCoursesTable({ arg }: MyCoursesTableProps) {
                     className="mx-auto size-5"
                   />
                 </TableCell>
-                {/* TODO: Extract component */}
                 <PracticeCell courseData={course.data} />
               </TableRow>
             ))}

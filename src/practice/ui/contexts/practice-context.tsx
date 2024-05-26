@@ -28,7 +28,7 @@ interface PracticeProviderProps extends PropsWithChildren {
   cards: PracticeCardModel[];
 }
 
-type State = {
+interface State {
   cards: PracticeCardModel[];
   currentCardIndex: number;
   reviewLogs: ReviewLogModel[];
@@ -103,6 +103,7 @@ export function PracticeProvider({
         });
         const handler = new ActionResponseHandler(response);
         if (handler.hasErrors) {
+          console.error(response.errors);
           throw new Error();
         }
         if (handler.data) {
