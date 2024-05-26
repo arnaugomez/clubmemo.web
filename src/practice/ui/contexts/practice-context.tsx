@@ -28,12 +28,12 @@ interface PracticeProviderProps extends PropsWithChildren {
   cards: PracticeCardModel[];
 }
 
-type State = {
+interface State {
   cards: PracticeCardModel[];
   currentCardIndex: number;
   reviewLogs: ReviewLogModel[];
   nextCards: PracticeCardModel[];
-};
+}
 
 interface PracticeContextValue {
   currentCard: PracticeCardModel | null;
@@ -96,16 +96,14 @@ export function PracticeProvider({
       async (payload, tasks) => {
         const { cards, currentCardIndex } = state;
         const { card, reviewLog } = payload;
-        const cardJson = JSON.parse(JSON.stringify(card.data));
-        cardJson.due = new Date(cardJson.due);
-        cardJson.lastReview = new Date(cardJson.lastReview);
         const response = await practiceAction({
           courseId: course.id,
-          card: cardJson,
+          card: card.data,
           reviewLog: reviewLog.data,
         });
         const handler = new ActionResponseHandler(response);
         if (handler.hasErrors) {
+          console.error(response.errors);
           throw new Error();
         }
         if (handler.data) {

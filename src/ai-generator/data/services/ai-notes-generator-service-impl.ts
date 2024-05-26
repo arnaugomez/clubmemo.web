@@ -1,5 +1,10 @@
 import type { EnvService } from "@/src/common/domain/interfaces/env-service";
-import { OpenAI } from "openai";
+import { OpenAI, OpenAIError, RateLimitError } from "openai";
+import {
+  AiGeneratorEmptyMessageError,
+  AiGeneratorError,
+  AiGeneratorRateLimitError,
+} from "../../domain/errors/ai-generator-errors";
 import type {
   AiNotesGeneratorService,
   GenerateAiNotesInputModel,
@@ -34,49 +39,61 @@ export class AiNotesGeneratorServiceImpl implements AiNotesGeneratorService {
     const textOrTopic =
       sourceType === AiNotesGeneratorSourceType.topic ? "topic" : "text";
 
-    const completion = await this.client.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: `You are a flashard generator.
+    try {
+      const completion = await this.client.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: `You are a flashard generator.
 Output a list of flashcards in JSON format. The JSON should be an array of arrays, where each sub-array contains two strings: the question and the answer.
 The flashcards can contain: ${noteTypes.map((type) => typesMap[type]).join(", ")}.
 You must generate ${notesCount} flashcards based on the ${textOrTopic} provided by the user.
 The language of the flashcards should be the language of the ${textOrTopic} provided by the user.
 `,
-        },
-        {
-          role: "user",
-          content: `Generate ${notesCount} flashcards to help me study this ${textOrTopic}: ${text}`,
-        },
-      ],
-      model: "gpt-3.5-turbo-0125",
-      response_format: { type: "json_object" },
-      n: 1,
-    });
-    const responseText = completion.choices[0].message.content;
-    if (!responseText) {
-      // TODO: use a proper error
-      throw new Error("Failed to generate notes");
+          },
+          {
+            role: "user",
+            content: `Generate ${notesCount} flashcards to help me study this ${textOrTopic}: ${text}`,
+          },
+        ],
+        model: "gpt-3.5-turbo-0125",
+        response_format: { type: "json_object" },
+        n: 1,
+      });
+      const responseText = completion.choices[0].message.content;
+      if (!responseText) {
+        throw new AiGeneratorEmptyMessageError();
+      }
+      const response = JSON.parse(responseText);
+      return this.parseResponse(response);
+    } catch (e) {
+      if (e instanceof RateLimitError) {
+        // TODO: log error
+        console.error(e);
+        throw new AiGeneratorRateLimitError();
+      } else if (e instanceof OpenAIError) {
+        // TODO: log error
+        console.error(e);
+        throw new AiGeneratorError();
+      }
+      throw e;
     }
-    const response = JSON.parse(responseText);
-    return this.parseResponse(response);
   }
 
   private parseResponse(response: unknown): string[][] {
     if (!response) {
-      return [];
+      throw new AiGeneratorEmptyMessageError();
     }
     if (Array.isArray(response)) {
       return response;
     }
     if (typeof response === "object") {
       for (const value of Object.values(response)) {
-        if (Array.isArray(value)) {
+        if (Array.isArray(value) && value.length) {
           return value;
         }
       }
     }
-    return [];
+    throw new AiGeneratorEmptyMessageError();
   }
 }

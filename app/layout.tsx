@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import type { PropsWithChildren } from "react";
 import { Suspense, lazy } from "react";
 import "./globals.css";
 
@@ -15,13 +16,9 @@ export const metadata: Metadata = {
   description: "Tu asistente AI para el estudio eficiente",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body className={inter.className}>
         {children}
         <Suspense>
