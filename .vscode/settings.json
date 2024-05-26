@@ -17,7 +17,8 @@
     "notes",
     "ai-generator",
     "practice",
-    "common"
+    "common",
+    "landing"
   ],
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
