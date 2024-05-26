@@ -1,7 +1,9 @@
 import { Suspense } from "react";
 import { NavbarLinks } from "./navbar-links";
-import { NavbarUserSection } from "./navbar-user-section";
-import { NavbarUserSectionLoggedOut } from "./navbar-user-session-logged-out";
+import {
+  NavbarUserSection,
+  NavbarUserSectionLoaded,
+} from "./navbar-user-section";
 import { NavbarLogo } from "./navgar-logo";
 
 export function Navbar() {
@@ -14,7 +16,7 @@ export function Navbar() {
           <Suspense>
             <NavbarLinks />
           </Suspense>
-          <Suspense fallback={<NavbarUserSectionLoggedOut />}>
+          <Suspense fallback={<NavbarUserSectionLoaded />}>
             <NavbarUserSection />
           </Suspense>
         </div>

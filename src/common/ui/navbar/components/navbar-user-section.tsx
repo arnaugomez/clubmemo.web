@@ -18,17 +18,17 @@ export async function NavbarUserSection() {
 }
 
 interface NavbarUserSectionLoadedProps {
-  profile: ProfileModel;
+  profile?: ProfileModel;
 }
 
 export function NavbarUserSectionLoaded({
   profile,
 }: NavbarUserSectionLoadedProps) {
   return (
-    <Link href={getProfilePagePath(profile)}>
+    <Link href={profile ? getProfilePagePath(profile) : ""}>
       <span className="sr-only">Página de perfil</span>
       <Avatar>
-        <AvatarImage src={profile.picture} alt="Imagen de perfil" />
+        <AvatarImage src={profile?.picture} alt="Imagen de perfil" />
         <AvatarFallback className="text-slate-500 hover:bg-slate-200">
           <User />
         </AvatarFallback>
