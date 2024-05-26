@@ -1,23 +1,18 @@
 "use client";
-import { NullError } from "@/src/common/domain/models/app-errors";
-import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseEnrollmentModelData } from "@/src/courses/domain/models/course-enrollment-model";
 import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import type { CourseModelData } from "@/src/courses/domain/models/course-model";
 import { CourseModel } from "@/src/courses/domain/models/course-model";
-import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import type { PracticeCardModelData } from "@/src/practice/domain/models/practice-card-model";
 import { PracticeCardModel } from "@/src/practice/domain/models/practice-card-model";
-import { useState } from "react";
 import {
   PracticeProvider,
   usePracticeContext,
 } from "../contexts/practice-context";
 import { TaskQueueProvider } from "../contexts/task-queue-context";
-import { PracticeActionsBar } from "./practice-actions-bar";
 import { PracticeProgress } from "./practice-progress";
-import { PracticeWizardFinish } from "./practice-wizard-finish";
+import { PracticeStepCard } from "./steps/practice-step-card";
+import { PracticeWizardFinish } from "./steps/practice-step-finish";
 
 interface PracticeWizardProps {
   courseData: CourseModelData;
@@ -49,53 +44,15 @@ interface PracticeWizardContentProps {
 }
 
 function PracticeWizardContent(props: PracticeWizardContentProps) {
-  const { currentCard } = usePracticeContext();
+  const { currentCard, progress } = usePracticeContext();
   return (
     <div className="flex size-full flex-col">
-      <PracticeProgress />
+      <PracticeProgress progress={progress} />
       {currentCard ? (
-        <PracticeCardSection note={currentCard.note} course={props.course} />
+        <PracticeStepCard note={currentCard.note} course={props.course} />
       ) : (
         <PracticeWizardFinish {...props} />
       )}
-    </div>
-  );
-}
-
-interface PracticeCardSectionProps {
-  note: NoteModel;
-  course: CourseModel;
-}
-
-function PracticeCardSection({ note, course }: PracticeCardSectionProps) {
-  const [showBack, setShowBack] = useState(false);
-  if (!course.enrollment) throw new NullError("course.enrollment");
-  return (
-    <div className="flex size-full flex-col">
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-4 py-8">
-          <div
-            className={cn(textStyles.base, "mx-auto max-w-sm font-medium")}
-            dangerouslySetInnerHTML={{ __html: note.front }}
-          ></div>
-        </div>
-
-        {showBack && (
-          <div className="border-t-[1px] border-t-slate-200 px-4 py-8">
-            <div
-              className={cn(textStyles.base, "mx-auto max-w-sm")}
-              dangerouslySetInnerHTML={{
-                __html: note.back,
-              }}
-            ></div>
-          </div>
-        )}
-      </div>
-      <PracticeActionsBar
-        showBack={showBack}
-        setShowBack={setShowBack}
-        enrollmentConfig={course.enrollment.config}
-      />
     </div>
   );
 }

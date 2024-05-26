@@ -99,6 +99,7 @@ export function PracticeProvider({
         const cardJson = JSON.parse(JSON.stringify(card.data));
         cardJson.due = new Date(cardJson.due);
         cardJson.lastReview = new Date(cardJson.lastReview);
+        cardJson.note.createdAt = new Date(cardJson.note.createdAt);
         const response = await practiceAction({
           courseId: course.id,
           card: cardJson,

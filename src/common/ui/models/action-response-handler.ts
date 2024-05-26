@@ -9,7 +9,7 @@ export class ActionResponseHandler<T> {
   }
 
   get hasErrors() {
-    return Object.keys(this.response.errors.length).length > 0;
+    return Object.keys(this.response.errors).length > 0;
   }
   get data() {
     return this.response.data;

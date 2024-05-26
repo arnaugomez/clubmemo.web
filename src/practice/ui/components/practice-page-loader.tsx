@@ -4,14 +4,14 @@ import { fetchPracticeCards } from "../fetch/fetch-practice-cards";
 import { PracticeEmptyState } from "./practice-empty-state";
 import { PracticeWizard } from "./practice-wizard";
 
-interface PracticeContentProps {
+interface PracticePageLoaderProps {
   course: CourseModel;
   enrollment: CourseEnrollmentModel;
 }
-export async function PracticeContent({
+export async function PracticePageLoader({
   course,
   enrollment,
-}: PracticeContentProps) {
+}: PracticePageLoaderProps) {
   const cards = await fetchPracticeCards({ course, enrollment });
 
   if (!cards.length) {
