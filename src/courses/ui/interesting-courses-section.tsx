@@ -1,3 +1,4 @@
+import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 import { SearchX } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -47,6 +48,7 @@ async function InterestingCoursesContent() {
 
 async function InterestingCoursesEmptyState() {
   const profile = await fetchMyProfile();
+  if (!profile) return null;
   return (
     <div className="rounded-xl border-2 border-dashed border-slate-400 bg-slate-100 px-6 py-8">
       <SearchX className="mx-auto size-6 text-slate-700" />
@@ -61,15 +63,7 @@ async function InterestingCoursesEmptyState() {
       <div className="h-4" />
       <div className="mx-auto flex max-w-min space-x-4">
         <Button asChild>
-          <Link
-            href={
-              profile?.handle
-                ? `/profile/${profile.handle}`
-                : `/profile/id/${profile?.id}`
-            }
-          >
-            Ver mi perfil
-          </Link>
+          <Link href={getProfilePagePath(profile)}>Ver mi perfil</Link>
         </Button>
       </div>
     </div>

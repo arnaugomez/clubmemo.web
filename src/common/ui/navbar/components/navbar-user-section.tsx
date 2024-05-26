@@ -5,6 +5,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/avatar";
 import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
+import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 import { User } from "lucide-react";
 import Link from "next/link";
 import { NavbarUserSectionLoggedOut } from "./navbar-user-session-logged-out";
@@ -24,9 +25,7 @@ export function NavbarUserSectionLoaded({
   profile,
 }: NavbarUserSectionLoadedProps) {
   return (
-    <Link
-      href={`/profile/${profile.handle ? profile.handle : `/id/${profile.id}`}`}
-    >
+    <Link href={getProfilePagePath(profile)}>
       <span className="sr-only">Página de perfil</span>
       <Avatar>
         <AvatarImage src={profile.picture} alt="Imagen de perfil" />
