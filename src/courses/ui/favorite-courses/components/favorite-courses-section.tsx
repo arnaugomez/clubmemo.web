@@ -1,3 +1,4 @@
+import { SearchEmptyState } from "@/src/common/ui/components/empty-state/search-empty-state";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
@@ -51,10 +52,6 @@ function FavoriteCoursesLoadingSection() {
 
 function FavoriteCoursesEmptyState() {
   return (
-    <div className="flex h-28 flex-col items-center justify-center">
-      <BookmarkX className="size-6 text-slate-500" />
-      <div className="h-3"></div>
-      <p className={textStyles.muted}>No hay resultados</p>
-    </div>
+    <SearchEmptyState icon={<BookmarkX className="size-6 text-slate-500" />} />
   );
 }

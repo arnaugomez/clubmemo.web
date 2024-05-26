@@ -18,10 +18,7 @@ export function LandingAdvantagesSection() {
       </h2>
       <div className="h-4" />
       <p
-        className={cn(
-          textStyles.base,
-          "mx-auto mt-0 max-w-prose px-8 text-center",
-        )}
+        className={cn(textStyles.base, "mx-auto max-w-prose px-8 text-center")}
       >
         Clubmemo es más eficiente que leer tus apuntes. Su método se apoya en 3
         técnicas de estudio avaladas por la ciencia.

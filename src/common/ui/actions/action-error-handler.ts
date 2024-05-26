@@ -15,6 +15,11 @@ import { ZodError } from "zod";
 import { NoPermissionError } from "../../domain/models/app-errors";
 import type { FormActionResponse } from "../models/server-form-errors";
 import { ActionResponse } from "../models/server-form-errors";
+import {
+  AiGeneratorEmptyMessageError,
+  AiGeneratorError,
+  AiGeneratorRateLimitError,
+} from "@/src/ai-generator/domain/errors/ai-generator-errors";
 
 export class ActionErrorHandler {
   static handle(e: unknown): FormActionResponse {
@@ -38,6 +43,12 @@ export class ActionErrorHandler {
       return ActionResponse.formGlobalError("forgotPasswordCodeExpired");
     } else if (e instanceof EnrollmentDoesNotExistError) {
       return ActionResponse.formGlobalError("enrollmentDoesNotExist");
+    } else if (e instanceof AiGeneratorEmptyMessageError) {
+      return ActionResponse.formGlobalError("aiGeneratorEmptyMessage");
+    } else if (e instanceof AiGeneratorError) {
+      return ActionResponse.formGlobalError("aiGeneratorError");
+    } else if (e instanceof AiGeneratorRateLimitError) {
+      return ActionResponse.formGlobalError("aiGeneratorRateLimitError");
     } else if (e instanceof ZodError) {
       return ActionResponse.formZodError(e);
     } else {

@@ -1,5 +1,6 @@
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { redirect } from "next/navigation";
+import type { PropsWithChildren } from "react";
 
 async function logoutGuard() {
   const result = await fetchSession();
@@ -12,9 +13,7 @@ async function logoutGuard() {
 }
 export default async function LogoutGuardLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: PropsWithChildren) {
   await logoutGuard();
   return <>{children}</>;
 }

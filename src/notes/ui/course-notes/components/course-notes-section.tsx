@@ -1,14 +1,12 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 import { Suspense } from "react";
 import { CourseNotesProvider } from "../contexts/course-notes-context";
 import { fetchCourseNotes } from "../fetch/fetch-course-notes";
 import { CourseNotesDropdown } from "./course-notes-dropdown";
+import { CourseNotesLoaded } from "./course-notes-loaded";
 import { CourseNotesLoadingSkeletons } from "./course-notes-loading-skeletons";
-import { CourseNotesResultsSection } from "./course-notes-results-section";
 import { CreateNoteButton } from "./create-note-button";
 
 interface CourseNotesSectionProps {
@@ -32,20 +30,12 @@ export function CourseNotesSection({ course }: CourseNotesSectionProps) {
               <CourseNotesDropdown courseData={course.data} />
             </div>
 
-            {/* TODO: Extract arrow link component. link addrress is missing. */}
-            <Link
-              href="/"
-              className={cn(textStyles.mutedLink, "space-x-1 pt-1")}
-            >
-              <span>Ver todas</span>
-
-              <ArrowRight size={16} className="inline" />
-            </Link>
+            {/* <ArrowLink href="/cards">Ver todas</ArrowLink> */}
           </div>
           <div className="h-6"></div>
           <div className="mx-auto max-w-prose">
             <Suspense fallback={<CourseNotesLoadingSkeletons />}>
-              <CourseNotesContent courseId={course.id} />
+              <CourseNotesLoader courseId={course.id} />
             </Suspense>
           </div>
         </CourseNotesProvider>
@@ -59,11 +49,11 @@ interface CourseNotesContentProps {
   courseId: string;
 }
 
-async function CourseNotesContent({ courseId }: CourseNotesContentProps) {
+async function CourseNotesLoader({ courseId }: CourseNotesContentProps) {
   const pagination = await fetchCourseNotes({ courseId });
 
   return (
-    <CourseNotesResultsSection
+    <CourseNotesLoaded
       courseId={courseId}
       initialData={pagination.toData((e) => e.data)}
     />

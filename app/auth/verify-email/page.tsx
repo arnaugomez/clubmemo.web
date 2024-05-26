@@ -1,13 +1,8 @@
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
-import { VerifyEmailForm } from "@/src/auth/ui/verify-email/components/verify-email-form";
+import { VerifyEmailPageLoaded } from "@/src/auth/ui/verify-email/pages/verify-email-page-loaded";
+import { NullError } from "@/src/common/domain/models/app-errors";
 import { locator } from "@/src/common/locator";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/src/common/ui/components/shadcn/ui/alert";
-import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { Inbox, MailCheck } from "lucide-react";
+
 import { redirect } from "next/navigation";
 
 async function verifyEmailGuard() {
@@ -18,11 +13,12 @@ async function verifyEmailGuard() {
   if (result.user.isEmailVerified) {
     redirect("/home");
   }
+  return result;
 }
 
 async function handleVerificationCodeExpirationDate() {
   const { user } = await fetchSession();
-  if (user == null) throw new Error("User not found");
+  if (!user) throw new NullError("user");
 
   const repository = await locator.EmailVerificationCodesRepository();
   const verificationCode = await repository.getByUserId(user.id);
@@ -39,37 +35,9 @@ async function handleVerificationCodeExpirationDate() {
 }
 
 export default async function VerifyEmailPage() {
-  await verifyEmailGuard();
+  const { user } = await verifyEmailGuard();
 
   const hasExpired = await handleVerificationCodeExpirationDate();
 
-  const { user } = await fetchSession();
-
-  return (
-    <>
-      <MailCheck size={32} />
-      <div className="h-6"></div>
-      <h1 className={textStyles.h2}>¡Ya casi estamos!</h1>
-      <div className="h-2"></div>
-      <p>
-        Te hemos enviado un correo electrónico a {user?.email} con un código de
-        verificación.
-      </p>
-      {hasExpired && (
-        <>
-          <div className="h-6" />
-          <Alert>
-            <Inbox size={16} />
-            <AlertTitle>Revisa de nuevo tu correo</AlertTitle>
-            <AlertDescription>
-              El código de verificación anterior ha expirado. Te hemos enviado
-              uno nuevo.
-            </AlertDescription>
-          </Alert>
-        </>
-      )}
-      <div className="h-8" />
-      <VerifyEmailForm />
-    </>
-  );
+  return <VerifyEmailPageLoaded user={user} hasExpired={hasExpired} />;
 }

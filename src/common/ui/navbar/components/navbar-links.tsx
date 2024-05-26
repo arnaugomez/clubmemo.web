@@ -1,10 +1,12 @@
 import { fetchSession } from "../../../../auth/ui/fetch/fetch-session";
 import { NavbarLink } from "./navbar-link";
 
-export async function NavbarLinksSection() {
-  const result = await fetchSession();
-  if (!result.session) return null;
+export async function NavbarLinks() {
+  const { session } = await fetchSession();
+  return session ? <NavbarLinksLoaded /> : null;
+}
 
+export function NavbarLinksLoaded() {
   return (
     <span className="hidden space-x-4 sm:inline">
       <NavbarLink href="/learn">Aprender</NavbarLink>
