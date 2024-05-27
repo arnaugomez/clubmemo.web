@@ -1,6 +1,9 @@
 "use client";
 
 import { z } from "@/i18n/zod";
+import { clientLocator } from "@/src/common/di/client-locator";
+import { FileSchema } from "@/src/common/schemas/file-schema";
+import { HandleSchema } from "@/src/common/schemas/handle-schema";
 import {
   FileFormField,
   InputFormField,
@@ -20,6 +23,7 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
+import { clientFileUploadLocator } from "@/src/file-upload/client-file-upload-locator";
 import type { ProfileModelData } from "@/src/profile/domain/models/profile-model";
 import { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,8 +34,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editProfileAction } from "../actions/edit-profile-action";
 import { editProfileUploadAction } from "../actions/edit-profile-upload-action";
-import { HandleSchema } from "@/src/common/schemas/handle-schema";
-import { FileSchema } from "@/src/common/schemas/file-schema";
 
 interface EditProfileSectionProps {
   profileData: ProfileModelData;
@@ -109,48 +111,38 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       }
       if (uploadActionHandler.data) {
         if (uploadActionHandler.data.picture && data.picture instanceof File) {
-          const { url, fields } = uploadActionHandler.data.picture.presignedUrl;
-
-          const formData = new FormData();
-          Object.entries(fields).forEach(([key, value]) => {
-            formData.append(key, value as string);
-          });
-          formData.append("file", data.picture);
-
-          const uploadResponse = await fetch(url, {
-            method: "POST",
-            body: formData,
+          const fileUploadService =
+            await clientFileUploadLocator.ClientFileUploadService();
+          await fileUploadService.uploadPresignedUrl({
+            file: data.picture,
+            presignedUrl: uploadActionHandler.data.picture.presignedUrl,
           });
 
-          if (uploadResponse.ok) {
-            data.picture = uploadActionHandler.data.picture.url;
-          }
+          data.picture = uploadActionHandler.data.picture.url;
         }
         if (
           uploadActionHandler.data.backgroundPicture &&
           data.backgroundPicture instanceof File
         ) {
-          const { url, fields } =
-            uploadActionHandler.data.backgroundPicture.presignedUrl;
-
-          const formData = new FormData();
-          Object.entries(fields).forEach(([key, value]) => {
-            formData.append(key, value as string);
-          });
-          formData.append("file", data.backgroundPicture);
-
-          const uploadResponse = await fetch(url, {
-            method: "POST",
-            body: formData,
+          const fileUploadService =
+            await clientFileUploadLocator.ClientFileUploadService();
+          await fileUploadService.uploadPresignedUrl({
+            file: data.backgroundPicture,
+            presignedUrl:
+              uploadActionHandler.data.backgroundPicture.presignedUrl,
           });
 
-          if (uploadResponse.ok) {
-            data.backgroundPicture =
-              uploadActionHandler.data.backgroundPicture.url;
-          }
+          data.backgroundPicture =
+            uploadActionHandler.data.backgroundPicture.url;
         }
       }
+    } catch (e) {
+      clientLocator.ErrorTrackingService().captureError(e);
+      toast.error("Error al subir las imágenes");
+      return;
+    }
 
+    try {
       const response = await editProfileAction({
         bio: data.bio,
         displayName: data.displayName,
@@ -173,8 +165,8 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
         onClose();
       }
       handler.setErrors();
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      clientLocator.ErrorTrackingService().captureError(e);
       FormResponseHandler.setGlobalError(form);
     }
   });
