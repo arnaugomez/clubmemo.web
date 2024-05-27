@@ -1,7 +1,7 @@
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { VerifyEmailPageLoaded } from "@/src/auth/ui/verify-email/pages/verify-email-page-loaded";
+import { locator } from "@/src/common/di/locator";
 import { NullError } from "@/src/common/domain/models/app-errors";
-import { locator } from "@/src/common/locator";
 
 import { redirect } from "next/navigation";
 

@@ -1,5 +1,5 @@
 import { ResetPasswordPageLoaded } from "@/src/auth/ui/forgot-password/pages/reset-password-page-loaded";
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import { notFound } from "next/navigation";
 
 interface SearchParams {

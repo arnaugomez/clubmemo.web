@@ -1,5 +1,5 @@
-import type { Lazy } from "../common/locator";
-import { locator } from "../common/locator";
+import { locator } from "../common/di/locator";
+import type { Lazy } from "../common/di/locator-types";
 import { profileLocator } from "../profile/profile-locator";
 import type { GenerateAiNotesConfirmUseCase } from "./domain/use-cases/generate-ai-notes-confirm-use-case";
 import type { GenerateAiNotesUseCase } from "./domain/use-cases/generate-ai-notes-use-case";

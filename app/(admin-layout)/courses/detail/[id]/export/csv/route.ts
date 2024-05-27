@@ -1,5 +1,5 @@
+import { locator } from "@/src/common/di/locator";
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import { locator } from "@/src/common/locator";
 import { ApiErrorHandler } from "@/src/common/ui/api/api-error-handler";
 import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";

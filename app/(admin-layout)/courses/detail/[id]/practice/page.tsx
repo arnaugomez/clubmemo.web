@@ -1,4 +1,4 @@
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import { invalidIdGuard } from "@/src/common/ui/guards/invalid-id-guard";
 import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
 import { PracticePageLoader } from "@/src/practice/ui/components/practice-page-loader";

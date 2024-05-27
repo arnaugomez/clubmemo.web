@@ -1,12 +1,12 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
+import { clientLocator } from "@/src/common/di/client-locator";
 import Error from "next/error";
 import { useEffect } from "react";
 
-export default function GlobalError({ error }) {
+export default function GlobalError({ error }: { error: unknown }) {
   useEffect(() => {
-    Sentry.captureException(error);
+    clientLocator.ErrorTrackingService().captureError(error);
   }, [error]);
 
   return (
