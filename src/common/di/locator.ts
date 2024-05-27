@@ -1,4 +1,3 @@
-import memoizeOne from "memoize-one";
 import type { AiNotesGeneratorService } from "../../ai-generator/domain/interfaces/ai-notes-generator-service";
 import { AuthServiceImpl } from "../../auth/data/services/auth-service-impl";
 import type { AuthService } from "../../auth/domain/interfaces/auth-service";
@@ -26,6 +25,7 @@ import type { IpService } from "../domain/interfaces/ip-service";
 import type { MongoService } from "../domain/interfaces/mongo-service";
 import { clientLocator } from "./client-locator";
 import type { Dependency, Lazy } from "./locator-types";
+import { singleton } from "./locator-utils";
 
 interface Locator {
   EnvService: Dependency<EnvService>;
@@ -58,8 +58,6 @@ interface Locator {
   // Rate Limits
   RateLimitsRepository: Dependency<RateLimitsRepository>;
 }
-
-export const singleton = memoizeOne;
 
 /**
  * A simple service locator for dependency injection.
