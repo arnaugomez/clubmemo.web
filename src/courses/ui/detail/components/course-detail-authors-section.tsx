@@ -1,4 +1,4 @@
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import {
   Avatar,
   AvatarFallback,

@@ -1,4 +1,5 @@
 import type { EnvService } from "@/src/common/domain/interfaces/env-service";
+import type { ErrorTrackingService } from "@/src/common/domain/interfaces/error-tracking-service";
 import { OpenAI, OpenAIError, RateLimitError } from "openai";
 import {
   AiGeneratorEmptyMessageError,
@@ -18,7 +19,10 @@ declare module global {
 
 export class AiNotesGeneratorServiceImpl implements AiNotesGeneratorService {
   private readonly client: OpenAI;
-  constructor(envService: EnvService) {
+  constructor(
+    envService: EnvService,
+    private readonly errorTrackingService: ErrorTrackingService,
+  ) {
     global.openaiClient ??= new OpenAI({
       apiKey: envService.openaiApiKey,
     });
@@ -68,12 +72,10 @@ The language of the flashcards should be the language of the ${textOrTopic} prov
       return this.parseResponse(response);
     } catch (e) {
       if (e instanceof RateLimitError) {
-        // TODO: log error
-        console.error(e);
+        this.errorTrackingService.captureError(e);
         throw new AiGeneratorRateLimitError();
       } else if (e instanceof OpenAIError) {
-        // TODO: log error
-        console.error(e);
+        this.errorTrackingService.captureError(e);
         throw new AiGeneratorError();
       }
       throw e;

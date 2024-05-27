@@ -1,6 +1,6 @@
 "use server";
 
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath, revalidateTag } from "next/cache";
