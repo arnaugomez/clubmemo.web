@@ -12,6 +12,7 @@ import type { EnrolledCourseListItemModel } from "@/src/courses/domain/models/en
 import { Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 interface FavoriteCourseCardProps {
   course: EnrolledCourseListItemModel;
 }
@@ -26,7 +27,7 @@ export function FavoriteCourseCard({ course }: FavoriteCourseCardProps) {
       </div>
       <div className="p-3">
         <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
-          <Link href={`/courses/detail/${course.courseId}`}>{course.name}</Link>
+          <Link href={getCourseDetailPath(course.courseId)}>{course.name}</Link>
         </h3>
         <div className="h-.5"></div>
         <FavoriteCourseCardPracticeSection course={course} />

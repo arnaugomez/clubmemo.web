@@ -7,6 +7,7 @@ import { PartyPopper, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
+import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 
 export async function KeepLearningContent() {
   const profile = await fetchMyProfile();
@@ -23,7 +24,7 @@ export async function KeepLearningContent() {
       </div>
       <div className="min-w-0 flex-1 p-3">
         <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
-          <Link href={`/courses/detail/${course.courseId}`}>{course.name}</Link>
+          <Link href={getCourseDetailPath(course.courseId)}>{course.name}</Link>
         </h3>
         <div className="h-1"></div>
         <p className={cn(textStyles.muted, "truncate")}>

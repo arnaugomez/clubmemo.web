@@ -14,6 +14,7 @@ import Link from "next/link";
 import { CreateCourseButton } from "../../create/components/create-course-button";
 import { PracticeCell } from "../../my-courses/components/practice-cell";
 import { fetchMyCoursesPreview } from "../fetch/fetch-my-courses-preview";
+import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 
 export function MyCoursesPreviewSection() {
   return (
@@ -48,7 +49,7 @@ async function MyCoursesResultsSection() {
             <TableCell
               className={cn(textStyles.small, "truncate hover:underline")}
             >
-              <Link href={`/courses/detail/${course.courseId}`}>
+              <Link href={getCourseDetailPath(course.courseId)}>
                 {course.name}
               </Link>
             </TableCell>

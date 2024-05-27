@@ -1,19 +1,19 @@
-import { NullError } from "@/src/common/domain/models/app-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import type { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import { useState } from "react";
+import { usePracticeContext } from "../../contexts/practice-context";
 import { PracticeActionsBar } from "../practice-actions-bar";
 
 interface PracticeStepCardProps {
   note: NoteModel;
-  course: CourseModel;
+  enrollment: CourseEnrollmentModel;
 }
 
-export function PracticeStepCard({ note, course }: PracticeStepCardProps) {
+export function PracticeStepCard({ note, enrollment }: PracticeStepCardProps) {
   const [showBack, setShowBack] = useState(false);
-  if (!course.enrollment) throw new NullError("course.enrollment");
+  const practiceContext = usePracticeContext();
   return (
     <div className="flex size-full flex-col">
       <div className="flex-1 overflow-y-auto">
@@ -36,9 +36,14 @@ export function PracticeStepCard({ note, course }: PracticeStepCardProps) {
         )}
       </div>
       <PracticeActionsBar
+        onShowBack={() => setShowBack(true)}
         showBack={showBack}
-        setShowBack={setShowBack}
-        enrollmentConfig={course.enrollment.config}
+        onRate={(rating) => {
+          setShowBack(false);
+          practiceContext.rate(rating);
+        }}
+        daysToNextReview={practiceContext.daysToNextReview}
+        enrollmentConfig={enrollment.config}
       />
     </div>
   );

@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
+import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 import { createCourseAction } from "../actions/create-course-action";
 import { CreateCourseActionSchema } from "../schemas/create-course-action-schema";
 
@@ -36,8 +37,8 @@ export function CreateCourseDialog({ onClose }: CreateCourseDialogProps) {
     try {
       const response = await createCourseAction(data);
       const handler = new FormResponseHandler(response, form);
-      if (!handler.hasErrors) {
-        router.push(`/courses/detail/${handler.data?.id}`);
+      if (!handler.hasErrors && handler.data) {
+        router.push(getCourseDetailPath(handler.data.id));
         toast.success("El curso ha sido creado");
       }
       handler.setErrors();

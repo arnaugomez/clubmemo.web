@@ -31,8 +31,12 @@ export function PracticeWizard({
 
   return (
     <TaskQueueProvider>
-      <PracticeProvider enrollment={enrollment} course={course} cards={cards}>
-        <PracticeWizardContent course={course} cards={cards} />
+      <PracticeProvider course={course} enrollment={enrollment} cards={cards}>
+        <PracticeWizardContent
+          course={course}
+          enrollment={enrollment}
+          cards={cards}
+        />
       </PracticeProvider>
     </TaskQueueProvider>
   );
@@ -40,6 +44,7 @@ export function PracticeWizard({
 
 interface PracticeWizardContentProps {
   course: CourseModel;
+  enrollment: CourseEnrollmentModel;
   cards: PracticeCardModel[];
 }
 
@@ -49,7 +54,10 @@ function PracticeWizardContent(props: PracticeWizardContentProps) {
     <div className="flex size-full flex-col">
       <PracticeProgress progress={progress} />
       {currentCard ? (
-        <PracticeStepCard note={currentCard.note} course={props.course} />
+        <PracticeStepCard
+          note={currentCard.note}
+          enrollment={props.enrollment}
+        />
       ) : (
         <PracticeWizardFinish {...props} />
       )}

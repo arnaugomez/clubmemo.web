@@ -2,83 +2,80 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseEnrollmentConfigModel } from "@/src/courses/domain/models/course-enrollment-config-model";
+import type { DaysToNextReviewModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import type { PropsWithChildren } from "react";
-import { usePracticeContext } from "../contexts/practice-context";
+
+interface PracticeOption {
+  label: string;
+  rating: PracticeCardRatingModel;
+  isAdvanced?: boolean;
+}
+
+const practiceOptions: PracticeOption[] = [
+  { label: "Repetir", rating: PracticeCardRatingModel.again },
+  { label: "Bien", rating: PracticeCardRatingModel.good },
+  { label: "Fácil", rating: PracticeCardRatingModel.easy, isAdvanced: true },
+  { label: "Difícil", rating: PracticeCardRatingModel.hard, isAdvanced: true },
+];
 
 interface PracticeActionsBarProps {
   showBack: boolean;
-  setShowBack: (showBack: boolean) => void;
+  onShowBack: () => void;
+  onRate: (rating: PracticeCardRatingModel) => void;
   enrollmentConfig: CourseEnrollmentConfigModel;
+  daysToNextReview: DaysToNextReviewModel;
 }
 export function PracticeActionsBar({
   showBack,
-  setShowBack,
+  onShowBack,
+  onRate,
   enrollmentConfig,
+  daysToNextReview,
 }: PracticeActionsBarProps) {
+  function buildContent() {
+    if (showBack) {
+      return (
+        <>
+          {practiceOptions
+            .filter(
+              (o) =>
+                !o.isAdvanced || enrollmentConfig.showAdvancedRatingOptions,
+            )
+            .map((o) => (
+              <RateButton
+                key={o.rating}
+                onClick={() => onRate(o.rating)}
+                days={daysToNextReview[o.rating]}
+              >
+                Repetir
+              </RateButton>
+            ))}
+        </>
+      );
+    }
+    return (
+      <ButtonWithBottomText className="max-w-xs" onClick={onShowBack}>
+        Mostrar respuesta
+      </ButtonWithBottomText>
+    );
+  }
   return (
     <div className="flex flex-none justify-center space-x-4 border-t-[1px] border-t-slate-200 p-4 pb-2">
-      {!showBack && (
-        <ButtonWithBottomText
-          className="max-w-xs"
-          onClick={() => setShowBack(true)}
-        >
-          Mostrar respuesta
-        </ButtonWithBottomText>
-      )}
-      {showBack && (
-        <>
-          <RateButton
-            rating={PracticeCardRatingModel.again}
-            setShowBack={setShowBack}
-          >
-            Repetir
-          </RateButton>
-          {enrollmentConfig.showAdvancedRatingOptions && (
-            <RateButton
-              rating={PracticeCardRatingModel.hard}
-              setShowBack={setShowBack}
-            >
-              Difícil
-            </RateButton>
-          )}
-          <RateButton
-            rating={PracticeCardRatingModel.good}
-            setShowBack={setShowBack}
-          >
-            Bien
-          </RateButton>
-          {enrollmentConfig.showAdvancedRatingOptions && (
-            <RateButton
-              rating={PracticeCardRatingModel.easy}
-              setShowBack={setShowBack}
-            >
-              Fácil
-            </RateButton>
-          )}
-        </>
-      )}
+      {buildContent()}
     </div>
   );
 }
 interface RateButtonProps extends PropsWithChildren {
-  rating: PracticeCardRatingModel;
-  setShowBack: (showBack: boolean) => void;
+  days?: number;
+  onClick(): void;
 }
 
-function RateButton({ rating, setShowBack, children }: RateButtonProps) {
-  const { daysToNextReview, rate } = usePracticeContext();
+function RateButton({ onClick, days, children }: RateButtonProps) {
   return (
     <ButtonWithBottomText
-      onClick={() => {
-        rate(rating);
-        setShowBack(false);
-      }}
-      bottomText={
-        daysToNextReview[rating]
-          ? `${daysToNextReview[rating]} días`
-          : undefined
-      }
+      onClick={onClick}
+      bottomText={days ? `${days} días` : undefined}
     >
       {children}
     </ButtonWithBottomText>

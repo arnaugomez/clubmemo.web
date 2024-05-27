@@ -3,6 +3,7 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
+import { getCourseDetailPath } from "@/src/courses/ui/utils/get-course-detail-path";
 import { PartyPopper } from "lucide-react";
 import Link from "next/link";
 import { usePracticeContext } from "../../contexts/practice-context";
@@ -34,10 +35,10 @@ export function PracticeWizardFinish({ course }: PracticeWizardFinishProps) {
         </div>
       )}
       <div className="flex w-full max-w-sm space-x-3">
-        <Button variant="link" className="flex-1">
-          <Link href={`/courses/detail/${course.id}`}>Volver al curso</Link>
+        <Button variant="link" className="flex-1" asChild>
+          <Link href={getCourseDetailPath(course.id)}>Volver al curso</Link>
         </Button>
-        <Button variant="secondary" className="flex-1">
+        <Button variant="secondary" className="flex-1" asChild>
           <Link href="/learn">Practicar otros cursos</Link>
         </Button>
       </div>

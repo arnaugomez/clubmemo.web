@@ -5,6 +5,7 @@ import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { Separator } from "@/src/common/ui/components/shadcn/ui/separator";
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
+import { getCourseDetailPath } from "@/src/courses/ui/utils/get-course-detail-path";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -25,7 +26,8 @@ export function GenerateAiNotesPreview({
   onRemove,
 }: GenerateAiNotesPreviewProps) {
   const router = useRouter();
-  router.prefetch(`/courses/detail/${courseId}`);
+  const courseDetailPath = getCourseDetailPath(courseId);
+  router.prefetch(courseDetailPath);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const onClick = async () => {
@@ -35,7 +37,7 @@ export function GenerateAiNotesPreview({
       const handler = new ActionResponseHandler(result);
       if (!handler.hasErrors) {
         toast.success("Tarjetas añadidas correctamente");
-        router.push(`/courses/detail/${courseId}`);
+        router.push(courseDetailPath);
       }
       handler.toastErrors();
     } catch (e) {
