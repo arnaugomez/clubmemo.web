@@ -1,5 +1,5 @@
 import { GenerateAiNotesWizard } from "@/src/ai-generator/ui/components/generate-ai-notes-wizard";
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import {
   Alert,
   AlertDescription,

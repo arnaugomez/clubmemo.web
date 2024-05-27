@@ -1,4 +1,4 @@
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";

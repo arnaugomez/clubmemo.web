@@ -1,5 +1,5 @@
+import { locator } from "@/src/common/di/locator";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
-import { locator } from "@/src/common/locator";
 import type { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
 import { cache } from "react";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";

@@ -1,6 +1,6 @@
 import { fetchSession } from "../auth/ui/fetch/fetch-session";
-import type { Lazy } from "../common/locator";
-import { locator } from "../common/locator";
+import { locator } from "../common/di/locator";
+import type { Lazy } from "../common/di/locator-types";
 import type { EditProfileUploadUseCase } from "./domain/use-cases/edit-profile-upload-use-case";
 import { GetMyProfileUseCase } from "./domain/use-cases/get-my-profile-use-case";
 import type { UpdateProfileUseCase } from "./domain/use-cases/update-profile-use-case";

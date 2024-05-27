@@ -1,5 +1,5 @@
+import { locator } from "@/src/common/di/locator";
 import type { TokenPaginationModelData } from "@/src/common/domain/models/token-pagination-model";
-import { locator } from "@/src/common/locator";
 import type { GetCoursesByAuthorInputModel } from "@/src/courses/domain/interfaces/courses-repository";
 import type { DiscoverCourseModelData } from "@/src/courses/domain/models/discover-course-model";
 

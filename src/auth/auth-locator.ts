@@ -1,5 +1,5 @@
-import type { Dependency, Lazy } from "../common/locator";
-import { locator } from "../common/locator";
+import { locator } from "../common/di/locator";
+import type { Dependency, Lazy } from "../common/di/locator-types";
 import type { ChangePasswordUseCase } from "./domain/use-cases/change-password-use-case";
 import type { DeleteUserUseCase } from "./domain/use-cases/delete-user-use-case";
 import type { ForgotPasswordUseCase } from "./domain/use-cases/forgot-password-use-case";
