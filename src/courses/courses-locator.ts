@@ -1,5 +1,5 @@
-import type { Lazy } from "../common/locator";
-import { locator } from "../common/locator";
+import { locator } from "../common/di/locator";
+import type { Lazy } from "../common/di/locator-types";
 import { profileLocator } from "../profile/profile-locator";
 import type { CopyCourseUseCase } from "./domain/use-cases/copy-course-use-case";
 import type { CreateCourseUseCase } from "./domain/use-cases/create-course-use-case";

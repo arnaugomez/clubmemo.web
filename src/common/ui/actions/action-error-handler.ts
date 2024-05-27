@@ -20,6 +20,7 @@ import {
   AiGeneratorError,
   AiGeneratorRateLimitError,
 } from "@/src/ai-generator/domain/errors/ai-generator-errors";
+import { clientLocator } from "../../di/client-locator";
 
 export class ActionErrorHandler {
   static handle(e: unknown): FormActionResponse {
@@ -52,8 +53,7 @@ export class ActionErrorHandler {
     } else if (e instanceof ZodError) {
       return ActionResponse.formZodError(e);
     } else {
-      // TODO: log error report
-      console.error(e);
+      clientLocator.ErrorTrackingService().captureError(e);
       return ActionResponse.formGlobalError("general");
     }
   }

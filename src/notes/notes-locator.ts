@@ -1,5 +1,5 @@
-import type { Lazy } from "../common/locator";
-import { locator } from "../common/locator";
+import { locator } from "../common/di/locator";
+import type { Lazy } from "../common/di/locator-types";
 import { profileLocator } from "../profile/profile-locator";
 import type { CreateNoteUseCase } from "./domain/use-cases/create-note-use-case";
 import type { DeleteNoteUseCase } from "./domain/use-cases/delete-note-use-case";

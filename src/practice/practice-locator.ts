@@ -1,5 +1,5 @@
-import type { Lazy } from "../common/locator";
-import { locator } from "../common/locator";
+import { locator } from "../common/di/locator";
+import type { Lazy } from "../common/di/locator-types";
 import { profileLocator } from "../profile/profile-locator";
 import type { GetNextPracticeCardsUseCase } from "./domain/use-cases/get-next-practice-cards-use-case";
 import type { GetPracticeCardsUseCase } from "./domain/use-cases/get-practice-cards-use-case";

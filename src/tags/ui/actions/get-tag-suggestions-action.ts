@@ -1,6 +1,6 @@
 "use server";
 
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import type { FormActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";

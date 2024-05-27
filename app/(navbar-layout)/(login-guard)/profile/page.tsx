@@ -1,5 +1,5 @@
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 import { RedirectType, notFound, redirect } from "next/navigation";
 

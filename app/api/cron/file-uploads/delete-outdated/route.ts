@@ -1,4 +1,4 @@
-import { locator } from "@/src/common/locator";
+import { locator } from "@/src/common/di/locator";
 import { ApiErrorHandler } from "@/src/common/ui/api/api-error-handler";
 
 export async function GET() {
