@@ -1,6 +1,6 @@
 import { Navbar } from "@/src/common/ui/navbar/components/navbar";
 
-export default async function AdminLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

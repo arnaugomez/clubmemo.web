@@ -4,6 +4,7 @@ export interface GeneratePresignedUrlInputModel {
   key: string;
   contentType: string;
 }
+
 export interface FileUploadService {
   generatePresignedUrl(
     input: GeneratePresignedUrlInputModel,

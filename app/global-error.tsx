@@ -1,19 +1,13 @@
 "use client";
 
-import { clientLocator } from "@/src/common/di/client-locator";
-import Error from "next/error";
-import { useEffect } from "react";
+import type { ErrorPageProps } from "@/src/common/ui/models/props-with-error";
+import ErrorPage from "./(admin-layout)/error";
 
-export default function GlobalError({ error }: { error: unknown }) {
-  useEffect(() => {
-    clientLocator.ErrorTrackingService().captureError(error);
-  }, [error]);
-
+export default function GlobalErrorPage(props: ErrorPageProps) {
   return (
     <html>
-      <body>
-        {/* @ts-expect-error next error component is not considered a react component for some reason */}
-        <Error />
+      <body className="relative h-screen">
+        <ErrorPage {...props} />
       </body>
     </html>
   );
