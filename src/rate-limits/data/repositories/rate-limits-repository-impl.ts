@@ -8,6 +8,8 @@ export class RateLimitsRepositoryImpl implements RateLimitsRepository {
 
   constructor(mongoService: MongoService) {
     this.rateLimits = mongoService.collection(rateLimitsCollection);
+    this.rateLimits.createIndex({ name: 1 });
+    this.rateLimits.createIndex({ name: 1, updatedAt: 1 });
   }
 
   async check(name: string, limit = 100): Promise<void> {

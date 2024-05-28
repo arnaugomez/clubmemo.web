@@ -12,6 +12,7 @@ export class UsersRepositoryImpl implements UsersRepository {
 
   constructor(mongoService: MongoService) {
     this.usersCollection = mongoService.collection(usersCollection);
+    this.usersCollection.createIndex({ email: 1 }, { unique: true });
   }
 
   async getByEmail(email: string): Promise<UserModel | null> {

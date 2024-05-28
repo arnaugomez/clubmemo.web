@@ -14,6 +14,8 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
 
   constructor(mongoService: MongoService) {
     this.collection = mongoService.collection(profilesCollection);
+    this.collection.createIndex({ userId: 1 });
+    this.collection.createIndex({ handle: 1 }, { unique: true });
   }
   async create(userId: string): Promise<void> {
     await this.collection.insertOne({

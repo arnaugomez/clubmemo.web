@@ -56,9 +56,13 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     this.coursePermissions = mongoService.collection(
       coursePermissionsCollection,
     );
+    this.coursePermissions.createIndex({ courseId: 1, profileId: 1 });
     this.courseEnrollments = mongoService.collection(
       courseEnrollmentsCollection,
     );
+    this.courseEnrollments.createIndex({ courseId: 1, profileId: 1 });
+    this.courseEnrollments.createIndex({ profileId: 1 });
+    this.courseEnrollments.createIndex({ profileId: 1, isFavorite: 1 });
   }
   async create(input: CreateCourseInputModel): Promise<CourseModel> {
     const insertedCourse = {
