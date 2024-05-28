@@ -3,6 +3,7 @@
 import type { PaginationModelData } from "@/src/common/domain/models/pagination-model";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { PaginationEmptyState } from "@/src/common/ui/components/empty-state/pagination-empty-state";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
@@ -110,26 +111,20 @@ export function CourseNotesLoaded({
             }}
           />
         ))}
-        {canLoadMore && (
-          <div key="inView" ref={ref}>
-            <Skeleton key="inView" className="h-32 rounded-lg bg-slate-200" />
-          </div>
-        )}
         {canLoadMore &&
-          Array.from({ length: 2 }).map((_, i) => (
-            <Skeleton key={i} className="h-64 rounded-lg bg-slate-200" />
+          Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              ref={i ? undefined : ref}
+              className="h-32 rounded-lg bg-slate-200"
+            />
           ))}
       </div>
       {!canLoadMore && (
-        <>
-          <div className="flex justify-center pt-16">
-            <Layers className={cn(textStyles.muted, "size-5")} />
-          </div>
-          <div className="h-4"></div>
-          <p className={cn(textStyles.muted, "text-center text-sm")}>
-            No hay más tarjetas
-          </p>
-        </>
+        <PaginationEmptyState
+          icon={<Layers className={cn(textStyles.muted, "size-5")} />}
+          title="No hay más tarjetas"
+        />
       )}
     </>
   );

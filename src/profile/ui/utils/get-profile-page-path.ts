@@ -1,5 +1,9 @@
-import type { ProfileModel } from "../../domain/models/profile-model";
-
-export function getProfilePagePath(profile: ProfileModel): string {
-  return `/profile/${profile.handle ? profile.handle : `id/${profile.id}`}`;
+export function getProfilePagePath({
+  handle,
+  id,
+}: {
+  handle?: string;
+  id: string;
+}): string {
+  return `/profile/${handle ? handle : `id/${id}`}`;
 }
