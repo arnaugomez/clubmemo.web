@@ -50,4 +50,8 @@ export class CourseEnrollmentConfigModel {
       request_retention: this.requestRetention,
     });
   }
+
+  getNewCount(reviewsOfNewCardsCount: number) {
+    return Math.max(0, this.dailyNewCardsCount - reviewsOfNewCardsCount);
+  }
 }

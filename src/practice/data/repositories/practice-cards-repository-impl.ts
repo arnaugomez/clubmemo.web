@@ -130,7 +130,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     );
   }
 
-  async getDueCount(courseEnrollmentId: number): Promise<number> {
+  async getUnpracticedCount(courseEnrollmentId: string): Promise<number> {
     const cursor = this.practiceCards.aggregate<{ count: number }>([
       {
         $match: {
