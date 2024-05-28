@@ -41,14 +41,14 @@ export class ImportNotesUseCase {
       [ImportNotesTypeModel.json]: this.parseJson,
       [ImportNotesTypeModel.anki]: this.parseAnki,
     };
+
     const parseFn = parseMap[importType];
-    if (!parseFn) throw new Error("parseFn does not exist");
-    const newNotes = await parseFn(file);
+    const text = await file.text();
+    const newNotes = await parseFn(text);
     return await this.notesRepository.createMany(courseId, newNotes);
   }
 
-  private async parseCsv(file: File): Promise<NoteRowModel[]> {
-    const text = await file.text();
+  private async parseCsv(text: string): Promise<NoteRowModel[]> {
     const records = parse(text, {
       skip_empty_lines: true,
     }) as string[][];
@@ -59,8 +59,7 @@ export class ImportNotesUseCase {
       }))
       .filter((note) => note.front);
   }
-  private async parseJson(file: File): Promise<NoteRowModel[]> {
-    const text = await file.text();
+  private async parseJson(text: string): Promise<NoteRowModel[]> {
     try {
       const parsed = ImportNotesJsonSchema.parse(JSON.parse(text));
       return parsed.notes
@@ -73,9 +72,7 @@ export class ImportNotesUseCase {
       throw new InvalidFileFormatError();
     }
   }
-  private async parseAnki(file: File): Promise<NoteRowModel[]> {
-    const text = await file.text();
-
+  private async parseAnki(text: string): Promise<NoteRowModel[]> {
     // Lexer to parse Anki format. Works like a finite state machine.
     enum Status {
       start,
