@@ -26,9 +26,6 @@ export class NotesRepositoryImpl implements NotesRepository {
     this.notes = mongoService.collection(notesCollection);
     this.practiceCards = mongoService.collection(practiceCardsCollection);
   }
-  copyAcrossCourses() {
-    throw new Error("Method not implemented.");
-  }
   async create(note: CreateNoteInputModel): Promise<NoteModel> {
     const newNote = {
       front: note.front,

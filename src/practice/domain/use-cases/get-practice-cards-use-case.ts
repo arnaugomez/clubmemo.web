@@ -13,7 +13,7 @@ export class GetPracticeCardsUseCase {
   async execute({ course, enrollment }: GetPracticeCardsInputModel) {
     const courseEnrollmentId = enrollment.id;
 
-    const newReviewsCountPromise =
+    const reviewsOfNewCardsCountPromise =
       this.reviewLogsRepository.getReviewsOfNewCardsCount(courseEnrollmentId);
     const cardsPerSessionCount = enrollment.config.cardsPerSessionCount;
     const newCardsPromise = this.practiceCardsRepository.getUnpracticed({
@@ -26,10 +26,9 @@ export class GetPracticeCardsUseCase {
       limit: cardsPerSessionCount,
     });
 
-    const newReviewsCount = await newReviewsCountPromise;
-    const cardsToLearnCount = Math.max(
-      0,
-      enrollment.config.dailyNewCardsCount - newReviewsCount,
+    const reviewsOfNewCardsCount = await reviewsOfNewCardsCountPromise;
+    const cardsToLearnCount = enrollment.config.getNewCount(
+      reviewsOfNewCardsCount,
     );
     const newCards = cardsToLearnCount > 0 ? await newCardsPromise : [];
     const newCardsToLearn = newCards.slice(0, cardsToLearnCount);
