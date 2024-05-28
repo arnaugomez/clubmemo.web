@@ -15,6 +15,8 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
     mongoService: MongoService,
   ) {
     this.fileUploads = mongoService.collection(fileUploadsCollection);
+    this.fileUploads.createIndex({ keyPrefix: 1 });
+    this.fileUploads.createIndex({ key: 1 });
   }
 
   async create(
@@ -56,8 +58,11 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
     const urlObject = new URL(url);
     const key = urlObject.pathname;
     const keyPrefix = key.split("/").slice(0, -1).join("/");
-    this.fileUploads.updateMany({ keyPrefix }, { $set: { isCurrent: false } });
-    this.fileUploads.updateOne({ key }, { $set: { isCurrent: true } });
+    await this.fileUploads.updateMany(
+      { keyPrefix },
+      { $set: { isCurrent: false } },
+    );
+    await this.fileUploads.updateOne({ key }, { $set: { isCurrent: true } });
   }
 
   async deleteOutdated(): Promise<void> {

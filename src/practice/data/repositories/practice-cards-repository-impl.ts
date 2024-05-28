@@ -26,7 +26,9 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     private readonly dateTimeService: DateTimeService,
   ) {
     this.practiceCards = mongoService.collection(practiceCardsCollection);
+    this.practiceCards.createIndex({ courseEnrollmentId: 1, due: 1 });
     this.notes = mongoService.collection(notesCollection);
+    this.notes.createIndex({ courseId: 1 });
   }
 
   async create(input: PracticeCardModel): Promise<PracticeCardModel> {
