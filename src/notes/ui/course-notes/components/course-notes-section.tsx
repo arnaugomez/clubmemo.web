@@ -40,7 +40,7 @@ export function CourseNotesSection({ course }: CourseNotesSectionProps) {
           </div>
         </CourseNotesProvider>
       </div>
-      <div className="h-16"></div>
+      <div className="h-16" />
     </>
   );
 }

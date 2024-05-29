@@ -8,7 +8,7 @@ import { fetchHasCourses } from "@/src/courses/ui/my-courses/fetch/fetch-has-cou
 import type { FetchMyCoursesPaginationModel } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import { fetchMyCoursesPagination } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
-import { BookText } from "lucide-react";
+import { BookText, GraduationCap } from "lucide-react";
 import { Suspense } from "react";
 
 export default function CoursesPage({
@@ -65,7 +65,7 @@ async function CoursesPageContent({ page }: CoursesPageContentProps) {
         </div>
       </div>
       <div className="h-4"></div>
-      <Suspense key={arg.page} fallback={<Fallback />}>
+      <Suspense key={arg.page} fallback={<MyCoursesLoading />}>
         <MyCoursesTable arg={arg} />
       </Suspense>
       <div className="h-8"></div>
@@ -82,15 +82,17 @@ interface CoursesPagePaginationProps {
 
 async function CoursesPagePagination({ arg }: CoursesPagePaginationProps) {
   const { totalCount: count } = await fetchMyCoursesPagination(arg);
-  const pageSize = 10;
 
-  return <PaginationSection resultsCount={count} pageSize={pageSize} />;
+  return <PaginationSection resultsCount={count} pageSize={10} />;
 }
 
-function Fallback() {
+function MyCoursesLoading() {
   return (
-    <div className="px-4">
-      <div className="mx-auto max-w-prose">Loading........</div>
+    <div className="flex h-96 flex-col items-center justify-center space-y-2">
+      <GraduationCap className="text-primary-500 size-6 animate-pulse" />
+      <p className={cn(textStyles.base, "animate-pulse text-center")}>
+        Cargando cursos...
+      </p>
     </div>
   );
 }

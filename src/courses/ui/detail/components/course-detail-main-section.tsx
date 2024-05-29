@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Suspense } from "react";
 import { TagsSection } from "../../../../tags/ui/components/tags-section";
 import { CourseDetailActionsSection } from "./course-detail-actions-section";
-import { CourseDetailAuthorsSection } from "./course-detail-authors-section";
+import { CourseDetailAuthorsSectionLoader } from "./course-detail-authors-section";
 import { CourseDetailMainActionsSection } from "./course-detail-main-actions-section";
 
 interface CourseDetailMainSectionProps {
@@ -39,7 +39,7 @@ export async function CourseDetailMainSection({
         <div className="h-6" />
       </div>
       <Suspense>
-        <CourseDetailAuthorsSection course={course} />
+        <CourseDetailAuthorsSectionLoader course={course} />
       </Suspense>
     </>
   );
