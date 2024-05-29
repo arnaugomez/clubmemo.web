@@ -9,7 +9,12 @@ import type { FetchMyCoursesPaginationModel } from "@/src/courses/ui/my-courses/
 import { fetchMyCoursesPagination } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import { BookText, GraduationCap } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Mis cursos",
+};
 
 export default function CoursesPage({
   searchParams,

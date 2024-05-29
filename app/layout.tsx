@@ -11,8 +11,12 @@ const Toaster = lazy(async () => {
 });
 
 export const metadata: Metadata = {
-  title: "clubmemo",
-  description: "Tu asistente AI para el estudio eficiente",
+  title: {
+    template: "%s | clubmemo",
+    default: "clubmemo",
+  },
+  description:
+    "Tu asistente AI para el estudio eficiente. Sube tus apuntes, genera flashards automáticamente y entrena tu memoria con juegos interactivos.",
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {

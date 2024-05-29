@@ -4,6 +4,11 @@ import { KeepLearningSection } from "@/src/courses/ui/keep-learning/components/k
 import { fetchHasCourses } from "@/src/courses/ui/my-courses/fetch/fetch-has-courses";
 import { HomeGreeting } from "@/src/home/ui/components/home-greeting";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Inicio",
+};
 
 export default async function HomePage() {
   const profile = await fetchMyProfile();
