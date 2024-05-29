@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { EmailSchema } from "@/src/common/schemas/email-schema";
+import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import {
   InputFormField,
   PasswordInputFormField,
@@ -16,8 +18,6 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
-import { EmailSchema } from "@/src/common/schemas/email-schema";
-import { PasswordSchema } from "@/src/common/schemas/password-schema";
 
 const SignupFormSchema = z.object({
   email: EmailSchema,
@@ -70,15 +70,15 @@ export function SignupForm() {
         <p className="text-sm italic">
           <Check size={16} className="inline" /> Con el envío de este
           formulario, acepto la{" "}
-          <a
-            className="underline"
-            href="https://raw.githubusercontent.com/arnaugomez/clubmemo.web/main/LICENSE.txt"
-            target="_blank"
-          >
+          <a className="underline" href="/compliance/license.txt" target="_blank">
             licencia de uso
+          </a>
+          , la{" "}
+          <a className="underline" href="/compliance/cookies.md" target="_blank">
+            política de cookies
           </a>{" "}
           y la{" "}
-          <a className="underline" href="">
+          <a className="underline" href="/compliance/privacy.md" target="_blank">
             política de privacidad.
           </a>
         </p>
