@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import type { PropsWithChildren } from "react";
+import { inter } from "../src/common/ui/styles/fonts";
 import { Suspense, lazy } from "react";
 import "./globals.css";
+import { cn } from "@/src/common/ui/utils/shadcn";
 
 const Toaster = lazy(async () => {
   const file = await import("../src/common/ui/components/shadcn/ui/sonner");
   return { default: file.Toaster };
 });
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "clubmemo",
@@ -19,7 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="es">
-      <body className={inter.className}>
+      <body className={cn(inter.className, "antialiased")}>
         {children}
         <Suspense>
           <Toaster />
