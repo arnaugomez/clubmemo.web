@@ -13,6 +13,7 @@ export default async function DiscoverPage({
 }: {
   searchParams?: {
     query?: string;
+    retries?: string;
   };
 }) {
   return (
@@ -28,7 +29,7 @@ export default async function DiscoverPage({
           <DiscoverFiltersSection />
           <div className="h-6"></div>
           <Suspense
-            key={searchParams?.query}
+            key={searchParams?.query ?? "" + searchParams?.retries ?? ""}
             fallback={<DiscoverLoadingSkeletons />}
           >
             <DiscoverPageContent query={searchParams?.query} />
