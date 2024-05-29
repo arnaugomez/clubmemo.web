@@ -28,3 +28,5 @@ just dev # Start the development server
 ## Documentation and guides
 
 - [Git Branch Policy](./docs/git-branch-policy.md)
+- [Folder Structure](./docs/folder-structure.md)
+- [Naming Conventions](./docs/naming-conventions.md)
