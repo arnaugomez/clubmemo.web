@@ -70,15 +70,27 @@ export function SignupForm() {
         <p className="text-sm italic">
           <Check size={16} className="inline" /> Con el envío de este
           formulario, acepto la{" "}
-          <a className="underline" href="/compliance/license.txt" target="_blank">
+          <a
+            className="underline"
+            href="/compliance/license.txt"
+            target="_blank"
+          >
             licencia de uso
           </a>
           , la{" "}
-          <a className="underline" href="/compliance/cookies.md" target="_blank">
+          <a
+            className="underline"
+            href="/compliance/cookies.md"
+            target="_blank"
+          >
             política de cookies
           </a>{" "}
           y la{" "}
-          <a className="underline" href="/compliance/privacy.md" target="_blank">
+          <a
+            className="underline"
+            href="/compliance/privacy.md"
+            target="_blank"
+          >
             política de privacidad.
           </a>
         </p>
