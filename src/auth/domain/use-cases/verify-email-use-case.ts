@@ -1,5 +1,5 @@
+import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
-import { cookies } from "next/headers";
 import { InvalidTokenError, SessionExpiredError } from "../errors/auth-errors";
 import type { AuthService } from "../interfaces/auth-service";
 import type { EmailVerificationCodesRepository } from "../interfaces/email-verification-codes-repository";
@@ -11,6 +11,7 @@ export class VerifyEmailUseCase {
     private readonly emailVerificationCodesRepository: EmailVerificationCodesRepository,
     private readonly authService: AuthService,
     private readonly rateLimitsRepository: RateLimitsRepository,
+    private readonly cookieService: CookieService,
   ) {}
 
   async execute(code: string) {
@@ -30,10 +31,6 @@ export class VerifyEmailUseCase {
     }
 
     const sessionCookie = await this.authService.verifyEmail(user.id);
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    );
+    this.cookieService.set(sessionCookie);
   }
 }

@@ -24,7 +24,10 @@ interface AuthLocator {
 
 export const authLocator: AuthLocator = {
   GetSessionUseCase() {
-    return new GetSessionUseCase(locator.AuthService());
+    return new GetSessionUseCase(
+      locator.AuthService(),
+      locator.CookieService(),
+    );
   },
   async LoginWithPasswordUseCase() {
     const file = await import(
@@ -34,6 +37,7 @@ export const authLocator: AuthLocator = {
       locator.AuthService(),
       await locator.IpService(),
       locator.RateLimitsRepository(),
+      locator.CookieService(),
     );
   },
   DeleteUserUseCase: async () => {
@@ -51,6 +55,7 @@ export const authLocator: AuthLocator = {
       authLocator.GetSessionUseCase(),
       locator.AuthService(),
       locator.RateLimitsRepository(),
+      locator.CookieService(),
     );
   },
   async LogoutUseCase() {
@@ -58,6 +63,7 @@ export const authLocator: AuthLocator = {
     return new file.LogoutUseCase(
       this.GetSessionUseCase(),
       locator.AuthService(),
+      locator.CookieService(),
     );
   },
   async ForgotPasswordUseCase() {
@@ -89,6 +95,7 @@ export const authLocator: AuthLocator = {
       await locator.ProfilesRepository(),
       await locator.EmailService(),
       await locator.EmailVerificationCodesRepository(),
+      locator.CookieService(),
     );
   },
   async VerifyEmailUseCase() {
@@ -98,6 +105,7 @@ export const authLocator: AuthLocator = {
       await locator.EmailVerificationCodesRepository(),
       locator.AuthService(),
       locator.RateLimitsRepository(),
+      locator.CookieService(),
     );
   },
 };

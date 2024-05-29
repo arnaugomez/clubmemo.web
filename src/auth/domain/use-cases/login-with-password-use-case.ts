@@ -1,6 +1,6 @@
+import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
 import type { IpService } from "@/src/common/domain/interfaces/ip-service";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
-import { cookies } from "next/headers";
 import { IncorrectPasswordError } from "../errors/auth-errors";
 import type {
   AuthService,
@@ -12,6 +12,7 @@ export class LoginWithPasswordUseCase {
     private readonly authService: AuthService,
     private readonly ipService: IpService,
     private readonly rateLimitsRepository: RateLimitsRepository,
+    private readonly cookieService: CookieService,
   ) {}
 
   async execute(input: LoginWithPasswordInputModel): Promise<void> {
@@ -21,11 +22,7 @@ export class LoginWithPasswordUseCase {
     try {
       const sessionCookie = await this.authService.loginWithPassword(input);
 
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      );
+      this.cookieService.set(sessionCookie);
     } catch (e) {
       if (e instanceof IncorrectPasswordError) {
         await this.rateLimitsRepository.increment(rateLimitKey);

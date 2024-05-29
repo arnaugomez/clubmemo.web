@@ -1,8 +1,8 @@
+import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
 import type { EmailService } from "@/src/common/domain/interfaces/email-service";
 import type { IpService } from "@/src/common/domain/interfaces/ip-service";
 import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
-import { cookies } from "next/headers";
 import type { AuthService } from "../interfaces/auth-service";
 import type { EmailVerificationCodesRepository } from "../interfaces/email-verification-codes-repository";
 
@@ -14,6 +14,7 @@ export class SignupUseCase {
     private readonly profilesRepository: ProfilesRepository,
     private readonly emailService: EmailService,
     private readonly emailVerificationCodesRepository: EmailVerificationCodesRepository,
+    private readonly cookieService: CookieService,
   ) {}
 
   async execute(input: SignupInputModel) {
@@ -34,11 +35,7 @@ export class SignupUseCase {
 
     await this.rateLimitsRepository.increment(rateLimitKey);
 
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    );
+    this.cookieService.set(sessionCookie);
   }
 }
 

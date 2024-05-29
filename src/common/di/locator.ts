@@ -16,8 +16,10 @@ import type { ProfilesRepository } from "../../profile/domain/interfaces/profile
 import { RateLimitsRepositoryImpl } from "../../rate-limits/data/repositories/rate-limits-repository-impl";
 import type { RateLimitsRepository } from "../../rate-limits/domain/interfaces/rate-limits-repository";
 import type { TagsRepository } from "../../tags/domain/interfaces/tags-repository";
+import { CookieServiceNextJsImpl } from "../data/services/cookie-service-next-js-impl";
 import { EnvServiceImpl } from "../data/services/env-service-impl";
 import { MongoServiceImpl } from "../data/services/mongo-service-impl";
+import type { CookieService } from "../domain/interfaces/cookie-service";
 import type { DateTimeService } from "../domain/interfaces/date-time-service";
 import type { EmailService } from "../domain/interfaces/email-service";
 import type { EnvService } from "../domain/interfaces/env-service";
@@ -40,6 +42,7 @@ interface Locator {
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
   ForgotPasswordTokensRepository: Lazy<ForgotPasswordTokensRepository>;
   UsersRepository: Lazy<UsersRepository>;
+  CookieService: Dependency<CookieService>;
   // Profiles
   ProfilesRepository: Lazy<ProfilesRepository>;
   // Courses
@@ -88,6 +91,7 @@ export const locator: Locator = {
       (file) => new file.FileUploadServiceS3Impl(locator.EnvService()),
     ),
   ),
+  CookieService: singleton(() => new CookieServiceNextJsImpl()),
 
   // Auth
   AuthService: singleton(

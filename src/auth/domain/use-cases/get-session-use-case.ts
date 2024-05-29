@@ -1,14 +1,17 @@
-import { cookies } from "next/headers";
+import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
 import type { AuthService } from "../interfaces/auth-service";
 import type { CheckSessionModel } from "../models/check-session-model";
 import { emptyCheckSession } from "../models/check-session-model";
 
 export class GetSessionUseCase {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly cookieService: CookieService,
+  ) {}
 
   async execute(): Promise<CheckSessionModel> {
     const sessionCookieName = this.authService.getSessionCookieName();
-    const sessionId = cookies().get(sessionCookieName)?.value ?? null;
+    const sessionId = this.cookieService.get(sessionCookieName);
     if (!sessionId) return emptyCheckSession;
 
     const result = await this.authService.validateSession(sessionId);
@@ -19,19 +22,11 @@ export class GetSessionUseCase {
         const sessionCookie = this.authService.createSessionCookie(
           result.session.id,
         );
-        cookies().set(
-          sessionCookie.name,
-          sessionCookie.value,
-          sessionCookie.attributes,
-        );
+        this.cookieService.set(sessionCookie);
       }
       if (!result.session) {
         const sessionCookie = this.authService.createBlankSessionCookie();
-        cookies().set(
-          sessionCookie.name,
-          sessionCookie.value,
-          sessionCookie.attributes,
-        );
+        this.cookieService.set(sessionCookie);
       }
     } catch {}
     return result;

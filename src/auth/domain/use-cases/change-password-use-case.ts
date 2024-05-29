@@ -1,5 +1,5 @@
+import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
-import type { Cookie } from "lucia";
 import {
   IncorrectPasswordError,
   UserDoesNotExistError,
@@ -17,9 +17,10 @@ export class ChangePasswordUseCase {
     private readonly getSessionUseCase: GetSessionUseCase,
     private readonly authService: AuthService,
     private readonly rateLimitsRepository: RateLimitsRepository,
+    private readonly cookieService: CookieService,
   ) {}
 
-  async execute(input: ChangePasswordInputModel): Promise<Cookie> {
+  async execute(input: ChangePasswordInputModel): Promise<void> {
     const { user } = await this.getSessionUseCase.execute();
     if (!user) throw new UserDoesNotExistError();
     const userId = user.id;
@@ -42,6 +43,8 @@ export class ChangePasswordUseCase {
       userId,
       password: input.newPassword,
     });
-    return await this.authService.resetSessions(userId);
+
+    const cookie = await this.authService.resetSessions(userId);
+    this.cookieService.set(cookie);
   }
 }

@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
 import type { AuthService } from "../interfaces/auth-service";
 import type { GetSessionUseCase } from "./get-session-use-case";
 
@@ -6,6 +6,7 @@ export class LogoutUseCase {
   constructor(
     private readonly getSessionUseCase: GetSessionUseCase,
     private readonly authService: AuthService,
+    private readonly cookieService: CookieService,
   ) {}
 
   async execute() {
@@ -17,10 +18,6 @@ export class LogoutUseCase {
     await this.authService.invalidateSession(session.id);
 
     const sessionCookie = this.authService.createBlankSessionCookie();
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    );
+    this.cookieService.set(sessionCookie);
   }
 }
