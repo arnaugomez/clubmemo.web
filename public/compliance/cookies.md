@@ -1,8 +1,8 @@
-### Política de Cookies de ClubMemo
+### Política de Cookies de clubmemo
 
 **Fecha de entrada en vigor: 29/5/2024**
 
-En ClubMemo, accesible desde www.clubmemo.com, utilizamos cookies para asegurar el correcto funcionamiento de nuestro sitio web y mejorar su experiencia como usuario. Esta política de cookies explica qué son las cookies, cómo las usamos y sus derechos en relación con el uso de cookies.
+En clubmemo, accesible desde www.clubmemo.com, utilizamos cookies para asegurar el correcto funcionamiento de nuestro sitio web y mejorar su experiencia como usuario. Esta política de cookies explica qué son las cookies, cómo las usamos y sus derechos en relación con el uso de cookies.
 
 #### 1. ¿Qué son las cookies?
 
@@ -10,7 +10,7 @@ Las cookies son pequeños archivos de texto que se almacenan en su dispositivo (
 
 #### 2. Tipos de cookies que utilizamos
 
-En ClubMemo, **solo utilizamos cookies necesarias** para el funcionamiento de nuestro sitio web. Específicamente, usamos la siguiente cookie:
+En clubmemo, **solo utilizamos cookies necesarias** para el funcionamiento de nuestro sitio web. Específicamente, usamos la siguiente cookie:
 
 - **auth_session**: Esta cookie es esencial para guardar la sesión del usuario cuando se encuentra logueado en nuestra página web. Permite que los usuarios permanezcan autenticados mientras navegan por el sitio.
 

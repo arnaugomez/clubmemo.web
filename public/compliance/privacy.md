@@ -1,19 +1,19 @@
-## Política de Privacidad de ClubMemo
+## Política de Privacidad de clubmemo
 
 **Fecha de entrada en vigor: 29/5/2024**
 
-En ClubMemo, accesible desde www.clubmemo.com, nos comprometemos a proteger y respetar su privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, compartimos y protegemos sus datos personales, en conformidad con el Reglamento General de Protección de Datos (GDPR) 2016/679 de la Unión Europea.
+En clubmemo, accesible desde www.clubmemo.com, nos comprometemos a proteger y respetar su privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, compartimos y protegemos sus datos personales, en conformidad con el Reglamento General de Protección de Datos (GDPR) 2016/679 de la Unión Europea.
 
 #### 1. Responsable del tratamiento de los datos
 
-El responsable del tratamiento de los datos personales recogidos en ClubMemo es:
+El responsable del tratamiento de los datos personales recogidos en clubmemo es:
 
 - Nombre del particular: Arnau Gómez
 - Email de contacto: support@clubmemo.com
 
 #### 2. Datos personales que recopilamos
 
-Cuando crea una cuenta en ClubMemo, recopilamos y tratamos los siguientes datos personales:
+Cuando crea una cuenta en clubmemo, recopilamos y tratamos los siguientes datos personales:
 
 - **Email**: Este dato es necesario para la creación de la cuenta, la autenticación y la comunicación con los administradores del sitio web.
 
@@ -34,7 +34,7 @@ Sus datos personales serán tratados desde el momento en que cree su cuenta hast
 Los datos personales (email) solo podrán ser consultados por:
 
 - Usted mismo.
-- Los administradores de ClubMemo, únicamente para fines de gestión y soporte técnico.
+- Los administradores de clubmemo, únicamente para fines de gestión y soporte técnico.
 
 #### 6. Opciones de privacidad del perfil y publicaciones
 
