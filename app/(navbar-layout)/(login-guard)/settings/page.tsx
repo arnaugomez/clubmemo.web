@@ -7,6 +7,11 @@ import { SettingsDeleteUserSection } from "@/src/settings/ui/components/settings
 import { SettingsLogoutSection } from "@/src/settings/ui/components/settings-logout-section";
 import { User } from "lucide-react";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Ajustes",
+};
 
 export default async function SettingsPage() {
   const { user } = await fetchSession();

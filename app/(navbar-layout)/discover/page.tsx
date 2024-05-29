@@ -6,7 +6,12 @@ import { DiscoverLoadingSkeletons } from "@/src/discover/ui/components/discover-
 import { DiscoverResultsSection } from "@/src/discover/ui/components/discover-results-section";
 import { fetchDiscoverCourses } from "@/src/discover/ui/fetch/fetch-discover-courses";
 import { Compass } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Explorar cursos",
+};
 
 export default async function DiscoverPage({
   searchParams,

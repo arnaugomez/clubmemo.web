@@ -6,6 +6,11 @@ import { KeepLearningSection } from "@/src/courses/ui/keep-learning/components/k
 import { MyCoursesPreviewSection } from "@/src/courses/ui/my-courses-preview/components/my-courses-preview-section";
 import { fetchMyCoursesPreview } from "@/src/courses/ui/my-courses-preview/fetch/fetch-my-courses-preview";
 import { GraduationCap } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Aprender",
+};
 
 export default async function LearnPage() {
   return (

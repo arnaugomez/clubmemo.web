@@ -1,6 +1,11 @@
 import { ResetPasswordPageLoaded } from "@/src/auth/ui/forgot-password/pages/reset-password-page-loaded";
 import { locator } from "@/src/common/di/locator";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Nueva contraseña",
+};
 
 interface SearchParams {
   email?: string;

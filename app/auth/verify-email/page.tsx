@@ -2,6 +2,7 @@ import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { VerifyEmailPageLoaded } from "@/src/auth/ui/verify-email/pages/verify-email-page-loaded";
 import { locator } from "@/src/common/di/locator";
 import { NullError } from "@/src/common/domain/models/app-errors";
+import type { Metadata } from "next";
 
 import { redirect } from "next/navigation";
 
@@ -15,6 +16,10 @@ async function verifyEmailGuard() {
   }
   return result;
 }
+
+export const metadata: Metadata = {
+  title: "Verifica tu email",
+};
 
 async function handleVerificationCodeExpirationDate() {
   const { user } = await fetchSession();
