@@ -75,7 +75,7 @@ export function ImportNotesAnkiForm({
             <CircleHelp size={16} />
             <AlertTitle>¿Cómo exportar tarjetas de Anki?</AlertTitle>
             <AlertDescription>
-              ClubMemo soporta la importación de tarjetas en{" "}
+              Clubmemo soporta la importación de tarjetas en{" "}
               <span className="font-medium">texto plano</span>. Lee el{" "}
               <a
                 className="underline"

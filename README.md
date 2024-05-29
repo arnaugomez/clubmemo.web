@@ -1,4 +1,4 @@
-# ClubMemo
+# clubmemo
 
 A web app for efficient study and memorization.
 
