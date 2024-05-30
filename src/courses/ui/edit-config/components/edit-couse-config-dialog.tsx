@@ -99,6 +99,7 @@ export function EditCourseConfigDialog({
                 <a
                   href="https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler"
                   className="underline hover:text-slate-700"
+                  target="_blank"
                 >
                   documentación del algoritmo
                 </a>
