@@ -12,14 +12,24 @@ export class GetCoursePracticeCountUseCase {
   async execute(
     courseEnrollment: CourseEnrollmentModel,
   ): Promise<CoursePracticeCountModel> {
-    const [dueCount, reviewsOfNewCardsCount] = await Promise.all([
-      this.practiceCardsRepository.getUnpracticedCount(courseEnrollment.id),
-      this.reviewLogsRepository.getReviewsOfNewCardsCount(courseEnrollment.id),
-    ]);
-
+    const [dueCount, newCardsCount, reviewsOfNewCardsCount] = await Promise.all(
+      [
+        this.practiceCardsRepository.getDueCount(courseEnrollment.id),
+        this.practiceCardsRepository.getNewCount({
+          courseId: courseEnrollment.courseId,
+          courseEnrollmentId: courseEnrollment.id,
+        }),
+        this.reviewLogsRepository.getReviewsOfNewCardsCount(
+          courseEnrollment.id,
+        ),
+      ],
+    );
     return new CoursePracticeCountModel({
       dueCount,
-      newCount: courseEnrollment.config.getNewCount(reviewsOfNewCardsCount),
+      newCount: Math.min(
+        courseEnrollment.config.getNewCount(reviewsOfNewCardsCount),
+        newCardsCount,
+      ),
     });
   }
 }

@@ -1,0 +1,13 @@
+{
+  "mappings": {
+    "dynamic": true,
+    "fields": {
+      "description": {
+        "type": "autocomplete"
+      },
+      "name": {
+        "type": "autocomplete"
+      }
+    }
+  }
+}
