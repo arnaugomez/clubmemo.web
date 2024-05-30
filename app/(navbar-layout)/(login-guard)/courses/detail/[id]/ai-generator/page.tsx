@@ -10,7 +10,13 @@ import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-para
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import { GraduationCap, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Script from "next/script";
+
+export const metadata: Metadata = {
+  title: "Generador AI",
+};
 
 export default async function CourseAiGeneratorPage({
   params: { id },
@@ -50,6 +56,11 @@ export default async function CourseAiGeneratorPage({
           <GenerateAiNotesWizard courseId={course.id} />
         </div>
       </div>
+      <Script type="module" id="pdfjs">
+        {
+          "import pdfjsDist from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.2.67/+esm'"
+        }
+      </Script>
     </main>
   );
 }

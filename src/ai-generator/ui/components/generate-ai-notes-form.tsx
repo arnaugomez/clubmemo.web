@@ -92,7 +92,9 @@ export function GenerateAiNotesForm({
                 return;
               }
               const typedarray = new Uint8Array(event.target.result);
-              const pdfjs = await import("pdfjs-dist");
+              // @ts-expect-error pdfjsLib is loaded through a script
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const pdfjs = window.pdfjsLib;
               pdfjs.GlobalWorkerOptions.workerSrc =
                 "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.mjs";
               const pdf = await pdfjs.getDocument(typedarray).promise;
@@ -104,7 +106,9 @@ export function GenerateAiNotesForm({
                   const page = await pdf.getPage(i + 1);
                   const content = await page.getTextContent();
                   return content.items
-                    .map((item) => ("str" in item ? item.str : ""))
+                    .map((item: { str: string }) =>
+                      "str" in item ? item.str : "",
+                    )
                     .join(" ");
                 }),
               );
