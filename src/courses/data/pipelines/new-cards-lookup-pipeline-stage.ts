@@ -2,7 +2,6 @@ import { notesCollection } from "@/src/notes/data/collections/notes-collection";
 import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
 import type { Document } from "mongodb";
 
-
 export const newCardsLookupPipelineStage: Document = {
   $lookup: {
     from: notesCollection.name,
