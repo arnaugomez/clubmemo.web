@@ -190,7 +190,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
                 label="Nombre de usuario"
                 name="displayName"
                 placeholder="Tu nombre de usuario"
-                autoComplete="username"
+                autoComplete="name"
               />
               <div className="h-4" />
               <InputFormField

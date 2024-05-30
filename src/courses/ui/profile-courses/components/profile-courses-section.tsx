@@ -21,8 +21,8 @@ export default async function ProfileCoursesSection({
       </h2>
       <div className="h-1.5"></div>
       <p className={textStyles.muted}>
-        En esta sección puedes ver los cursos que{" "}
-        {profile.displayName ?? "el usuario"} ha publicado o editado
+        En esta sección puedes ver los <strong>cursos públicos</strong> que{" "}
+        {profile.displayName ?? "el usuario"} ha creado
       </p>
       <div className="h-6"></div>
       <Suspense fallback={<DiscoverLoadingSkeletons />}>

@@ -14,7 +14,6 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -45,8 +44,6 @@ interface ChangePasswordDialogProps {
 type FormValues = z.infer<typeof ChangePasswordActionSchema>;
 
 function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
-  const router = useRouter();
-
   const form = useForm<FormValues>({
     resolver: zodResolver(ChangePasswordActionSchema),
     defaultValues: {
@@ -61,7 +58,7 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
       const response = await changePasswordAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
-        router.push("/home");
+        onClose();
         toast.success("Contraseña cambiada con éxito");
       }
       handler.setErrors();
