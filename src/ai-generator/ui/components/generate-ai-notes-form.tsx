@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 interface GenerateAiNotesFormProps {
   courseId: string;
@@ -151,6 +152,7 @@ export function GenerateAiNotesForm({
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

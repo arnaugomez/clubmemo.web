@@ -11,6 +11,7 @@ import {
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
@@ -28,7 +29,9 @@ export function LoginForm() {
     },
   });
 
-  async function onSubmit(data: LoginWithPasswordActionModel) {
+  const onSubmit = form.handleSubmit(async function onSubmit(
+    data: LoginWithPasswordActionModel,
+  ) {
     try {
       const response = await loginWithPasswordAction(data);
       const handler = new FormResponseHandler(response, form);
@@ -38,11 +41,12 @@ export function LoginForm() {
       console.error(error);
       FormResponseHandler.setGlobalError(form);
     }
-  }
+  });
+  useCommandEnter(onSubmit);
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <InputFormField
           label="Correo electrónico"
           name="email"

@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
@@ -84,7 +85,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       confirmation: "",
     },
   });
-  async function onSubmit(data: FormValues) {
+  const onSubmit = form.handleSubmit(async function (data: FormValues) {
     try {
       const response = await deleteUserAction(data);
       const handler = new FormResponseHandler(response, form);
@@ -94,7 +95,8 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       console.error(error);
       FormResponseHandler.setGlobalError(form);
     }
-  }
+  });
+  useCommandEnter(onSubmit);
 
   const { isSubmitting } = form.formState;
   const confirmation = form.watch("confirmation");
@@ -113,7 +115,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={onSubmit}>
             <div>
               <PasswordInputFormField
                 label="Contraseña"

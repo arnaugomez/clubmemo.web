@@ -22,6 +22,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { default_maximum_interval } from "ts-fsrs";
 import { editCourseConfigAction } from "../actions/edit-course-config-action";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 const EditCourseConfigSchema = z.object({
   enableFuzz: z.boolean(),
@@ -69,6 +70,7 @@ export function EditCourseConfigDialog({
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 
