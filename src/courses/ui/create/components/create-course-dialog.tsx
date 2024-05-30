@@ -19,6 +19,7 @@ import type { z } from "zod";
 import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 import { createCourseAction } from "../actions/create-course-action";
 import { CreateCourseActionSchema } from "../schemas/create-course-action-schema";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 interface CreateCourseDialogProps {
   onClose: () => void;
@@ -47,6 +48,7 @@ export function CreateCourseDialog({ onClose }: CreateCourseDialogProps) {
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const { isSubmitting } = form.formState;
   return (

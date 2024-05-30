@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,6 +58,7 @@ export function CreateNoteDialog({
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

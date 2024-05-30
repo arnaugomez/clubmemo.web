@@ -22,6 +22,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { default_maximum_interval } from "ts-fsrs";
 import { editCourseConfigAction } from "../actions/edit-course-config-action";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 const EditCourseConfigSchema = z.object({
   enableFuzz: z.boolean(),
@@ -69,6 +70,7 @@ export function EditCourseConfigDialog({
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 
@@ -99,6 +101,7 @@ export function EditCourseConfigDialog({
                 <a
                   href="https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler"
                   className="underline hover:text-slate-700"
+                  target="_blank"
                 >
                   documentación del algoritmo
                 </a>

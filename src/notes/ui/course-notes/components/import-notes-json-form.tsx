@@ -18,6 +18,7 @@ import { CircleHelp, FileJson } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { importNotesAction } from "../actions/import-notes-action";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 interface ImportNotesJsonFormProps {
   courseId: string;
@@ -63,6 +64,7 @@ export function ImportNotesJsonForm({
     }
     setIsLoading(false);
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

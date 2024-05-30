@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editNoteAction } from "../actions/edit-note-action";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 const EditNoteSchema = z.object({
   front: z.string().min(1).max(1000),
@@ -57,6 +58,7 @@ export function EditNoteDialog({
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

@@ -21,7 +21,6 @@ export default function TagsInput({
 }: TagsInputProps) {
   const loadExistingTags = async (text: string) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const query = text.trim();
       const response = await getTagSuggestionsAction({ query });
       const handler = new ActionResponseHandler(response);
@@ -53,6 +52,7 @@ export default function TagsInput({
       loadingMessage={() => "Cargando..."}
       placeholder={placeholder}
       allowCreateWhileLoading
+      noOptionsMessage={() => <>No hay etiquetas. ¡Crea una!</>}
     />
   );
 }

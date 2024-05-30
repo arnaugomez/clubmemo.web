@@ -10,6 +10,7 @@ import type { CoursePracticeCountModel } from "@/src/practice/domain/models/cour
 import { practiceLocator } from "@/src/practice/practice-locator";
 import Link from "next/link";
 import { Suspense } from "react";
+import { CourseDetailPracticeButtonLoading } from "./course-detail-practice-button-loading";
 
 interface CourseDetailPracticeButtonProps {
   course: CourseModel;
@@ -22,14 +23,6 @@ export function CourseDetailPracticeButton({
     <Suspense fallback={<CourseDetailPracticeButtonLoading />}>
       <CourseDetailPracticeButtonLoader course={course} />
     </Suspense>
-  );
-}
-
-export function CourseDetailPracticeButtonLoading() {
-  return (
-    <Button className="w-full" disabled>
-      Cargando práctica...
-    </Button>
   );
 }
 

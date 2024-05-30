@@ -34,6 +34,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editProfileAction } from "../actions/edit-profile-action";
 import { editProfileUploadAction } from "../actions/edit-profile-upload-action";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 interface EditProfileSectionProps {
   profileData: ProfileModelData;
@@ -170,6 +171,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 
@@ -190,7 +192,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
                 label="Nombre de usuario"
                 name="displayName"
                 placeholder="Tu nombre de usuario"
-                autoComplete="username"
+                autoComplete="name"
               />
               <div className="h-4" />
               <InputFormField

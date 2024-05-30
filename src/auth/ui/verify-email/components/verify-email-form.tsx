@@ -9,6 +9,7 @@ import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { InputOtpFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { useEffect, useRef } from "react";
 import { logoutAction } from "../../actions/logout-action";
@@ -27,7 +28,9 @@ export function VerifyEmailForm() {
   });
   const formRef = useRef<HTMLFormElement>(null);
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  const onSubmit = form.handleSubmit(async function (
+    data: z.infer<typeof FormSchema>,
+  ) {
     try {
       const response = await verifyEmailAction(data);
       const handler = new FormResponseHandler(response, form);
@@ -37,7 +40,8 @@ export function VerifyEmailForm() {
       console.error(error);
       FormResponseHandler.setGlobalError(form);
     }
-  }
+  });
+  useCommandEnter(onSubmit);
   const code = form.watch("code");
 
   useEffect(() => {
@@ -48,7 +52,7 @@ export function VerifyEmailForm() {
 
   return (
     <FormProvider {...form}>
-      <form ref={formRef} onSubmit={form.handleSubmit(onSubmit)}>
+      <form ref={formRef} onSubmit={onSubmit}>
         <InputOtpFormField />
         <div className="h-2" />
         <FormGlobalErrorMessage />

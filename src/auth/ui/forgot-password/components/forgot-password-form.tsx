@@ -13,6 +13,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { forgotPasswordAction } from "../actions/forgot-password-action";
 import type { ForgotPasswordActionModel } from "../schemas/forgot-password-action-schema";
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 const ForgotPasswordConfirmDialog = lazy(async () => {
   const file = await import("./forgot-password-confirm-dialog");
@@ -28,7 +29,9 @@ export function ForgotPasswordForm() {
     },
   });
 
-  async function onSubmit(data: ForgotPasswordActionModel) {
+  const onSubmit = form.handleSubmit(async function (
+    data: ForgotPasswordActionModel,
+  ) {
     try {
       const response = await forgotPasswordAction(data);
       const handler = new FormResponseHandler(response, form);
@@ -41,12 +44,13 @@ export function ForgotPasswordForm() {
       console.error(error);
       FormResponseHandler.setGlobalError(form);
     }
-  }
+  });
+  useCommandEnter(onSubmit);
 
   return (
     <>
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
           <InputFormField
             label="Correo electrónico"
             name="email"

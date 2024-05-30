@@ -13,6 +13,7 @@ import { FileSpreadsheet } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { importNotesAction } from "../actions/import-notes-action";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 
 interface ImportNotesCsvFormProps {
   courseId: string;
@@ -58,6 +59,7 @@ export function ImportNotesCsvForm({
     }
     setIsLoading(false);
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

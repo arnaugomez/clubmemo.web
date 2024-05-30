@@ -5,6 +5,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { CourseModelData } from "@/src/courses/domain/models/course-model";
 import { CourseModel } from "@/src/courses/domain/models/course-model";
 import { useState } from "react";
+import { CourseDetailPracticeButtonLoading } from "../../detail/components/course-detail-practice-button-loading";
 import { enrollCourseAction } from "../actions/enroll-course-action";
 
 interface CourseDetailEnrollSectionProps {
@@ -26,7 +27,7 @@ function EnrollButton({ course }: EnrollButtonProps) {
   const [isEnrolled, setIsEnrolled] = useState(course.isEnrolled);
 
   if (isEnrolled) {
-    return <></>;
+    return <CourseDetailPracticeButtonLoading />;
   }
   return (
     <AsyncButton

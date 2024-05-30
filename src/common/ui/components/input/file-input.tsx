@@ -48,9 +48,10 @@ export function FileInput({
     onDropRejected: () => onChange(undefined),
     accept,
     maxSize,
+    multiple: false,
   });
-  const acceptedFile = acceptedFiles[0];
-  const rejectedFile = fileRejections[0];
+  const acceptedFile = acceptedFiles.at(0);
+  const rejectedFile = fileRejections.at(0);
 
   return (
     <>
