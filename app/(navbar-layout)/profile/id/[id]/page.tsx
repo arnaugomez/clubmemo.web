@@ -1,3 +1,4 @@
+import { verifyEmailGuard } from "@/src/auth/ui/guards/verify-email-guard";
 import { invalidIdGuard } from "@/src/common/ui/guards/invalid-id-guard";
 import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
 import { handlePromiseError } from "@/src/common/utils/handle-promise-error";
@@ -12,7 +13,10 @@ export default async function ProfileByIdPage({
 }: PropsWithIdParam) {
   invalidIdGuard(id);
 
-  const profile = await fetchProfileById(id);
+  const [profile] = await Promise.all([
+    fetchProfileById(id),
+    verifyEmailGuard(),
+  ]);
   if (!profile) notFound();
 
   if (profile.handle)
