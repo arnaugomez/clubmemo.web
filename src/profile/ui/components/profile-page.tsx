@@ -33,6 +33,7 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
             src={profile.backgroundPicture}
             alt=""
             className="object-cover"
+            priority
           />
         )}
       </div>

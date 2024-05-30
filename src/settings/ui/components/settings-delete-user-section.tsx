@@ -97,6 +97,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
   }
 
   const { isSubmitting } = form.formState;
+  const confirmation = form.watch("confirmation");
 
   return (
     <Dialog open>
@@ -142,7 +143,10 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
               >
                 Volver
               </Button>
-              <FormSubmitButton variant="destructive">
+              <FormSubmitButton
+                disabled={confirmation !== email}
+                variant="destructive"
+              >
                 Eliminar mi usuario
               </FormSubmitButton>
             </DialogFooter>
