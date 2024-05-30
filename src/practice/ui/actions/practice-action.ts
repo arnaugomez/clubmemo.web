@@ -4,6 +4,7 @@ import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { PracticeCardModel } from "@/src/practice/domain/models/practice-card-model";
 import { ReviewLogModel } from "@/src/practice/domain/models/review-log-model";
+import { revalidatePath } from "next/cache";
 import { practiceLocator } from "../../practice-locator";
 import {
   PracticeActionSchema,
@@ -20,6 +21,8 @@ export async function practiceAction(input: PracticeActionModel) {
       card: new PracticeCardModel(parsed.card),
       reviewLog: new ReviewLogModel(parsed.reviewLog),
     });
+
+    revalidatePath("/");
 
     return ActionResponse.formSuccess({
       card: newCard.data,

@@ -172,9 +172,9 @@ export const locator: Locator = {
     }
 
     const file = await import(
-      "../../ai-generator/data/services/ai-notes-generator-service-impl"
+      "../../ai-generator/data/services/ai-notes-generator-service-openai-impl"
     );
-    return new file.AiNotesGeneratorServiceImpl(
+    return new file.AiNotesGeneratorServiceOpenaiImpl(
       envService,
       clientLocator.ErrorTrackingService(),
     );
