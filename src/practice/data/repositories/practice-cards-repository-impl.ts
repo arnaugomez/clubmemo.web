@@ -119,7 +119,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     });
   }
 
-  async getUnpracticedCount(input: GetUnpracticedInput): Promise<number> {
+  async getNewCount(input: GetUnpracticedInput): Promise<number> {
     const cursor = this.notes.aggregate<{ count: number }>([
       {
         $match: {

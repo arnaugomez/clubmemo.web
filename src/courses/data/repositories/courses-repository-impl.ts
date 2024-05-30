@@ -4,10 +4,6 @@ import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-s
 import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import type { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
-import { notesCollection } from "@/src/notes/data/collections/notes-collection";
-import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
-import { reviewLogsCollection } from "@/src/practice/data/collections/review-logs-collection";
-import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
 import type { WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import type {
@@ -43,6 +39,11 @@ import {
 } from "../collections/courses-collection";
 import type { WithPaginationToken } from "../models/with-pagination-token";
 import { TokenPaginationTransformer } from "../models/with-pagination-token";
+import { coursesByEnrollmentLookupPipelineStages } from "../pipelines/courses-by-enrollment-lookup-pipeline-stage";
+import { getDueCardsLookupPipelineStage } from "../pipelines/due-cards-lookup-pipeline-stage";
+import { newCardsLookupPipelineStage } from "../pipelines/new-cards-lookup-pipeline-stage";
+import { newCountProjectionQuery } from "../pipelines/new-count-projection-query";
+import { getReviewsOfNewCardsLookupPipelineStage } from "../pipelines/reviews-of-new-cards-lookup-pipeline-stage";
 
 export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly courses: typeof coursesCollection.type;
@@ -151,107 +152,14 @@ export class CoursesRepositoryImpl implements CoursesRepository {
         {
           $limit: limit ?? 10,
         },
-        {
-          $lookup: {
-            from: "courses",
-            localField: "courseId",
-            foreignField: "_id",
-            as: "course",
-          },
-        },
-        {
-          $unwind: "$course",
-        },
-        {
-          $lookup: {
-            from: practiceCardsCollection.name,
-            let: { courseEnrollmentId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
-                  },
-                  due: { $lte: this.dateTimeService.getStartOfTomorrow() },
-                },
-              },
-            ],
-            as: "practiceCards",
-          },
-        },
-        {
-          $lookup: {
-            from: reviewLogsCollection.name,
-            let: { courseEnrollmentId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
-                  },
-                  review: { $gte: this.dateTimeService.getStartOfToday() },
-                  state: PracticeCardStateModel.new,
-                },
-              },
-            ],
-            as: "reviewsOfNewCards",
-          },
-        },
-        {
-          $lookup: {
-            from: notesCollection.name,
-            let: { courseId: "$courseId", courseEnrollmentId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ["$courseId", "$$courseId"],
-                  },
-                },
-              },
-              {
-                $lookup: {
-                  from: practiceCardsCollection.name,
-                  let: {
-                    noteId: "$_id",
-                    courseEnrollmentId: "$$courseEnrollmentId",
-                  },
-                  pipeline: [
-                    {
-                      $match: {
-                        $and: [
-                          {
-                            $expr: {
-                              $eq: ["$noteId", "$$noteId"],
-                            },
-                          },
-                          {
-                            $expr: {
-                              $eq: [
-                                "$courseEnrollmentId",
-                                "$$courseEnrollmentId",
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                    {
-                      $limit: 1,
-                    },
-                  ],
-                  as: "practiceCards",
-                },
-              },
-              {
-                $match: {
-                  practiceCards: { $size: 0 },
-                },
-              },
-            ],
-            as: "newCards",
-          },
-        },
+        ...coursesByEnrollmentLookupPipelineStages,
+        getDueCardsLookupPipelineStage(
+          this.dateTimeService.getStartOfTomorrow(),
+        ),
+        getReviewsOfNewCardsLookupPipelineStage(
+          this.dateTimeService.getStartOfToday(),
+        ),
+        newCardsLookupPipelineStage,
         {
           $project: {
             _id: false,
@@ -259,23 +167,8 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             isFavorite: true,
             name: "$course.name",
             picture: "$course.picture",
-            dueCount: { $size: "$practiceCards" },
-            newCount: {
-              $min: [
-                {
-                  $max: [
-                    {
-                      $subtract: [
-                        { $ifNull: ["$course.dailyNewCardsCount", 10] },
-                        { $size: "$reviewsOfNewCards" },
-                      ],
-                    },
-                    0,
-                  ],
-                },
-                { $size: "$newCards" },
-              ],
-            },
+            dueCount: { $size: "$dueCards" },
+            newCount: newCountProjectionQuery,
           },
         },
       ]);
@@ -311,107 +204,15 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           results: [
             { $skip: skip },
             { $limit: limit },
-            {
-              $lookup: {
-                from: "courses",
-                localField: "courseId",
-                foreignField: "_id",
-                as: "course",
-              },
-            },
-            {
-              $unwind: "$course",
-            },
-            {
-              $lookup: {
-                from: practiceCardsCollection.name,
-                let: { courseEnrollmentId: "$_id" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
-                      },
-                      due: { $lte: this.dateTimeService.getStartOfTomorrow() },
-                    },
-                  },
-                ],
-                as: "practiceCards",
-              },
-            },
-            {
-              $lookup: {
-                from: reviewLogsCollection.name,
-                let: { courseEnrollmentId: "$_id" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
-                      },
-                      review: { $gte: this.dateTimeService.getStartOfToday() },
-                      state: PracticeCardStateModel.new,
-                    },
-                  },
-                ],
-                as: "reviewsOfNewCards",
-              },
-            },
-            {
-              $lookup: {
-                from: notesCollection.name,
-                let: { courseId: "$courseId", courseEnrollmentId: "$_id" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $eq: ["$courseId", "$$courseId"],
-                      },
-                    },
-                  },
-                  {
-                    $lookup: {
-                      from: practiceCardsCollection.name,
-                      let: {
-                        noteId: "$_id",
-                        courseEnrollmentId: "$$courseEnrollmentId",
-                      },
-                      pipeline: [
-                        {
-                          $match: {
-                            $and: [
-                              {
-                                $expr: {
-                                  $eq: ["$noteId", "$$noteId"],
-                                },
-                              },
-                              {
-                                $expr: {
-                                  $eq: [
-                                    "$courseEnrollmentId",
-                                    "$$courseEnrollmentId",
-                                  ],
-                                },
-                              },
-                            ],
-                          },
-                        },
-                        {
-                          $limit: 1,
-                        },
-                      ],
-                      as: "practiceCards",
-                    },
-                  },
-                  {
-                    $match: {
-                      practiceCards: { $size: 0 },
-                    },
-                  },
-                ],
-                as: "newCards",
-              },
-            },
+            ...coursesByEnrollmentLookupPipelineStages,
+            getDueCardsLookupPipelineStage(
+              this.dateTimeService.getStartOfTomorrow(),
+            ),
+
+            getReviewsOfNewCardsLookupPipelineStage(
+              this.dateTimeService.getStartOfToday(),
+            ),
+            newCardsLookupPipelineStage,
             {
               $project: {
                 _id: false,
@@ -419,23 +220,8 @@ export class CoursesRepositoryImpl implements CoursesRepository {
                 isFavorite: true,
                 name: "$course.name",
                 picture: "$course.picture",
-                dueCount: { $size: "$practiceCards" },
-                newCount: {
-                  $min: [
-                    {
-                      $max: [
-                        {
-                          $subtract: [
-                            { $ifNull: ["$course.dailyNewCardsCount", 10] },
-                            { $size: "$reviewsOfNewCards" },
-                          ],
-                        },
-                        0,
-                      ],
-                    },
-                    { $size: "$newCards" },
-                  ],
-                },
+                dueCount: { $size: "$dueCards" },
+                newCount: newCountProjectionQuery,
               },
             },
           ],
@@ -627,107 +413,14 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             profileId: new ObjectId(profileId),
           },
         },
-        {
-          $lookup: {
-            from: "courses",
-            localField: "courseId",
-            foreignField: "_id",
-            as: "course",
-          },
-        },
-        {
-          $unwind: "$course",
-        },
-        {
-          $lookup: {
-            from: practiceCardsCollection.name,
-            let: { courseEnrollmentId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
-                  },
-                  due: { $lte: this.dateTimeService.getStartOfTomorrow() },
-                },
-              },
-            ],
-            as: "practiceCards",
-          },
-        },
-        {
-          $lookup: {
-            from: reviewLogsCollection.name,
-            let: { courseEnrollmentId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ["$courseEnrollmentId", "$$courseEnrollmentId"],
-                  },
-                  review: { $gte: this.dateTimeService.getStartOfToday() },
-                  state: PracticeCardStateModel.new,
-                },
-              },
-            ],
-            as: "reviewsOfNewCards",
-          },
-        },
-        {
-          $lookup: {
-            from: notesCollection.name,
-            let: { courseId: "$courseId", courseEnrollmentId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ["$courseId", "$$courseId"],
-                  },
-                },
-              },
-              {
-                $lookup: {
-                  from: practiceCardsCollection.name,
-                  let: {
-                    noteId: "$_id",
-                    courseEnrollmentId: "$$courseEnrollmentId",
-                  },
-                  pipeline: [
-                    {
-                      $match: {
-                        $and: [
-                          {
-                            $expr: {
-                              $eq: ["$noteId", "$$noteId"],
-                            },
-                          },
-                          {
-                            $expr: {
-                              $eq: [
-                                "$courseEnrollmentId",
-                                "$$courseEnrollmentId",
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                    {
-                      $limit: 1,
-                    },
-                  ],
-                  as: "practiceCards",
-                },
-              },
-              {
-                $match: {
-                  practiceCards: { $size: 0 },
-                },
-              },
-            ],
-            as: "newCards",
-          },
-        },
+        ...coursesByEnrollmentLookupPipelineStages,
+        getDueCardsLookupPipelineStage(
+          this.dateTimeService.getStartOfTomorrow(),
+        ),
+        getReviewsOfNewCardsLookupPipelineStage(
+          this.dateTimeService.getStartOfToday(),
+        ),
+        newCardsLookupPipelineStage,
         {
           $project: {
             courseId: true,
@@ -736,23 +429,8 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             picture: "$course.picture",
             tags: "$course.tags",
             description: "$course.description",
-            dueCount: { $size: "$practiceCards" },
-            newCount: {
-              $min: [
-                {
-                  $max: [
-                    {
-                      $subtract: [
-                        { $ifNull: ["$course.dailyNewCardsCount", 10] },
-                        { $size: "$reviewsOfNewCards" },
-                      ],
-                    },
-                    0,
-                  ],
-                },
-                { $size: "$newCards" },
-              ],
-            },
+            dueCount: { $size: "$dueCards" },
+            newCount: newCountProjectionQuery,
           },
         },
         {

@@ -5,7 +5,7 @@ export interface PracticeCardsRepository {
   update(input: PracticeCardModel): Promise<void>;
   getUnpracticed(input: GetUnpracticedInput): Promise<PracticeCardModel[]>;
   getDue(input: GetDueInput): Promise<PracticeCardModel[]>;
-  getUnpracticedCount(input: GetUnpracticedCountInput): Promise<number>;
+  getNewCount(input: GetUnpracticedCountInput): Promise<number>;
   getDueCount(courseEnrollmentId: string): Promise<number>;
 }
 
