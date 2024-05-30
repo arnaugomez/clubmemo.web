@@ -79,7 +79,7 @@ export const locator: Locator = {
       return new file.EmailServiceImpl(envService);
     }
     const file = await import("../data/services/email-service-fake-impl");
-    return new file.EmailServiceFakeImpl();
+    return new file.EmailServiceFakeImpl(envService);
   },
   DateTimeService: singleton(() =>
     import("../data/services/date-time-service-impl").then(
