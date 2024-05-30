@@ -5,6 +5,5 @@
   "handleInvalidCharacters": "Solo puede contener letras, números y guiones bajos",
   "atLeastOneLowerCase": "Debe contener al menos una letra minúscula",
   "atLeastOneUpperCase": "Debe contener al menos una letra mayúscula",
-  "atLeastOneNumber": "Debe contener al menos un número",
-  "atLeastOneSpecialCharacter": "Debe contener al menos un carácter especial"
+  "atLeastOneNumber": "Debe contener al menos un número"
 }
