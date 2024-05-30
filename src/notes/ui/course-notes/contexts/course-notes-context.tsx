@@ -3,8 +3,9 @@ import {
   createContextHook,
   createNullContext,
 } from "@/src/common/ui/utils/context";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
-import { Dispatch, PropsWithChildren, SetStateAction, useState } from "react";
+import type { NoteModel } from "@/src/notes/domain/models/note-model";
+import type { Dispatch, PropsWithChildren, SetStateAction } from "react";
+import { useState } from "react";
 
 type State = NoteModel[];
 

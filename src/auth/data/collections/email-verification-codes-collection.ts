@@ -1,5 +1,5 @@
 import { collection } from "@/src/common/data/utils/mongo";
-import { ObjectId } from "mongodb";
+import type { ObjectId } from "mongodb";
 import { EmailVerificationCodeModel } from "../../domain/models/email-verification-code-model";
 
 export interface EmailVerificationCodeDoc {

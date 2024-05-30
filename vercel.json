@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/file-uploads/delete-outdated",
+      "schedule": "0 5 * * *"
+    }
+  ]
+}

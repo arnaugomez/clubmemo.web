@@ -1,6 +1,8 @@
+import { SearchEmptyState } from "@/src/common/ui/components/empty-state/search-empty-state";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
+import type { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
 import { BookmarkCheck, BookmarkX } from "lucide-react";
 import { Suspense } from "react";
 import { fetchFavoriteCourses } from "../fetch/fetch-favorite-courses";
@@ -16,30 +18,15 @@ export function FavoriteCoursesSection() {
             <BookmarkCheck className="ml-2 inline size-6 -translate-y-[2px]" />
           </h2>
           <div className="h-4" />
-          <Suspense fallback={<FavoriteCoursesLoadingSection />}>
-            <FavoriteCoursesContent />
+          <Suspense fallback={<FavoriteCoursesLoading />}>
+            <FavoriteCoursesLoader />
           </Suspense>
         </div>
       </section>
     </>
   );
 }
-
-async function FavoriteCoursesContent() {
-  const results = await fetchFavoriteCourses();
-  if (!results.length) {
-    return <FavoriteCoursesEmptyState />;
-  }
-  return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-      {results.map((course) => (
-        <FavoriteCourseCard key={course.courseId} course={course} />
-      ))}
-    </div>
-  );
-}
-
-function FavoriteCoursesLoadingSection() {
+function FavoriteCoursesLoading() {
   return (
     <div className="grid h-48 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
       <Skeleton className="h-48 rounded-lg" />
@@ -49,12 +36,30 @@ function FavoriteCoursesLoadingSection() {
   );
 }
 
+async function FavoriteCoursesLoader() {
+  const results = await fetchFavoriteCourses();
+  if (!results.length) {
+    return <FavoriteCoursesEmptyState />;
+  }
+  return <FavoriteCoursesLoaded courses={results} />;
+}
+
 function FavoriteCoursesEmptyState() {
   return (
-    <div className="flex h-28 flex-col items-center justify-center">
-      <BookmarkX className="size-6 text-slate-500" />
-      <div className="h-3"></div>
-      <p className={textStyles.muted}>No hay resultados</p>
+    <SearchEmptyState icon={<BookmarkX className="size-6 text-slate-500" />} />
+  );
+}
+
+interface FavoriteCoursesLoadedProps {
+  courses: EnrolledCourseListItemModel[];
+}
+
+function FavoriteCoursesLoaded({ courses }: FavoriteCoursesLoadedProps) {
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+      {courses.map((course) => (
+        <FavoriteCourseCard key={course.courseId} course={course} />
+      ))}
     </div>
   );
 }

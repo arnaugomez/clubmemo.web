@@ -1,6 +1,8 @@
+import { cn } from "@/src/common/ui/utils/shadcn";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { PropsWithChildren } from "react";
 import { Suspense, lazy } from "react";
+import { inter } from "../src/common/ui/styles/fonts";
 import "./globals.css";
 
 const Toaster = lazy(async () => {
@@ -8,21 +10,19 @@ const Toaster = lazy(async () => {
   return { default: file.Toaster };
 });
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "clubmemo",
-  description: "Tu asistente AI para el estudio eficiente",
+  title: {
+    template: "%s | clubmemo",
+    default: "clubmemo",
+  },
+  description:
+    "Tu asistente AI para el estudio eficiente. Sube tus apuntes, genera flashards automáticamente y entrena tu memoria con juegos interactivos.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="es">
+      <body className={cn(inter.className, "antialiased")}>
         {children}
         <Suspense>
           <Toaster />

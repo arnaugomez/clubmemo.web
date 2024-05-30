@@ -2,8 +2,8 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { DiscoverCourseModel } from "@/src/courses/domain/models/discover-course-model";
-import { Plus } from "lucide-react";
+import type { DiscoverCourseModel } from "@/src/courses/domain/models/discover-course-model";
+import { getCourseDetailPath } from "@/src/courses/ui/utils/get-course-detail-path";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,7 +21,7 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
       </div>
       <div className="p-3">
         <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
-          <Link href={`/courses/detail/${course.id}`}>{course.name}</Link>
+          <Link href={getCourseDetailPath(course.id)}>{course.name}</Link>
         </h3>
         <div className="h-1"></div>
         <p className={cn(textStyles.base, "truncate")}>
@@ -31,12 +31,8 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
         <DiscoverCourseCardTags tags={course.tags} />
         <div className="h-4"></div>
         <div className="flex justify-end space-x-3">
-          <Button size="sm" variant={"secondary"}>
-            <Link href={`/courses/detail/${course.id}`}>Ver</Link>
-          </Button>
-          <Button size="sm">
-            <Plus className="mr-2 size-5" />
-            <Link href={`/courses/detail/${course.id}`}>Unirme</Link>
+          <Button size="sm" variant="outline" className="w-full">
+            <Link href={getCourseDetailPath(course.id)}>Ver curso</Link>
           </Button>
         </div>
       </div>

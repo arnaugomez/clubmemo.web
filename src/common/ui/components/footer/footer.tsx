@@ -12,14 +12,15 @@ export function Footer() {
       </p>
       <div className="h-2" />
       <p className={cn(textStyles.muted, "text-center")}>
-        <a
-          className="hover:underline"
-          href="https://raw.githubusercontent.com/arnaugomez/clubmemo.web/main/LICENSE.txt"
-        >
-          Licencia de uso EUPL
+        <a className="hover:underline" href="/compliance/license.txt">
+          Licencia de uso
         </a>
         {" - "}
-        <a className="hover:underline" href="">
+        <a className="hover:underline" href="/compliance/cookies.md">
+          Cookies
+        </a>
+        {" - "}
+        <a className="hover:underline" href="/compliance/privacy.md">
           Política de privacidad
         </a>
       </p>

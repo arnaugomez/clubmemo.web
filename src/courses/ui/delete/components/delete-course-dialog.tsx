@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { deleteCourseAction } from "../actions/delete-course-action";
@@ -27,7 +27,7 @@ export function DeleteCourseDialog({
   const router = useRouter();
   async function onDelete() {
     try {
-      const response = await deleteCourseAction(course.id);
+      const response = await deleteCourseAction({ id: course.id });
       const handler = new FormResponseHandler(response);
       if (!handler.hasErrors) {
         toast.success("Curso eliminado");

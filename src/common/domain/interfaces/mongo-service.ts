@@ -1,5 +1,5 @@
-import { Collection, Db, MongoClient, Document } from "mongodb";
-import { CollectionType } from "../../data/utils/mongo";
+import type { Collection, Db, MongoClient, Document } from "mongodb";
+import type { CollectionType } from "../../data/utils/mongo";
 
 export interface MongoService {
   readonly client: MongoClient;

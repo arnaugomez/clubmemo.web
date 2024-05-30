@@ -1,28 +1,22 @@
 "use server";
 
-import { locator } from "@/src/common/locator";
-import { fetchMyProfile } from "../../../profile/ui/fetch/fetch-my-profile";
-import { fetchPracticeCards } from "../fetch/fetch-practice-cards";
-
-interface GetNextPracticeCardsActionModel {
-  courseId: string;
-}
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
+import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
+import { practiceLocator } from "../../practice-locator";
+import type { GetNextPracticeCardsActionModel } from "../schemas/get-next-practice-cards-action-schema";
+import { GetNextPracticeCardsActionSchema } from "../schemas/get-next-practice-cards-action-schema";
 
 export async function getNextPracticeCardsAction(
-  params: GetNextPracticeCardsActionModel,
+  input: GetNextPracticeCardsActionModel,
 ) {
-  const profile = await fetchMyProfile();
-  if (!profile) return [];
-  const coursesRepository = await locator.CoursesRepository();
-  const course = await coursesRepository.getDetail({
-    id: params.courseId,
-    profileId: profile?.id,
-  });
-  if (!course?.enrollment) return [];
+  try {
+    const parsed = GetNextPracticeCardsActionSchema.parse(input);
 
-  const cards = await fetchPracticeCards({
-    course,
-    enrollment: course.enrollment,
-  });
-  return cards.map((c) => c.data);
+    const useCase = await practiceLocator.GetNextPracticeCardsUseCase();
+    const cards = await useCase.execute(parsed);
+
+    return ActionResponse.formSuccess(cards.map((c) => c.data));
+  } catch (e) {
+    return ActionErrorHandler.handle(e);
+  }
 }

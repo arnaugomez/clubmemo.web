@@ -9,6 +9,14 @@ install *deps:
 dev:
     ./nvm-exec.sh pnpm run dev
 
+# Compile and build the project
+build:
+    ./nvm-exec.sh pnpm run build
+
+# Start production server
+start:
+    ./nvm-exec.sh pnpm run start
+
 # Apply automatic fixes
 fix:
     ./nvm-exec.sh pnpm format
@@ -25,6 +33,7 @@ install-git-hooks:
 
 # Set up the project for the first time
 setup:
+    ./nvm-exec.sh corepack enable
     just install
     just install-git-hooks
 
@@ -35,5 +44,6 @@ test:
 # Run end-to-end tests
 e2e *args:
     ./nvm-exec.sh pnpm exec playwright test {{ args }}
+
 
 alias i := install

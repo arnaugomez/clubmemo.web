@@ -1,4 +1,4 @@
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { CourseDetailEditSection } from "../../edit/components/edit-course-section";
 import { CourseDetailActionsDropdown } from "./course-detail-actions-dropdown";
 

@@ -1,10 +1,12 @@
 "use client";
 
+import { z } from "@/i18n/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { EmailSchema } from "@/src/common/schemas/email-schema";
+import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import {
   InputFormField,
   PasswordInputFormField,
@@ -18,8 +20,8 @@ import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
 
 const SignupFormSchema = z.object({
-  email: z.string().email().max(254),
-  password: z.string().min(8).max(256),
+  email: EmailSchema,
+  password: PasswordSchema,
 });
 
 export function SignupForm() {
@@ -70,13 +72,25 @@ export function SignupForm() {
           formulario, acepto la{" "}
           <a
             className="underline"
-            href="https://raw.githubusercontent.com/arnaugomez/clubmemo.web/main/LICENSE.txt"
+            href="/compliance/license.txt"
             target="_blank"
           >
             licencia de uso
+          </a>
+          , la{" "}
+          <a
+            className="underline"
+            href="/compliance/cookies.md"
+            target="_blank"
+          >
+            política de cookies
           </a>{" "}
           y la{" "}
-          <a className="underline" href="">
+          <a
+            className="underline"
+            href="/compliance/privacy.md"
+            target="_blank"
+          >
             política de privacidad.
           </a>
         </p>

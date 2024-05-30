@@ -1,5 +1,8 @@
 "use client";
 
+import { z } from "@/i18n/zod";
+import { clientLocator } from "@/src/common/di/client-locator";
+import { FileSchema } from "@/src/common/schemas/file-schema";
 import {
   FileFormField,
   InputFormField,
@@ -19,18 +22,16 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import {
-  CourseModel,
-  CourseModelData,
-} from "@/src/courses/domain/models/course-model";
+import type { CourseModelData } from "@/src/courses/domain/models/course-model";
+import { CourseModel } from "@/src/courses/domain/models/course-model";
+import { clientFileUploadLocator } from "@/src/file-upload/client-file-upload-locator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-import { editCourseUploadAction } from "../actions/edit-course-upload-action";
 import { editCourseAction } from "../actions/edit-course-action";
+import { editCourseUploadAction } from "../actions/edit-course-upload-action";
 
 interface CourseDetailEditSectionProps {
   courseData: CourseModelData;
@@ -62,7 +63,7 @@ const EditCourseSchema = z.object({
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),
   tags: z.array(z.string().trim().min(1).max(50)).max(10),
-  picture: z.string().or(z.instanceof(File)).optional(),
+  picture: z.string().or(FileSchema).optional(),
 });
 
 type FormValues = z.infer<typeof EditCourseSchema>;
@@ -80,50 +81,56 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    const uploadActionResponse = await editCourseUploadAction({
-      courseId: course.id,
-      pictureContentType: data.picture instanceof File ? data.picture.type : "",
-      uploadPicture: data.picture instanceof File,
-    });
-    const uploadActionHandler = new FormResponseHandler(
-      uploadActionResponse,
-      form,
-    );
-    if (uploadActionHandler.hasErrors) {
-      uploadActionHandler.setErrors();
-      return;
-    }
-    if (uploadActionHandler.data) {
-      if (uploadActionHandler.data.picture && data.picture instanceof File) {
-        const { url, fields } = uploadActionHandler.data.picture;
-
-        const formData = new FormData();
-        Object.entries(fields).forEach(([key, value]) => {
-          formData.append(key, value as string);
-        });
-        formData.append("file", data.picture);
-
-        const uploadResponse = await fetch(url, {
-          method: "POST",
-          body: formData,
-        });
-
-        if (uploadResponse.ok) {
-          data.picture = url + fields.key;
+    try {
+      const uploadActionResponse = await editCourseUploadAction({
+        courseId: course.id,
+        pictureContentType:
+          data.picture instanceof File ? data.picture.type : "",
+        uploadPicture: data.picture instanceof File,
+      });
+      const uploadActionHandler = new FormResponseHandler(
+        uploadActionResponse,
+        form,
+      );
+      if (uploadActionHandler.hasErrors) {
+        uploadActionHandler.setErrors();
+        return;
+      }
+      if (uploadActionHandler.data) {
+        if (uploadActionHandler.data.picture && data.picture instanceof File) {
+          const fileUploadService =
+            await clientFileUploadLocator.ClientFileUploadService();
+          await fileUploadService.uploadPresignedUrl({
+            file: data.picture,
+            presignedUrl: uploadActionHandler.data.picture.presignedUrl,
+          });
+          data.picture = uploadActionHandler.data.picture.url;
         }
       }
+    } catch (e) {
+      clientLocator.ErrorTrackingService().captureError(e);
+      toast.error("Error al subir la imagen");
+      return;
     }
 
     try {
-      const response = await editCourseAction({ id: course.id, ...data });
+      const response = await editCourseAction({
+        id: course.id,
+        description: data.description,
+        isPublic: data.isPublic,
+        name: data.name,
+        picture: typeof data.picture === "string" ? data.picture : undefined,
+        tags: data.tags,
+      });
+
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
         toast.success("El curso ha sido actualizado");
         onClose();
       }
       handler.setErrors();
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      clientLocator.ErrorTrackingService().captureError(e);
       FormResponseHandler.setGlobalError(form);
     }
   });

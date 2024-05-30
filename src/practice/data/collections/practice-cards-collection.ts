@@ -1,11 +1,9 @@
 import { collection } from "@/src/common/data/utils/mongo";
-import {
-  NoteDoc,
-  NoteDocTransformer,
-} from "@/src/notes/data/collections/notes-collection";
-import { ObjectId, WithId } from "mongodb";
+import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
+import { NoteDocTransformer } from "@/src/notes/data/collections/notes-collection";
+import type { ObjectId, WithId } from "mongodb";
 import { PracticeCardModel } from "../../domain/models/practice-card-model";
-import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
+import type { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 
 export interface PracticeCardDoc {
   courseEnrollmentId: ObjectId;

@@ -1,4 +1,4 @@
-import { UserModel } from "./user-model";
+import type { UserModel } from "./user-model";
 
 interface SessionModelData {
   id: string;

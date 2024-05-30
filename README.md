@@ -1,4 +1,4 @@
-# ClubMemo
+# clubmemo
 
 A web app for efficient study and memorization.
 
@@ -13,7 +13,6 @@ To set up the project in your local environment, follow the steps below:
 Make sure you have the following installed:
 
 - `nvm` to manage node versions
-- `pnpm` as package manager. To install it, enable Corepack in your node version.
 - `just` as task runner
 - `lefthook` as git hooks manager
 
@@ -29,3 +28,5 @@ just dev # Start the development server
 ## Documentation and guides
 
 - [Git Branch Policy](./docs/git-branch-policy.md)
+- [Folder Structure](./docs/folder-structure.md)
+- [Naming Conventions](./docs/naming-conventions.md)

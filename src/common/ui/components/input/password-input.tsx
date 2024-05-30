@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
-import { Input, InputProps } from "@/src/common/ui/components/shadcn/ui/input";
+import type { InputProps } from "@/src/common/ui/components/shadcn/ui/input";
+import { Input } from "@/src/common/ui/components/shadcn/ui/input";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { forwardRef, useState } from "react";
 import { cn } from "../../utils/shadcn";

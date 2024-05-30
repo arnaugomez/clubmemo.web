@@ -1,38 +1,24 @@
 "use server";
 
-import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import { locator } from "@/src/common/locator";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { EnrollmentDoesNotExistError } from "@/src/courses/domain/models/enrollment-errors";
+import { coursesLocator } from "@/src/courses/courses-locator";
 import { revalidatePath } from "next/cache";
-import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
-import {
-  EditCourseConfigActionModel,
-  EditCourseConfigActionSchema,
-} from "../schema/edit-course-config-action-schema";
+import type { EditCourseConfigActionModel } from "../schema/edit-course-config-action-schema";
+import { EditCourseConfigActionSchema } from "../schema/edit-course-config-action-schema";
 
 export async function editCourseConfigAction(
   data: EditCourseConfigActionModel,
 ) {
   try {
-    const profile = await fetchMyProfile();
-    if (!profile) throw new NoPermissionError();
     const parsed = EditCourseConfigActionSchema.parse(data);
-    const enrollmentsRepository = await locator.CourseEnrollmentsRepository();
-    const enrollment = await enrollmentsRepository.get(parsed.enrollmentId);
-    if (!enrollment) throw new EnrollmentDoesNotExistError();
-    if (enrollment.profileId !== profile.id) throw new NoPermissionError();
-    await enrollmentsRepository.updateConfig(parsed);
+
+    const useCase = await coursesLocator.EditCourseConfigUseCase();
+    await useCase.execute(parsed);
+
     revalidatePath(`/courses/detail`);
     return ActionResponse.formSuccess(null);
   } catch (e) {
-    if (e instanceof NoPermissionError) {
-      return ActionResponse.formGlobalError("noPermission");
-    } else if (e instanceof EnrollmentDoesNotExistError) {
-      return ActionResponse.formGlobalError("enrollmentDoesNotExist");
-    }
-    // TODO: report error
-    console.error(e);
-    return ActionResponse.formGlobalError("general");
+    return ActionErrorHandler.handle(e);
   }
 }

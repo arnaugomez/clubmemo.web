@@ -1,12 +1,13 @@
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
-import { Collection, ObjectId } from "mongodb";
+import type { Collection } from "mongodb";
+import { ObjectId } from "mongodb";
 import { TimeSpan, createDate } from "oslo";
 import { alphabet, generateRandomString } from "oslo/crypto";
-import { EmailVerificationCodesRepository } from "../../domain/interfaces/email-verification-codes-repository";
-import { EmailVerificationCodeModel } from "../../domain/models/email-verification-code-model";
+import type { EmailVerificationCodesRepository } from "../../domain/interfaces/email-verification-codes-repository";
+import type { EmailVerificationCodeModel } from "../../domain/models/email-verification-code-model";
+import type { EmailVerificationCodeDoc } from "../collections/email-verification-codes-collection";
 import {
-  EmailVerificationCodeDoc,
   EmailVerificationCodeDocTransformer,
   emailVerificationCodesCollection,
 } from "../collections/email-verification-codes-collection";

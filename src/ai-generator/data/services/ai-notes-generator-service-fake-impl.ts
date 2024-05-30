@@ -1,4 +1,4 @@
-import {
+import type {
   AiNotesGeneratorService,
   GenerateAiNotesInputModel,
 } from "../../domain/interfaces/ai-notes-generator-service";

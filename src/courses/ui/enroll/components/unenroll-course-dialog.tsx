@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { toast } from "sonner";
 import { unenrollCourseAction } from "../actions/unenroll-course-action";
 
@@ -25,7 +25,7 @@ export function UnenrollCourseDialog({
 }: unenrollCourseDialogProps) {
   async function onUnenroll() {
     try {
-      const response = await unenrollCourseAction(course.id);
+      const response = await unenrollCourseAction({ courseId: course.id });
       const handler = new FormResponseHandler(response);
       if (!handler.hasErrors) {
         toast.success("Te has desapuntado del curso");
@@ -34,7 +34,7 @@ export function UnenrollCourseDialog({
       handler.toastErrors();
     } catch (error) {
       console.error(error);
-      toast.error("Error al desapuntarse el curso");
+      toast.error("Error al desapuntarse del curso");
     }
   }
 

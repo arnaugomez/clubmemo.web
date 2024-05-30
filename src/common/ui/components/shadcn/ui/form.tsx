@@ -1,13 +1,8 @@
-import * as LabelPrimitive from "@radix-ui/react-label";
+import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  useFormContext,
-} from "react-hook-form";
+import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 import { Label } from "@/src/common/ui/components/shadcn/ui/label";
 import { cn } from "@/src/common/ui/utils/shadcn";

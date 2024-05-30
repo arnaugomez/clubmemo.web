@@ -1,25 +1,21 @@
-import { locator } from "@/src/common/locator";
 import { invalidIdGuard } from "@/src/common/ui/guards/invalid-id-guard";
+import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
+import { handlePromiseError } from "@/src/common/utils/handle-promise-error";
 import { CourseDetailMainSection } from "@/src/courses/ui/detail/components/course-detail-main-section";
+import { fetchCourseDetail } from "@/src/courses/ui/detail/fetch/fetch-course-detail";
 import { CourseNotesSection } from "@/src/notes/ui/course-notes/components/course-notes-section";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export default async function CourseDetailPage({
   params: { id },
-}: {
-  // TODO: create reusable type for id params
-  params: { id: string };
-}) {
+}: PropsWithIdParam) {
   invalidIdGuard(id);
 
   const profile = await fetchMyProfile();
+  const course = await fetchCourseDetail(id, profile?.id);
 
-  const coursesRepository = await locator.CoursesRepository();
-  const course = await coursesRepository.getDetail({
-    id,
-    profileId: profile?.id,
-  });
   if (!course || !course.canView) notFound();
 
   return (
@@ -32,4 +28,14 @@ export default async function CourseDetailPage({
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params: { id },
+}: PropsWithIdParam): Promise<Metadata> {
+  const course = await handlePromiseError(fetchCourseDetail(id));
+  return {
+    title: course?.name,
+    description: course?.description,
+  };
 }

@@ -1,3 +1,4 @@
+import { ArrowLink } from "@/src/common/ui/components/button/arrow-link";
 import {
   Table,
   TableBody,
@@ -8,11 +9,12 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/table";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { ArrowRight, Bookmark } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import Link from "next/link";
 import { CreateCourseButton } from "../../create/components/create-course-button";
 import { PracticeCell } from "../../my-courses/components/practice-cell";
 import { fetchMyCoursesPreview } from "../fetch/fetch-my-courses-preview";
+import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 
 export function MyCoursesPreviewSection() {
   return (
@@ -22,14 +24,7 @@ export function MyCoursesPreviewSection() {
           <h2 className={cn(textStyles.h2, "flex-1")}>Mis cursos</h2>
           <CreateCourseButton size="sm" />
         </div>
-        {/* TODO: create reusable ocmponent for the link */}
-        <Link
-          href="/courses"
-          className={cn(textStyles.mutedLink, "space-x-1 pt-1")}
-        >
-          <span>Ver todos</span>
-          <ArrowRight size={16} className="inline" />
-        </Link>
+        <ArrowLink href="/courses">Ver todos</ArrowLink>
         <div className="h-4"></div>
         <MyCoursesResultsSection />
       </div>
@@ -54,7 +49,7 @@ async function MyCoursesResultsSection() {
             <TableCell
               className={cn(textStyles.small, "truncate hover:underline")}
             >
-              <Link href={`/courses/detail/${course.courseId}`}>
+              <Link href={getCourseDetailPath(course.courseId)}>
                 {course.name}
               </Link>
             </TableCell>

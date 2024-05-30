@@ -1,7 +1,11 @@
-import { ResetPasswordForm } from "@/src/auth/ui/forgot-password/components/reset-password-form";
-import { locator } from "@/src/common/locator";
-import { textStyles } from "@/src/common/ui/styles/text-styles";
+import { ResetPasswordPageLoaded } from "@/src/auth/ui/forgot-password/pages/reset-password-page-loaded";
+import { locator } from "@/src/common/di/locator";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Nueva contraseña",
+};
 
 interface SearchParams {
   email?: string;
@@ -38,16 +42,8 @@ export default async function ResetPasswordPage({
 }) {
   await resetPasswordPageGuard(searchParams);
 
-  const { email } = searchParams;
-  if (!email) return notFound();
+  const { email, token } = searchParams;
+  if (!email || !token) return notFound();
 
-  return (
-    <>
-      <h1 className={textStyles.h2}>Nueva contraseña</h1>
-      <div className="h-2"></div>
-      <p>Entra una nueva contraseña para el usuario {email}</p>
-      <div className="h-6"></div>
-      <ResetPasswordForm email={email} />
-    </>
-  );
+  return <ResetPasswordPageLoaded email={email} token={token} />;
 }

@@ -10,10 +10,9 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { Bookmark } from "lucide-react";
 import Link from "next/link";
-import {
-  FetchMyCoursesPaginationModel,
-  fetchMyCoursesPagination,
-} from "../fetch/fetch-my-courses";
+import { getCourseDetailPath } from "../../utils/get-course-detail-path";
+import type { FetchMyCoursesPaginationModel } from "../fetch/fetch-my-courses";
+import { fetchMyCoursesPagination } from "../fetch/fetch-my-courses";
 import { PracticeCell } from "./practice-cell";
 
 interface MyCoursesTableProps {
@@ -38,7 +37,7 @@ export async function MyCoursesTable({ arg }: MyCoursesTableProps) {
                 <TableCell
                   className={cn(textStyles.small, "truncate hover:underline")}
                 >
-                  <Link href={`/courses/detail/${course.courseId}`}>
+                  <Link href={getCourseDetailPath(course.courseId)}>
                     {course.name}
                   </Link>
                 </TableCell>
@@ -48,7 +47,6 @@ export async function MyCoursesTable({ arg }: MyCoursesTableProps) {
                     className="mx-auto size-5"
                   />
                 </TableCell>
-                {/* TODO: Extract component */}
                 <PracticeCell courseData={course.data} />
               </TableRow>
             ))}

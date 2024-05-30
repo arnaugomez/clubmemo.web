@@ -1,46 +1,48 @@
 "use client";
 
+import { z } from "@/i18n/zod";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/src/common/ui/components/shadcn/ui/dialog";
+
+import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { resetPasswordAction } from "../actions/reset-password-action";
+
+const ResetPasswordConfirmDialog = lazy(async () => {
+  const file = await import("./reset-password-confirm-dialog");
+  return { default: file.ResetPasswordConfirmDialog };
+});
 
 const FormSchema = z
   .object({
-    password: z.string().min(8).max(256),
-    repeatPassword: z.string(),
+    password: PasswordSchema,
+    repeatPassword: PasswordSchema,
   })
   .superRefine(({ password, repeatPassword }, ctx) => {
     if (password !== repeatPassword) {
       ctx.addIssue({
         path: ["repeatPassword"],
         code: "custom",
-        message: "The passwords did not match",
+        params: {
+          i18n: "passwordsDoNotMatch",
+        },
       });
     }
   });
 
 interface Props {
   email: string;
+  token: string;
 }
 
-export function ResetPasswordForm({ email }: Props) {
+export function ResetPasswordForm({ email, token }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const form = useForm({
@@ -55,11 +57,15 @@ export function ResetPasswordForm({ email }: Props) {
     try {
       const response = await resetPasswordAction({
         email,
+        token,
         password: data.password,
       });
 
       const handler = new FormResponseHandler(response, form);
-      if (!handler.hasErrors) setIsDialogOpen(true);
+      if (!handler.hasErrors) {
+        setIsDialogOpen(true);
+        await waitMilliseconds(1000);
+      }
       handler.setErrors();
     } catch (error) {
       console.error(error);
@@ -94,36 +100,11 @@ export function ResetPasswordForm({ email }: Props) {
           </div>
         </form>
       </FormProvider>
-      {isDialogOpen && <ConfirmDialog email={email} />}
+      {isDialogOpen && (
+        <Suspense>
+          <ResetPasswordConfirmDialog email={email} />
+        </Suspense>
+      )}
     </>
-  );
-}
-
-interface ConfirmDialogProps {
-  email: string;
-}
-export function ConfirmDialog({ email }: ConfirmDialogProps) {
-  const router = useRouter();
-  return (
-    <Dialog open>
-      <DialogContent
-        onClose={() => router.push("/auth/login")}
-        className="sm:max-w-[425px]"
-      >
-        <DialogHeader>
-          <DialogTitle>Contraseña modificada</DialogTitle>
-          <DialogDescription>
-            La contraseña del usuario {email} ha sido modificada. Ya puedes
-            iniciar sesión con tu nueva contraseña.
-          </DialogDescription>
-        </DialogHeader>
-
-        <DialogFooter>
-          <Button asChild>
-            <Link href="/auth/login">Login</Link>
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   );
 }

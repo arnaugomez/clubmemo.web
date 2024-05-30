@@ -1,28 +1,24 @@
 "use server";
 
-import {
-  InvalidFileFormatError,
-  NoPermissionError,
-} from "@/src/common/domain/models/app-errors";
+import { InvalidFileFormatError } from "@/src/common/domain/models/app-errors";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { notesLocator } from "@/src/notes/notes-locator";
-import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
-import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import { ImportNotesActionSchema } from "../schemas/import-notes-action-schema";
 
-export async function importNotesAction(data: FormData) {
+export async function importNotesAction(formData: FormData) {
   try {
-    const profile = await fetchMyProfile();
-    if (!profile) throw new ProfileDoesNotExistError();
+    if (!(formData instanceof FormData))
+      throw new Error("formData is not an instance of FormData.");
+
     const parsed = ImportNotesActionSchema.parse({
-      file: data.get("file"),
-      courseId: data.get("courseId"),
-      importType: data.get("importType"),
+      file: formData.get("file"),
+      courseId: formData.get("courseId"),
+      importType: formData.get("importType"),
     });
+
     const importNotesUseCase = await notesLocator.ImportNotesUseCase();
     const result = await importNotesUseCase.execute({
-      profileId: profile.id,
       courseId: parsed.courseId,
       file: parsed.file,
       importType: parsed.importType,
@@ -30,21 +26,12 @@ export async function importNotesAction(data: FormData) {
 
     return ActionResponse.formSuccess(result.map((e) => e.data));
   } catch (e) {
-    if (e instanceof ProfileDoesNotExistError) {
-      return ActionResponse.formGlobalError("profileDoesNotExist");
-    } else if (e instanceof CourseDoesNotExistError) {
-      return ActionResponse.formGlobalError("courseDoesNotExist");
-    } else if (e instanceof NoPermissionError) {
-      return ActionResponse.formGlobalError("noPermission");
-    } else if (e instanceof InvalidFileFormatError) {
-      return ActionResponse.formError({
-        name: "file",
+    if (e instanceof InvalidFileFormatError) {
+      return ActionResponse.formError("file", {
         type: "invalidFileFormat",
-        message: "Invalid file format.",
+        message: "Formato de archivo inválido",
       });
     }
-    // TODO: log error report
-    console.error(e);
-    return ActionResponse.formGlobalError("general");
+    return ActionErrorHandler.handle(e);
   }
 }

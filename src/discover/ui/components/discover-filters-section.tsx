@@ -1,25 +1,38 @@
 "use client";
 
+import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Input } from "@/src/common/ui/components/shadcn/ui/input";
+import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { CreateCourseButton } from "../../../courses/ui/create/components/create-course-button";
 
 export function DiscoverFiltersSection() {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const query = searchParams.get("query")?.trim() ?? "";
-  const router = useRouter();
 
-  const handleSearch = useDebouncedCallback((text: string) => {
-    const query = text.trim();
+  const query = searchParams.get("query")?.trim() ?? "";
+
+  const inputValueRef = useRef(query);
+
+  const handleSearch = useDebouncedCallback(() => {
+    const newQuery = inputValueRef.current.trim();
 
     const params = new URLSearchParams(searchParams);
-    if (query) {
-      params.set("query", query);
+    if (newQuery) {
+      params.set("query", newQuery);
     } else {
       params.delete("query");
     }
+
+    if (query === newQuery) {
+      const retries = parseInt(searchParams.get("retries") ?? "") || 0;
+      params.set("retries", `${retries + 1}`);
+    } else {
+      params.delete("retries");
+    }
+
     router.replace(`${pathname}?${params.toString()}`);
   }, 300);
 
@@ -31,9 +44,15 @@ export function DiscoverFiltersSection() {
         placeholder="Buscar cursos"
         className="flex-1"
         defaultValue={query}
-        onChange={(e) => handleSearch(e.target.value)}
+        onChange={(e) => {
+          inputValueRef.current = e.target.value;
+          handleSearch();
+        }}
       />
-      <CreateCourseButton />
+      <Button variant="secondary" size="icon" onClick={handleSearch}>
+        <span className="sr-only">Buscar</span>
+        <Search className="text-muted-foreground" />
+      </Button>
     </div>
   );
 }

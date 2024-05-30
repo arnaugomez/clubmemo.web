@@ -1,5 +1,9 @@
 "use client";
 
+import { z } from "@/i18n/zod";
+import { clientLocator } from "@/src/common/di/client-locator";
+import { FileSchema } from "@/src/common/schemas/file-schema";
+import { HandleSchema } from "@/src/common/schemas/handle-schema";
 import {
   FileFormField,
   InputFormField,
@@ -19,17 +23,15 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import {
-  ProfileModel,
-  ProfileModelData,
-} from "@/src/profile/domain/models/profile-model";
+import { clientFileUploadLocator } from "@/src/file-upload/client-file-upload-locator";
+import type { ProfileModelData } from "@/src/profile/domain/models/profile-model";
+import { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { editProfileAction } from "../actions/edit-profile-action";
 import { editProfileUploadAction } from "../actions/edit-profile-upload-action";
 
@@ -59,17 +61,13 @@ interface EditProfileDialogProps {
 
 const EditProfileSchema = z.object({
   displayName: z.string().trim().min(1).max(50),
-  handle: z
-    .string()
-    .min(1)
-    .max(15)
-    .regex(/^[a-zA-Z0-9_]+$/),
+  handle: HandleSchema,
   bio: z.string().trim().min(0).max(255),
   website: z.string().url().max(2083).or(z.string().max(0)),
   isPublic: z.boolean(),
   tags: z.array(z.string().trim().min(1).max(50)).max(10),
-  picture: z.string().or(z.instanceof(File)).optional(),
-  backgroundPicture: z.string().or(z.instanceof(File)).optional(),
+  picture: z.string().or(FileSchema).optional(),
+  backgroundPicture: z.string().or(FileSchema).optional(),
 });
 
 type FormValues = z.infer<typeof EditProfileSchema>;
@@ -113,47 +111,51 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       }
       if (uploadActionHandler.data) {
         if (uploadActionHandler.data.picture && data.picture instanceof File) {
-          const { url, fields } = uploadActionHandler.data.picture;
-
-          const formData = new FormData();
-          Object.entries(fields).forEach(([key, value]) => {
-            formData.append(key, value as string);
-          });
-          formData.append("file", data.picture);
-
-          const uploadResponse = await fetch(url, {
-            method: "POST",
-            body: formData,
+          const fileUploadService =
+            await clientFileUploadLocator.ClientFileUploadService();
+          await fileUploadService.uploadPresignedUrl({
+            file: data.picture,
+            presignedUrl: uploadActionHandler.data.picture.presignedUrl,
           });
 
-          if (uploadResponse.ok) {
-            data.picture = url + fields.key;
-          }
+          data.picture = uploadActionHandler.data.picture.url;
         }
         if (
           uploadActionHandler.data.backgroundPicture &&
           data.backgroundPicture instanceof File
         ) {
-          const { url, fields } = uploadActionHandler.data.backgroundPicture;
-
-          const formData = new FormData();
-          Object.entries(fields).forEach(([key, value]) => {
-            formData.append(key, value as string);
-          });
-          formData.append("file", data.backgroundPicture);
-
-          const uploadResponse = await fetch(url, {
-            method: "POST",
-            body: formData,
+          const fileUploadService =
+            await clientFileUploadLocator.ClientFileUploadService();
+          await fileUploadService.uploadPresignedUrl({
+            file: data.backgroundPicture,
+            presignedUrl:
+              uploadActionHandler.data.backgroundPicture.presignedUrl,
           });
 
-          if (uploadResponse.ok) {
-            data.backgroundPicture = url + fields.key;
-          }
+          data.backgroundPicture =
+            uploadActionHandler.data.backgroundPicture.url;
         }
       }
+    } catch (e) {
+      clientLocator.ErrorTrackingService().captureError(e);
+      toast.error("Error al subir las imágenes");
+      return;
+    }
 
-      const response = await editProfileAction(data);
+    try {
+      const response = await editProfileAction({
+        bio: data.bio,
+        displayName: data.displayName,
+        handle: data.handle,
+        isPublic: data.isPublic,
+        picture: typeof data.picture === "string" ? data.picture : undefined,
+        backgroundPicture:
+          typeof data.backgroundPicture === "string"
+            ? data.backgroundPicture
+            : undefined,
+        tags: data.tags,
+        website: data.website,
+      });
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
         toast.success("Tu perfil ha sido actualizado");
@@ -163,8 +165,8 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
         onClose();
       }
       handler.setErrors();
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      clientLocator.ErrorTrackingService().captureError(e);
       FormResponseHandler.setGlobalError(form);
     }
   });

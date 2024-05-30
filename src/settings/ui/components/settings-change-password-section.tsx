@@ -1,6 +1,5 @@
 "use client";
 
-import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -19,9 +18,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import type { z } from "zod";
 import { changePasswordAction } from "../actions/change-password-action";
-import { ChangePasswordSchema } from "../schemas/change-password-schema";
+import { ChangePasswordActionSchema } from "../schemas/change-password-action-schema";
 import { SettingsSectionTitle } from "./settings-section-title";
 
 export function SettingsChangePasswordSection() {
@@ -29,9 +28,9 @@ export function SettingsChangePasswordSection() {
   return (
     <>
       <SettingsSectionTitle>Mis credenciales</SettingsSectionTitle>
-      <AsyncButton onClick={() => setIsDialogOpen(true)} variant="secondary">
+      <Button onClick={() => setIsDialogOpen(true)} variant="secondary">
         Cambiar contraseña
-      </AsyncButton>
+      </Button>
       {isDialogOpen && (
         <ChangePasswordDialog onClose={() => setIsDialogOpen(false)} />
       )}
@@ -43,13 +42,13 @@ interface ChangePasswordDialogProps {
   onClose: () => void;
 }
 
-type FormValues = z.infer<typeof ChangePasswordSchema>;
+type FormValues = z.infer<typeof ChangePasswordActionSchema>;
 
 function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(ChangePasswordSchema),
+    resolver: zodResolver(ChangePasswordActionSchema),
     defaultValues: {
       password: "",
       newPassword: "",

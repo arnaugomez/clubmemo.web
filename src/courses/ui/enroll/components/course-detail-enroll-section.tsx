@@ -2,10 +2,8 @@
 
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import {
-  CourseModel,
-  CourseModelData,
-} from "@/src/courses/domain/models/course-model";
+import type { CourseModelData } from "@/src/courses/domain/models/course-model";
+import { CourseModel } from "@/src/courses/domain/models/course-model";
 import { useState } from "react";
 import { enrollCourseAction } from "../actions/enroll-course-action";
 
@@ -33,7 +31,7 @@ function EnrollButton({ course }: EnrollButtonProps) {
   return (
     <AsyncButton
       onClick={async function enroll() {
-        const response = await enrollCourseAction(course.id);
+        const response = await enrollCourseAction({ courseId: course.id });
         const handler = new FormResponseHandler(response);
         if (!handler.hasErrors) {
           setIsEnrolled(true);

@@ -1,12 +1,13 @@
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
-import { Collection, ObjectId } from "mongodb";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { Collection } from "mongodb";
+import { ObjectId } from "mongodb";
 import { TimeSpan, createDate } from "oslo";
 import { alphabet, generateRandomString, sha256 } from "oslo/crypto";
 import { encodeHex } from "oslo/encoding";
-import { ForgotPasswordTokensRepository } from "../../domain/interfaces/forgot-password-tokens-repository";
-import { ForgotPasswordTokenModel } from "../../domain/models/forgot-password-token-model";
+import type { ForgotPasswordTokensRepository } from "../../domain/interfaces/forgot-password-tokens-repository";
+import type { ForgotPasswordTokenModel } from "../../domain/models/forgot-password-token-model";
+import type { ForgotPasswordTokenDoc } from "../collections/forgot-password-tokens-collection";
 import {
-  ForgotPasswordTokenDoc,
   ForgotPasswordTokenDocTransformer,
   forgotPasswordTokensCollection,
 } from "../collections/forgot-password-tokens-collection";

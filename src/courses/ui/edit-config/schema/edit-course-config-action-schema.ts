@@ -1,9 +1,9 @@
-import { ObjectId } from "mongodb";
+import { z } from "@/i18n/zod";
+import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { default_maximum_interval } from "ts-fsrs";
-import { z } from "zod";
 
 export const EditCourseConfigActionSchema = z.object({
-  enrollmentId: z.string().refine(ObjectId.isValid),
+  enrollmentId: ObjectIdSchema,
   enableFuzz: z.boolean(),
   maximumInterval: z.number().min(1).max(default_maximum_interval),
   requestRetention: z.number().min(0).max(1),

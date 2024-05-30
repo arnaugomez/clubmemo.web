@@ -1,3 +1,4 @@
+import { ArrowLink } from "@/src/common/ui/components/button/arrow-link";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import {
   Tooltip,
@@ -7,10 +8,11 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/tooltip";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
-import { ArrowRight, Check } from "lucide-react";
+import type { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
+import { Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 interface FavoriteCourseCardProps {
   course: EnrolledCourseListItemModel;
 }
@@ -25,7 +27,7 @@ export function FavoriteCourseCard({ course }: FavoriteCourseCardProps) {
       </div>
       <div className="p-3">
         <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
-          <Link href={`/courses/detail/${course.courseId}`}>{course.name}</Link>
+          <Link href={getCourseDetailPath(course.courseId)}>{course.name}</Link>
         </h3>
         <div className="h-.5"></div>
         <FavoriteCourseCardPracticeSection course={course} />
@@ -49,13 +51,9 @@ function FavoriteCourseCardPracticeSection({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <Link
-            href={`/courses/detail/${course.courseId}/practice`}
-            className={cn(textStyles.muted, "group")}
-          >
-            <span className="group-hover:underline">Practicar</span>
-            <ArrowRight className="ml-1 inline size-4 -translate-y-[1px]" />
-          </Link>
+          <ArrowLink href={`/courses/detail/${course.courseId}/practice`}>
+            Practicar
+          </ArrowLink>
         </TooltipTrigger>
         <TooltipContent>
           Nuevo: {course.newCount} | Repasar: {course.dueCount}

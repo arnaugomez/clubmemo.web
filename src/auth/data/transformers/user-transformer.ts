@@ -1,6 +1,6 @@
-import { WithId } from "mongodb";
+import type { WithId } from "mongodb";
 import { UserModel } from "../../domain/models/user-model";
-import { UserDoc } from "../collections/users-collection";
+import type { UserDoc } from "../collections/users-collection";
 
 export function userTransformer(doc: WithId<UserDoc>): UserModel {
   return new UserModel({

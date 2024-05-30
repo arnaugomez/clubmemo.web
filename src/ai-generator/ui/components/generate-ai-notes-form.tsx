@@ -1,5 +1,7 @@
+import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
+import { FileSchema } from "@/src/common/schemas/file-schema";
 import {
   CheckboxesFormField,
   FileFormField,
@@ -13,11 +15,10 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
+import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
 
 interface GenerateAiNotesFormProps {
@@ -40,7 +41,7 @@ export function GenerateAiNotesForm({
         : z.string().min(1).max(20_000),
     file:
       sourceType === AiNotesGeneratorSourceType.file
-        ? z.instanceof(File)
+        ? FileSchema
         : z.undefined(),
     noteTypes: z
       .array(
@@ -93,7 +94,7 @@ export function GenerateAiNotesForm({
               const typedarray = new Uint8Array(event.target.result);
               const pdfjs = await import("pdfjs-dist");
               pdfjs.GlobalWorkerOptions.workerSrc =
-                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.1.392/pdf.worker.min.mjs";
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.mjs";
               const pdf = await pdfjs.getDocument(typedarray).promise;
 
               const numPages = pdf.numPages;

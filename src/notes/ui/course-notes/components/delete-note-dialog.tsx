@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
+import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import { toast } from "sonner";
 import { deleteNoteAction } from "../actions/delete-note-action";
 

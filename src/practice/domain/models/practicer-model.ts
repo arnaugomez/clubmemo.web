@@ -1,8 +1,9 @@
-import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
-import { Rating, RecordLog } from "ts-fsrs";
+import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
+import type { RecordLog } from "ts-fsrs";
+import { Rating } from "ts-fsrs";
 import { PracticeCardModel } from "./practice-card-model";
+import type { DaysToNextReviewModel } from "./practice-card-rating-model";
 import {
-  DaysToNextReviewModel,
   PracticeCardRatingModel,
   PracticeCardRatingTransformer,
 } from "./practice-card-rating-model";

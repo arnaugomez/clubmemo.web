@@ -1,4 +1,5 @@
-import { Badge, BadgeProps } from "@/src/common/ui/components/shadcn/ui/badge";
+import type { BadgeProps } from "@/src/common/ui/components/shadcn/ui/badge";
+import { Badge } from "@/src/common/ui/components/shadcn/ui/badge";
 
 interface TagsSectionProps {
   variant?: BadgeProps["variant"];

@@ -1,38 +1,28 @@
 "use server";
 
-import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
-import { locator } from "@/src/common/locator";
+import { authLocator } from "@/src/auth/auth-locator";
+import { InvalidTokenError } from "@/src/auth/domain/errors/auth-errors";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import type { VerifyEmailActionModel } from "../schemas/verify-email-action-schema";
+import { VerifyEmailActionSchema } from "../schemas/verify-email-action-schema";
 
-interface VerifyEmailActionViewModel {
-  code: string;
-}
+export async function verifyEmailAction(input: VerifyEmailActionModel) {
+  try {
+    const { code } = VerifyEmailActionSchema.parse(input);
 
-export async function verifyEmailAction({ code }: VerifyEmailActionViewModel) {
-  const { user } = await fetchSession();
-  if (!user) {
-    return ActionResponse.formGlobalError("sessionExpired");
+    const useCase = await authLocator.VerifyEmailUseCase();
+    await useCase.execute(code);
+  } catch (e) {
+    if (e instanceof InvalidTokenError) {
+      return ActionResponse.formError("code", {
+        type: "invalidCode",
+        message: "Código incorrecto",
+      });
+    }
+    return ActionErrorHandler.handle(e);
   }
-
-  const emailVerificationCodesRepository =
-    await locator.EmailVerificationCodesRepository();
-  const isValid = await emailVerificationCodesRepository.verify(user.id, code);
-  if (!isValid) {
-    return ActionResponse.formError({
-      name: "code",
-      type: "invalidCode",
-      message: "Invalid code",
-    });
-  }
-
-  const sessionCookie = await locator.AuthService().verifyEmail(user.id);
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
 
   redirect(`/home`);
 }

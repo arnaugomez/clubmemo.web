@@ -1,19 +1,14 @@
-import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { cn } from "@/src/common/ui/utils/shadcn";
+import { AuthLeftPanel } from "@/src/auth/ui/components/auth-left-panel";
+import { AuthLogo } from "@/src/auth/ui/components/auth-logo";
+import type { PropsWithChildren } from "react";
 
-export default function AuthLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function AuthLayout({ children }: PropsWithChildren) {
   return (
     <main className="divide-slate-300 sm:flex sm:h-screen md:divide-x-[1px]">
-      <div className="gradient-animation hidden flex-1 md:block">
-        <Logo />
-      </div>
+      <AuthLeftPanel />
       <div className="relative flex-1 sm:flex sm:overflow-y-auto">
         <div className="absolute md:hidden">
-          <Logo />
+          <AuthLogo />
         </div>
         <div className="my-auto w-full px-6 py-8">
           <div className="mx-auto max-w-80">
@@ -23,13 +18,5 @@ export default function AuthLayout({
         </div>
       </div>
     </main>
-  );
-}
-
-function Logo() {
-  return (
-    <div className="px-6 py-4">
-      <div className={cn(textStyles.logo, "text-slate-700")}>clubmemo</div>
-    </div>
   );
 }

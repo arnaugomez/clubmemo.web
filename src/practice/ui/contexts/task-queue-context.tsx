@@ -4,7 +4,8 @@ import {
   createContextHook,
   createNullContext,
 } from "@/src/common/ui/utils/context";
-import { PropsWithChildren, useCallback, useEffect, useState } from "react";
+import type { PropsWithChildren } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 enum Status {
   ready,

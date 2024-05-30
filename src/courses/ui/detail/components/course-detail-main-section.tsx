@@ -1,11 +1,11 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import Image from "next/image";
 import { Suspense } from "react";
 import { TagsSection } from "../../../../tags/ui/components/tags-section";
 import { CourseDetailActionsSection } from "./course-detail-actions-section";
-import { CourseDetailAuthorsSection } from "./course-detail-authors-section";
+import { CourseDetailAuthorsSectionLoader } from "./course-detail-authors-section";
 import { CourseDetailMainActionsSection } from "./course-detail-main-actions-section";
 
 interface CourseDetailMainSectionProps {
@@ -39,7 +39,7 @@ export async function CourseDetailMainSection({
         <div className="h-6" />
       </div>
       <Suspense>
-        <CourseDetailAuthorsSection course={course} />
+        <CourseDetailAuthorsSectionLoader course={course} />
       </Suspense>
     </>
   );

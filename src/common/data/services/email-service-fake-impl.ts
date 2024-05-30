@@ -1,4 +1,4 @@
-import { EmailService } from "../../domain/interfaces/email-service";
+import type { EmailService } from "../../domain/interfaces/email-service";
 
 export class EmailServiceFakeImpl implements EmailService {
   async sendVerificationCode(

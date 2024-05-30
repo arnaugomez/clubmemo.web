@@ -1,6 +1,6 @@
-import { ObjectId } from "mongodb";
+import type { ObjectId } from "mongodb";
 import { CourseAuthorModel } from "../../domain/models/course-author-model";
-import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
+import type { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 
 export interface CourseAuthorDoc {
   courseId: ObjectId;

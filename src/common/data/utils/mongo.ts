@@ -1,4 +1,4 @@
-import { Collection, Document } from "mongodb";
+import type { Collection, Document } from "mongodb";
 
 export type CollectionType<TSchema extends Document = Document> = {
   name: string;

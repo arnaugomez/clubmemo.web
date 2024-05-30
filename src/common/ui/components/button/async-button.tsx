@@ -1,8 +1,15 @@
 import { Loader2 } from "lucide-react";
 import { forwardRef, useState } from "react";
-import { Button, ButtonProps } from "../shadcn/ui/button";
+import type { ButtonProps } from "../shadcn/ui/button";
+import { Button } from "../shadcn/ui/button";
 
-const AsyncButton = forwardRef<HTMLButtonElement, ButtonProps>(
+interface AsyncButtonProps extends ButtonProps {
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => Promise<void>;
+}
+
+const AsyncButton = forwardRef<HTMLButtonElement, AsyncButtonProps>(
   ({ children, onClick, ...props }, ref) => {
     const [isLoading, setIsLoading] = useState(false);
     const handleClick: ButtonProps["onClick"] = async (e) => {

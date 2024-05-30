@@ -1,19 +1,13 @@
 "use client";
 
-import {
-  TokenPaginationModel,
-  TokenPaginationModelData,
-} from "@/src/common/domain/models/token-pagination-model";
+import type { TokenPaginationModelData } from "@/src/common/domain/models/token-pagination-model";
+import { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { PaginationEmptyState } from "@/src/common/ui/components/empty-state/pagination-empty-state";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { cn } from "@/src/common/ui/utils/shadcn";
-import {
-  DiscoverCourseModel,
-  DiscoverCourseModelData,
-} from "@/src/courses/domain/models/discover-course-model";
-import { Search } from "lucide-react";
+import type { DiscoverCourseModelData } from "@/src/courses/domain/models/discover-course-model";
+import { DiscoverCourseModel } from "@/src/courses/domain/models/discover-course-model";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -80,27 +74,16 @@ export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
         {results.map((course) => (
           <DiscoverCourseCard course={course} key={course.id} />
         ))}
-        {canLoadMore && (
-          <div key="inView" ref={ref}>
-            <Skeleton key="inView" className="h-64 rounded-lg" />
-          </div>
-        )}
         {canLoadMore &&
           Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-64 rounded-lg" />
+            <Skeleton
+              key={i}
+              ref={i ? undefined : ref}
+              className="h-64 rounded-lg"
+            />
           ))}
       </div>
-      {!canLoadMore && (
-        <>
-          <div className="flex justify-center pt-16">
-            <Search className={cn(textStyles.muted, "size-5")} />
-          </div>
-          <div className="h-4"></div>
-          <p className={cn(textStyles.muted, "text-center text-sm")}>
-            No hay más resultados
-          </p>
-        </>
-      )}
+      {!canLoadMore && <PaginationEmptyState />}
     </>
   );
 }

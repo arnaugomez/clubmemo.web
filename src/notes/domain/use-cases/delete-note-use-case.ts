@@ -1,30 +1,32 @@
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
+import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
-import { NotesRepository } from "../interfaces/notes-repository";
+import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
+import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
+import type { NotesRepository } from "../interfaces/notes-repository";
 import { NoteDoesNotExistError } from "../models/notes-errors";
 
 interface DeleteNoteUseCaseInputModel {
-  profileId: string;
   noteId: string;
 }
 
 export class DeleteNoteUseCase {
   constructor(
+    private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly coursesRepository: CoursesRepository,
     private readonly notesRepository: NotesRepository,
   ) {}
 
-  async execute({
-    profileId,
-    noteId,
-  }: DeleteNoteUseCaseInputModel): Promise<void> {
+  async execute({ noteId }: DeleteNoteUseCaseInputModel): Promise<void> {
+    const profile = await this.getMyProfileUseCase.execute();
+    if (!profile) throw new ProfileDoesNotExistError();
+
     const note = await this.notesRepository.getDetail(noteId);
     if (!note) throw new NoteDoesNotExistError();
 
     const course = await this.coursesRepository.getDetail({
       id: note.courseId,
-      profileId,
+      profileId: profile.id,
     });
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canDelete) throw new NoPermissionError();

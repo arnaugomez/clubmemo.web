@@ -1,5 +1,6 @@
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
-import { TagsRepository } from "../../domain/interfaces/tags-repository";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import { MongoBulkWriteError } from "mongodb";
+import type { TagsRepository } from "../../domain/interfaces/tags-repository";
 import { tagsCollection } from "../collections/tags-collection";
 
 export class TagsRepositoryImpl implements TagsRepository {
@@ -16,7 +17,11 @@ export class TagsRepositoryImpl implements TagsRepository {
         { ordered: false },
       );
     } catch (e) {
-      // TODO: handle "element already exists" error
+      // Ignore duplicate key errors
+      if (e instanceof MongoBulkWriteError && e.code === 11000) {
+        return;
+      }
+      throw e;
     }
   }
   async getSuggestions(query?: string): Promise<string[]> {

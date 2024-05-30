@@ -1,6 +1,7 @@
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
+import { getCourseDetailPath } from "@/src/courses/ui/utils/get-course-detail-path";
 import { PartyPopper } from "lucide-react";
 import Link from "next/link";
 
@@ -20,7 +21,7 @@ export function PracticeEmptyState({ courseId }: PracticeEmptyStateProps) {
       <div className="h-6"></div>
       <div className="flex space-x-3">
         <Button variant="secondary" className="w-full">
-          <Link href={`/courses/detail/${courseId}`}>Volver al curso</Link>
+          <Link href={getCourseDetailPath(courseId)}>Volver al curso</Link>
         </Button>
         <Button className="w-full">
           <Link href="/learn">Aprender</Link>

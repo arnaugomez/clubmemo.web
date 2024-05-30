@@ -19,14 +19,25 @@ export function LandingHero() {
 }
 
 function HeroSteps() {
+  const steps: HeroStepViewModel[] = [
+    {
+      text: "Sube tus apuntes",
+      icon: <FileUp />,
+    },
+    {
+      text: "Genera flashcards con A.I.",
+      icon: <Layers />,
+    },
+    {
+      text: "Estudia de forma divertida y eficiente",
+      icon: <GraduationCap />,
+    },
+  ];
   return (
     <div className="mx-auto flex w-fit flex-col space-y-4 px-8">
-      <HeroStep text="Sube tus apuntes" icon={<FileUp />} />
-      <HeroStep text="Genera flashcards con A.I." icon={<Layers />} />
-      <HeroStep
-        text="Estudia de forma divertida y eficiente"
-        icon={<GraduationCap />}
-      />
+      {steps.map((step, index) => (
+        <HeroStep key={index} {...step} />
+      ))}
     </div>
   );
 }

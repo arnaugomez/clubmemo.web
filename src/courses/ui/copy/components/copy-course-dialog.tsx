@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

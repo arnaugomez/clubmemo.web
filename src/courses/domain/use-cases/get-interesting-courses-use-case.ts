@@ -1,7 +1,7 @@
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
-import { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
-import { CoursesRepository } from "../interfaces/courses-repository";
-import { DiscoverCourseModel } from "../models/discover-course-model";
+import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
+import type { CoursesRepository } from "../interfaces/courses-repository";
+import type { DiscoverCourseModel } from "../models/discover-course-model";
 
 export class GetInterestingCoursesUseCase {
   constructor(

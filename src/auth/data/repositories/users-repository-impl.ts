@@ -1,7 +1,7 @@
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
-import { UsersRepository } from "../../domain/interfaces/users-repository";
-import { UserModel } from "../../domain/models/user-model";
+import type { UsersRepository } from "../../domain/interfaces/users-repository";
+import type { UserModel } from "../../domain/models/user-model";
 import {
   UserDocTransformer,
   usersCollection,
@@ -12,6 +12,7 @@ export class UsersRepositoryImpl implements UsersRepository {
 
   constructor(mongoService: MongoService) {
     this.usersCollection = mongoService.collection(usersCollection);
+    this.usersCollection.createIndex({ email: 1 }, { unique: true });
   }
 
   async getByEmail(email: string): Promise<UserModel | null> {

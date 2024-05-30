@@ -1,13 +1,13 @@
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
-import {
+import type {
   CourseEnrollmentsRepository,
   CreateCourseEnrollmentInputModel,
   DeleteCourseEnrollmentInputModel,
   SetCourseFavoriteInputModel,
   UpdateCourseEnrollmentConfigInputModel,
 } from "../../domain/interfaces/course-enrollments-repository";
-import { CourseEnrollmentModel } from "../../domain/models/course-enrollment-model";
+import type { CourseEnrollmentModel } from "../../domain/models/course-enrollment-model";
 import {
   CourseEnrollmentDocTransformer,
   courseEnrollmentsCollection,

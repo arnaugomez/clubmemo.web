@@ -1,21 +1,20 @@
-import { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
-import { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
+import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
 import {
-  NoteDoc,
   NoteDocTransformer,
   notesCollection,
 } from "@/src/notes/data/collections/notes-collection";
-import { ObjectId, WithId } from "mongodb";
-import {
+import type { WithId } from "mongodb";
+import { ObjectId } from "mongodb";
+import type {
   GetDueInput,
   GetUnpracticedInput,
   PracticeCardsRepository,
 } from "../../domain/interfaces/practice-cards-repository";
 import { PracticeCardModel } from "../../domain/models/practice-card-model";
-import {
-  PracticeCardAggregationDoc,
-  PracticeCardAggregationDocTransformer,
-} from "../collections/practice-card-aggregation";
+import type { PracticeCardAggregationDoc } from "../collections/practice-card-aggregation";
+import { PracticeCardAggregationDocTransformer } from "../collections/practice-card-aggregation";
 import { practiceCardsCollection } from "../collections/practice-cards-collection";
 
 export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
@@ -27,7 +26,9 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     private readonly dateTimeService: DateTimeService,
   ) {
     this.practiceCards = mongoService.collection(practiceCardsCollection);
+    this.practiceCards.createIndex({ courseEnrollmentId: 1, due: 1 });
     this.notes = mongoService.collection(notesCollection);
+    this.notes.createIndex({ courseId: 1 });
   }
 
   async create(input: PracticeCardModel): Promise<PracticeCardModel> {
@@ -131,7 +132,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     );
   }
 
-  async getDueCount(courseEnrollmentId: number): Promise<number> {
+  async getUnpracticedCount(courseEnrollmentId: string): Promise<number> {
     const cursor = this.practiceCards.aggregate<{ count: number }>([
       {
         $match: {

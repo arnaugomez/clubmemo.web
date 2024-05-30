@@ -1,6 +1,6 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 export function SettingsSectionTitle({ children }: PropsWithChildren) {
   return (

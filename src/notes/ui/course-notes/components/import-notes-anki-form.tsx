@@ -1,3 +1,5 @@
+import { z } from "@/i18n/zod";
+import { FileSchema } from "@/src/common/schemas/file-schema";
 import { FileFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -15,7 +17,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleHelp, FileText } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { importNotesAction } from "../actions/import-notes-action";
 
 interface ImportNotesAnkiFormProps {
@@ -25,7 +26,7 @@ interface ImportNotesAnkiFormProps {
   onSuccess: (notes: NoteModel[]) => void;
 }
 const Schema = z.object({
-  file: z.instanceof(File),
+  file: FileSchema,
 });
 
 type FormValues = z.infer<typeof Schema>;
@@ -74,7 +75,7 @@ export function ImportNotesAnkiForm({
             <CircleHelp size={16} />
             <AlertTitle>¿Cómo exportar tarjetas de Anki?</AlertTitle>
             <AlertDescription>
-              ClubMemo soporta la importación de tarjetas en{" "}
+              Clubmemo soporta la importación de tarjetas en{" "}
               <span className="font-medium">texto plano</span>. Lee el{" "}
               <a
                 className="underline"

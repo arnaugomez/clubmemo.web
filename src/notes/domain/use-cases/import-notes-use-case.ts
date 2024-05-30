@@ -1,32 +1,37 @@
+import { z } from "@/i18n/zod";
 import {
   InvalidFileFormatError,
   NoPermissionError,
 } from "@/src/common/domain/models/app-errors";
-import { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
+import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
+import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
+import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
 import { parse } from "csv-parse/sync";
-import { z } from "zod";
-import { NotesRepository } from "../interfaces/notes-repository";
+import type { NotesRepository } from "../interfaces/notes-repository";
 import { ImportNotesTypeModel } from "../models/import-note-type-model";
-import { ImportNotesInputModel } from "../models/import-notes-input-model";
-import { NoteModel } from "../models/note-model";
-import { NoteRowModel } from "../models/note-row-model";
+import type { ImportNotesInputModel } from "../models/import-notes-input-model";
+import type { NoteModel } from "../models/note-model";
+import type { NoteRowModel } from "../models/note-row-model";
 
 export class ImportNotesUseCase {
   constructor(
+    private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly coursesRepository: CoursesRepository,
     private readonly notesRepository: NotesRepository,
   ) {}
 
   async execute({
-    profileId,
     courseId,
     file,
     importType,
   }: ImportNotesInputModel): Promise<NoteModel[]> {
+    const profile = await this.getMyProfileUseCase.execute();
+    if (!profile) throw new ProfileDoesNotExistError();
+
     const course = await this.coursesRepository.getDetail({
       id: courseId,
-      profileId,
+      profileId: profile.id,
     });
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canEdit) throw new NoPermissionError();
@@ -36,14 +41,14 @@ export class ImportNotesUseCase {
       [ImportNotesTypeModel.json]: this.parseJson,
       [ImportNotesTypeModel.anki]: this.parseAnki,
     };
+
     const parseFn = parseMap[importType];
-    if (!parseFn) throw new Error("parseFn does not exist");
-    const newNotes = await parseFn(file);
+    const text = await file.text();
+    const newNotes = await parseFn(text);
     return await this.notesRepository.createMany(courseId, newNotes);
   }
 
-  private async parseCsv(file: File): Promise<NoteRowModel[]> {
-    const text = await file.text();
+  private async parseCsv(text: string): Promise<NoteRowModel[]> {
     const records = parse(text, {
       skip_empty_lines: true,
     }) as string[][];
@@ -54,8 +59,7 @@ export class ImportNotesUseCase {
       }))
       .filter((note) => note.front);
   }
-  private async parseJson(file: File): Promise<NoteRowModel[]> {
-    const text = await file.text();
+  private async parseJson(text: string): Promise<NoteRowModel[]> {
     try {
       const parsed = ImportNotesJsonSchema.parse(JSON.parse(text));
       return parsed.notes
@@ -68,9 +72,7 @@ export class ImportNotesUseCase {
       throw new InvalidFileFormatError();
     }
   }
-  private async parseAnki(file: File): Promise<NoteRowModel[]> {
-    const text = await file.text();
-
+  private async parseAnki(text: string): Promise<NoteRowModel[]> {
     // Lexer to parse Anki format. Works like a finite state machine.
     enum Status {
       start,

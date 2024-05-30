@@ -1,43 +1,19 @@
 "use server";
 
-import { locator } from "@/src/common/locator";
-import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
+import { authLocator } from "@/src/auth/auth-locator";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
+import {
+  ResetPasswordActionSchema,
+  type ResetPasswordActionModel,
+} from "../schemas/reset-password-action-schema";
 
-interface ResetPasswordActionViewModel {
-  email: string;
-  password: string;
-}
-
-export async function resetPasswordAction({
-  email,
-  password,
-}: ResetPasswordActionViewModel) {
+export async function resetPasswordAction(input: ResetPasswordActionModel) {
   try {
-    const usersRepository = await locator.UsersRepository();
+    const parsed = ResetPasswordActionSchema.parse(input);
 
-    const user = await usersRepository.getByEmail(email);
-    if (!user) {
-      return ActionResponse.formGlobalError("userDoesNotExist");
-    }
-
-    const forgotPasswordCodesRepository =
-      await locator.ForgotPasswordTokensRepository();
-    const forgotPasswordCode = await forgotPasswordCodesRepository.get(user.id);
-    if (!forgotPasswordCode || forgotPasswordCode.hasExpired) {
-      return ActionResponse.formGlobalError("forgotPasswordCodeExpired");
-    }
-
-    const authService = locator.AuthService();
-    await authService.updatePassword({
-      userId: user.id,
-      password,
-    });
-
-    await forgotPasswordCodesRepository.delete(user.id);
-
-    await authService.invalidateUserSessions(user.id);
+    const useCase = await authLocator.ResetPasswordUseCase();
+    await useCase.execute(parsed);
   } catch (e) {
-    console.error(e);
-    return ActionResponse.formGlobalError("general");
+    return ActionErrorHandler.handle(e);
   }
 }

@@ -1,7 +1,7 @@
-import { TokenPaginationModelData } from "@/src/common/domain/models/token-pagination-model";
-import { locator } from "@/src/common/locator";
-import { GetCoursesByAuthorInputModel } from "@/src/courses/domain/interfaces/courses-repository";
-import { DiscoverCourseModelData } from "@/src/courses/domain/models/discover-course-model";
+import { locator } from "@/src/common/di/locator";
+import type { TokenPaginationModelData } from "@/src/common/domain/models/token-pagination-model";
+import type { GetCoursesByAuthorInputModel } from "@/src/courses/domain/interfaces/courses-repository";
+import type { DiscoverCourseModelData } from "@/src/courses/domain/models/discover-course-model";
 
 export async function fetchCoursesByAuthor(
   input: GetCoursesByAuthorInputModel,

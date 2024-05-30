@@ -3,6 +3,8 @@ export interface NoteModelData {
   courseId: string;
   front: string;
   back: string;
+  frontText?: string;
+  backText?: string;
   createdAt: Date;
 }
 
@@ -20,6 +22,13 @@ export class NoteModel {
   }
   get back() {
     return this.data.back;
+  }
+
+  get frontText() {
+    return this.data.frontText;
+  }
+  get backText() {
+    return this.data.backText;
   }
 
   get createdAt() {

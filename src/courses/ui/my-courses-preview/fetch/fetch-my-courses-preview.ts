@@ -1,7 +1,7 @@
 import { cache } from "react";
 
-import { locator } from "@/src/common/locator";
-import { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
+import { locator } from "@/src/common/di/locator";
+import type { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 
 export const fetchMyCoursesPreview = cache(

@@ -1,8 +1,7 @@
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import { Separator } from "@/src/common/ui/components/shadcn/ui/separator";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
-import DOMPurify from "isomorphic-dompurify";
+import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import { Edit2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { DeleteNoteDialog } from "./delete-note-dialog";
@@ -23,7 +22,7 @@ export function CourseNoteCard({
     <Card className="flex h-32 flex-col items-stretch overflow-clip">
       <div className="flex flex-1 items-center space-x-3 px-4">
         <h3 className="flex-1 truncate font-medium">
-          {DOMPurify.sanitize(note.front, { ALLOWED_TAGS: ["#text"] })}
+          {note.frontText || "Sin contenido"}
         </h3>
         <EditNoteButton note={note} onSuccess={onEdit} />
 
@@ -31,10 +30,7 @@ export function CourseNoteCard({
       </div>
       <Separator />
       <div className="flex flex-1 items-center px-4">
-        <p className="flex-1 truncate">
-          {DOMPurify.sanitize(note.front, { ALLOWED_TAGS: ["#text"] }) ||
-            "Sin contenido"}
-        </p>
+        <p className="flex-1 truncate">{note.backText || "Sin contenido"}</p>
       </div>
     </Card>
   );

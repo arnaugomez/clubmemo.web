@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import {
@@ -16,25 +15,22 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import Link from "next/link";
-import { loginAction } from "../actions/login-action";
-
-const FormSchema = z.object({
-  email: z.string().email().max(254),
-  password: z.string(),
-});
+import { loginWithPasswordAction } from "../actions/login-with-password-action";
+import type { LoginWithPasswordActionModel } from "../schemas/login-with-password-action-schema";
+import { LoginWithPasswordActionSchema } from "../schemas/login-with-password-action-schema";
 
 export function LoginForm() {
   const form = useForm({
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(LoginWithPasswordActionSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: LoginWithPasswordActionModel) {
     try {
-      const response = await loginAction(data);
+      const response = await loginWithPasswordAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();

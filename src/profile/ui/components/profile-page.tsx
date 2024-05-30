@@ -1,3 +1,4 @@
+import { WebsiteLink } from "@/src/common/ui/components/button/website-link";
 import {
   Avatar,
   AvatarFallback,
@@ -6,8 +7,8 @@ import {
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { ProfileModel } from "@/src/profile/domain/models/profile-model";
-import { LinkIcon, Settings, User } from "lucide-react";
+import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
+import { Settings, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -66,18 +67,7 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
               {profile.bio}
             </p>
           )}
-          {/* TODO: wrap into reusable link component */}
-          {profile.website && (
-            <a
-              href={profile.website}
-              className="flex max-w-xs items-center pt-4 text-muted-foreground underline hover:text-slate-900"
-            >
-              <LinkIcon className="mr-2 size-4 flex-none" />
-              <span className="truncate text-sm">
-                {profile.website.replace(/(^\w+:|^)\/\//, "")}
-              </span>
-            </a>
-          )}
+          {profile.website && <WebsiteLink url={profile.website} />}
           <TagsSection tags={profile.tags} />
           <div className="h-12"></div>
           <ProfileCoursesSection profile={profile} />

@@ -4,23 +4,23 @@ import {
   createContextHook,
   createNullContext,
 } from "@/src/common/ui/utils/context";
-import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
-import { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
+import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { PracticeCardModel } from "@/src/practice/domain/models/practice-card-model";
-import {
+import type {
   DaysToNextReviewModel,
   PracticeCardRatingModel,
 } from "@/src/practice/domain/models/practice-card-rating-model";
-import {
-  PracticeResultModel,
-  PracticerModel,
-} from "@/src/practice/domain/models/practicer-model";
-import { ReviewLogModel } from "@/src/practice/domain/models/review-log-model";
-import { PropsWithChildren, useMemo, useState } from "react";
+import type { PracticeResultModel } from "@/src/practice/domain/models/practicer-model";
+import { PracticerModel } from "@/src/practice/domain/models/practicer-model";
+import type { ReviewLogModel } from "@/src/practice/domain/models/review-log-model";
+import type { PropsWithChildren } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { getNextPracticeCardsAction } from "../actions/get-next-practice-cards-action";
 import { practiceAction } from "../actions/practice-action";
-import { Task, useTaskQueueContext } from "./task-queue-context";
+import type { Task } from "./task-queue-context";
+import { useTaskQueueContext } from "./task-queue-context";
 
 interface PracticeProviderProps extends PropsWithChildren {
   course: CourseModel;
@@ -28,12 +28,12 @@ interface PracticeProviderProps extends PropsWithChildren {
   cards: PracticeCardModel[];
 }
 
-type State = {
+interface State {
   cards: PracticeCardModel[];
   currentCardIndex: number;
   reviewLogs: ReviewLogModel[];
   nextCards: PracticeCardModel[];
-};
+}
 
 interface PracticeContextValue {
   currentCard: PracticeCardModel | null;
@@ -74,11 +74,18 @@ export function PracticeProvider({
   }, [enrollment, currentCard]);
 
   async function getNextPracticeCards() {
-    const cards = await getNextPracticeCardsAction({ courseId: course.id });
-    setState((state) => ({
-      ...state,
-      nextCards: cards.map((c) => new PracticeCardModel(c)),
-    }));
+    const response = await getNextPracticeCardsAction({ courseId: course.id });
+
+    const handler = new ActionResponseHandler(response);
+    handler.toastErrors();
+
+    const { data } = handler;
+    if (data) {
+      setState((state) => ({
+        ...state,
+        nextCards: data.map((c) => new PracticeCardModel(c)),
+      }));
+    }
   }
 
   const rate = async (rating: PracticeCardRatingModel) => {
@@ -89,16 +96,14 @@ export function PracticeProvider({
       async (payload, tasks) => {
         const { cards, currentCardIndex } = state;
         const { card, reviewLog } = payload;
-        const cardJson = JSON.parse(JSON.stringify(card.data));
-        cardJson.due = new Date(cardJson.due);
-        cardJson.lastReview = new Date(cardJson.lastReview);
         const response = await practiceAction({
           courseId: course.id,
-          card: cardJson,
+          card: card.data,
           reviewLog: reviewLog.data,
         });
         const handler = new ActionResponseHandler(response);
         if (handler.hasErrors) {
+          console.error(response.errors);
           throw new Error();
         }
         if (handler.data) {

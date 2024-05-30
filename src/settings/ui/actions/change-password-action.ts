@@ -1,52 +1,29 @@
 "use server";
 import { authLocator } from "@/src/auth/auth-locator";
-import {
-  IncorrectPasswordError,
-  UserDoesNotExistError,
-} from "@/src/auth/domain/errors/auth-errors";
+import { IncorrectPasswordError } from "@/src/auth/domain/errors/auth-errors";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { cookies } from "next/headers";
-import { z } from "zod";
-import { fetchSession } from "../../../auth/ui/fetch/fetch-session";
-import { ChangePasswordSchema } from "../schemas/change-password-schema";
+import type { ChangePasswordActionModel } from "../schemas/change-password-action-schema";
+import { ChangePasswordActionSchema } from "../schemas/change-password-action-schema";
 
-export async function changePasswordAction(
-  data: z.infer<typeof ChangePasswordSchema>,
-) {
+export async function changePasswordAction(input: ChangePasswordActionModel) {
   try {
-    const parsed = ChangePasswordSchema.parse(data);
-
-    const { user } = await fetchSession();
-    if (!user) throw new UserDoesNotExistError();
-    const userId = user.id;
+    const parsed = ChangePasswordActionSchema.parse(input);
 
     const changePasswordUseCase = await authLocator.ChangePasswordUseCase();
-    const sessionCookie = await changePasswordUseCase.execute({
-      userId,
+    await changePasswordUseCase.execute({
       password: parsed.password,
       newPassword: parsed.newPassword,
     });
-
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    );
   } catch (e) {
-    if (e instanceof UserDoesNotExistError) {
-      return ActionResponse.formGlobalError("userDoesNotExist");
-    } else if (e instanceof IncorrectPasswordError) {
+    if (e instanceof IncorrectPasswordError) {
       await waitMilliseconds(800); // Prevent brute-force attacks
-      return ActionResponse.formError({
-        name: "password",
+      return ActionResponse.formError("password", {
         message: "Contraseña incorrecta",
         type: "invalidCredentials",
       });
-    } else {
-      // TODO: handle ZodError
-      console.error(e);
-      return ActionResponse.formGlobalError("general");
     }
+    return ActionErrorHandler.handle(e);
   }
 }

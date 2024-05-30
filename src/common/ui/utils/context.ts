@@ -1,5 +1,6 @@
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
-import { Context, createContext, useContext } from "react";
+import type { Context } from "react";
+import { createContext, useContext } from "react";
 
 export const createNullContext = <T>() => createContext<T | null>(null);
 
