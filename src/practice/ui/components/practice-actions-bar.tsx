@@ -14,9 +14,9 @@ interface PracticeOption {
 
 const practiceOptions: PracticeOption[] = [
   { label: "Repetir", rating: PracticeCardRatingModel.again },
+  { label: "Difícil", rating: PracticeCardRatingModel.hard, isAdvanced: true },
   { label: "Bien", rating: PracticeCardRatingModel.good },
   { label: "Fácil", rating: PracticeCardRatingModel.easy, isAdvanced: true },
-  { label: "Difícil", rating: PracticeCardRatingModel.hard, isAdvanced: true },
 ];
 
 interface PracticeActionsBarProps {
@@ -48,7 +48,7 @@ export function PracticeActionsBar({
                 onClick={() => onRate(o.rating)}
                 days={daysToNextReview[o.rating]}
               >
-                Repetir
+                {o.label}
               </RateButton>
             ))}
         </>

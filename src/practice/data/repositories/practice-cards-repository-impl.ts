@@ -81,14 +81,28 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
       {
         $lookup: {
           from: practiceCardsCollection.name,
-          localField: "_id",
-          foreignField: "noteId",
-          as: "practiceCard",
+          let: {
+            noteId: "$_id",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$noteId", "$$noteId"],
+                },
+                courseEnrollmentId: new ObjectId(input.courseEnrollmentId),
+              },
+            },
+            {
+              $limit: 1,
+            },
+          ],
+          as: "practiceCards",
         },
       },
       {
         $match: {
-          practiceCard: [],
+          practiceCards: { $size: 0 },
         },
       },
       {
@@ -103,6 +117,51 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
         provisionalId: i,
       });
     });
+  }
+
+  async getUnpracticedCount(input: GetUnpracticedInput): Promise<number> {
+    const cursor = this.notes.aggregate<{ count: number }>([
+      {
+        $match: {
+          courseId: new ObjectId(input.courseId),
+        },
+      },
+      {
+        $lookup: {
+          from: practiceCardsCollection.name,
+          let: {
+            noteId: "$_id",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$noteId", "$$noteId"],
+                },
+                courseEnrollmentId: new ObjectId(input.courseEnrollmentId),
+              },
+            },
+            {
+              $limit: 1,
+            },
+          ],
+          as: "practiceCards",
+        },
+      },
+      {
+        $match: {
+          practiceCards: { $size: 0 },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const result = await cursor.next();
+    return result?.count ?? 0;
   }
 
   async getDue(input: GetDueInput): Promise<PracticeCardModel[]> {
@@ -132,7 +191,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     );
   }
 
-  async getUnpracticedCount(courseEnrollmentId: string): Promise<number> {
+  async getDueCount(courseEnrollmentId: string): Promise<number> {
     const cursor = this.practiceCards.aggregate<{ count: number }>([
       {
         $match: {

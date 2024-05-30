@@ -134,8 +134,16 @@ export function GenerateAiNotesForm({
       });
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors && handler.data) {
-        toast.success("Tarjetas generadas con éxito");
-        onSuccess(handler.data);
+        if (handler.data.length) {
+          toast.success("Tarjetas generadas con éxito");
+          onSuccess(handler.data);
+        } else {
+          form.setError("root.globalError", {
+            type: "global",
+            message:
+              "El generador AI ha generado 0 tarjetas. Use otra entrada o inténtalo más tarde.",
+          });
+        }
       }
       handler.setErrors();
     } catch (error) {

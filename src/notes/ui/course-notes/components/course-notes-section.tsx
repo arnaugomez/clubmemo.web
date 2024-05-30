@@ -24,7 +24,7 @@ export function CourseNotesSection({ course }: CourseNotesSectionProps) {
               <h2
                 className={cn(textStyles.h2, "flex-1 truncate text-slate-700")}
               >
-                Tarjetas de aprendizaje
+                Tarjetas <span className="hidden sm:inline">de aprendizaje</span>
               </h2>
               <CreateNoteButton courseId={course.id} />
               <CourseNotesDropdown courseData={course.data} />

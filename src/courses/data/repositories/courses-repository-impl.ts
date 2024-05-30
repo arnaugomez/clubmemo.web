@@ -4,6 +4,7 @@ import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-s
 import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import type { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
+import { notesCollection } from "@/src/notes/data/collections/notes-collection";
 import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
 import { reviewLogsCollection } from "@/src/practice/data/collections/review-logs-collection";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
@@ -197,6 +198,61 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           },
         },
         {
+          $lookup: {
+            from: notesCollection.name,
+            let: { courseId: "$courseId", courseEnrollmentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$courseId", "$$courseId"],
+                  },
+                },
+              },
+              {
+                $lookup: {
+                  from: practiceCardsCollection.name,
+                  let: {
+                    noteId: "$_id",
+                    courseEnrollmentId: "$$courseEnrollmentId",
+                  },
+                  pipeline: [
+                    {
+                      $match: {
+                        $and: [
+                          {
+                            $expr: {
+                              $eq: ["$noteId", "$$noteId"],
+                            },
+                          },
+                          {
+                            $expr: {
+                              $eq: [
+                                "$courseEnrollmentId",
+                                "$$courseEnrollmentId",
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      $limit: 1,
+                    },
+                  ],
+                  as: "practiceCards",
+                },
+              },
+              {
+                $match: {
+                  practiceCards: { $size: 0 },
+                },
+              },
+            ],
+            as: "newCards",
+          },
+        },
+        {
           $project: {
             _id: false,
             courseId: true,
@@ -205,14 +261,19 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             picture: "$course.picture",
             dueCount: { $size: "$practiceCards" },
             newCount: {
-              $max: [
+              $min: [
                 {
-                  $subtract: [
-                    { $ifNull: ["$course.dailyNewCardsCount", 10] },
-                    { $size: "$reviewsOfNewCards" },
+                  $max: [
+                    {
+                      $subtract: [
+                        { $ifNull: ["$course.dailyNewCardsCount", 10] },
+                        { $size: "$reviewsOfNewCards" },
+                      ],
+                    },
+                    0,
                   ],
                 },
-                0,
+                { $size: "$newCards" },
               ],
             },
           },
@@ -297,6 +358,61 @@ export class CoursesRepositoryImpl implements CoursesRepository {
               },
             },
             {
+              $lookup: {
+                from: notesCollection.name,
+                let: { courseId: "$courseId", courseEnrollmentId: "$_id" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $eq: ["$courseId", "$$courseId"],
+                      },
+                    },
+                  },
+                  {
+                    $lookup: {
+                      from: practiceCardsCollection.name,
+                      let: {
+                        noteId: "$_id",
+                        courseEnrollmentId: "$$courseEnrollmentId",
+                      },
+                      pipeline: [
+                        {
+                          $match: {
+                            $and: [
+                              {
+                                $expr: {
+                                  $eq: ["$noteId", "$$noteId"],
+                                },
+                              },
+                              {
+                                $expr: {
+                                  $eq: [
+                                    "$courseEnrollmentId",
+                                    "$$courseEnrollmentId",
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          $limit: 1,
+                        },
+                      ],
+                      as: "practiceCards",
+                    },
+                  },
+                  {
+                    $match: {
+                      practiceCards: { $size: 0 },
+                    },
+                  },
+                ],
+                as: "newCards",
+              },
+            },
+            {
               $project: {
                 _id: false,
                 courseId: true,
@@ -305,14 +421,19 @@ export class CoursesRepositoryImpl implements CoursesRepository {
                 picture: "$course.picture",
                 dueCount: { $size: "$practiceCards" },
                 newCount: {
-                  $max: [
+                  $min: [
                     {
-                      $subtract: [
-                        { $ifNull: ["$course.dailyNewCardsCount", 10] },
-                        { $size: "$reviewsOfNewCards" },
+                      $max: [
+                        {
+                          $subtract: [
+                            { $ifNull: ["$course.dailyNewCardsCount", 10] },
+                            { $size: "$reviewsOfNewCards" },
+                          ],
+                        },
+                        0,
                       ],
                     },
-                    0,
+                    { $size: "$newCards" },
                   ],
                 },
               },
@@ -553,6 +674,61 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           },
         },
         {
+          $lookup: {
+            from: notesCollection.name,
+            let: { courseId: "$courseId", courseEnrollmentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$courseId", "$$courseId"],
+                  },
+                },
+              },
+              {
+                $lookup: {
+                  from: practiceCardsCollection.name,
+                  let: {
+                    noteId: "$_id",
+                    courseEnrollmentId: "$$courseEnrollmentId",
+                  },
+                  pipeline: [
+                    {
+                      $match: {
+                        $and: [
+                          {
+                            $expr: {
+                              $eq: ["$noteId", "$$noteId"],
+                            },
+                          },
+                          {
+                            $expr: {
+                              $eq: [
+                                "$courseEnrollmentId",
+                                "$$courseEnrollmentId",
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      $limit: 1,
+                    },
+                  ],
+                  as: "practiceCards",
+                },
+              },
+              {
+                $match: {
+                  practiceCards: { $size: 0 },
+                },
+              },
+            ],
+            as: "newCards",
+          },
+        },
+        {
           $project: {
             courseId: true,
             isFavorite: true,
@@ -562,14 +738,19 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             description: "$course.description",
             dueCount: { $size: "$practiceCards" },
             newCount: {
-              $max: [
+              $min: [
                 {
-                  $subtract: [
-                    { $ifNull: ["$course.dailyNewCardsCount", 10] },
-                    { $size: "$reviewsOfNewCards" },
+                  $max: [
+                    {
+                      $subtract: [
+                        { $ifNull: ["$course.dailyNewCardsCount", 10] },
+                        { $size: "$reviewsOfNewCards" },
+                      ],
+                    },
+                    0,
                   ],
                 },
-                0,
+                { $size: "$newCards" },
               ],
             },
           },

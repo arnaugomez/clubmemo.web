@@ -17,7 +17,9 @@ declare module global {
   let openaiClient: OpenAI;
 }
 
-export class AiNotesGeneratorServiceImpl implements AiNotesGeneratorService {
+export class AiNotesGeneratorServiceOpenaiImpl
+  implements AiNotesGeneratorService
+{
   private readonly client: OpenAI;
   constructor(
     envService: EnvService,
