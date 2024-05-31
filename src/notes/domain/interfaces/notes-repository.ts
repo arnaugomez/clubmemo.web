@@ -47,7 +47,7 @@ export interface NotesRepository {
   update(input: UpdateNoteInputModel): Promise<void>;
 
   /**
-   * Deletes a note permanently
+   * Deletes a note permanently. Also deletes all its associated practice cards.
    *
    * @param noteId The id of the note to delete
    */

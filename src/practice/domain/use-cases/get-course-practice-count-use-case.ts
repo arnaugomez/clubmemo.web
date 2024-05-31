@@ -3,6 +3,12 @@ import type { PracticeCardsRepository } from "../interfaces/practice-cards-repos
 import type { ReviewLogsRepository } from "../interfaces/review-logs-repository";
 import { CoursePracticeCountModel } from "../models/course-practice-count-model";
 
+/**
+ * Gets the number of due cards and new cards that a user should practice for
+ * a course
+ * @param courseEnrollment The course enrollment of the user
+ * @returns The number of due cards and new cards that the user should practice
+ */
 export class GetCoursePracticeCountUseCase {
   constructor(
     private readonly practiceCardsRepository: PracticeCardsRepository,

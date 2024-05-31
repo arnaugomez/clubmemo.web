@@ -8,6 +8,17 @@ import type { NoteModel } from "../models/note-model";
 import { NoteDoesNotExistError } from "../models/notes-errors";
 import type { UpdateNoteInputModel } from "../models/update-note-input-model";
 
+/**
+ * Updates a note of a course
+ * @param input The input data to update a note, including the note id, and the
+ * new note content
+ * @throws {ProfileDoesNotExistError} When the user is not logged in
+ * @throws {CourseDoesNotExistError} When the course does not exist
+ * @throws {NoteDoesNotExistError} When the note does not exist
+ * @throws {NoPermissionError} When the user does not have permission to edit
+ * the note
+ * @returns The updated note
+ */
 export class UpdateNoteUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
@@ -15,6 +26,15 @@ export class UpdateNoteUseCase {
     private readonly notesRepository: NotesRepository,
   ) {}
 
+  /**
+   * Updates a note of a course
+   * @param input The input data to update a note, including the note id, and the new note content
+   * @throws {ProfileDoesNotExistError} When the user is not logged in
+   * @throws {CourseDoesNotExistError} When the course does not exist
+   * @throws {NoteDoesNotExistError} When the note does not exist
+   * @throws {NoPermissionError} When the user does not have permission to edit the note
+   * @returns The updated note
+   */
   async execute(input: UpdateNoteInputModel): Promise<NoteModel | null> {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();

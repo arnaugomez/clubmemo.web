@@ -8,6 +8,26 @@ import type { ReviewLogsRepository } from "../interfaces/review-logs-repository"
 import type { PracticeCardModel } from "../models/practice-card-model";
 import type { ReviewLogModel } from "../models/review-log-model";
 
+/**
+ * Practices a card for a course, and logs the review and its result
+ *
+ * A new card is created if the card is new, or the card is updated if it
+ * already existed.
+ *
+ * A new review log is created and stored in the persistence layer.
+ *
+ * The newly created card and review log are returned.
+ *
+ * @param input The input data to practice a card, including the course id, the
+ * card data, and the review log data
+ * @throws {ProfileDoesNotExistError} When the user is not logged in
+ * @throws {CourseDoesNotExistError} When the course does not exist
+ * @throws {NoPermissionError} When the user does not have permission to
+ * practice the course. This happens when the profile cannot view the course
+ * (because it is private), when the profile is not enrolled in the course, and
+ * when the card does not belong to the profile.
+ * @returns The new card data and the new review log data.
+ */
 export class PracticeUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
@@ -38,6 +58,7 @@ export class PracticeUseCase {
       throw new NoPermissionError();
     }
 
+    // Create a new card or update it if it already exists
     const newCard =
       (await (card.isNew
         ? this.cardsRepository.create(card)

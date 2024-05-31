@@ -9,6 +9,18 @@ import type { AuthService } from "../interfaces/auth-service";
 import type { ForgotPasswordTokensRepository } from "../interfaces/forgot-password-tokens-repository";
 import type { UsersRepository } from "../interfaces/users-repository";
 
+/**
+ * Sets a new password for the user.
+ *
+ * Before setting the new password, it checks if the user exists and if the
+ * forgot password token is valid.
+ * - If the user does not exist, it throws `UserDoesNotExistError`.
+ * - If the token is invalid, it throws `NoPermissionError`.
+ * - If the token has expired, it throws `ForgotPasswordCodeExpiredError`.
+ *
+ * If everything is correct, it sets the new password and invalidates all other
+ * user sessions for security reasons.
+ */
 export class ResetPasswordUseCase {
   constructor(
     private readonly ipService: IpService,
@@ -18,6 +30,18 @@ export class ResetPasswordUseCase {
     private readonly forgotPasswordTokensRepository: ForgotPasswordTokensRepository,
   ) {}
 
+  /**
+   * Sets a new password for the user.
+   *
+   * Before setting the new password, it checks if the user exists and if the
+   * forgot password token is valid.
+   * - If the user does not exist, it throws `UserDoesNotExistError`.
+   * - If the token is invalid, it throws `NoPermissionError`.
+   * - If the token has expired, it throws `ForgotPasswordCodeExpiredError`.
+   *
+   * If everything is correct, it sets the new password and invalidates all other
+   * user sessions for security reasons.
+   */
   async execute(input: ResetPasswordInputModel) {
     const ip = await this.ipService.getIp();
     const rateLimitKey = `ResetPasswordUseCase/${ip}`;

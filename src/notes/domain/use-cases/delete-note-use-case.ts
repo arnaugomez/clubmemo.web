@@ -6,10 +6,12 @@ import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-
 import type { NotesRepository } from "../interfaces/notes-repository";
 import { NoteDoesNotExistError } from "../models/notes-errors";
 
-interface DeleteNoteUseCaseInputModel {
-  noteId: string;
-}
-
+/**
+ * Deletes a note permanently, removing it from the course. It
+ * also deletes all the practice cards of that note.
+ *
+ * @input The input data to delete a note, including the note id
+ */
 export class DeleteNoteUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
@@ -33,4 +35,8 @@ export class DeleteNoteUseCase {
 
     await this.notesRepository.delete(noteId);
   }
+}
+
+interface DeleteNoteUseCaseInputModel {
+  noteId: string;
 }

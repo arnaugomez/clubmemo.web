@@ -7,6 +7,13 @@ import type { AuthService } from "../interfaces/auth-service";
 import type { UsersRepository } from "../interfaces/users-repository";
 import type { GetSessionUseCase } from "./get-session-use-case";
 
+/**
+ * Deletes a user account. Before deleting the account, it checks if the
+ * password is correct and if the confirmation text matches the user's email.
+ * It deletes the user's profile and the user itself.
+ *
+ * @param param0 The user's password and the confirmation email
+ */
 export class DeleteUserUseCase {
   constructor(
     private readonly getSessionUseCase: GetSessionUseCase,
@@ -15,6 +22,13 @@ export class DeleteUserUseCase {
     private readonly profilesRepository: ProfilesRepository,
   ) {}
 
+  /**
+   * Deletes a user account. Before deleting the account, it checks if the
+   * password is correct and if the confirmation text matches the user's email.
+   * It deletes the user's profile and the user itself.
+   *
+   * @param param0 The user's password and the confirmation email
+   */
   async execute({
     password,
     confirmation,
