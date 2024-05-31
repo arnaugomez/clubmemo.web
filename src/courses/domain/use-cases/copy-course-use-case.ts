@@ -6,6 +6,18 @@ import type { CoursesRepository } from "../interfaces/courses-repository";
 import { CourseDoesNotExistError } from "../models/course-errors";
 import type { CourseModel } from "../models/course-model";
 
+/**
+ * Creates a copy of a course and assigns it to the profile of the current user (the one
+ * that is logged in).
+ *
+ * Not only is the data of the course copied, but also the notes that belong to the course.
+ * The new course and notes are independent from the original ones, so changes in the original
+ * course or notes do not affect the new ones.
+ *
+ * @throws {ProfileDoesNotExistError} When the user is not logged in
+ * @throws {CourseDoesNotExistError} When the course does not exist
+ * @throws {NoPermissionError} When the user does not have permission to view the course
+ */
 export class CopyCourseUseCase {
   constructor(
     private readonly coursesRepository: CoursesRepository,
@@ -13,6 +25,20 @@ export class CopyCourseUseCase {
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
   ) {}
 
+  /**
+   * Creates a copy of a course and assigns it to the profile of the current user (the one
+   * that is logged in).
+   *
+   * Not only is the data of the course copied, but also the notes that belong to the course.
+   * The new course and notes are independent from the original ones, so changes in the original
+   * course or notes do not affect the new ones.
+   *
+   * @param courseId The id of the course to copy
+   * @returns The new course that was created
+   * @throws {ProfileDoesNotExistError} When the user is not logged in
+   * @throws {CourseDoesNotExistError} When the course does not exist
+   * @throws {NoPermissionError} When the user does not have permission to view the course
+   */
   async execute(courseId: string): Promise<CourseModel> {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();

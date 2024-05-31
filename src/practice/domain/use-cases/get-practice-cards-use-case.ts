@@ -4,6 +4,14 @@ import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import type { PracticeCardsRepository } from "../interfaces/practice-cards-repository";
 import type { ReviewLogsRepository } from "../interfaces/review-logs-repository";
 
+/**
+ * Gets a list of the practice cards that the user should practice in the next
+ * practice session
+ * @param input The course and the enrollment of the current profile to that
+ * course
+ * @returns A list of practice cards that should be practiced in the next
+ * practice session.
+ */
 export class GetPracticeCardsUseCase {
   constructor(
     private readonly reviewLogsRepository: ReviewLogsRepository,
@@ -16,7 +24,7 @@ export class GetPracticeCardsUseCase {
     const reviewsOfNewCardsCountPromise =
       this.reviewLogsRepository.getReviewsOfNewCardsCount(courseEnrollmentId);
     const cardsPerSessionCount = enrollment.config.cardsPerSessionCount;
-    const newCardsPromise = this.practiceCardsRepository.getUnpracticed({
+    const newCardsPromise = this.practiceCardsRepository.getNew({
       courseEnrollmentId,
       courseId: course.id,
       limit: cardsPerSessionCount,

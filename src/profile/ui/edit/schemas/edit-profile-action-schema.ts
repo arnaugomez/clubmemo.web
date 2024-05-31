@@ -1,6 +1,9 @@
 import { z } from "@/i18n/zod";
 import { HandleSchema } from "@/src/common/schemas/handle-schema";
 
+/**
+ * Validates the parameters of `editProfileAction`
+ */
 export const EditProfileActionSchema = z.object({
   displayName: z.string().trim().min(1).max(50),
   handle: HandleSchema,

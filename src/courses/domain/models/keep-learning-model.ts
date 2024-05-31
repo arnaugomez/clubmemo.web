@@ -8,6 +8,10 @@ export interface KeepLearningModelData {
   newCount: number;
 }
 
+/**
+ * A recommendation of a course that the user should keep practicing,
+ * because there are due or new cards to review.
+ */
 export class KeepLearningModel {
   constructor(readonly data: KeepLearningModelData) {}
 

@@ -1,3 +1,7 @@
+/**
+ * The type of notes created by the AI generator: question and answer, lists to
+ * memorize, definitions of concepts, etc.
+ */
 export enum AiGeneratorNoteType {
   /** A note that contains a question and an answer */
   qa = "qa",

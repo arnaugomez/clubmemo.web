@@ -12,6 +12,10 @@ export interface CourseDoc {
   isPublic: boolean;
   tags?: string[];
 }
+
+/**
+ * Collection of MongoDB documents of type `CourseDoc`
+ */
 export const coursesCollection = collection<CourseDoc>("courses");
 
 export class CourseDocTransformer {

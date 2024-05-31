@@ -7,6 +7,9 @@ export interface EnrolledCourseListItemModelData {
   newCount: number;
 }
 
+/**
+ * A list item containing the data of an enrolled course.
+ */
 export class EnrolledCourseListItemModel {
   constructor(readonly data: EnrolledCourseListItemModelData) {}
 

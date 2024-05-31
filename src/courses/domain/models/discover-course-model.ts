@@ -6,6 +6,9 @@ export interface DiscoverCourseModelData {
   tags?: string[];
 }
 
+/**
+ * Contains the data of a course, as a result of a query to search courses
+ */
 export class DiscoverCourseModel {
   constructor(readonly data: DiscoverCourseModelData) {}
 

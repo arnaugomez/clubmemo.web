@@ -7,6 +7,15 @@ import type { NotesRepository } from "../interfaces/notes-repository";
 import type { CreateNoteInputModel } from "../models/create-note-input-model";
 import type { NoteModel } from "../models/note-model";
 
+/**
+ * Creates a new note for a course
+ *
+ * @input The input data to create a note, including the course id, and the note content
+ * @returns The created note
+ *
+ * @throws {ProfileDoesNotExistError} When the user is not logged in
+ * @throws {CourseDoesNotExistError} When the course does not exist
+ */
 export class CreateNoteUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
@@ -14,6 +23,16 @@ export class CreateNoteUseCase {
     private readonly notesRepository: NotesRepository,
   ) {}
 
+  /**
+   * Creates a new note for a course
+   *
+   * @input The input data to create a note, including the course id, and the
+   * note content
+   * @returns The created note
+   *
+   * @throws {ProfileDoesNotExistError} When the user is not logged in
+   * @throws {CourseDoesNotExistError} When the course does not exist
+   */
   async execute(input: CreateNoteInputModel): Promise<NoteModel> {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();

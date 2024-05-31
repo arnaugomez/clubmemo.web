@@ -19,7 +19,9 @@ export interface EnvService {
   /** Whether to use a fake of the OpenAI API to save money */
   readonly fakeOpenAiApi: boolean;
 
+  /** The AWS region code of the S3 bucket */
   readonly awsRegion: string;
 
+  /** The unique identifier of the AWS S3 bucket */
   readonly awsBucketName: string;
 }

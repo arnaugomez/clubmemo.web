@@ -30,6 +30,14 @@ interface NewPracticeCardInput {
   provisionalId: number;
 }
 
+/**
+ * A practice card for a note.
+ *
+ * Practice cards keep track of the learner's progress in memorizing a certain
+ * note. The card is a relationship between a note and a course enrollment. It
+ * contains the data of the learner's progress, such as the next time the
+ * learner should practice the note, the number of previous practices, etc.
+ */
 export class PracticeCardModel {
   constructor(readonly data: PracticeCardModelData) {}
 

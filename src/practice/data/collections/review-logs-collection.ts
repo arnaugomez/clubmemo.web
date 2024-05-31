@@ -19,6 +19,9 @@ export interface ReviewLogDoc {
   review: Date;
 }
 
+/**
+ * Collection of MongoDB documents of type `ReviewLogDoc`
+ */
 export const reviewLogsCollection = collection<ReviewLogDoc>("reviewLogs");
 
 export class ReviewLogDocTransformer {

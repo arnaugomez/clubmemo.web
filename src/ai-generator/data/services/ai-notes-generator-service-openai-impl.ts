@@ -14,13 +14,26 @@ import { AiGeneratorNoteType } from "../../domain/models/ai-generator-note-type"
 import { AiNotesGeneratorSourceType } from "../../domain/models/ai-notes-generator-source-type";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare module global {
+  /**
+   * Singleton instance of the OpenAI client. Avoids creating multiple instances
+   * of the client when the app hot reloads.
+   */
   let openaiClient: OpenAI;
 }
 
+/**
+ * Implementation of AiNotesGeneratorService using the gpt-3.5-turbo-0125
+ * model. It communicates with the model using the OpenAI SDK, which makes
+ * requests to the OpenAI API.
+ */
 export class AiNotesGeneratorServiceOpenaiImpl
   implements AiNotesGeneratorService
 {
+  /**
+   * OpenAI client instance used to communicate with the AI
+   */
   private readonly client: OpenAI;
+
   constructor(
     envService: EnvService,
     private readonly errorTrackingService: ErrorTrackingService,
@@ -30,6 +43,7 @@ export class AiNotesGeneratorServiceOpenaiImpl
     });
     this.client = global.openaiClient;
   }
+
   async generate({
     text,
     noteTypes,
@@ -46,6 +60,7 @@ export class AiNotesGeneratorServiceOpenaiImpl
       sourceType === AiNotesGeneratorSourceType.topic ? "topic" : "text";
 
     try {
+      // This promise might take more than 10 seconds to resolve. Therefore, make sure the server is configured to handle long requests and not throw a timeout error.
       const completion = await this.client.chat.completions.create({
         messages: [
           {
@@ -84,6 +99,15 @@ The language of the flashcards should be the language of the ${textOrTopic} prov
     }
   }
 
+  /**
+   * Analyzes the response from the AI, in search of a list of flashcards.
+   * Because the response from the AI cannot be predicted, this method
+   * traverses the response object to find the flashcards.
+   *
+   * @param response a JSON object with the response from the AI
+   * @returns an array of flashcards, where each flashcard is an array with two strings: the question and the answer
+   * @throws `AiGeneratorEmptyMessageError` if the response does not contain the expected data
+   */
   private parseResponse(response: unknown): string[][] {
     if (!response) {
       throw new AiGeneratorEmptyMessageError();

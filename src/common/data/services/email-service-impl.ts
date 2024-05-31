@@ -2,6 +2,9 @@ import { Resend } from "resend";
 import type { EmailService } from "../../domain/interfaces/email-service";
 import type { EnvService } from "../../domain/interfaces/env-service";
 
+/**
+ * Implementation of `EmailService` using the Resend SDK
+ */
 export class EmailServiceImpl implements EmailService {
   private readonly resend;
   constructor(private readonly envService: EnvService) {
@@ -34,7 +37,7 @@ export class EmailServiceImpl implements EmailService {
       html: `
       <div>
         <h1>¿Has olvidado tu contraseña?</h1>
-        <p>No te preocupes. Recupera tu cuenta haciendo clic en en este <a href="${url}"><strong>enlace de recuperación</strong></a>.</p> 
+        <p>No te preocupes. Recupera tu cuenta haciendo clic en en este <a href="${url}"><strong>enlace de recuperación</strong></a>.</p>
       </div>
       `,
     });

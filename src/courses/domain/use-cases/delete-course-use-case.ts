@@ -6,13 +6,33 @@ import {
   CourseDoesNotExistError,
 } from "../models/course-errors";
 
+/**
+ * Deletes a course permanently
+ *
+ * @param courseId The id of the course to delete
+ * @throws {ProfileDoesNotExistError} When the user is not logged in
+ * @throws {CourseDoesNotExistError} When the course does not exist
+ * @throws {CannotDeleteCourseError} When the course cannot be deleted because
+ * the profile does not have permission to do so
+ */
 export class DeleteCourseUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly coursesRepository: CoursesRepository,
   ) {}
 
-  async execute(courseId: string) {
+  /**
+   * Deletes a course permanently. Also deletes
+   * - Enrollments
+   * - Permissions
+   *
+   * @param courseId The id of the course to delete
+   * @throws {ProfileDoesNotExistError} When the user is not logged in
+   * @throws {CourseDoesNotExistError} When the course does not exist
+   * @throws {CannotDeleteCourseError} When the course cannot be deleted because
+   * the profile does not have permission to do so
+   */
+  async execute(courseId: string): Promise<void> {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();
 
@@ -23,5 +43,6 @@ export class DeleteCourseUseCase {
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canDelete) throw new CannotDeleteCourseError();
     await this.coursesRepository.delete(courseId);
+    // TODO: Delete course notes, cards and other related data
   }
 }

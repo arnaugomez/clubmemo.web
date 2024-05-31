@@ -6,6 +6,12 @@ import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/r
 import type { AuthService } from "../interfaces/auth-service";
 import type { EmailVerificationCodesRepository } from "../interfaces/email-verification-codes-repository";
 
+/**
+ * Creates a new user account.
+ *
+ * Creates a new user and a new profile. Sends an email with a verification code
+ * to the user's email address. Finally, it sets the session cookie in the server response.
+ */
 export class SignupUseCase {
   constructor(
     private readonly ipService: IpService,
@@ -17,9 +23,15 @@ export class SignupUseCase {
     private readonly cookieService: CookieService,
   ) {}
 
+  /**
+   * Creates a new user account.
+   *
+   * Creates a new user and a new profile. Sends an email with a verification code
+   * to the user's email address. Finally, it sets the session cookie in the server response.
+   */
   async execute(input: SignupInputModel) {
     const ip = await this.ipService.getIp();
-    const rateLimitKey = `signupAction/${ip}`;
+    const rateLimitKey = `SignupUseCase/${ip}`;
 
     await this.rateLimitsRepository.check(rateLimitKey, 40);
 

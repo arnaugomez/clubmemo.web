@@ -7,11 +7,19 @@ import { aiGeneratorLocator } from "../../ai-generator-locator";
 import type { GenerateAiNotesConfirmActionModel } from "../schemas/generate-ai-notes-confirm-action-schema";
 import { GenerateAiNotesConfirmActionSchema } from "../schemas/generate-ai-notes-confirm-action-schema";
 
+/**
+ * Approves the AI-generated notes and adds them to the course so that the user
+ * can practice them later
+ *
+ * @param input Data containing the course id and a list of notes to add to the
+ * course
+ * @returns A success response or an error
+ */
 export async function generateAiNotesConfirmAction(
-  data: GenerateAiNotesConfirmActionModel,
+  input: GenerateAiNotesConfirmActionModel,
 ) {
   try {
-    const parsed = GenerateAiNotesConfirmActionSchema.parse(data);
+    const parsed = GenerateAiNotesConfirmActionSchema.parse(input);
 
     const useCase = await aiGeneratorLocator.GenerateAiNotesConfirmUseCase();
     await useCase.execute(parsed);

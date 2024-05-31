@@ -7,6 +7,11 @@ interface CoursePermissionModelData {
   permissionType: CoursePermissionTypeModel;
 }
 
+/**
+ * A permission to view, edit, delete a course.
+ * There are different types of permissions, defined in the `CoursePermissionTypeModel` enum.
+ * @see CoursePermissionTypeModel
+ */
 export class CoursePermissionModel {
   constructor(private readonly data: CoursePermissionModelData) {}
 

@@ -5,6 +5,12 @@ import { ProfileDoesNotExistError } from "../errors/profile-errors";
 import type { UpdateProfileInputModel } from "../models/update-profile-input-model";
 import type { GetMyProfileUseCase } from "./get-my-profile-use-case";
 
+/**
+ * Edits the data of the profile of the currently logged in user
+ *
+ * @param input The data of the profile that will be changed
+ * @throws {ProfileDoesNotExistError} When the user is not logged in
+ */
 export class UpdateProfileUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,

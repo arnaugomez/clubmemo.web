@@ -12,6 +12,9 @@ import {
   forgotPasswordTokensCollection,
 } from "../collections/forgot-password-tokens-collection";
 
+/**
+ * Implementation of `ForgotPasswordTokensRepository` with the MongoDB database
+ */
 export class ForgotPasswordTokensRepositoryImpl
   implements ForgotPasswordTokensRepository
 {
@@ -21,7 +24,7 @@ export class ForgotPasswordTokensRepositoryImpl
   }
 
   async generate(userId: string): Promise<string> {
-    await this.collection.deleteMany({ userId: new ObjectId(userId) });
+    await this.delete(userId);
     const token = generateRandomString(24, alphabet("a-z", "0-9"));
     const doc = {
       userId: new ObjectId(userId),
@@ -45,10 +48,10 @@ export class ForgotPasswordTokensRepositoryImpl
   }
 
   async delete(userId: string): Promise<void> {
-    await this.collection.deleteOne({ userId: new ObjectId(userId) });
+    await this.collection.deleteMany({ userId: new ObjectId(userId) });
   }
 
-  async hashToken(token: string) {
+  private async hashToken(token: string) {
     return encodeHex(await sha256(new TextEncoder().encode(token)));
   }
 }

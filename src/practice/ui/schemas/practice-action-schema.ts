@@ -3,6 +3,9 @@ import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 
+/**
+ * Validates the values of the `PracticeCardStateModel` enum
+ */
 const PracticeCardStateModelSchema = z.enum([
   PracticeCardStateModel.learning,
   PracticeCardStateModel.new,
@@ -10,6 +13,9 @@ const PracticeCardStateModelSchema = z.enum([
   PracticeCardStateModel.review,
 ]);
 
+/**
+ * Validates the parameters of `practiceAction`
+ */
 export const PracticeActionSchema = z.object({
   courseId: ObjectIdSchema,
   card: z.object({
@@ -55,4 +61,7 @@ export const PracticeActionSchema = z.object({
   }),
 });
 
+/**
+ * Parameters of `practiceAction`
+ */
 export type PracticeActionModel = z.infer<typeof PracticeActionSchema>;

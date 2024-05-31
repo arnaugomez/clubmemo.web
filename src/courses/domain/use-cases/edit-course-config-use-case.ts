@@ -6,11 +6,34 @@ import type {
 } from "../interfaces/course-enrollments-repository";
 import { EnrollmentDoesNotExistError } from "../models/enrollment-errors";
 
+/**
+ * Changes the configuration of a course enrollment. This way, the user can
+ * configure the parameters of the practice algorithm.
+ *
+ * @param input The input data to update the configuration of the course
+ * enrollment, including the enrollment id and the new configuration
+ *
+ * @throws {EnrollmentDoesNotExistError} When the enrollment does not exist
+ * @throws {NoPermissionError} When the configuration does not belong to the
+ * current user's profile.
+ */
 export class EditCourseConfigUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly courseEnrollmentsRepository: CourseEnrollmentsRepository,
   ) {}
+
+  /**
+   * Changes the configuration of a course enrollment. This way, the user can
+   * configure the parameters of the practice algorithm.
+   *
+   * @param input The input data to update the configuration of the course
+   * enrollment, including the enrollment id and the new configuration
+   *
+   * @throws {EnrollmentDoesNotExistError} When the enrollment does not exist
+   * @throws {NoPermissionError} When the user does not have permission to edit
+   * the configuration
+   */
   async execute(input: UpdateCourseEnrollmentConfigInputModel): Promise<void> {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new NoPermissionError();
