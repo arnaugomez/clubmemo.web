@@ -51,7 +51,7 @@ type MyLucia = Lucia<
 export class AuthServiceImpl implements AuthService {
   private readonly lucia: MyLucia;
 
-  private readonly usersCollection: Collection<UserDoc>;
+  private readonly usersCollection: typeof usersCollection.type;
 
   constructor(
     private readonly envService: EnvService,
