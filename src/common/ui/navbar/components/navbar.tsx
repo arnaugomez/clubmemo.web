@@ -12,7 +12,7 @@ export function Navbar() {
       <nav className="fixed inset-x-0 top-0 z-10 flex h-16 items-center justify-between border-b-[1px] border-slate-200 bg-white px-6">
         <NavbarLogo />
 
-        <div className="flex items-center space-x-8">
+        <div className="flex items-center space-x-4 sm:space-x-8">
           <Suspense>
             <NavbarLinks />
           </Suspense>

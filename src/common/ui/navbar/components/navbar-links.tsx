@@ -8,9 +8,11 @@ export async function NavbarLinks() {
 
 export function NavbarLinksLoaded() {
   return (
-    <span className="hidden space-x-4 sm:inline">
+    <span className="space-x-4">
       <NavbarLink href="/learn">Aprender</NavbarLink>
-      <NavbarLink href="/discover">Descubrir</NavbarLink>
+      <NavbarLink className="hidden sm:inline" href="/discover">
+        Descubrir
+      </NavbarLink>
     </span>
   );
 }
