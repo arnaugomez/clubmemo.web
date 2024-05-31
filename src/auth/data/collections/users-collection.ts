@@ -4,6 +4,10 @@ import type { WithId } from "mongodb";
 import { UserModel } from "../../domain/models/user-model";
 
 export interface UserDoc extends RegisteredDatabaseUserAttributes {}
+
+/**
+ * Collection of MongoDB documents of type `UserDoc`
+ */
 export const usersCollection = collection<UserDoc>("users");
 
 export class UserDocTransformer {

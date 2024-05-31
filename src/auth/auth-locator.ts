@@ -10,6 +10,9 @@ import type { ResetPasswordUseCase } from "./domain/use-cases/reset-password-use
 import type { SignupUseCase } from "./domain/use-cases/signup-use-case";
 import type { VerifyEmailUseCase } from "./domain/use-cases/verify-email-use-case";
 
+/**
+ * Service locator for the auth module
+ */
 interface AuthLocator {
   GetSessionUseCase: Dependency<GetSessionUseCase>;
   LoginWithPasswordUseCase: Lazy<LoginWithPasswordUseCase>;
@@ -22,6 +25,9 @@ interface AuthLocator {
   VerifyEmailUseCase: Lazy<VerifyEmailUseCase>;
 }
 
+/**
+ * Service locator for the auth module
+ */
 export const authLocator: AuthLocator = {
   GetSessionUseCase() {
     return new GetSessionUseCase(

@@ -11,6 +11,9 @@ export interface NoteDoc {
   createdAt: Date;
 }
 
+/**
+ * Collection of MongoDB documents of type `NoteDoc`
+ */
 export const notesCollection = collection<NoteDoc>("notes");
 
 const window = new JSDOM("").window;

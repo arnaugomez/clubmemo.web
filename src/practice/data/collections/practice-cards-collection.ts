@@ -20,6 +20,9 @@ export interface PracticeCardDoc {
   lastReview?: Date;
 }
 
+/**
+ * Collection of MongoDB documents of type `PracticeCardDoc`
+ */
 export const practiceCardsCollection =
   collection<PracticeCardDoc>("practiceCards");
 

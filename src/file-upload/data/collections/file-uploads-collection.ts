@@ -1,6 +1,6 @@
 import { collection } from "@/src/common/data/utils/mongo";
 
-export interface FileUploadsCollection {
+export interface FileUploadDoc {
   key: string;
   keyPrefix: string;
   count: number;
@@ -9,5 +9,7 @@ export interface FileUploadsCollection {
   createdAt: Date;
 }
 
-export const fileUploadsCollection =
-  collection<FileUploadsCollection>("fileUploads");
+/**
+ * Collection of MongoDB documents of type `FileUploadDoc`
+ */
+export const fileUploadsCollection = collection<FileUploadDoc>("fileUploads");

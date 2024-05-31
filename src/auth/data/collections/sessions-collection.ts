@@ -8,6 +8,9 @@ export interface SessionDoc {
   user_id: ObjectId;
 }
 
+/**
+ * Collection of MongoDB documents of type `SessionDoc`
+ */
 export const sessionsCollection = collection<SessionDoc>("sessions");
 
 export class SessionTransformer {

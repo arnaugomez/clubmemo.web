@@ -14,6 +14,9 @@ export interface ProfileDoc {
   tags?: string[];
 }
 
+/**
+ * Collection of MongoDB documents of type `ProfileDoc`
+ */
 export const profilesCollection = collection<ProfileDoc>("profiles");
 
 export class ProfileDocTransformer {
