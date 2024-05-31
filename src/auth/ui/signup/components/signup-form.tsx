@@ -19,6 +19,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 const SignupFormSchema = z.object({
   email: EmailSchema,
@@ -43,7 +44,7 @@ export function SignupForm() {
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

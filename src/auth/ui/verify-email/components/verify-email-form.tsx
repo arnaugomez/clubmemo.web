@@ -14,6 +14,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { useEffect, useRef } from "react";
 import { logoutAction } from "../../actions/logout-action";
 import { verifyEmailAction } from "../actions/verify-email-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 const FormSchema = z.object({
   code: z.string().length(6),
@@ -37,7 +38,7 @@ export function VerifyEmailForm() {
       if (!handler.hasErrors) waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

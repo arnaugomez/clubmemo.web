@@ -15,6 +15,7 @@ import Link from "next/link";
 import { Suspense, lazy, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { resetPasswordAction } from "../actions/reset-password-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 const ResetPasswordConfirmDialog = lazy(async () => {
   const file = await import("./reset-password-confirm-dialog");
@@ -71,7 +72,7 @@ export function ResetPasswordForm({ email, token }: Props) {
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

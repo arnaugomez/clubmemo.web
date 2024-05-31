@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { copyCourseAction } from "../actions/copy-course-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 interface CopyCourseDialogProps {
   course: CourseModel;
@@ -41,7 +42,7 @@ export function CopyCourseDialog({ course, onClose }: CopyCourseDialogProps) {
       }
       handler.toastErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       toast.error("Error al copiar el curso");
     }
     setIsLoading(false);

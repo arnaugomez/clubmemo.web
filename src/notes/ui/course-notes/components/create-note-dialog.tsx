@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createNoteAction } from "../actions/create-note-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 interface CreateNoteDialogProps {
   courseId: string;
@@ -54,7 +55,7 @@ export function CreateNoteDialog({
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

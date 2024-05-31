@@ -13,6 +13,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { toast } from "sonner";
 import { unenrollCourseAction } from "../actions/unenroll-course-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 interface unenrollCourseDialogProps {
   course: CourseModel;
@@ -33,7 +34,7 @@ export function UnenrollCourseDialog({
       }
       handler.toastErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       toast.error("Error al desapuntarse del curso");
     }
   }

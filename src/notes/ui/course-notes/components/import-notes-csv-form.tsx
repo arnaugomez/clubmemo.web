@@ -5,6 +5,7 @@ import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-glo
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { ImportNotesTypeModel } from "@/src/notes/domain/models/import-note-type-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
@@ -13,7 +14,7 @@ import { FileSpreadsheet } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { importNotesAction } from "../actions/import-notes-action";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 interface ImportNotesCsvFormProps {
   courseId: string;
@@ -54,7 +55,7 @@ export function ImportNotesCsvForm({
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
     setIsLoading(false);

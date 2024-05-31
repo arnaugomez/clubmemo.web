@@ -11,13 +11,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editNoteAction } from "../actions/edit-note-action";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 const EditNoteSchema = z.object({
   front: z.string().min(1).max(1000),
@@ -54,7 +55,7 @@ export function EditNoteDialog({
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });
