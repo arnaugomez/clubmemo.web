@@ -68,6 +68,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     this.courseEnrollments.createIndex({ profileId: 1 });
     this.courseEnrollments.createIndex({ profileId: 1, isFavorite: 1 });
   }
+
   async create(input: CreateCourseInputModel): Promise<CourseModel> {
     const insertedCourse = {
       name: input.name,

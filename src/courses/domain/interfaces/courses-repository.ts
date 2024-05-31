@@ -36,8 +36,11 @@ export interface CoursesRepository {
    * @param input The new data of the course
    */
   update(input: UpdateCourseInputModel): Promise<void>;
+
   /**
-   * Deletes a course permanently
+   * Deletes a course permanently. Also deletes:
+   * - Enrollments
+   * - Permissions
    *
    * @param id The id of the course to delete
    */

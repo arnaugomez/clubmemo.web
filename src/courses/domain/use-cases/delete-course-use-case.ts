@@ -22,7 +22,9 @@ export class DeleteCourseUseCase {
   ) {}
 
   /**
-   * Deletes a course permanently
+   * Deletes a course permanently. Also deletes
+   * - Enrollments
+   * - Permissions
    *
    * @param courseId The id of the course to delete
    * @throws {ProfileDoesNotExistError} When the user is not logged in
