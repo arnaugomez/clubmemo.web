@@ -1,6 +1,9 @@
 import { z } from "@/i18n/zod";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
+/**
+ * Validates the parameters of `createNoteAction`
+ */
 export const CreateNoteActionSchema = z.object({
   courseId: ObjectIdSchema,
   front: z.string().min(1).max(1000),

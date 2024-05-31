@@ -6,17 +6,18 @@ import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import type { GenerateAiNotesActionModel } from "../schemas/generate-ai-notes-action-schema";
 import { GenerateAiNotesActionSchema } from "../schemas/generate-ai-notes-action-schema";
 
+/**
+ * Creates a list of notes automatically with the AI generator.
+ *
+ * @param input Parameters to fine-tune the AI notes generation process
+ * @returns A list of generated notes or an error
+ */
 export async function generateAiNotesAction(input: GenerateAiNotesActionModel) {
   try {
     const parsed = GenerateAiNotesActionSchema.parse(input);
 
     const useCase = await aiGeneratorLocator.GenerateAiNotesUseCase();
-    const result = await useCase.execute({
-      text: parsed.text,
-      noteTypes: parsed.noteTypes,
-      notesCount: parsed.notesCount,
-      sourceType: parsed.sourceType,
-    });
+    const result = await useCase.execute(parsed);
 
     return ActionResponse.formSuccess(result);
   } catch (e) {

@@ -5,10 +5,6 @@ import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-er
 import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
 
-/**
- * Creates a list of AI-generated notes that the user can add to the course.
- * This use case is rate-limited to 50 requests/profile-day.
- */
 export class GenerateAiNotesUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,

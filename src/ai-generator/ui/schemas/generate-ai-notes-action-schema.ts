@@ -2,6 +2,9 @@ import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
 
+/**
+ * Validates the parameters of `generateAiNotesAction`
+ */
 export const GenerateAiNotesActionSchema = z.object({
   sourceType: z.union([
     z.literal(AiNotesGeneratorSourceType.file),
@@ -21,6 +24,9 @@ export const GenerateAiNotesActionSchema = z.object({
   notesCount: z.number().int().positive(),
 });
 
+/**
+ * Parameters of `generateAiNotesAction`
+ */
 export type GenerateAiNotesActionModel = z.infer<
   typeof GenerateAiNotesActionSchema
 >;

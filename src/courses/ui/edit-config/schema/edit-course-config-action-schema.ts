@@ -2,6 +2,9 @@ import { z } from "@/i18n/zod";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { default_maximum_interval } from "ts-fsrs";
 
+/**
+ * Validates the parameters of `editCourseConfigAction`
+ */
 export const EditCourseConfigActionSchema = z.object({
   enrollmentId: ObjectIdSchema,
   enableFuzz: z.boolean(),
@@ -11,6 +14,9 @@ export const EditCourseConfigActionSchema = z.object({
   showAdvancedRatingOptions: z.boolean(),
 });
 
+/**
+ * Parameters of `editCourseConfigAction`
+ */
 export type EditCourseConfigActionModel = z.infer<
   typeof EditCourseConfigActionSchema
 >;
