@@ -10,7 +10,6 @@ import type {
   CoursesRepository,
   GetCoursesByAuthorInputModel,
   GetDiscoverCoursesInputModel,
-  GetHasCoursesInputModel,
   GetInterestingCoursesInputModel,
   GetMyCoursesInputModel,
   GetMyCoursesPaginationInputModel,
@@ -45,6 +44,9 @@ import { newCardsLookupPipelineStage } from "../pipelines/new-cards-lookup-pipel
 import { newCountProjectionQuery } from "../pipelines/new-count-projection-query";
 import { getReviewsOfNewCardsLookupPipelineStage } from "../pipelines/reviews-of-new-cards-lookup-pipeline-stage";
 
+/**
+ * Implementation of `CoursesRepository` with the MongoDB database
+ */
 export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly courses: typeof coursesCollection.type;
   private readonly coursePermissions: typeof coursePermissionsCollection.type;
@@ -241,11 +243,9 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     );
   }
 
-  async getHasCourses(input: GetHasCoursesInputModel) {
+  async getHasCourses(profileId: string) {
     const result = await this.courseEnrollments.findOne(
-      {
-        profileId: new ObjectId(input.profileId),
-      },
+      { profileId: new ObjectId(profileId) },
       { projection: { _id: 1 } },
     );
     return Boolean(result);
