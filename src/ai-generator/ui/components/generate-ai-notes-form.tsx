@@ -1,6 +1,7 @@
 import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
+import { clientLocator } from "@/src/common/di/client-locator";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import {
   CheckboxesFormField,
@@ -13,6 +14,7 @@ import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-glo
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
@@ -134,7 +136,7 @@ export function GenerateAiNotesForm({
       });
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors && handler.data) {
-        if (handler.data.length) {
+        if (handler.data?.length) {
           toast.success("Tarjetas generadas con éxito");
           onSuccess(handler.data);
         } else {
@@ -147,10 +149,11 @@ export function GenerateAiNotesForm({
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "@/i18n/zod";
+import { clientLocator } from "@/src/common/di/client-locator";
 import {
   InputFormField,
   PasswordInputFormField,
@@ -16,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
@@ -84,19 +86,21 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       confirmation: "",
     },
   });
-  async function onSubmit(data: FormValues) {
+  const onSubmit = form.handleSubmit(async function (data: FormValues) {
     try {
       const response = await deleteUserAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) router.push("/auth/signup");
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
-  }
+  });
+  useCommandEnter(onSubmit);
 
   const { isSubmitting } = form.formState;
+  const confirmation = form.watch("confirmation");
 
   return (
     <Dialog open>
@@ -112,7 +116,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={onSubmit}>
             <div>
               <PasswordInputFormField
                 label="Contraseña"
@@ -142,7 +146,10 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
               >
                 Volver
               </Button>
-              <FormSubmitButton variant="destructive">
+              <FormSubmitButton
+                disabled={confirmation !== email}
+                variant="destructive"
+              >
                 Eliminar mi usuario
               </FormSubmitButton>
             </DialogFooter>

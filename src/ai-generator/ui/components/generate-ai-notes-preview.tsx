@@ -88,7 +88,7 @@ export function GenerateAiNotesPreview({
         >
           Volver
         </Button>
-        <AsyncButton onClick={onClick}>Enviar</AsyncButton>
+        <AsyncButton onClick={onClick}>Añadir tarjetas al curso</AsyncButton>
       </DialogFooter>
     </>
   );

@@ -14,10 +14,12 @@ import {
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { signupAction } from "../actions/signup-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 const SignupFormSchema = z.object({
   email: EmailSchema,
@@ -33,21 +35,24 @@ export function SignupForm() {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof SignupFormSchema>) {
+  const onSubmit = form.handleSubmit(async function (
+    data: z.infer<typeof SignupFormSchema>,
+  ) {
     try {
       const response = await signupAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
-  }
+  });
+  useCommandEnter(onSubmit);
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-6">
         <InputFormField
           label="Correo electrónico"
           name="email"

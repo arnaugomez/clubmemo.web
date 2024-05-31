@@ -8,12 +8,14 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Suspense, lazy, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { resetPasswordAction } from "../actions/reset-password-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 const ResetPasswordConfirmDialog = lazy(async () => {
   const file = await import("./reset-password-confirm-dialog");
@@ -53,7 +55,9 @@ export function ResetPasswordForm({ email, token }: Props) {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  const onSubmit = form.handleSubmit(async function (
+    data: z.infer<typeof FormSchema>,
+  ) {
     try {
       const response = await resetPasswordAction({
         email,
@@ -68,15 +72,16 @@ export function ResetPasswordForm({ email, token }: Props) {
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
-  }
+  });
+  useCommandEnter(onSubmit);
 
   return (
     <>
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
           <PasswordInputFormField
             label="Contraseña"
             name="password"

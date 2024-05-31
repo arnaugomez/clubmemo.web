@@ -11,6 +11,7 @@ export class TagsRepositoryImpl implements TagsRepository {
     this.tags.createIndex({ name: 1 }, { unique: true });
   }
   async create(tags: string[]): Promise<void> {
+    if (!tags.length) return;
     try {
       await this.tags.insertMany(
         tags.map((name) => ({ name })),

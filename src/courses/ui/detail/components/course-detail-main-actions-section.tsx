@@ -1,6 +1,7 @@
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { CourseDetailEnrollSection } from "../../enroll/components/course-detail-enroll-section";
 import { CourseDetailPracticeButton } from "./course-detail-practice-button";
+import { CourseDetailPracticeButtonLoading } from "./course-detail-practice-button-loading";
 
 interface CourseDetailMainActionsSectionProps {
   course: CourseModel;
@@ -9,15 +10,10 @@ interface CourseDetailMainActionsSectionProps {
 export function CourseDetailMainActionsSection({
   course,
 }: CourseDetailMainActionsSectionProps) {
-  return (
-    <div className="min-h-10">
-      {!course.isOwner && (
-        <CourseDetailEnrollSection
-          key={course.isEnrolled.toString()}
-          courseData={course.data}
-        />
-      )}
-      {course.isEnrolled && <CourseDetailPracticeButton course={course} />}
-    </div>
-  );
+  if (course.isEnrolled) {
+    return <CourseDetailPracticeButton course={course} />;
+  } else if (!course.isOwner) {
+    return <CourseDetailEnrollSection courseData={course.data} />;
+  }
+  return <CourseDetailPracticeButtonLoading />;
 }

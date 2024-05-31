@@ -1,5 +1,6 @@
 "use client";
 
+import { clientLocator } from "@/src/common/di/client-locator";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -12,9 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -45,8 +46,6 @@ interface ChangePasswordDialogProps {
 type FormValues = z.infer<typeof ChangePasswordActionSchema>;
 
 function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
-  const router = useRouter();
-
   const form = useForm<FormValues>({
     resolver: zodResolver(ChangePasswordActionSchema),
     defaultValues: {
@@ -61,15 +60,16 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
       const response = await changePasswordAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) {
-        router.push("/home");
+        onClose();
         toast.success("Contraseña cambiada con éxito");
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });
+  useCommandEnter(onSubmit);
 
   const { isSubmitting } = form.formState;
 

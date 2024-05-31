@@ -11,6 +11,7 @@ import {
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
@@ -18,6 +19,7 @@ import Link from "next/link";
 import { loginWithPasswordAction } from "../actions/login-with-password-action";
 import type { LoginWithPasswordActionModel } from "../schemas/login-with-password-action-schema";
 import { LoginWithPasswordActionSchema } from "../schemas/login-with-password-action-schema";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 export function LoginForm() {
   const form = useForm({
@@ -28,21 +30,24 @@ export function LoginForm() {
     },
   });
 
-  async function onSubmit(data: LoginWithPasswordActionModel) {
+  const onSubmit = form.handleSubmit(async function onSubmit(
+    data: LoginWithPasswordActionModel,
+  ) {
     try {
       const response = await loginWithPasswordAction(data);
       const handler = new FormResponseHandler(response, form);
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
-  }
+  });
+  useCommandEnter(onSubmit);
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <InputFormField
           label="Correo electrónico"
           name="email"

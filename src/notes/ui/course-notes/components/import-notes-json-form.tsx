@@ -10,6 +10,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/alert";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { ImportNotesTypeModel } from "@/src/notes/domain/models/import-note-type-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
@@ -18,6 +19,7 @@ import { CircleHelp, FileJson } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { importNotesAction } from "../actions/import-notes-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 interface ImportNotesJsonFormProps {
   courseId: string;
@@ -58,11 +60,12 @@ export function ImportNotesJsonForm({
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
     setIsLoading(false);
   });
+  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

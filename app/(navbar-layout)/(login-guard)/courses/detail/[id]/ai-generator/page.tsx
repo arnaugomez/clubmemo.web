@@ -14,6 +14,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 
+export const maxDuration = 50;
+
 export const metadata: Metadata = {
   title: "Generador AI",
 };
