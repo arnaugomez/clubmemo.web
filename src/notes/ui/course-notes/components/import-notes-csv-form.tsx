@@ -5,7 +5,6 @@ import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-glo
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { ImportNotesTypeModel } from "@/src/notes/domain/models/import-note-type-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
@@ -60,7 +59,6 @@ export function ImportNotesCsvForm({
     }
     setIsLoading(false);
   });
-  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

@@ -17,6 +17,9 @@ export interface CourseEnrollmentDoc {
   isFavorite: boolean;
   config?: CourseEnrollmentConfigDoc;
 }
+/**
+ * Collection of MongoDB documents of type `CourseEnrollmentDoc`
+ */
 export const courseEnrollmentsCollection =
   collection<CourseEnrollmentDoc>("courseEnrollments");
 

@@ -18,6 +18,9 @@ import {
   notesCollection,
 } from "../collections/notes-collection";
 
+/**
+ * Implementation of `NotesRepository` using MongoDB.
+ */
 export class NotesRepositoryImpl implements NotesRepository {
   private readonly notes: typeof notesCollection.type;
   private readonly practiceCards: typeof practiceCardsCollection.type;

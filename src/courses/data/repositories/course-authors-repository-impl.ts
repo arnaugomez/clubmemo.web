@@ -7,6 +7,9 @@ import type { CourseAuthorDoc } from "../aggregations/course-authors-aggregation
 import { CourseAuthorDocTransformer } from "../aggregations/course-authors-aggregation";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
 
+/**
+ * Implementation of the `CourseAuthorsRepository` with the MongoDB database
+ */
 export class CourseAuthorsRepositoryImpl implements CourseAuthorsRepository {
   private readonly collection: typeof coursePermissionsCollection.type;
 
@@ -21,8 +24,8 @@ export class CourseAuthorsRepositoryImpl implements CourseAuthorsRepository {
           courseId: new ObjectId(courseId),
           permissionType: {
             $in: [
-              CoursePermissionTypeModel.Own,
-              CoursePermissionTypeModel.Edit,
+              CoursePermissionTypeModel.own,
+              CoursePermissionTypeModel.edit,
             ],
           },
         },

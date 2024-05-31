@@ -5,6 +5,18 @@ import type { AuthService } from "../interfaces/auth-service";
 import type { EmailVerificationCodesRepository } from "../interfaces/email-verification-codes-repository";
 import type { GetSessionUseCase } from "./get-session-use-case";
 
+/**
+ * Sets the user's email as verified.
+ *
+ * Once the user's email is verified, the user can perform actions that require
+ * email verification, such as access to most of the pages of the website.
+ *
+ * First, it checks if the email verification code is valid. If it is not, it
+ * throws `InvalidTokenError`. Then, it sets the user's email as verified and
+ * sets a new session cookie.
+ *
+ * Rate limited to 100 requests/user-day.
+ */
 export class VerifyEmailUseCase {
   constructor(
     private readonly getSessionUseCase: GetSessionUseCase,
@@ -14,6 +26,19 @@ export class VerifyEmailUseCase {
     private readonly cookieService: CookieService,
   ) {}
 
+  /**
+   * Sets the user's email as verified.
+   *
+   * Once the user's email is verified, the user can perform actions that
+   * require email verification, such as access to most of the pages of the
+   * website.
+   *
+   * First, it checks if the email verification code is valid. If it is not, it
+   * throws `InvalidTokenError`. Then, it sets the user's email as verified and
+   * sets a new session cookie.
+   *
+   * Rate limited to 100 requests/user-day.
+   */
   async execute(code: string) {
     const { user } = await this.getSessionUseCase.execute();
     if (!user) throw new SessionExpiredError();

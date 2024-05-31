@@ -8,6 +8,15 @@ import {
   CourseDoesNotExistError,
 } from "../models/course-errors";
 
+/**
+ * Uploads the files of a course, such as the picture, before making changes to
+ * the course.
+ *
+ * @param input The input data to upload the files of the course, including the
+ * file type and the course id
+ * @returns Relevant data to upload the files of the course, such as a presigned
+ * URL to upload the file on the client side
+ */
 export class EditCourseUploadUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
@@ -16,6 +25,15 @@ export class EditCourseUploadUseCase {
     private readonly fileUploadsRepository: FileUploadsRepository,
   ) {}
 
+  /**
+   * Uploads the files of a course, such as the picture, before making changes to
+   * the course.
+   *
+   * @param input The input data to upload the files of the course, including the
+   * file type and the course id
+   * @returns Relevant data to upload the files of the course, such as a presigned
+   * URL to upload the file on the client side
+   */
   async execute({
     courseId,
     uploadPicture,
@@ -48,5 +66,6 @@ export class EditCourseUploadUseCase {
 interface UpdateCourseInputModel {
   courseId: string;
   pictureContentType: string;
+  /** Whether to upload a new picture when making changes to the course. */
   uploadPicture: boolean;
 }

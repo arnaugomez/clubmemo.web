@@ -1,5 +1,8 @@
 import type { EnvService } from "../../domain/interfaces/env-service";
 
+/**
+ * Implementation of `EnvService` using process.env to read the environment variables
+ */
 export class EnvServiceImpl implements EnvService {
   readonly mongodbUrl = process.env.MONGODB_URL;
   readonly resendApiKey = process.env.RESEND_API_KEY;

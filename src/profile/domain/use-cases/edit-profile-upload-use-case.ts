@@ -3,6 +3,14 @@ import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/r
 import { ProfileDoesNotExistError } from "../errors/profile-errors";
 import type { GetMyProfileUseCase } from "./get-my-profile-use-case";
 
+/**
+ * Generates presigned urls to upload a new profile picture and/or background picture for the profile, before
+ * the profile is updated
+ *
+ * @param input The input data to upload a new profile picture and/or background. It
+ * contains the content type of the pictures.
+ * @returns The presigned URL to upload the picture to the external storage service
+ */
 export class EditProfileUploadUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
@@ -10,6 +18,14 @@ export class EditProfileUploadUseCase {
     private readonly fileUploadsRepository: FileUploadsRepository,
   ) {}
 
+  /**
+   * Generates presigned urls to upload a new profile picture and/or background
+   * picture for the profile, before the profile is updated
+   * @param input The input data to upload a new profile picture and/or
+   * background. It contains the content type of the pictures.
+   * @returns The presigned URL to upload the picture to the external storage
+   * service
+   */
   async execute({
     uploadPicture,
     pictureContentType,

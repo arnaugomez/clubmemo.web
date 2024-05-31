@@ -14,7 +14,6 @@ import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-glo
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
@@ -24,14 +23,12 @@ import { toast } from "sonner";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
 
 interface GenerateAiNotesFormProps {
-  courseId: string;
   sourceType: AiNotesGeneratorSourceType;
   onGoBack: () => void;
   onSuccess: (notes: NoteRowModel[]) => void;
 }
 
 export function GenerateAiNotesForm({
-  courseId,
   sourceType,
   onSuccess,
   onGoBack,
@@ -128,7 +125,6 @@ export function GenerateAiNotesForm({
         return;
       }
       const response = await generateAiNotesAction({
-        courseId,
         notesCount: data.notesCount,
         noteTypes: data.noteTypes,
         sourceType,
@@ -153,7 +149,6 @@ export function GenerateAiNotesForm({
       FormResponseHandler.setGlobalError(form);
     }
   });
-  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 

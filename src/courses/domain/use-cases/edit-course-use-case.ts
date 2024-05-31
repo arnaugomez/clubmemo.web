@@ -9,6 +9,22 @@ import {
 } from "../models/course-errors";
 import type { UpdateCourseInputModel } from "../models/update-course-input-model";
 
+/**
+ * Edits the public data of the course, such as the name, description, tags and
+ * picture. It also updates the public status of the course, letting its creator
+ * decide whether it is public or private.
+ *
+ * If the course's picture is changed, `EditCourseUploadUseCase` should be
+ * called first
+ *
+ * @param input The input data to update the course, including the course id and
+ * the new data of the course
+ *
+ * @throws {ProfileDoesNotExistError} When the user is not logged in
+ * @throws {CourseDoesNotExistError} When the course does not exist
+ * @throws {CannotEditCourseError} When the course cannot be edited because the
+ * profile lacks permission
+ */
 export class EditCourseUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
@@ -17,6 +33,22 @@ export class EditCourseUseCase {
     private readonly fileUploadsRepository: FileUploadsRepository,
   ) {}
 
+  /**
+   * Edits the public data of the course, such as the name,
+   * description, tags and picture. It also updates the public status of the
+   * course, letting its creator decide whether it is public or private.
+   *
+   * If the course's picture is changed, `EditCourseUploadUseCase` should be
+   * called first
+   *
+   * @param input The input data to update the course, including the course id and
+   * the new data of the course
+   *
+   * @throws {ProfileDoesNotExistError} When the user is not logged in
+   * @throws {CourseDoesNotExistError} When the course does not exist
+   * @throws {CannotEditCourseError} When the course cannot be edited because the
+   * profile lacks permission
+   */
   async execute(input: UpdateCourseInputModel): Promise<void> {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();

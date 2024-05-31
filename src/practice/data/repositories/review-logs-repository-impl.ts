@@ -6,6 +6,9 @@ import { PracticeCardStateModel } from "../../domain/models/practice-card-state-
 import { ReviewLogModel } from "../../domain/models/review-log-model";
 import { reviewLogsCollection } from "../collections/review-logs-collection";
 
+/**
+ * Implementation of `ReviewLogsRepository` using the MongoDB database.
+ */
 export class ReviewLogsRepositoryImpl implements ReviewLogsRepository {
   private readonly reviewLogs: typeof reviewLogsCollection.type;
 

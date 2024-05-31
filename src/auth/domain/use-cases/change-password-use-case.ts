@@ -12,6 +12,17 @@ interface ChangePasswordInputModel {
   newPassword: string;
 }
 
+/**
+ * Changes the password of the user
+ *
+ * Before changing the password, it checks if the current password is correct.
+ * If it is not, it throws `IncorrectPasswordError`.
+ *
+ * Then, it invalidates all user sessions (so that other devices cannot log
+ * in) and sets a new session cookie.
+ *
+ * @param input The user and the new password
+ */
 export class ChangePasswordUseCase {
   constructor(
     private readonly getSessionUseCase: GetSessionUseCase,
@@ -20,6 +31,17 @@ export class ChangePasswordUseCase {
     private readonly cookieService: CookieService,
   ) {}
 
+  /**
+   * Changes the password of the user
+   *
+   * Before changing the password, it checks if the current password is correct.
+   * If it is not, it throws `IncorrectPasswordError`.
+   *
+   * Then, it invalidates all user sessions (so that other devices cannot log
+   * in) and sets a new session cookie.
+   *
+   * @param input The user and the new password
+   */
   async execute(input: ChangePasswordInputModel): Promise<void> {
     const { user } = await this.getSessionUseCase.execute();
     if (!user) throw new UserDoesNotExistError();

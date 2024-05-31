@@ -8,6 +8,10 @@ export interface CoursePermissionDoc {
   profileId: ObjectId;
   permissionType: CoursePermissionTypeModel;
 }
+
+/**
+ * Collection of MongoDB documents of type `CoursePermissionDoc`
+ */
 export const coursePermissionsCollection =
   collection<CoursePermissionDoc>("coursePermissions");
 

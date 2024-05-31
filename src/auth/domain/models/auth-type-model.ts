@@ -1,4 +1,8 @@
+/**
+ * Types of authentication available for a certain user
+ */
 export enum AuthTypeModel {
-  Email = "email",
-  // Google = "google",
+  /** Email and password authentication */
+  email = "email",
+  // google = "google",
 }

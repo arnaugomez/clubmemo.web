@@ -13,6 +13,10 @@ export interface CourseModelData {
   tags?: string[];
 }
 
+/**
+ * A course is a collection of notes. Users can enroll to a course to view its
+ * notes and practice them via practice sessions.
+ */
 export class CourseModel {
   constructor(readonly data: CourseModelData) {}
 
@@ -47,16 +51,16 @@ export class CourseModel {
   get canView() {
     return (
       this.isPublic ||
-      this.permissionType === CoursePermissionTypeModel.Own ||
-      this.permissionType === CoursePermissionTypeModel.Edit ||
-      this.permissionType === CoursePermissionTypeModel.View
+      this.permissionType === CoursePermissionTypeModel.own ||
+      this.permissionType === CoursePermissionTypeModel.edit ||
+      this.permissionType === CoursePermissionTypeModel.view
     );
   }
 
   get canEdit() {
     return (
-      this.permissionType === CoursePermissionTypeModel.Own ||
-      this.permissionType === CoursePermissionTypeModel.Edit
+      this.permissionType === CoursePermissionTypeModel.own ||
+      this.permissionType === CoursePermissionTypeModel.edit
     );
   }
 
@@ -65,7 +69,7 @@ export class CourseModel {
   }
 
   get isOwner() {
-    return this.permissionType === CoursePermissionTypeModel.Own;
+    return this.permissionType === CoursePermissionTypeModel.own;
   }
 
   get enrollment() {

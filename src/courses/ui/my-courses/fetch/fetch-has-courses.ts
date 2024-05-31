@@ -4,9 +4,7 @@ import { cache } from "react";
 
 const cached = cache(async function (profileId: string) {
   const coursesRepository = await locator.CoursesRepository();
-  return await coursesRepository.getHasCourses({
-    profileId,
-  });
+  return await coursesRepository.getHasCourses(profileId);
 });
 
 export const fetchHasCourses = unstable_cache(cached, ["hasCourses"], {

@@ -4,6 +4,9 @@ import type {
   UploadPresignedUrlInputModel,
 } from "../../domain/interfaces/client-file-upload-service";
 
+/**
+ * Implementation of `ClientFileUploadService` that uploads files to an S3 bucket
+ */
 export class ClientFileUploadServiceS3Impl implements ClientFileUploadService {
   async uploadPresignedUrl({
     file,

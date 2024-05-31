@@ -3,6 +3,9 @@ import { MongoBulkWriteError } from "mongodb";
 import type { TagsRepository } from "../../domain/interfaces/tags-repository";
 import { tagsCollection } from "../collections/tags-collection";
 
+/**
+ * Implementation of `TagsRepository` using the MongoDB database.
+ */
 export class TagsRepositoryImpl implements TagsRepository {
   private readonly tags: typeof tagsCollection.type;
 

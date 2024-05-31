@@ -2,6 +2,10 @@ import type { CheckSessionModel } from "@/src/auth/domain/models/check-session-m
 import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
 import type { ProfileModel } from "../models/profile-model";
 
+/**
+ * Gets the profile of the currently logged in user
+ * @returns The profile of the currently logged in user, otherwise `null`
+ */
 export class GetMyProfileUseCase {
   constructor(
     private readonly getSessionFn: () => Promise<CheckSessionModel>,

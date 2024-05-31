@@ -10,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -49,7 +48,6 @@ export function CreateCourseDialog({ onClose }: CreateCourseDialogProps) {
       FormResponseHandler.setGlobalError(form);
     }
   });
-  useCommandEnter(onSubmit);
 
   const { isSubmitting } = form.formState;
   return (

@@ -7,4 +7,7 @@ export const EditNoteActionSchema = z.object({
   back: z.string().min(0).max(10000),
 });
 
+/**
+ * Parameters of `editNoteAction`
+ */
 export type EditNoteActionModel = z.infer<typeof EditNoteActionSchema>;

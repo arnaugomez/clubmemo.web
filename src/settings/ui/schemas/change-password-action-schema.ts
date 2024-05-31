@@ -18,6 +18,9 @@ export const ChangePasswordActionSchema = z
     }
   });
 
+/**
+ * Parameters of `changePasswordAction`
+ */
 export type ChangePasswordActionModel = z.infer<
   typeof ChangePasswordActionSchema
 >;

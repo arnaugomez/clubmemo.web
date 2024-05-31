@@ -13,7 +13,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { forgotPasswordAction } from "../actions/forgot-password-action";
 import type { ForgotPasswordActionModel } from "../schemas/forgot-password-action-schema";
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { clientLocator } from "@/src/common/di/client-locator";
 
 const ForgotPasswordConfirmDialog = lazy(async () => {
@@ -46,7 +45,6 @@ export function ForgotPasswordForm() {
       FormResponseHandler.setGlobalError(form);
     }
   });
-  useCommandEnter(onSubmit);
 
   return (
     <>

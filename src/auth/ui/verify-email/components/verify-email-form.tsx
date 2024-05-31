@@ -9,7 +9,6 @@ import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { InputOtpFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { useEffect, useRef } from "react";
 import { logoutAction } from "../../actions/logout-action";
@@ -42,7 +41,6 @@ export function VerifyEmailForm() {
       FormResponseHandler.setGlobalError(form);
     }
   });
-  useCommandEnter(onSubmit);
   const code = form.watch("code");
 
   useEffect(() => {

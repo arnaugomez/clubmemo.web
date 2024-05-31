@@ -6,4 +6,7 @@ export interface RateLimitDoc {
   updatedAt: Date;
 }
 
+/**
+ * Collection of MongoDB documents of type `RateLimitDoc`
+ */
 export const rateLimitsCollection = collection<RateLimitDoc>("rateLimits");

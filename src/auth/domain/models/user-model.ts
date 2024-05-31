@@ -7,6 +7,12 @@ interface UserModelData {
   isEmailVerified?: boolean;
 }
 
+/**
+ * A user of the application. The user represents a person that is using the
+ * application, and has a set of credentials to log in and access its services.
+ *
+ * Each user has an email. The email is unique: no two users can have the same.
+ */
 export class UserModel {
   constructor(private data: UserModelData) {}
 
@@ -22,6 +28,9 @@ export class UserModel {
     return this.data.authTypes;
   }
 
+  /**
+   * Whether the user has verified their email address
+   */
   get isEmailVerified() {
     return this.data.isEmailVerified;
   }

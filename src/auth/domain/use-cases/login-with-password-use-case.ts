@@ -7,6 +7,12 @@ import type {
   LoginWithPasswordInputModel,
 } from "../interfaces/auth-service";
 
+/**
+ * Logs in the user with their email and password. If the login is successful,
+ * it sets a session cookie and sets it in the response.
+ *
+ * Rate limited to 100 requests/IP-day.
+ */
 export class LoginWithPasswordUseCase {
   constructor(
     private readonly authService: AuthService,
@@ -15,6 +21,12 @@ export class LoginWithPasswordUseCase {
     private readonly cookieService: CookieService,
   ) {}
 
+  /**
+   * Logs in the user with their email and password. If the login is successful,
+   * it sets a session cookie and sets it in the response.
+   *
+   * Rate limited to 100 requests/IP-day.
+   */
   async execute(input: LoginWithPasswordInputModel): Promise<void> {
     const ip = await this.ipService.getIp();
     const rateLimitKey = `LoginWithPasswordUseCase/${ip}`;

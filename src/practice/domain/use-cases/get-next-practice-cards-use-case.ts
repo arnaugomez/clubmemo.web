@@ -3,12 +3,29 @@ import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-
 import type { PracticeCardModel } from "../models/practice-card-model";
 import type { GetPracticeCardsUseCase } from "./get-practice-cards-use-case";
 
+/**
+ * Gets a list of the next practice cards that the current user should
+ * practice for a course, after the current practice session is finished
+ *
+ * @param input an object containing the course id
+ * @returns A list of practice cards that the user should practice. If the
+ * user is not logged in or not enrolled in the course, returns an empty list.
+ */
 export class GetNextPracticeCardsUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly coursesRepository: CoursesRepository,
     private readonly getPracticeCardsUseCase: GetPracticeCardsUseCase,
   ) {}
+
+  /**
+   * Gets a list of the next practice cards that the current user should
+   * practice for a course, after the current practice session is finished
+   *
+   * @param input an object containing the course id
+   * @returns A list of practice cards that the user should practice. If the
+   * user is not logged in or not enrolled in the course, returns an empty list.
+   */
   async execute(
     input: GetNextPracticeCardsInputModel,
   ): Promise<PracticeCardModel[]> {

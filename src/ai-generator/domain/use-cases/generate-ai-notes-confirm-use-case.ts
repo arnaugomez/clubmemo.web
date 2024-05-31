@@ -6,6 +6,10 @@ import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
 
+/**
+ * Saves the AI-generated notes permanently and adds them to
+ * the course, so that the user can practice them later.
+ */
 export class GenerateAiNotesConfirmUseCase {
   constructor(
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
@@ -13,6 +17,10 @@ export class GenerateAiNotesConfirmUseCase {
     private readonly notesRepository: NotesRepository,
   ) {}
 
+  /**
+   * Saves the AI-generated notes permanently and adds them to
+   * the course, so that the user can practice them later.
+   */
   async execute(input: GenerateAiNotesConfirmInputModel) {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();
@@ -22,6 +30,7 @@ export class GenerateAiNotesConfirmUseCase {
       profileId: profile.id,
     });
     if (!course) throw new CourseDoesNotExistError();
+    // Before adding the notes, check that the profile has permission to do so
     if (!course.canEdit) throw new NoPermissionError();
 
     await this.notesRepository.createMany(input.courseId, input.notes);
@@ -29,6 +38,12 @@ export class GenerateAiNotesConfirmUseCase {
 }
 
 interface GenerateAiNotesConfirmInputModel {
+  /**
+   * The ID of the course where the notes will be added
+   */
   courseId: string;
+  /**
+   * The notes that will be added to the course
+   */
   notes: NoteRowModel[];
 }

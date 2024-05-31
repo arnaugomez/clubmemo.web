@@ -10,7 +10,6 @@ import type {
   CoursesRepository,
   GetCoursesByAuthorInputModel,
   GetDiscoverCoursesInputModel,
-  GetHasCoursesInputModel,
   GetInterestingCoursesInputModel,
   GetMyCoursesInputModel,
   GetMyCoursesPaginationInputModel,
@@ -45,6 +44,9 @@ import { newCardsLookupPipelineStage } from "../pipelines/new-cards-lookup-pipel
 import { newCountProjectionQuery } from "../pipelines/new-count-projection-query";
 import { getReviewsOfNewCardsLookupPipelineStage } from "../pipelines/reviews-of-new-cards-lookup-pipeline-stage";
 
+/**
+ * Implementation of `CoursesRepository` with the MongoDB database
+ */
 export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly courses: typeof coursesCollection.type;
   private readonly coursePermissions: typeof coursePermissionsCollection.type;
@@ -66,6 +68,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     this.courseEnrollments.createIndex({ profileId: 1 });
     this.courseEnrollments.createIndex({ profileId: 1, isFavorite: 1 });
   }
+
   async create(input: CreateCourseInputModel): Promise<CourseModel> {
     const insertedCourse = {
       name: input.name,
@@ -75,7 +78,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     await this.coursePermissions.insertOne({
       courseId: insertedCourse._id,
       profileId: new ObjectId(input.profileId),
-      permissionType: CoursePermissionTypeModel.Own,
+      permissionType: CoursePermissionTypeModel.own,
     });
     const insertedEnrollment = {
       courseId: insertedCourse._id,
@@ -84,7 +87,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     } as WithId<CourseEnrollmentDoc>;
     await this.courseEnrollments.insertOne(insertedEnrollment);
     return new CourseDocTransformer(insertedCourse).toDomain(
-      CoursePermissionTypeModel.Own,
+      CoursePermissionTypeModel.own,
       insertedEnrollment,
     );
   }
@@ -241,11 +244,9 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     );
   }
 
-  async getHasCourses(input: GetHasCoursesInputModel) {
+  async getHasCourses(profileId: string) {
     const result = await this.courseEnrollments.findOne(
-      {
-        profileId: new ObjectId(input.profileId),
-      },
+      { profileId: new ObjectId(profileId) },
       { projection: { _id: 1 } },
     );
     return Boolean(result);
@@ -380,8 +381,8 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           "permission.profileId": new ObjectId(profileId),
           "permission.permissionType": {
             $in: [
-              CoursePermissionTypeModel.Own,
-              CoursePermissionTypeModel.Edit,
+              CoursePermissionTypeModel.own,
+              CoursePermissionTypeModel.edit,
             ],
           },
         },

@@ -1,6 +1,9 @@
 import { z } from "@/i18n/zod";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
+/**
+ * Validates the parameters of `editCourseAction`
+ */
 export const EditCourseActionSchema = z.object({
   id: ObjectIdSchema,
   name: z.string().trim().min(1).max(50),
@@ -10,4 +13,7 @@ export const EditCourseActionSchema = z.object({
   tags: z.array(z.string().trim().min(1).max(50)).max(10),
 });
 
+/**
+ * Parameters of `editCourseAction`
+ */
 export type EditCourseActionModel = z.infer<typeof EditCourseActionSchema>;

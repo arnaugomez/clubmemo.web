@@ -3,6 +3,9 @@ import { DailyRateLimitError } from "../../domain/errors/rate-limits-errors";
 import type { RateLimitsRepository } from "../../domain/interfaces/rate-limits-repository";
 import { rateLimitsCollection } from "../collections/rate-limits-collection";
 
+/**
+ * Implementation of `RateLimitsRepository` using the MongoDB database.
+ */
 export class RateLimitsRepositoryImpl implements RateLimitsRepository {
   private readonly rateLimits: typeof rateLimitsCollection.type;
 
