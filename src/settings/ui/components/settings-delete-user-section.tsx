@@ -17,7 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
@@ -97,7 +96,6 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       FormResponseHandler.setGlobalError(form);
     }
   });
-  useCommandEnter(onSubmit);
 
   const { isSubmitting } = form.formState;
   const confirmation = form.watch("confirmation");

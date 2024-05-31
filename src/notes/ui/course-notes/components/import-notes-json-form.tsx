@@ -10,7 +10,6 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/alert";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { ImportNotesTypeModel } from "@/src/notes/domain/models/import-note-type-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
@@ -65,7 +64,6 @@ export function ImportNotesJsonForm({
     }
     setIsLoading(false);
   });
-  useCommandEnter(onSubmit);
 
   const isSubmitting = form.formState.isSubmitting;
 
