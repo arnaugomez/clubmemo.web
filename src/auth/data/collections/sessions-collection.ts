@@ -3,6 +3,10 @@ import type { Session } from "lucia";
 import type { ObjectId } from "mongodb";
 import { SessionModel } from "../../domain/models/check-session-model";
 
+/**
+ * MongoDB document representing the public fields of a user session.
+ * The fields are in snake_case to facilitate interoperability with the Lucia authentication library
+ */
 export interface SessionDoc {
   expires_at: Date;
   user_id: ObjectId;

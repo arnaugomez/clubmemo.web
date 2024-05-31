@@ -17,11 +17,11 @@ import {
 } from "../../domain/errors/auth-errors";
 import type {
   AuthService,
-  CheckPasswordModel,
+  CheckPasswordInputModel,
   LoginWithPasswordInputModel,
   SignupWithPasswordInputModel,
   SignupWithPasswordResultModel,
-  UpdatePasswordModel,
+  UpdatePasswordInputModel,
 } from "../../domain/interfaces/auth-service";
 import { AuthTypeModel } from "../../domain/models/auth-type-model";
 import type { CheckSessionModel } from "../../domain/models/check-session-model";
@@ -48,6 +48,10 @@ type MyLucia = Lucia<
   Omit<DatabaseUserAttributes, "hashed_password">
 >;
 
+/**
+ * Implementation of `AuthService` with the Lucia authentication library and the
+ * MongoDB database
+ */
 export class AuthServiceImpl implements AuthService {
   private readonly lucia: MyLucia;
 
@@ -177,7 +181,7 @@ export class AuthServiceImpl implements AuthService {
   async updatePassword({
     userId,
     password,
-  }: UpdatePasswordModel): Promise<void> {
+  }: UpdatePasswordInputModel): Promise<void> {
     const hashed_password = await this.passwordHashingAlgorithm.hash(password);
     await this.usersCollection.updateOne(
       { _id: new ObjectId(userId) },
@@ -185,7 +189,7 @@ export class AuthServiceImpl implements AuthService {
     );
   }
 
-  async checkPasswordIsCorrect(input: CheckPasswordModel): Promise<void> {
+  async checkPasswordIsCorrect(input: CheckPasswordInputModel): Promise<void> {
     const existingUser = await this.usersCollection.findOne({
       _id: new ObjectId(input.userId),
     });

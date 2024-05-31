@@ -7,6 +7,9 @@ import {
   usersCollection,
 } from "../collections/users-collection";
 
+/**
+ * Implementation of `UsersRepository` with the MongoDB database
+ */
 export class UsersRepositoryImpl implements UsersRepository {
   private readonly usersCollection: typeof usersCollection.type;
 

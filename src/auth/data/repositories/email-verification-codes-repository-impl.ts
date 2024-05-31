@@ -10,6 +10,9 @@ import {
   emailVerificationCodesCollection,
 } from "../collections/email-verification-codes-collection";
 
+/**
+ * Implementation of `EmailVerificationCodesRepository` with the MongoDB database
+ */
 export class EmailVerificationCodesRepositoryImpl
   implements EmailVerificationCodesRepository
 {
