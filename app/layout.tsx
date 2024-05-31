@@ -1,4 +1,5 @@
 import { cn } from "@/src/common/ui/utils/shadcn";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import type { PropsWithChildren } from "react";
 import { Suspense, lazy } from "react";
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <Suspense>
           <Toaster />
         </Suspense>
+        <SpeedInsights />
       </body>
     </html>
   );
