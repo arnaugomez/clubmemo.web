@@ -8,9 +8,10 @@ import { usePathname } from "next/navigation";
 interface NavbarLinkProps {
   href: string;
   children: React.ReactNode;
+  className?: string;
 }
 
-export function NavbarLink({ href, children }: NavbarLinkProps) {
+export function NavbarLink({ href, children, className }: NavbarLinkProps) {
   const isCurrent = usePathname() === href;
 
   return (
@@ -19,6 +20,7 @@ export function NavbarLink({ href, children }: NavbarLinkProps) {
         textStyles.muted,
         "hover:text-slate-700",
         isCurrent && "text-slate-700",
+        className,
       )}
       href={href}
     >
