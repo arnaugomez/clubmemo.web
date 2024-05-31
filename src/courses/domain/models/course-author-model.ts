@@ -10,6 +10,10 @@ interface CourseAuthorModelData {
   handle: string;
 }
 
+/**
+ * An author of a course. The author is a profile that has permission to edit the
+ * course or has created the course.
+ */
 export class CourseAuthorModel {
   constructor(private readonly data: CourseAuthorModelData) {}
   get courseId() {

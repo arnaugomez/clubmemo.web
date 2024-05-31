@@ -14,10 +14,28 @@ interface PracticerData {
   enrollment: CourseEnrollmentModel;
   card: PracticeCardModel;
 }
+
+/**
+ * Calculates the result of practicing a card.
+ *
+ * When a card is practiced, the learner must rate the card based on how well
+ * they did in the review. The result determines the next time the card should
+ * be reviewed, and causes the card to update many of its parameters.
+ *
+ * This update is decided by the FSRS algorithm, which is a spaced repetition
+ * algorithm that determines the optimal time to review a card based on the
+ * learner's performance in the previous review.
+ *
+ * The PracticerModel provides an abstraction over the FSRS algorithm, and uses
+ * its API under the hood to calculate the result of practicing a card.
+ */
 export class PracticerModel {
   private recordLog?: RecordLog;
   constructor(private readonly data: PracticerData) {}
 
+  /**
+   * Calculates the result of practicing a card for each possible rating of the user
+   */
   practice() {
     const fsrs = this.data.enrollment.fsrs;
     const fsrsCard = this.data.card.fsrsCard;
@@ -27,6 +45,18 @@ export class PracticerModel {
     }
   }
 
+  /**
+   * Rates the card based on the user's performance in the review. The rating is
+   * used to determine the next time the card should be reviewed. This is done
+   * by creating a new instance of the practice card with the updated
+   * parameters, and a new review log object to keep track of the learner's
+   * practice history.
+   *
+   * @param rating The rating selected by the user, indicating how well they did
+   * in the review
+   * @returns The result of practicing the card, including the new card and the
+   * review log
+   */
   rate(rating: PracticeCardRatingModel): PracticeResultModel {
     if (!this.recordLog) throw new Error("Must practice before rate");
     const fsrsRating = new PracticeCardRatingTransformer(rating).toFsrs();
@@ -79,6 +109,11 @@ export class PracticerModel {
     [PracticeCardRatingModel.again]: 0,
     [PracticeCardRatingModel.manual]: 0,
   };
+
+  /**
+   * Gets the number of days until the next review for each possible rating
+   * @returns an object with the number of days until the next review for each rating
+   */
   getDaysToNextReview(): DaysToNextReviewModel {
     if (!this.recordLog)
       throw new Error("Must practice before getDaysToNextReview");

@@ -78,7 +78,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     await this.coursePermissions.insertOne({
       courseId: insertedCourse._id,
       profileId: new ObjectId(input.profileId),
-      permissionType: CoursePermissionTypeModel.Own,
+      permissionType: CoursePermissionTypeModel.own,
     });
     const insertedEnrollment = {
       courseId: insertedCourse._id,
@@ -87,7 +87,7 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     } as WithId<CourseEnrollmentDoc>;
     await this.courseEnrollments.insertOne(insertedEnrollment);
     return new CourseDocTransformer(insertedCourse).toDomain(
-      CoursePermissionTypeModel.Own,
+      CoursePermissionTypeModel.own,
       insertedEnrollment,
     );
   }
@@ -381,8 +381,8 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           "permission.profileId": new ObjectId(profileId),
           "permission.permissionType": {
             $in: [
-              CoursePermissionTypeModel.Own,
-              CoursePermissionTypeModel.Edit,
+              CoursePermissionTypeModel.own,
+              CoursePermissionTypeModel.edit,
             ],
           },
         },

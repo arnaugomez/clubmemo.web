@@ -1,5 +1,7 @@
-import type { AiNotesGeneratorService } from "@/src/ai-generator/domain/interfaces/ai-notes-generator-service";
-import type { GenerateAiNotesUseCaseInputModel } from "@/src/notes/domain/models/generate-ai-notes-input-model";
+import type {
+  AiNotesGeneratorService,
+  GenerateAiNotesInputModel,
+} from "@/src/ai-generator/domain/interfaces/ai-notes-generator-service";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
@@ -24,7 +26,7 @@ export class GenerateAiNotesUseCase {
    */
   async execute({
     ...input
-  }: GenerateAiNotesUseCaseInputModel): Promise<NoteRowModel[]> {
+  }: GenerateAiNotesInputModel): Promise<NoteRowModel[]> {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();
 

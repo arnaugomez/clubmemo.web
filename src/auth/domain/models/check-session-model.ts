@@ -7,6 +7,9 @@ interface SessionModelData {
   userId: string;
 }
 
+/**
+ * A user session, meaning that a user is logged in
+ */
 export class SessionModel {
   constructor(private data: SessionModelData) {}
 
@@ -23,11 +26,18 @@ export class SessionModel {
   }
 }
 
+/**
+ * The result of checking if a user is logged in and seeing that the user is not
+ * logged in
+ */
 export const emptyCheckSession = {
   user: null,
   session: null,
 };
 
+/**
+ * The result of checking if a user is logged in
+ */
 export type CheckSessionModel =
   | {
       user: UserModel;

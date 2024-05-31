@@ -6,6 +6,9 @@ interface EmailVerificationCodeModelData {
   expiresAt: Date;
 }
 
+/**
+ * A token that is sent to the user's email to verify their email address
+ */
 export class EmailVerificationCodeModel {
   constructor(private data: EmailVerificationCodeModelData) {}
 

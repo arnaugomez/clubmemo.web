@@ -25,6 +25,10 @@ export interface SetCookieInputModel {
   attributes: CookieAttributesModel;
 }
 
+/**
+ * The attributes that a cookie can have, such as the expiration date, the
+ * domain, etc. Used when setting a cookie.
+ */
 interface CookieAttributesModel {
   secure?: boolean;
   path?: string;

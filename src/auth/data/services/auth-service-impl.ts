@@ -156,7 +156,7 @@ export class AuthServiceImpl implements AuthService {
     const result = await this.usersCollection.insertOne({
       email,
       hashed_password,
-      authTypes: [AuthTypeModel.Email],
+      authTypes: [AuthTypeModel.email],
     });
     const userId = result.insertedId;
 

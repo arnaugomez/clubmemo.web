@@ -24,8 +24,8 @@ export class CourseAuthorsRepositoryImpl implements CourseAuthorsRepository {
           courseId: new ObjectId(courseId),
           permissionType: {
             $in: [
-              CoursePermissionTypeModel.Own,
-              CoursePermissionTypeModel.Edit,
+              CoursePermissionTypeModel.own,
+              CoursePermissionTypeModel.edit,
             ],
           },
         },

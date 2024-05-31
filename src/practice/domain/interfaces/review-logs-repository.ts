@@ -13,8 +13,8 @@ import type { ReviewLogModel } from "../models/review-log-model";
  * insights and data so the learner can make informed decisions about their
  * learning.
  *
- * Furthermore, they can be combined with machine learning techniques to find
- * the optimal parameters of the learning algorithm.
+ * Furthermore, they can be used by machine learning techniques to find the
+ * optimal parameters of the learning algorithm.
  */
 export interface ReviewLogsRepository {
   /**
