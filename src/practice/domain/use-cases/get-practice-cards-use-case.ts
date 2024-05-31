@@ -16,7 +16,7 @@ export class GetPracticeCardsUseCase {
     const reviewsOfNewCardsCountPromise =
       this.reviewLogsRepository.getReviewsOfNewCardsCount(courseEnrollmentId);
     const cardsPerSessionCount = enrollment.config.cardsPerSessionCount;
-    const newCardsPromise = this.practiceCardsRepository.getUnpracticed({
+    const newCardsPromise = this.practiceCardsRepository.getNew({
       courseEnrollmentId,
       courseId: course.id,
       limit: cardsPerSessionCount,

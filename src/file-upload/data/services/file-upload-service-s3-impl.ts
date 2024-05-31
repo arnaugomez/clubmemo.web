@@ -11,6 +11,9 @@ declare module global {
   let s3Client: S3Client;
 }
 
+/**
+ * Implementation of `FileUploadService` that uses the AWS S3 SDK
+ */
 export class FileUploadServiceS3Impl implements FileUploadService {
   private readonly client: S3Client;
   constructor(private readonly envService: EnvService) {

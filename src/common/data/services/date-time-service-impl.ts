@@ -6,6 +6,9 @@ import type { DateTimeService } from "../../domain/interfaces/date-time-service"
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+/**
+ * Implementation of `DateTimeService` using the `dayjs` library.
+ */
 export class DateTimeServiceImpl implements DateTimeService {
   getStartOfToday(): Date {
     return dayjs().tz("Europe/Madrid").startOf("day").toDate();

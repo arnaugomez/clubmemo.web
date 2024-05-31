@@ -1,13 +1,23 @@
-import type { Collection, Db, MongoClient, Document } from "mongodb";
+import type { Collection, Document, MongoClient } from "mongodb";
 import type { CollectionType } from "../../data/utils/mongo";
 
+/**
+ * Service to interact with the MongoDB database.
+ *
+ * Encapsulates the MongoDB client and provides methods to interact with
+ * collections. It is recommended to use the `collection` method to get a
+ * collection instead of using the MongoDB client directly. However, it also
+ * exposes the MongoDB client for more advanced use cases.
+ */
 export interface MongoService {
   readonly client: MongoClient;
-  /**
-   *  The default database of the mongodb cluster
-   */
-  readonly db: Db;
 
+  /**
+   * Gets a MongoDB collection by its type.
+   *
+   * @param collectionType - The collection type object defined in the collection file with the `collection` function.
+   * @see `collection` function in the MongoDB utils file.
+   */
   collection<TSchema extends Document = Document>(
     collectionType: CollectionType<TSchema>,
   ): Collection<TSchema>;

@@ -9,7 +9,7 @@ import type { WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import type {
   GetDueInput,
-  GetUnpracticedInput,
+  GetNewInput,
   PracticeCardsRepository,
 } from "../../domain/interfaces/practice-cards-repository";
 import { PracticeCardModel } from "../../domain/models/practice-card-model";
@@ -17,6 +17,9 @@ import type { PracticeCardAggregationDoc } from "../collections/practice-card-ag
 import { PracticeCardAggregationDocTransformer } from "../collections/practice-card-aggregation";
 import { practiceCardsCollection } from "../collections/practice-cards-collection";
 
+/**
+ * Implementation of `PracticeCardsRepository` using the MongoDB database.
+ */
 export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
   private readonly practiceCards: typeof practiceCardsCollection.type;
   private readonly notes: typeof notesCollection.type;
@@ -69,9 +72,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     );
   }
 
-  async getUnpracticed(
-    input: GetUnpracticedInput,
-  ): Promise<PracticeCardModel[]> {
+  async getNew(input: GetNewInput): Promise<PracticeCardModel[]> {
     const cursor = this.notes.aggregate<WithId<NoteDoc>>([
       {
         $match: {
@@ -119,7 +120,7 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     });
   }
 
-  async getNewCount(input: GetUnpracticedInput): Promise<number> {
+  async getNewCount(input: GetNewInput): Promise<number> {
     const cursor = this.notes.aggregate<{ count: number }>([
       {
         $match: {

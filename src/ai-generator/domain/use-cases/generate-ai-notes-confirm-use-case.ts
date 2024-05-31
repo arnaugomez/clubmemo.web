@@ -17,6 +17,10 @@ export class GenerateAiNotesConfirmUseCase {
     private readonly notesRepository: NotesRepository,
   ) {}
 
+  /**
+   * Saves the AI-generated notes permanently and adds them to
+   * the course, so that the user can practice them later.
+   */
   async execute(input: GenerateAiNotesConfirmInputModel) {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();

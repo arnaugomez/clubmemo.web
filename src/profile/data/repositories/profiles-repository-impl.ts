@@ -9,6 +9,9 @@ import {
   profilesCollection,
 } from "../collections/profiles-collection";
 
+/**
+ * Implementation of `ProfilesRepository` using the MongoDB database.
+ */
 export class ProfilesRepositoryImpl implements ProfilesRepository {
   private readonly collection: typeof profilesCollection.type;
 

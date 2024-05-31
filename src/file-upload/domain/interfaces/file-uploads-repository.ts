@@ -30,7 +30,8 @@ export interface FileUploadsRepository {
   setCurrent(url: string): Promise<void>;
 
   /**
-   * Deletes all the outdated versions of a file
+   * Deletes all the outdated versions of files that are still stored in the
+   * external storage service
    */
   deleteOutdated(): Promise<void>;
 }
