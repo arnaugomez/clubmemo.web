@@ -19,6 +19,7 @@ import Link from "next/link";
 import { loginWithPasswordAction } from "../actions/login-with-password-action";
 import type { LoginWithPasswordActionModel } from "../schemas/login-with-password-action-schema";
 import { LoginWithPasswordActionSchema } from "../schemas/login-with-password-action-schema";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 export function LoginForm() {
   const form = useForm({
@@ -38,7 +39,7 @@ export function LoginForm() {
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

@@ -14,6 +14,7 @@ import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { deleteCourseAction } from "../actions/delete-course-action";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 interface DeleteCourseDialogProps {
   course: CourseModel;
@@ -35,7 +36,7 @@ export function DeleteCourseDialog({
       }
       handler.toastErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       toast.error("Error al eliminar el curso");
     }
   }

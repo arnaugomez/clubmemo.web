@@ -137,7 +137,7 @@ export class FormResponseHandler<
   >(form: UseFormReturn<U, V, W>) {
     form.setError("root.globalError", {
       type: "global",
-      message: "Something went wrong",
+      message: "Error al enviar el formulario. Inténtalo más tarde.",
     });
   }
 }

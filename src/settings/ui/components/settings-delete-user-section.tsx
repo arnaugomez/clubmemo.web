@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "@/i18n/zod";
+import { clientLocator } from "@/src/common/di/client-locator";
 import {
   InputFormField,
   PasswordInputFormField,
@@ -92,7 +93,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       if (!handler.hasErrors) router.push("/auth/signup");
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

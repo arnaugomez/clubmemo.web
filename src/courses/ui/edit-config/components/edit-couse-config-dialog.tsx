@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
@@ -22,7 +23,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { default_maximum_interval } from "ts-fsrs";
 import { editCourseConfigAction } from "../actions/edit-course-config-action";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 const EditCourseConfigSchema = z.object({
   enableFuzz: z.boolean(),
@@ -66,7 +67,7 @@ export function EditCourseConfigDialog({
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

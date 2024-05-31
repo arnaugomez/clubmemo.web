@@ -14,6 +14,7 @@ import { forgotPasswordAction } from "../actions/forgot-password-action";
 import type { ForgotPasswordActionModel } from "../schemas/forgot-password-action-schema";
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
 import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 const ForgotPasswordConfirmDialog = lazy(async () => {
   const file = await import("./forgot-password-confirm-dialog");
@@ -41,7 +42,7 @@ export function ForgotPasswordForm() {
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

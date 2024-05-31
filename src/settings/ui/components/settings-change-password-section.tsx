@@ -1,5 +1,6 @@
 "use client";
 
+import { clientLocator } from "@/src/common/di/client-locator";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -64,7 +65,7 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

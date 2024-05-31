@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,7 @@ import type { z } from "zod";
 import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 import { createCourseAction } from "../actions/create-course-action";
 import { CreateCourseActionSchema } from "../schemas/create-course-action-schema";
-import { useCommandEnter } from "@/src/common/ui/hooks/use-command-enter";
+import { clientLocator } from "@/src/common/di/client-locator";
 
 interface CreateCourseDialogProps {
   onClose: () => void;
@@ -44,7 +45,7 @@ export function CreateCourseDialog({ onClose }: CreateCourseDialogProps) {
       }
       handler.setErrors();
     } catch (error) {
-      console.error(error);
+      clientLocator.ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });
