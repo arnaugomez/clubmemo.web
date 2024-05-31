@@ -3,6 +3,12 @@ import type {
   GenerateAiNotesInputModel,
 } from "../../domain/interfaces/ai-notes-generator-service";
 
+/**
+ * Fake implementation of the AI notes generator service.
+ * Used for testing and local development, to avoid making too many
+ * requests to the external AI service. This lets us speed up the
+ * development process and avoid being charged a fee for each request.
+ */
 export class AiNotesGeneratorServiceFakeImpl
   implements AiNotesGeneratorService
 {

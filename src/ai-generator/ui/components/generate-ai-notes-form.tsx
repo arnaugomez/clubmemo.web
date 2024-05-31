@@ -24,14 +24,12 @@ import { toast } from "sonner";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
 
 interface GenerateAiNotesFormProps {
-  courseId: string;
   sourceType: AiNotesGeneratorSourceType;
   onGoBack: () => void;
   onSuccess: (notes: NoteRowModel[]) => void;
 }
 
 export function GenerateAiNotesForm({
-  courseId,
   sourceType,
   onSuccess,
   onGoBack,
@@ -128,7 +126,6 @@ export function GenerateAiNotesForm({
         return;
       }
       const response = await generateAiNotesAction({
-        courseId,
         notesCount: data.notesCount,
         noteTypes: data.noteTypes,
         sourceType,

@@ -23,7 +23,6 @@ export function GenerateAiNotesWizard({
     return (
       <GenerateAiNotesForm
         sourceType={source}
-        courseId={courseId}
         onSuccess={(notes) => setNotes(notes)}
         onGoBack={() => setSource(null)}
       />
