@@ -56,7 +56,7 @@ De acuerdo con el GDPR, usted tiene los siguientes derechos respecto a sus datos
 - **Derecho de oposición**: Tiene derecho a oponerse al tratamiento de sus datos personales.
 - **Derecho a la portabilidad de los datos**: Tiene derecho a recibir sus datos en un formato estructurado y a transferirlos a otro responsable.
 
-Para ejercer cualquiera de estos derechos, puede contactarnos en [email].
+Para ejercer cualquiera de estos derechos, puede contactarnos en support@clubmemo.com.
 
 #### 8. Seguridad de los datos personales
 
