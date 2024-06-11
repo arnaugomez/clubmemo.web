@@ -29,6 +29,7 @@ export function Footer() {
         <Button variant="ghost" size="icon" asChild>
           <a href="https://github.com/arnaugomez/clubmemo.web">
             <Github />
+            <span className="sr-only">Repositorio de GitHub</span>
           </a>
         </Button>
       </div>
