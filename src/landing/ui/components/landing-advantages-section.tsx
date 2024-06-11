@@ -28,7 +28,7 @@ export function LandingAdvantagesSection() {
       <LandingAdvantageCards />
       <div className="h-16" />
       <p
-        className={cn(textStyles.muted, "mx-auto max-w-prose px-8 text-center")}
+        className={cn(textStyles.muted, "mx-auto max-w-prose px-8 text-center text-slate-700")}
       >
         Crea tu usuario en menos de 1 minuto
       </p>
