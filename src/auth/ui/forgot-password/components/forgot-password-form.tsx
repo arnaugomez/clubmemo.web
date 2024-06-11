@@ -1,5 +1,6 @@
 "use client";
 
+import { clientLocator } from "@/src/common/di/client-locator";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { InputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
@@ -7,18 +8,19 @@ import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-bu
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Suspense, lazy, useState } from "react";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { forgotPasswordAction } from "../actions/forgot-password-action";
 import type { ForgotPasswordActionModel } from "../schemas/forgot-password-action-schema";
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
-import { clientLocator } from "@/src/common/di/client-locator";
 
-const ForgotPasswordConfirmDialog = lazy(async () => {
-  const file = await import("./forgot-password-confirm-dialog");
-  return { default: file.ForgotPasswordConfirmDialog };
-});
+const ForgotPasswordConfirmDialog = dynamic(() =>
+  import("./forgot-password-confirm-dialog").then(
+    (file) => file.ForgotPasswordConfirmDialog,
+  ),
+);
 
 export function ForgotPasswordForm() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -66,9 +68,7 @@ export function ForgotPasswordForm() {
         </form>
       </FormProvider>
       {isDialogOpen && (
-        <Suspense>
-          <ForgotPasswordConfirmDialog email={form.getValues("email")} />
-        </Suspense>
+        <ForgotPasswordConfirmDialog email={form.getValues("email")} />
       )}
     </>
   );
