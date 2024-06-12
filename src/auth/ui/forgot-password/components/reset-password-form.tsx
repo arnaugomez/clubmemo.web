@@ -1,7 +1,6 @@
 "use client";
 
 import { z } from "@/i18n/zod";
-import { PasswordInputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -16,6 +15,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { resetPasswordAction } from "../actions/reset-password-action";
+import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 
 const ResetPasswordConfirmDialog = dynamic(() =>
   import("./reset-password-confirm-dialog").then(

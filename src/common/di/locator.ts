@@ -75,8 +75,8 @@ export const locator: Locator = {
   async EmailService() {
     const envService = this.EnvService();
     if (envService.sendEmail) {
-      const file = await import("../data/services/email-service-impl");
-      return new file.EmailServiceImpl(envService);
+      const file = await import("../data/services/email-service-resend-impl");
+      return new file.EmailServiceResendImpl(envService);
     }
     const file = await import("../data/services/email-service-fake-impl");
     return new file.EmailServiceFakeImpl(envService);

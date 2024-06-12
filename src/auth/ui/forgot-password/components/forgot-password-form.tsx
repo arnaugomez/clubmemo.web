@@ -2,7 +2,6 @@
 
 import { clientLocator } from "@/src/common/di/client-locator";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
-import { InputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -15,6 +14,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { forgotPasswordAction } from "../actions/forgot-password-action";
 import type { ForgotPasswordActionModel } from "../schemas/forgot-password-action-schema";
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
+import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
 
 const ForgotPasswordConfirmDialog = dynamic(() =>
   import("./forgot-password-confirm-dialog").then(

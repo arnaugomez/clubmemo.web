@@ -5,3 +5,4 @@ export class ForgotPasswordCodeExpiredError extends Error {}
 export class InvalidTokenError extends Error {}
 export class SessionExpiredError extends Error {}
 export class InvalidConfirmationError extends Error {}
+export class UserDoesNotAcceptTermsError extends Error {}

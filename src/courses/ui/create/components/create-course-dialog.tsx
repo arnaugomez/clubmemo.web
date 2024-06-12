@@ -1,4 +1,3 @@
-import { InputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -20,6 +19,7 @@ import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 import { createCourseAction } from "../actions/create-course-action";
 import { CreateCourseActionSchema } from "../schemas/create-course-action-schema";
 import { clientLocator } from "@/src/common/di/client-locator";
+import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
 
 interface CreateCourseDialogProps {
   onClose: () => void;

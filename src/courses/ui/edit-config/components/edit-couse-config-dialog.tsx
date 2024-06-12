@@ -1,8 +1,5 @@
 import { z } from "@/i18n/zod";
-import {
-  SliderFormField,
-  SwitchSectionFormField,
-} from "@/src/common/ui/components/form/form-fields";
+import { clientLocator } from "@/src/common/di/client-locator";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -22,7 +19,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { default_maximum_interval } from "ts-fsrs";
 import { editCourseConfigAction } from "../actions/edit-course-config-action";
-import { clientLocator } from "@/src/common/di/client-locator";
+import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
+import { SwitchSectionFormField } from "@/src/common/ui/components/form/switch-section-form-field";
 
 const EditCourseConfigSchema = z.object({
   enableFuzz: z.boolean(),

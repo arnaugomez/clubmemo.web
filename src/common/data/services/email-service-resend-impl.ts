@@ -5,7 +5,7 @@ import type { EnvService } from "../../domain/interfaces/env-service";
 /**
  * Implementation of `EmailService` using the Resend SDK
  */
-export class EmailServiceImpl implements EmailService {
+export class EmailServiceResendImpl implements EmailService {
   private readonly resend;
   constructor(private readonly envService: EnvService) {
     this.resend = new Resend(envService.resendApiKey);
