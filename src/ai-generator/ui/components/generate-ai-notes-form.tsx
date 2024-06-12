@@ -3,13 +3,6 @@ import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generat
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
 import { clientLocator } from "@/src/common/di/client-locator";
 import { FileSchema } from "@/src/common/schemas/file-schema";
-import {
-  CheckboxesFormField,
-  FileFormField,
-  InputFormField,
-  SliderFormField,
-  TextareaFormField,
-} from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -21,6 +14,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
+import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
+import { CheckboxesFormField } from "@/src/common/ui/components/form/checkboxes-form-field";
+import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
+import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
+import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 
 interface GenerateAiNotesFormProps {
   sourceType: AiNotesGeneratorSourceType;

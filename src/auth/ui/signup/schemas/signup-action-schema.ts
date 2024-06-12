@@ -8,6 +8,7 @@ import { PasswordSchema } from "@/src/common/schemas/password-schema";
 export const SignupActionSchema = z.object({
   email: EmailSchema,
   password: PasswordSchema,
+  acceptTerms: z.boolean(),
 });
 
 /**

@@ -2,10 +2,6 @@
 
 import { z } from "@/i18n/zod";
 import { clientLocator } from "@/src/common/di/client-locator";
-import {
-  InputFormField,
-  PasswordInputFormField,
-} from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -25,6 +21,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { deleteUserAction } from "../actions/delete-user-action";
+import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
+import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 
 interface SettingsDeleteUserSectionProps {
   email: string;

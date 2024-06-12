@@ -3,13 +3,6 @@
 import { z } from "@/i18n/zod";
 import { clientLocator } from "@/src/common/di/client-locator";
 import { FileSchema } from "@/src/common/schemas/file-schema";
-import {
-  FileFormField,
-  InputFormField,
-  SwitchSectionFormField,
-  TagsFormField,
-  TextareaFormField,
-} from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -32,6 +25,11 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editCourseAction } from "../actions/edit-course-action";
 import { editCourseUploadAction } from "../actions/edit-course-upload-action";
+import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
+import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
+import { SwitchSectionFormField } from "@/src/common/ui/components/form/switch-section-form-field";
+import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
+import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 
 interface CourseDetailEditSectionProps {
   courseData: CourseModelData;

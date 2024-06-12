@@ -6,7 +6,6 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
-import { InputOtpFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
@@ -14,6 +13,7 @@ import { useEffect, useRef } from "react";
 import { logoutAction } from "../../actions/logout-action";
 import { verifyEmailAction } from "../actions/verify-email-action";
 import { clientLocator } from "@/src/common/di/client-locator";
+import { InputOtpFormField } from "@/src/common/ui/components/form/input-otp-form-field";
 
 const FormSchema = z.object({
   code: z.string().length(6),

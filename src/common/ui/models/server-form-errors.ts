@@ -30,6 +30,8 @@ const globalErrors = {
   aiGeneratorError: "Error al generar las tarjetas.",
   aiGeneratorRateLimitError:
     "El generador de IA ha alcanzado su límite de peticiones. Por favor, inténtalo más tarde y avisa al equipo de clubmemo para que aumente los recursos del generador de AI.",
+  userDoesNotAcceptTerms:
+    "El usuario no ha aceptado los términos y condiciones",
 };
 type GlobalErrorType = keyof typeof globalErrors;
 
