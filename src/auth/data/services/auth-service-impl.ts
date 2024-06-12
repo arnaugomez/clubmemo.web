@@ -141,6 +141,7 @@ export class AuthServiceImpl implements AuthService {
     const session = await this.lucia.createSession(existingUser._id, {});
     return this.lucia.createSessionCookie(session.id);
   }
+
   async signupWithPassword(
     input: SignupWithPasswordInputModel,
   ): Promise<SignupWithPasswordResultModel> {
