@@ -1,7 +1,6 @@
 "use client";
 
 import { clientLocator } from "@/src/common/di/client-locator";
-import { PasswordInputFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -22,6 +21,7 @@ import type { z } from "zod";
 import { changePasswordAction } from "../actions/change-password-action";
 import { ChangePasswordActionSchema } from "../schemas/change-password-action-schema";
 import { SettingsSectionTitle } from "./settings-section-title";
+import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 
 export function SettingsChangePasswordSection() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

@@ -132,6 +132,7 @@ export interface LoginWithPasswordInputModel {
 export interface SignupWithPasswordInputModel {
   email: string;
   password: string;
+  acceptTerms: boolean;
 }
 
 export interface SignupWithPasswordResultModel {

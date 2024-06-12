@@ -40,6 +40,7 @@ interface DatabaseUserAttributes {
   email: string;
   hashed_password: string;
   authTypes: AuthTypeModel[];
+  acceptTerms: boolean;
   isEmailVerified?: boolean;
 }
 
@@ -142,10 +143,11 @@ export class AuthServiceImpl implements AuthService {
     return this.lucia.createSessionCookie(session.id);
   }
 
-  async signupWithPassword(
-    input: SignupWithPasswordInputModel,
-  ): Promise<SignupWithPasswordResultModel> {
-    const { email, password } = input;
+  async signupWithPassword({
+    email,
+    password,
+    acceptTerms,
+  }: SignupWithPasswordInputModel): Promise<SignupWithPasswordResultModel> {
     const existingUser = await this.usersCollection.findOne({
       email,
     });
@@ -157,6 +159,7 @@ export class AuthServiceImpl implements AuthService {
     const result = await this.usersCollection.insertOne({
       email,
       hashed_password,
+      acceptTerms,
       authTypes: [AuthTypeModel.email],
     });
     const userId = result.insertedId;

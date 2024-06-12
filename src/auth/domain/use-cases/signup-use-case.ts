@@ -3,6 +3,7 @@ import type { EmailService } from "@/src/common/domain/interfaces/email-service"
 import type { IpService } from "@/src/common/domain/interfaces/ip-service";
 import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
+import { UserDoesNotAcceptTermsError } from "../errors/auth-errors";
 import type { AuthService } from "../interfaces/auth-service";
 import type { EmailVerificationCodesRepository } from "../interfaces/email-verification-codes-repository";
 
@@ -30,6 +31,8 @@ export class SignupUseCase {
    * to the user's email address. Finally, it sets the session cookie in the server response.
    */
   async execute(input: SignupInputModel) {
+    if (!input.acceptTerms) throw new UserDoesNotAcceptTermsError();
+
     const ip = await this.ipService.getIp();
     const rateLimitKey = `SignupUseCase/${ip}`;
 
@@ -54,4 +57,5 @@ export class SignupUseCase {
 interface SignupInputModel {
   email: string;
   password: string;
+  acceptTerms: boolean;
 }

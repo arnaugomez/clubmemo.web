@@ -1,5 +1,4 @@
 import { z } from "@/i18n/zod";
-import { WysiwygFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -19,6 +18,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createNoteAction } from "../actions/create-note-action";
 import { clientLocator } from "@/src/common/di/client-locator";
+import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
 
 interface CreateNoteDialogProps {
   courseId: string;

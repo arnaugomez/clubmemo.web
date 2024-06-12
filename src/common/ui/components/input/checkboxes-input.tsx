@@ -1,5 +1,5 @@
-import { Checkbox } from "../shadcn/ui/checkbox";
 import { FormDescription, FormLabel } from "../shadcn/ui/form";
+import { CheckboxInput } from "./checkbox-input";
 
 export interface Option {
   label: string;
@@ -33,26 +33,19 @@ export function CheckboxesInput({
       {options.map((option) => {
         const checkboxName = `${name}.${option.value}`;
         return (
-          <div
+          <CheckboxInput
             key={option.value}
-            className="flex flex-row items-start space-x-3 space-y-0"
-          >
-            <Checkbox
-              name={checkboxName}
-              id={checkboxName}
-              checked={value.includes(option.value)}
-              onCheckedChange={(checked) => {
-                onChange(
-                  checked
-                    ? [...value, option.value]
-                    : value.filter((e) => e !== option.value),
-                );
-              }}
-            />
-            <FormLabel htmlFor={checkboxName} className="font-normal">
-              {option.label}
-            </FormLabel>
-          </div>
+            name={checkboxName}
+            value={value.includes(option.value)}
+            onChange={(checked) => {
+              onChange(
+                checked
+                  ? [...value, option.value]
+                  : value.filter((e) => e !== option.value),
+              );
+            }}
+            label={option.label}
+          />
         );
       })}
     </>

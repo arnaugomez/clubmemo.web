@@ -1,6 +1,5 @@
 import { z } from "@/i18n/zod";
 import { FileSchema } from "@/src/common/schemas/file-schema";
-import { FileFormField } from "@/src/common/ui/components/form/form-fields";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -14,6 +13,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { importNotesAction } from "../actions/import-notes-action";
 import { clientLocator } from "@/src/common/di/client-locator";
+import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 
 interface ImportNotesCsvFormProps {
   courseId: string;
