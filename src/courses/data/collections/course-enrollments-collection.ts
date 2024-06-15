@@ -2,6 +2,14 @@ import { collection } from "@/src/common/data/utils/mongo";
 import type { ObjectId, WithId } from "mongodb";
 import { CourseEnrollmentModel } from "../../domain/models/course-enrollment-model";
 
+export interface CourseEnrollmentDoc {
+  courseId: ObjectId;
+  profileId: ObjectId;
+
+  isFavorite: boolean;
+  config?: CourseEnrollmentConfigDoc;
+}
+
 export interface CourseEnrollmentConfigDoc {
   enableFuzz?: boolean;
   maximumInterval?: number;
@@ -10,13 +18,6 @@ export interface CourseEnrollmentConfigDoc {
   showAdvancedRatingOptions?: boolean;
 }
 
-export interface CourseEnrollmentDoc {
-  courseId: ObjectId;
-  profileId: ObjectId;
-
-  isFavorite: boolean;
-  config?: CourseEnrollmentConfigDoc;
-}
 /**
  * Collection of MongoDB documents of type `CourseEnrollmentDoc`
  */
