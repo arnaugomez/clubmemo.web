@@ -19,8 +19,8 @@ export class SignupUseCase {
     private readonly rateLimitsRepository: RateLimitsRepository,
     private readonly authService: AuthService,
     private readonly profilesRepository: ProfilesRepository,
-    private readonly emailService: EmailService,
     private readonly emailVerificationCodesRepository: EmailVerificationCodesRepository,
+    private readonly emailService: EmailService,
     private readonly cookieService: CookieService,
   ) {}
 

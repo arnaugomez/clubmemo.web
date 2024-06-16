@@ -1,6 +1,6 @@
 import type { PaginationFacet } from "@/src/common/data/facets/pagination-facet";
 import { PaginationFacetTransformer } from "@/src/common/data/facets/pagination-facet";
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
 import type { WithId } from "mongodb";
@@ -25,9 +25,9 @@ export class NotesRepositoryImpl implements NotesRepository {
   private readonly notes: typeof notesCollection.type;
   private readonly practiceCards: typeof practiceCardsCollection.type;
 
-  constructor(mongoService: MongoService) {
-    this.notes = mongoService.collection(notesCollection);
-    this.practiceCards = mongoService.collection(practiceCardsCollection);
+  constructor(databaseService: DatabaseService) {
+    this.notes = databaseService.collection(notesCollection);
+    this.practiceCards = databaseService.collection(practiceCardsCollection);
   }
   async create(note: CreateNoteInputModel): Promise<NoteModel> {
     const newNote = {

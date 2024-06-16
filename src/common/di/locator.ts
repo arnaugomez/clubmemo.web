@@ -16,22 +16,22 @@ import type { ProfilesRepository } from "../../profile/domain/interfaces/profile
 import { RateLimitsRepositoryImpl } from "../../rate-limits/data/repositories/rate-limits-repository-impl";
 import type { RateLimitsRepository } from "../../rate-limits/domain/interfaces/rate-limits-repository";
 import type { TagsRepository } from "../../tags/domain/interfaces/tags-repository";
-import { CookieServiceNextJsImpl } from "../data/services/cookie-service-next-js-impl";
+import { CookieServiceNextImpl } from "../data/services/cookie-service-next-impl";
+import { DatabaseServiceImpl } from "../data/services/database-service-impl";
 import { EnvServiceImpl } from "../data/services/env-service-impl";
-import { MongoServiceImpl } from "../data/services/mongo-service-impl";
 import type { CookieService } from "../domain/interfaces/cookie-service";
+import type { DatabaseService } from "../domain/interfaces/database-service";
 import type { DateTimeService } from "../domain/interfaces/date-time-service";
 import type { EmailService } from "../domain/interfaces/email-service";
 import type { EnvService } from "../domain/interfaces/env-service";
 import type { IpService } from "../domain/interfaces/ip-service";
-import type { MongoService } from "../domain/interfaces/mongo-service";
 import { clientLocator } from "./client-locator";
 import type { Dependency, Lazy } from "./locator-types";
 import { singleton } from "./locator-utils";
 
 interface Locator {
   EnvService: Dependency<EnvService>;
-  MongoService: Dependency<MongoService>;
+  DatabaseService: Dependency<DatabaseService>;
   EmailService: Lazy<EmailService>;
   DateTimeService: Lazy<DateTimeService>;
   FileUploadService: Lazy<FileUploadService>;
@@ -67,7 +67,9 @@ interface Locator {
  */
 export const locator: Locator = {
   EnvService: singleton(() => new EnvServiceImpl()),
-  MongoService: singleton(() => new MongoServiceImpl(locator.EnvService())),
+  DatabaseService: singleton(
+    () => new DatabaseServiceImpl(locator.EnvService()),
+  ),
   IpService: singleton(async () => {
     const file = await import("../data/services/ip-service-vercel-impl");
     return new file.IpServiceVercelImpl();
@@ -91,29 +93,31 @@ export const locator: Locator = {
       (file) => new file.FileUploadServiceS3Impl(locator.EnvService()),
     ),
   ),
-  CookieService: singleton(() => new CookieServiceNextJsImpl()),
+  CookieService: singleton(() => new CookieServiceNextImpl()),
 
   // Auth
   AuthService: singleton(
-    () => new AuthServiceImpl(locator.EnvService(), locator.MongoService()),
+    () => new AuthServiceImpl(locator.EnvService(), locator.DatabaseService()),
   ),
   async EmailVerificationCodesRepository() {
     const file = await import(
       "../../auth/data/repositories/email-verification-codes-repository-impl"
     );
-    return new file.EmailVerificationCodesRepositoryImpl(this.MongoService());
+    return new file.EmailVerificationCodesRepositoryImpl(
+      this.DatabaseService(),
+    );
   },
   async ForgotPasswordTokensRepository() {
     const file = await import(
       "../../auth/data/repositories/forgot-password-tokens-repository-impl"
     );
-    return new file.ForgotPasswordTokensRepositoryImpl(this.MongoService());
+    return new file.ForgotPasswordTokensRepositoryImpl(this.DatabaseService());
   },
   async UsersRepository() {
     const file = await import(
       "../../auth/data/repositories/users-repository-impl"
     );
-    return new file.UsersRepositoryImpl(this.MongoService());
+    return new file.UsersRepositoryImpl(this.DatabaseService());
   },
 
   // Profile
@@ -121,7 +125,7 @@ export const locator: Locator = {
     const file = await import(
       "../../profile/data/repositories/profiles-repository-impl"
     );
-    return new file.ProfilesRepositoryImpl(this.MongoService());
+    return new file.ProfilesRepositoryImpl(this.DatabaseService());
   },
 
   // Courses
@@ -130,7 +134,7 @@ export const locator: Locator = {
       "../../courses/data/repositories/courses-repository-impl"
     );
     return new file.CoursesRepositoryImpl(
-      this.MongoService(),
+      this.DatabaseService(),
       await this.DateTimeService(),
     );
   },
@@ -138,13 +142,13 @@ export const locator: Locator = {
     const file = await import(
       "../../courses/data/repositories/course-enrollments-repository-impl"
     );
-    return new file.CourseEnrollmentsRepositoryImpl(this.MongoService());
+    return new file.CourseEnrollmentsRepositoryImpl(this.DatabaseService());
   },
   async CourseAuthorsRepository() {
     const file = await import(
       "../../courses/data/repositories/course-authors-repository-impl"
     );
-    return new file.CourseAuthorsRepositoryImpl(this.MongoService());
+    return new file.CourseAuthorsRepositoryImpl(this.DatabaseService());
   },
 
   // Tags
@@ -152,14 +156,14 @@ export const locator: Locator = {
     const file = await import(
       "../../tags/data/repositories/tags-repository-impl"
     );
-    return new file.TagsRepositoryImpl(this.MongoService());
+    return new file.TagsRepositoryImpl(this.DatabaseService());
   },
   // Notes
   async NotesRepository() {
     const file = await import(
       "../../notes/data/repositories/notes-repository-impl"
     );
-    return new file.NotesRepositoryImpl(this.MongoService());
+    return new file.NotesRepositoryImpl(this.DatabaseService());
   },
   // Ai Generator
   async AiNotesGeneratorService() {
@@ -185,7 +189,7 @@ export const locator: Locator = {
       "../../practice/data/repositories/practice-cards-repository-impl"
     );
     return new file.PracticeCardsRepositoryImpl(
-      this.MongoService(),
+      this.DatabaseService(),
       await this.DateTimeService(),
     );
   },
@@ -194,7 +198,7 @@ export const locator: Locator = {
       "../../practice/data/repositories/review-logs-repository-impl"
     );
     return new file.ReviewLogsRepositoryImpl(
-      this.MongoService(),
+      this.DatabaseService(),
       await this.DateTimeService(),
     );
   },
@@ -205,12 +209,12 @@ export const locator: Locator = {
     );
     return new file.FileUploadsRepositoryImpl(
       await this.FileUploadService(),
-      this.MongoService(),
+      this.DatabaseService(),
     );
   },
 
   // Rate Limits
   RateLimitsRepository: singleton(
-    () => new RateLimitsRepositoryImpl(locator.MongoService()),
+    () => new RateLimitsRepositoryImpl(locator.DatabaseService()),
   ),
 };

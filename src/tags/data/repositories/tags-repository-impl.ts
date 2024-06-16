@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { MongoBulkWriteError } from "mongodb";
 import type { TagsRepository } from "../../domain/interfaces/tags-repository";
 import { tagsCollection } from "../collections/tags-collection";
@@ -9,8 +9,8 @@ import { tagsCollection } from "../collections/tags-collection";
 export class TagsRepositoryImpl implements TagsRepository {
   private readonly tags: typeof tagsCollection.type;
 
-  constructor(mongoService: MongoService) {
-    this.tags = mongoService.collection(tagsCollection);
+  constructor(databaseService: DatabaseService) {
+    this.tags = databaseService.collection(tagsCollection);
     this.tags.createIndex({ name: 1 }, { unique: true });
   }
   async create(tags: string[]): Promise<void> {

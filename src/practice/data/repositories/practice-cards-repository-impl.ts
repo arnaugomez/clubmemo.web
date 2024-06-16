@@ -1,5 +1,5 @@
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
 import {
   NoteDocTransformer,
@@ -25,12 +25,12 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
   private readonly notes: typeof notesCollection.type;
 
   constructor(
-    mongoService: MongoService,
+    databaseService: DatabaseService,
     private readonly dateTimeService: DateTimeService,
   ) {
-    this.practiceCards = mongoService.collection(practiceCardsCollection);
+    this.practiceCards = databaseService.collection(practiceCardsCollection);
     this.practiceCards.createIndex({ courseEnrollmentId: 1, due: 1 });
-    this.notes = mongoService.collection(notesCollection);
+    this.notes = databaseService.collection(notesCollection);
     this.notes.createIndex({ courseId: 1 });
   }
 

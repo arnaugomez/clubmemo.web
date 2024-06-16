@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
 import type { UsersRepository } from "../../domain/interfaces/users-repository";
 import type { UserModel } from "../../domain/models/user-model";
@@ -13,8 +13,8 @@ import {
 export class UsersRepositoryImpl implements UsersRepository {
   private readonly usersCollection: typeof usersCollection.type;
 
-  constructor(mongoService: MongoService) {
-    this.usersCollection = mongoService.collection(usersCollection);
+  constructor(databaseService: DatabaseService) {
+    this.usersCollection = databaseService.collection(usersCollection);
     this.usersCollection.createIndex({ email: 1 }, { unique: true });
   }
 

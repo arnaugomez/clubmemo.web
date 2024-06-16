@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { FileUploadService } from "../../domain/interfaces/file-upload-service";
 import type {
   CreateFileUploadInputModel,
@@ -12,9 +12,9 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
 
   constructor(
     private readonly fileUploadService: FileUploadService,
-    mongoService: MongoService,
+    databaseService: DatabaseService,
   ) {
-    this.fileUploads = mongoService.collection(fileUploadsCollection);
+    this.fileUploads = databaseService.collection(fileUploadsCollection);
     this.fileUploads.createIndex({ keyPrefix: 1 });
     this.fileUploads.createIndex({ key: 1 });
   }

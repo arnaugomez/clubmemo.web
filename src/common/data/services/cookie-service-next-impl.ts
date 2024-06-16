@@ -1,13 +1,13 @@
 import { cookies } from "next/headers";
 import type {
-  SetCookieInputModel,
   CookieService,
+  SetCookieInputModel,
 } from "../../domain/interfaces/cookie-service";
 
 /**
- * Implementation of `CookieService` using the Next.js `cookies` function.
+ * Implementation of `CookieService` using the Next `cookies` function.
  */
-export class CookieServiceNextJsImpl implements CookieService {
+export class CookieServiceNextImpl implements CookieService {
   get(name: string) {
     return cookies().get(name)?.value;
   }
