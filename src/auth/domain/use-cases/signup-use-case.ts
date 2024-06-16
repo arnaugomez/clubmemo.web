@@ -43,8 +43,9 @@ export class SignupUseCase {
 
     await this.profilesRepository.create(userId);
 
-    const { code } =
+    const emailVerificationCode =
       await this.emailVerificationCodesRepository.generate(userId);
+    const code = emailVerificationCode.code;
 
     await this.emailService.sendVerificationCode(input.email, code);
 

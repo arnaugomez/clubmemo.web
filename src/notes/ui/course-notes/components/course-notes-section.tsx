@@ -1,9 +1,9 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
+import { notesLocator } from "@/src/notes/notes-locator";
 import { Suspense } from "react";
 import { CourseNotesProvider } from "../contexts/course-notes-context";
-import { fetchCourseNotes } from "../fetch/fetch-course-notes";
 import { CourseNotesDropdown } from "./course-notes-dropdown";
 import { CourseNotesLoaded } from "./course-notes-loaded";
 import { CourseNotesLoadingSkeletons } from "./course-notes-loading-skeletons";
@@ -51,7 +51,8 @@ interface CourseNotesContentProps {
 }
 
 async function CourseNotesLoader({ courseId }: CourseNotesContentProps) {
-  const pagination = await fetchCourseNotes({ courseId });
+  const useCase = await notesLocator.GetNotesUseCase();
+  const pagination = await useCase.execute({ courseId });
 
   return (
     <CourseNotesLoaded
