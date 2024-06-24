@@ -32,7 +32,7 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
       )
       .next();
     const count = previous ? (previous.count + 1) % 1000 : 0;
-    const keySuffix = count ? `${input.fileName}-${count}` : "";
+    const keySuffix = input.fileName + (count ? `-${count}` : "");
     const key = `${input.keyPrefix}/${keySuffix}`;
 
     const presignedUrl = await this.fileUploadService.generatePresignedUrl({
