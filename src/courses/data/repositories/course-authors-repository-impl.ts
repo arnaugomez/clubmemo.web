@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
 import type { CourseAuthorsRepository } from "../../domain/interfaces/course-authors-repository";
 import type { CourseAuthorModel } from "../../domain/models/course-author-model";
@@ -13,8 +13,8 @@ import { coursePermissionsCollection } from "../collections/course-permissions-c
 export class CourseAuthorsRepositoryImpl implements CourseAuthorsRepository {
   private readonly collection: typeof coursePermissionsCollection.type;
 
-  constructor(mongoService: MongoService) {
-    this.collection = mongoService.collection(coursePermissionsCollection);
+  constructor(databaseService: DatabaseService) {
+    this.collection = databaseService.collection(coursePermissionsCollection);
   }
 
   async get(courseId: string): Promise<CourseAuthorModel[]> {

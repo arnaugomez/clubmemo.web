@@ -1,5 +1,5 @@
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { ObjectId } from "mongodb";
 import type { ReviewLogsRepository } from "../../domain/interfaces/review-logs-repository";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
@@ -13,10 +13,10 @@ export class ReviewLogsRepositoryImpl implements ReviewLogsRepository {
   private readonly reviewLogs: typeof reviewLogsCollection.type;
 
   constructor(
-    mongoService: MongoService,
+    databaseService: DatabaseService,
     private readonly dateTimeService: DateTimeService,
   ) {
-    this.reviewLogs = mongoService.collection(reviewLogsCollection);
+    this.reviewLogs = databaseService.collection(reviewLogsCollection);
     this.reviewLogs.createIndex({ courseEnrollmentId: 1, review: 1, state: 1 });
   }
 

@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
 import { HandleAlreadyExistsError } from "../../domain/errors/profile-errors";
 import type { ProfilesRepository } from "../../domain/interfaces/profiles-repository";
@@ -15,8 +15,8 @@ import {
 export class ProfilesRepositoryImpl implements ProfilesRepository {
   private readonly collection: typeof profilesCollection.type;
 
-  constructor(mongoService: MongoService) {
-    this.collection = mongoService.collection(profilesCollection);
+  constructor(databaseService: DatabaseService) {
+    this.collection = databaseService.collection(profilesCollection);
     this.collection.createIndex({ userId: 1 });
     this.collection.createIndex({ handle: 1 });
   }

@@ -99,8 +99,8 @@ export const authLocator: AuthLocator = {
       locator.RateLimitsRepository(),
       locator.AuthService(),
       await locator.ProfilesRepository(),
-      await locator.EmailService(),
       await locator.EmailVerificationCodesRepository(),
+      await locator.EmailService(),
       locator.CookieService(),
     );
   },

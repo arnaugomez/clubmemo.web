@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { DailyRateLimitError } from "../../domain/errors/rate-limits-errors";
 import type { RateLimitsRepository } from "../../domain/interfaces/rate-limits-repository";
 import { rateLimitsCollection } from "../collections/rate-limits-collection";
@@ -9,8 +9,8 @@ import { rateLimitsCollection } from "../collections/rate-limits-collection";
 export class RateLimitsRepositoryImpl implements RateLimitsRepository {
   private readonly rateLimits: typeof rateLimitsCollection.type;
 
-  constructor(mongoService: MongoService) {
-    this.rateLimits = mongoService.collection(rateLimitsCollection);
+  constructor(databaseService: DatabaseService) {
+    this.rateLimits = databaseService.collection(rateLimitsCollection);
     this.rateLimits.createIndex({ name: 1 });
     this.rateLimits.createIndex({ name: 1, updatedAt: 1 });
   }

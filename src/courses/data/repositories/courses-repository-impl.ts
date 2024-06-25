@@ -1,7 +1,7 @@
 import type { PaginationFacet } from "@/src/common/data/facets/pagination-facet";
 import { PaginationFacetTransformer } from "@/src/common/data/facets/pagination-facet";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import type { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
 import type { WithId } from "mongodb";
@@ -53,15 +53,15 @@ export class CoursesRepositoryImpl implements CoursesRepository {
   private readonly courseEnrollments: typeof courseEnrollmentsCollection.type;
 
   constructor(
-    mongoService: MongoService,
+    databaseService: DatabaseService,
     private readonly dateTimeService: DateTimeService,
   ) {
-    this.courses = mongoService.collection(coursesCollection);
-    this.coursePermissions = mongoService.collection(
+    this.courses = databaseService.collection(coursesCollection);
+    this.coursePermissions = databaseService.collection(
       coursePermissionsCollection,
     );
     this.coursePermissions.createIndex({ courseId: 1, profileId: 1 });
-    this.courseEnrollments = mongoService.collection(
+    this.courseEnrollments = databaseService.collection(
       courseEnrollmentsCollection,
     );
     this.courseEnrollments.createIndex({ courseId: 1, profileId: 1 });

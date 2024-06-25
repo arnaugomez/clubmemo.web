@@ -9,7 +9,7 @@ import type { CollectionType } from "../../data/utils/mongo";
  * collection instead of using the MongoDB client directly. However, it also
  * exposes the MongoDB client for more advanced use cases.
  */
-export interface MongoService {
+export interface DatabaseService {
   readonly client: MongoClient;
 
   /**

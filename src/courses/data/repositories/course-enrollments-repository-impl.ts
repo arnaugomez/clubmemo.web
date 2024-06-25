@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
 import type {
   CourseEnrollmentsRepository,
@@ -18,8 +18,8 @@ export class CourseEnrollmentsRepositoryImpl
 {
   private readonly collection: typeof courseEnrollmentsCollection.type;
 
-  constructor(mongoService: MongoService) {
-    this.collection = mongoService.collection(courseEnrollmentsCollection);
+  constructor(databaseService: DatabaseService) {
+    this.collection = databaseService.collection(courseEnrollmentsCollection);
   }
 
   async create(input: CreateCourseEnrollmentInputModel): Promise<void> {

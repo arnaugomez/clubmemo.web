@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { waitMilliseconds } from "@/src/common/domain/utils/promises";
 import { ObjectId } from "mongodb";
 import { TimeSpan, createDate } from "oslo";
@@ -17,8 +17,10 @@ export class EmailVerificationCodesRepositoryImpl
   implements EmailVerificationCodesRepository
 {
   private readonly collection: typeof emailVerificationCodesCollection.type;
-  constructor(mongoService: MongoService) {
-    this.collection = mongoService.collection(emailVerificationCodesCollection);
+  constructor(databaseService: DatabaseService) {
+    this.collection = databaseService.collection(
+      emailVerificationCodesCollection,
+    );
   }
 
   async generate(userId: string): Promise<EmailVerificationCodeModel> {

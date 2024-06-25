@@ -1,4 +1,4 @@
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { Collection } from "mongodb";
 import { ObjectId } from "mongodb";
 import { TimeSpan, createDate } from "oslo";
@@ -19,8 +19,10 @@ export class ForgotPasswordTokensRepositoryImpl
   implements ForgotPasswordTokensRepository
 {
   private readonly collection: Collection<ForgotPasswordTokenDoc>;
-  constructor(mongoService: MongoService) {
-    this.collection = mongoService.collection(forgotPasswordTokensCollection);
+  constructor(databaseService: DatabaseService) {
+    this.collection = databaseService.collection(
+      forgotPasswordTokensCollection,
+    );
   }
 
   async generate(userId: string): Promise<string> {

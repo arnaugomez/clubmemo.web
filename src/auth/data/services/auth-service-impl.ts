@@ -1,5 +1,5 @@
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { EnvService } from "@/src/common/domain/interfaces/env-service";
-import type { MongoService } from "@/src/common/domain/interfaces/mongo-service";
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import type {
   Cookie,
@@ -60,12 +60,12 @@ export class AuthServiceImpl implements AuthService {
 
   constructor(
     private readonly envService: EnvService,
-    mongoService: MongoService,
+    databaseService: DatabaseService,
   ) {
-    this.usersCollection = mongoService.collection(usersCollection);
+    this.usersCollection = databaseService.collection(usersCollection);
 
     const adapter = new MongodbAdapter(
-      mongoService.collection(sessionsCollection) as unknown as Collection<
+      databaseService.collection(sessionsCollection) as unknown as Collection<
         SessionDoc & { _id: string }
       >,
       this.usersCollection as unknown as Collection<WithId<UserDoc>>,

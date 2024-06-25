@@ -3,6 +3,7 @@ import type { Lazy } from "../common/di/locator-types";
 import { profileLocator } from "../profile/profile-locator";
 import type { CreateNoteUseCase } from "./domain/use-cases/create-note-use-case";
 import type { DeleteNoteUseCase } from "./domain/use-cases/delete-note-use-case";
+import type { GetNotesUseCase } from "./domain/use-cases/get-notes-use-case";
 import type { ImportNotesUseCase } from "./domain/use-cases/import-notes-use-case";
 import type { UpdateNoteUseCase } from "./domain/use-cases/update-note-use-case";
 
@@ -11,6 +12,7 @@ interface NotesLocator {
   UpdateNoteUseCase: Lazy<UpdateNoteUseCase>;
   DeleteNoteUseCase: Lazy<DeleteNoteUseCase>;
   ImportNotesUseCase: Lazy<ImportNotesUseCase>;
+  GetNotesUseCase: Lazy<GetNotesUseCase>;
 }
 
 export const notesLocator: NotesLocator = {
@@ -45,5 +47,9 @@ export const notesLocator: NotesLocator = {
       await locator.CoursesRepository(),
       await locator.NotesRepository(),
     );
+  },
+  GetNotesUseCase: async () => {
+    const file = await import("./domain/use-cases/get-notes-use-case");
+    return new file.GetNotesUseCase(await locator.NotesRepository());
   },
 };

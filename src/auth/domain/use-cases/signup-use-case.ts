@@ -19,8 +19,8 @@ export class SignupUseCase {
     private readonly rateLimitsRepository: RateLimitsRepository,
     private readonly authService: AuthService,
     private readonly profilesRepository: ProfilesRepository,
-    private readonly emailService: EmailService,
     private readonly emailVerificationCodesRepository: EmailVerificationCodesRepository,
+    private readonly emailService: EmailService,
     private readonly cookieService: CookieService,
   ) {}
 
@@ -43,8 +43,9 @@ export class SignupUseCase {
 
     await this.profilesRepository.create(userId);
 
-    const { code } =
+    const emailVerificationCode =
       await this.emailVerificationCodesRepository.generate(userId);
+    const code = emailVerificationCode.code;
 
     await this.emailService.sendVerificationCode(input.email, code);
 
