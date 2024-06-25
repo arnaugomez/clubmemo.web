@@ -13,6 +13,12 @@ import {
   type LoginWithPasswordActionModel,
 } from "../schemas/login-with-password-action-schema";
 
+/**
+ * Checks that the user credentials (email and password) are valid and creates a
+ * new session to log in the user. Then, it redirects to the home page.
+ *
+ * @param input The credentials of the user: email and password
+ */
 export async function loginWithPasswordAction(
   input: LoginWithPasswordActionModel,
 ) {

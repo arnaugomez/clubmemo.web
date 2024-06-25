@@ -20,6 +20,12 @@ interface PracticeWizardProps {
   cardsData: PracticeCardModelData[];
 }
 
+/**
+ * Shows a series of steps that the user must follow in order to complete
+ * a practice session.
+ *
+ * It shows the practice cards and a success message at the end of the practice.
+ */
 export function PracticeWizard({
   courseData,
   enrollmentData,
