@@ -1,6 +1,6 @@
 import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { fetchPracticeCards } from "../fetch/fetch-practice-cards";
+import { practiceLocator } from "../../practice-locator";
 import { PracticeEmptyState } from "./practice-empty-state";
 import { PracticeWizard } from "./practice-wizard";
 
@@ -12,7 +12,8 @@ export async function PracticePageLoader({
   course,
   enrollment,
 }: PracticePageLoaderProps) {
-  const cards = await fetchPracticeCards({ course, enrollment });
+  const useCase = await practiceLocator.GetPracticeCardsUseCase();
+  const cards = await useCase.execute({ course, enrollment });
 
   if (!cards.length) {
     return <PracticeEmptyState courseId={course.id} />;

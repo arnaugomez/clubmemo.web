@@ -83,6 +83,10 @@ const TaskQueueContext = createNullContext<TaskQueueContextValue>();
 export function TaskQueueProvider({ children }: PropsWithChildren) {
   const [tasks, setTasks] = useState<Task<unknown>[]>([]);
 
+  /**
+   * The first task in the list that is not done yet.
+   * This task could be in status `ready` or `running`.
+   */
   const pendingTask = tasks.find((task) => task.status !== Status.done);
 
   const setStatus = useCallback(function <T>(
