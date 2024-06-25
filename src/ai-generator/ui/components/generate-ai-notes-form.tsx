@@ -3,8 +3,13 @@ import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generat
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
 import { clientLocator } from "@/src/common/di/client-locator";
 import { FileSchema } from "@/src/common/schemas/file-schema";
+import { CheckboxesFormField } from "@/src/common/ui/components/form/checkboxes-form-field";
+import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
+import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
+import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
+import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
@@ -14,18 +19,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
-import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
-import { CheckboxesFormField } from "@/src/common/ui/components/form/checkboxes-form-field";
-import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
-import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
-import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 
 interface GenerateAiNotesFormProps {
+  /**
+   * The type of data that the user will enter to generate the notes.
+   * It can be a file, a text or a topic.
+   */
   sourceType: AiNotesGeneratorSourceType;
+  /**
+   * Triggered when the user clicks on the go back button
+   */
   onGoBack: () => void;
+  /**
+   * Triggered when the form is submitted without errors and a list of notes is
+   * generated
+   */
   onSuccess: (notes: NoteRowModel[]) => void;
 }
 
+/**
+ * Displays a form with the AI notes generator options.
+ * On submit, it generates the notes and calls the `onSuccess` callback
+ */
 export function GenerateAiNotesForm({
   sourceType,
   onSuccess,

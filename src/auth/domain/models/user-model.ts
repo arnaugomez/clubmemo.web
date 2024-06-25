@@ -24,6 +24,10 @@ export class UserModel {
     return this.data.email;
   }
 
+  /**
+   * Types of authentication methods that can be used to log in
+   * with this user
+   */
   get authTypes() {
     return this.data.authTypes;
   }

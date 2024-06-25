@@ -1,14 +1,12 @@
 #!/bin/bash
 
-echo "VERCEL_GIT_COMMIT_REF: $VERCEL_GIT_COMMIT_REF"
-
+# If the commit target branch is dev or main, allow the Vercel build
 if [[ "$VERCEL_GIT_COMMIT_REF" == "dev" || "$VERCEL_GIT_COMMIT_REF" == "main"  ]] ; then
-  # Proceed with the build
-    echo "✅ - Build can proceed"
+  echo "✅ - Build can proceed"
   exit 1;
 
+# Otherwise, cancel the build
 else
-  # Don't build
   echo "🛑 - Build cancelled"
   exit 0;
 fi

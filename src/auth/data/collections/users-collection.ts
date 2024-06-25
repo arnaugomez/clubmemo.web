@@ -14,9 +14,18 @@ export interface UserDoc extends RegisteredDatabaseUserAttributes {}
  */
 export const usersCollection = collection<UserDoc>("users");
 
+/**
+ * Transforms a `UserDoc` instance with the user data from the database into a
+ * `UserModel` instance of the domain layer.
+ */
 export class UserDocTransformer {
   constructor(private readonly user: WithId<UserDoc>) {}
 
+  /**
+   * Transforms a `UserDoc` instance with the user data from the database into a
+   * `UserModel` instance of the domain layer.
+   * @returns the `UserModel` instance.
+   */
   toDomain(): UserModel {
     return new UserModel({
       ...this.user,
@@ -25,6 +34,10 @@ export class UserDocTransformer {
   }
 }
 
+/**
+ * Transforms a `User` instance of the Lucia authentication library into a
+ * `UserModel` instance of the domain layer.
+ */
 export class LuciaUserTransformer {
   constructor(private readonly user: User) {}
 

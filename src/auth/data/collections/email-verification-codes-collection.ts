@@ -21,9 +21,17 @@ export interface EmailVerificationCodeDoc {
 export const emailVerificationCodesCollection =
   collection<EmailVerificationCodeDoc>("emailVerificationCodes");
 
+/**
+ * Transforms a `EmailVerificationCodeDoc` object from the database to a
+ * `EmailVerificationCodeModel` instance of the Domain layer.
+ */
 export class EmailVerificationCodeDocTransformer {
   constructor(private readonly doc: EmailVerificationCodeDoc) {}
 
+  /**
+   * @returns A `EmailVerificationCodeModel` object of the domain layer
+   * with the data of the current `EmailVerificationCodeDoc` object
+   */
   toDomain(): EmailVerificationCodeModel {
     return new EmailVerificationCodeModel({
       code: this.doc.code,

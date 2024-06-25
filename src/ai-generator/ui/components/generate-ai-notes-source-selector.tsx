@@ -15,6 +15,13 @@ interface GenerateAiNotesSourceSelectorProps {
   setSource: (source: AiNotesGeneratorSourceType) => void;
 }
 
+/**
+ * Displays a list of options. The user can click on the option
+ * to pick the type of notes generator. There are three types:
+ * - File upload
+ * - Paste a text with your classroom notes
+ * - Generate notes about a specific topic
+ */
 export function GenerateAiNotesSourceSelector({
   setSource,
 }: GenerateAiNotesSourceSelectorProps) {
