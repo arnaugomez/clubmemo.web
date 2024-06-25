@@ -38,6 +38,9 @@ interface EditProfileSectionProps {
   profileData: ProfileModelData;
 }
 
+/**
+ * Shows a button to edit the profile and opens a dialog when the button is pressed
+ */
 export function EditProfileSection({ profileData }: EditProfileSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const profile = new ProfileModel(profileData);
@@ -58,6 +61,9 @@ interface EditProfileDialogProps {
   onClose: () => void;
 }
 
+/**
+ * Validation rules for the edit profile form
+ */
 const EditProfileSchema = z.object({
   displayName: z.string().trim().min(1).max(50),
   handle: HandleSchema,
@@ -71,6 +77,9 @@ const EditProfileSchema = z.object({
 
 type FormValues = z.infer<typeof EditProfileSchema>;
 
+/**
+ * Dialog with a form to edit the profile
+ */
 function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
   const router = useRouter();
 

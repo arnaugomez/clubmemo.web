@@ -6,6 +6,9 @@ import type { GetNextPracticeCardsUseCase } from "./domain/use-cases/get-next-pr
 import type { GetPracticeCardsUseCase } from "./domain/use-cases/get-practice-cards-use-case";
 import type { PracticeUseCase } from "./domain/use-cases/practice-use-case";
 
+/**
+ * Interface of the service locator of the Practice module
+ */
 interface PracticeLocator {
   GetNextPracticeCardsUseCase: Lazy<GetNextPracticeCardsUseCase>;
   PracticeUseCase: Lazy<PracticeUseCase>;
@@ -13,6 +16,9 @@ interface PracticeLocator {
   GetCoursePracticeCountUseCase: Lazy<GetCoursePracticeCountUseCase>;
 }
 
+/**
+ * The service locator of the Practice module
+ */
 export const practiceLocator: PracticeLocator = {
   async GetNextPracticeCardsUseCase() {
     const file = await import(

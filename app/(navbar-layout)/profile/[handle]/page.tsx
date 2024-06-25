@@ -5,6 +5,9 @@ import { fetchProfileByHandle } from "@/src/profile/ui/fetch/fetch-profile-by-ha
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+/**
+ * Gets the data of the profile with the given handle and shows the profile page
+ */
 export default async function ProfileByHandlePage({
   params: { handle },
 }: PropsWithHandleParam) {
@@ -14,6 +17,9 @@ export default async function ProfileByHandlePage({
   return <ProfilePage profile={profile} />;
 }
 
+/**
+ * Returns the metadata of the HTML head for the profile page
+ */
 export async function generateMetadata({
   params: { handle },
 }: PropsWithHandleParam): Promise<Metadata> {

@@ -22,6 +22,11 @@ interface ProfilePageProps {
   profile: ProfileModel;
 }
 
+/**
+ * Page that displays the data of the profile and its published courses.
+ *
+ * It also contains links to edit the profile and the user settings.
+ */
 export async function ProfilePage({ profile }: ProfilePageProps) {
   await privateProfileGuard(profile);
   return (

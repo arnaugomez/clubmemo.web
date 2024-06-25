@@ -12,6 +12,10 @@ export class GetMyProfileUseCase {
     private readonly profilesRepository: ProfilesRepository,
   ) {}
 
+  /**
+   * Gets the profile of the currently logged in user
+   * @returns The profile of the currently logged in user, otherwise `null`
+   */
   async execute(): Promise<ProfileModel | null> {
     const { user } = await this.getSessionFn();
     if (!user) return null;

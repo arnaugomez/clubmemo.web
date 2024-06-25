@@ -1,4 +1,10 @@
+/**
+ * Data that can be entered by the user to update their profile.
+ */
 export interface UpdateProfileInputModel {
+  /**
+   * The id of the profile to update.
+   */
   id: string;
 
   displayName: string;
