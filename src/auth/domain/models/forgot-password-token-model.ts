@@ -16,6 +16,9 @@ export class ForgotPasswordTokenModel {
     return this.data.userId;
   }
 
+  /**
+   * Is `true` if the verification code has reached its expiration date
+   */
   get hasExpired() {
     return !isWithinExpirationDate(this.data.expiresAt);
   }

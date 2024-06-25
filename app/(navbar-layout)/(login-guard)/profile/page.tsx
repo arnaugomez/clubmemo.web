@@ -3,6 +3,9 @@ import { locator } from "@/src/common/di/locator";
 import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 import { RedirectType, notFound, redirect } from "next/navigation";
 
+/**
+ * Route that redirects to the page of the profile of the current user
+ */
 export default async function MyProfilePage() {
   const { user } = await fetchSession();
   if (!user) notFound();

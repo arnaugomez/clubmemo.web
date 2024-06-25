@@ -9,6 +9,9 @@ import { CircleX } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 
+/**
+ * Shows an error message that is displayed in the pages with the Admin layout.
+ */
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   useEffect(() => {
     clientLocator.ErrorTrackingService().captureError(error);

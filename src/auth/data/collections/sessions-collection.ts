@@ -17,9 +17,17 @@ export interface SessionDoc {
  */
 export const sessionsCollection = collection<SessionDoc>("sessions");
 
+/**
+ * Converts a `Session` object from the Data layer to a
+ * `SessionModel` instance of the Domain layer.
+ */
 export class SessionTransformer {
   constructor(private readonly session: Session) {}
 
+  /**
+   * @returns A new `SessionModel` object of the domain layer
+   * with the data of the original `Session` object
+   */
   toDomain(): SessionModel {
     return new SessionModel({
       id: this.session.id,

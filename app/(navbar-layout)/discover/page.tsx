@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   title: "Explorar cursos",
 };
 
+/**
+ * Page that contains a search bar and a list of search results. The search
+ * results are a list of courses.
+ */
 export default async function DiscoverPage({
   searchParams,
 }: {

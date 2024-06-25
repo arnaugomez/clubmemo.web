@@ -1,7 +1,7 @@
 import { ResetPasswordPageLoaded } from "@/src/auth/ui/forgot-password/pages/reset-password-page-loaded";
 import { locator } from "@/src/common/di/locator";
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Nueva contraseña",
@@ -12,6 +12,10 @@ interface SearchParams {
   token?: string;
 }
 
+/**
+ * Verifies that the user can access the reset password check. It does so by checking
+ * the validity of the password recovery code and the email.
+ */
 async function resetPasswordPageGuard(searchParams: SearchParams) {
   if (!searchParams.email || !searchParams.token) {
     notFound();
@@ -35,6 +39,9 @@ async function resetPasswordPageGuard(searchParams: SearchParams) {
   if (!isValid) notFound();
 }
 
+/**
+ * Shows a form to set a new password, thereby regaining access to the account.
+ */
 export default async function ResetPasswordPage({
   searchParams,
 }: {

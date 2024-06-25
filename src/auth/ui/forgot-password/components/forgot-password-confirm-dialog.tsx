@@ -14,6 +14,9 @@ interface ForgotPasswordConfirmDialogProps {
   email: string;
 }
 
+/**
+ * Confirmation dialog that pops up after the reset password email is sent.
+ */
 export function ForgotPasswordConfirmDialog({
   email,
 }: ForgotPasswordConfirmDialogProps) {

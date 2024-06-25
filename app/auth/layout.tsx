@@ -2,6 +2,11 @@ import { AuthLeftPanel } from "@/src/auth/ui/components/auth-left-panel";
 import { AuthLogo } from "@/src/auth/ui/components/auth-logo";
 import type { PropsWithChildren } from "react";
 
+/**
+ * Layout that is common to all the authentication-related pages. It shows two panels:
+ * one with a decoration image and the other with the main content of the page (for
+ * example, the login form).
+ */
 export default function AuthLayout({ children }: PropsWithChildren) {
   return (
     <main className="divide-slate-300 sm:flex sm:h-screen md:divide-x-[1px]">

@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: "Aprender",
 };
 
+/**
+ * Page that shows the courses that the profile has enrolled in
+ * and suggests a variety of learning activities.
+ */
 export default async function LearnPage() {
   return (
     <main>
@@ -30,6 +34,10 @@ export default async function LearnPage() {
   );
 }
 
+/**
+ * This component shows the content of the Learn page if the user has enrolled
+ * in some courses. Otherwise, it shows a call to action to create a course.
+ */
 async function LearnPageContent() {
   const courses = await fetchMyCoursesPreview();
   if (courses.length === 0) {

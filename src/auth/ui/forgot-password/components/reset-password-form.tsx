@@ -23,6 +23,10 @@ const ResetPasswordConfirmDialog = dynamic(() =>
   ),
 );
 
+/**
+ * Form that the user fills in to change its password after receiving a reset
+ * password email.
+ */
 const FormSchema = z
   .object({
     password: PasswordSchema,

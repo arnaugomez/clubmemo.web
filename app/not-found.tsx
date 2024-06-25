@@ -5,6 +5,9 @@ import { SearchX } from "lucide-react";
 import Link from "next/link";
 import AdminLayout from "./(admin-layout)/layout";
 
+/**
+ * This page is shown when a user tries to access a route that does not exist.
+ */
 export default function NotFoundPage() {
   return (
     <AdminLayout>

@@ -6,6 +6,9 @@ interface ResetPasswordPageLoadedProps {
   token: string;
 }
 
+/**
+ * Content of reset password page. Contains a form to set a new password.
+ */
 export function ResetPasswordPageLoaded({
   email,
   token,

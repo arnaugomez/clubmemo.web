@@ -1,9 +1,15 @@
 import { cn } from "@/src/common/ui/utils/shadcn";
 
 interface PracticeProgressProps {
+  /**
+   * A number from 0 to 1 that represents the fraction of practiced cards
+   */
   progress: number;
 }
 
+/**
+ * Progress bar that shows the amount of practiced cards
+ */
 export function PracticeProgress({ progress }: PracticeProgressProps) {
   return (
     <div className="flex h-3 w-full bg-slate-50">

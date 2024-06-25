@@ -14,6 +14,9 @@ interface ResetPasswordConfirmDialogProps {
   email: string;
 }
 
+/**
+ * Dialog that appears after the password is successfully reset
+ */
 export function ResetPasswordConfirmDialog({
   email,
 }: ResetPasswordConfirmDialogProps) {

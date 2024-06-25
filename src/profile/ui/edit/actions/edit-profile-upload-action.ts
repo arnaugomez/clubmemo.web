@@ -15,6 +15,12 @@ interface EditProfileUploadActionResult {
   backgroundPicture?: CreateFileUploadOutputModel;
 }
 
+/**
+ * Generates presigned urls to upload the profile picture and background picture
+ * of the profile
+ *
+ * @param input The data of the pictures that need to be uploaded
+ */
 export async function editProfileUploadAction(
   input: EditProfileUploadActionModel,
 ): Promise<FormActionResponse<EditProfileUploadActionResult | null>> {

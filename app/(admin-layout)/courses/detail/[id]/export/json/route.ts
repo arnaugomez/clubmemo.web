@@ -5,6 +5,9 @@ import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-para
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 
+/**
+ * Route handler that returns a JSON file with the notes of a course, in JSON format.
+ */
 export async function GET(_: Request, { params: { id } }: PropsWithIdParam) {
   try {
     const profile = await fetchMyProfile();

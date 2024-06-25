@@ -21,9 +21,17 @@ export interface ForgotPasswordTokenDoc {
 export const forgotPasswordTokensCollection =
   collection<ForgotPasswordTokenDoc>("forgotPasswordTokens");
 
+/**
+ * Transforms a `ForgotPasswordTokenDoc` object from the Data layer to a
+ * `ForgotPasswordTokenModel` instance of the Domain layer.
+ */
 export class ForgotPasswordTokenDocTransformer {
   constructor(private readonly doc: WithId<ForgotPasswordTokenDoc>) {}
 
+  /**
+   * @returns A `ForgotPasswordTokenModel` object of the domain layer
+   * with the data of the current `ForgotPasswordTokenDoc` object
+   */
   toDomain(): ForgotPasswordTokenModel {
     return new ForgotPasswordTokenModel({
       userId: this.doc.userId.toString(),

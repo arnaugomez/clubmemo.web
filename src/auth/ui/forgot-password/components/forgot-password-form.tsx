@@ -22,6 +22,9 @@ const ForgotPasswordConfirmDialog = dynamic(() =>
   ),
 );
 
+/**
+ * Form that the user fills in to request a password reset email.
+ */
 export function ForgotPasswordForm() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const form = useForm({

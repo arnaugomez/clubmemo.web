@@ -7,6 +7,12 @@ import {
   type ResetPasswordActionModel,
 } from "../schemas/reset-password-action-schema";
 
+/**
+ * Changes the password of a user. Used when the user forgot the password and
+ * was sent a password reset code.
+ *
+ * @param input The data of the user and the new password
+ */
 export async function resetPasswordAction(input: ResetPasswordActionModel) {
   try {
     const parsed = ResetPasswordActionSchema.parse(input);

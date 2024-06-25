@@ -19,6 +19,12 @@ export class UpdateProfileUseCase {
     private readonly fileUploadsRepository: FileUploadsRepository,
   ) {}
 
+  /**
+   * Edits the data of the profile of the currently logged in user
+   *
+   * @param input The data of the profile that will be changed
+   * @throws {ProfileDoesNotExistError} When the user is not logged in
+   */
   async execute(input: Omit<UpdateProfileInputModel, "id">): Promise<void> {
     const profile = await this.getMyProfileUseCase.execute();
     if (!profile) throw new ProfileDoesNotExistError();
