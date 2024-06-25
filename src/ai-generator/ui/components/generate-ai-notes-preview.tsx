@@ -94,7 +94,7 @@ export function GenerateAiNotesPreview({
               </Button>
             </div>
             <Separator />
-            <div className="flex flex-1  px-4 py-5">
+            <div className="flex flex-1 px-4 py-5">
               <p className="flex-1">{note.back || "Tarjeta sin contenido"}</p>
             </div>
           </Card>
