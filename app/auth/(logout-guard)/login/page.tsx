@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Login",
 };
 
+/**
+ * Renders a welcome message and a login form
+ */
 export default function LoginPage() {
   return (
     <>

@@ -6,6 +6,10 @@ import type { Metadata } from "next";
 
 import { redirect } from "next/navigation";
 
+/**
+ * Checks that the user is logged in and still has not verified the email. Otherwise,
+ * it redirects to the login page or to the home page.
+ */
 async function verifyEmailGuard() {
   const result = await fetchSession();
   if (!result.session) {
@@ -21,6 +25,9 @@ export const metadata: Metadata = {
   title: "Verifica tu email",
 };
 
+/**
+ * Checks if the email verification code has expired and sends a new one if it has.
+ */
 async function handleVerificationCodeExpirationDate() {
   const { user } = await fetchSession();
   if (!user) throw new NullError("user");
@@ -39,6 +46,10 @@ async function handleVerificationCodeExpirationDate() {
   return false;
 }
 
+/**
+ * Shows a form with an OTP input that, when submitted successfully, verifies the email
+ * of the user and grants access to the rest of the application.
+ */
 export default async function VerifyEmailPage() {
   const { user } = await verifyEmailGuard();
 

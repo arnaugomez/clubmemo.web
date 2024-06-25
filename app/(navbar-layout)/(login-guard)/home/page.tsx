@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Inicio",
 };
 
+/**
+ * Shows the home page.
+ */
 export default async function HomePage() {
   const profile = await fetchMyProfile();
   if (!profile) {
@@ -22,12 +25,16 @@ export default async function HomePage() {
       <HomeGreeting />
 
       <div className="h-6" />
-      {hasCourses ? <HomePageContent /> : <CreateCourseCtaLarge />}
+      {hasCourses ? <HomePageSections /> : <CreateCourseCtaLarge />}
     </main>
   );
 }
 
-function HomePageContent() {
+/**
+ * Shows the different sections of the home page that should show up when the
+ * user has already created or enrolled in a course
+ */
+function HomePageSections() {
   return (
     <>
       <KeepLearningSection />

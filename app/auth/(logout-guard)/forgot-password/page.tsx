@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: "Recupera tu cuenta",
 };
 
+/**
+ * This page is visited when the user has forgotten its credentials and wants to
+ * recover their account. It shows a form that, when submitted, sends a password
+ * restoration email to the user.
+ */
 export default function ForgotPasswordPage() {
   return (
     <>

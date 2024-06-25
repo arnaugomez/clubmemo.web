@@ -6,6 +6,9 @@ import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-erro
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import { stringify } from "csv-stringify/sync";
 
+/**
+ * Returns a CSV file with the notes of a course in CSV format.
+ */
 export async function GET(_: Request, { params: { id } }: PropsWithIdParam) {
   try {
     const profile = await fetchMyProfile();

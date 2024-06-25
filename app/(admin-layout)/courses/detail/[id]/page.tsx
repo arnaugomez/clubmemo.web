@@ -8,6 +8,12 @@ import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+/**
+ * Shows detailed data of a course.
+ *
+ * This component is also responsible for getting the data of the course
+ * and checking that the profile has access rights to the course
+ */
 export default async function CourseDetailPage({
   params: { id },
 }: PropsWithIdParam) {
@@ -30,6 +36,9 @@ export default async function CourseDetailPage({
   );
 }
 
+/**
+ * Generates the data inside the head tag of the HTML document, for the course detail page.
+ */
 export async function generateMetadata({
   params: { id },
 }: PropsWithIdParam): Promise<Metadata> {

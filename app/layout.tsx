@@ -12,6 +12,9 @@ const Toaster = dynamic(() =>
   ),
 );
 
+/**
+ * Content of the HTML head tag, with SEO metadata.
+ */
 export const metadata: Metadata = {
   title: {
     template: "%s | clubmemo",
@@ -21,6 +24,10 @@ export const metadata: Metadata = {
     "Tu asistente AI para el estudio eficiente. Sube tus apuntes, genera flashards automáticamente y entrena tu memoria con juegos interactivos.",
 };
 
+/**
+ * Layout that is common to all the pages of the application. It contains
+ * components, styles and HTML elements that are shared across all pages.
+ */
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="es">

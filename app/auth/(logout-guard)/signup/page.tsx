@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Crea tu usuario",
 };
 
+/**
+ * Displays a form to create a new user account.
+ */
 export default function SignupPage() {
   return (
     <>

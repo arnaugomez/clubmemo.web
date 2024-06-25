@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: "Generador AI",
 };
 
+/**
+ * Shows the AI generator section for a given course
+ */
 export default async function CourseAiGeneratorPage({
   params: { id },
 }: PropsWithIdParam) {
