@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { clientLocator } from "@/src/common/di/client-locator";
-import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { EmailSchema } from "@/src/common/schemas/email-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";

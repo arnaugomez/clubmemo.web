@@ -4,7 +4,7 @@ import {
   IncorrectPasswordError,
   InvalidConfirmationError,
 } from "@/src/auth/domain/errors/auth-errors";
-import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import type { DeleteUserActionModel } from "../schemas/delete-user-action-schema";

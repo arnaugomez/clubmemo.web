@@ -2,7 +2,7 @@
 
 import type { TokenPaginationModelData } from "@/src/common/domain/models/token-pagination-model";
 import { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
-import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { PaginationEmptyState } from "@/src/common/ui/components/empty-state/pagination-empty-state";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";

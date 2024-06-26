@@ -1,6 +1,6 @@
 "use client";
 import { clientLocator } from "@/src/common/di/client-locator";
-import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import {
   createContextHook,
   createNullContext,
