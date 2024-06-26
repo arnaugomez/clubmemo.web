@@ -3,7 +3,7 @@
  * @param fn The function to memoize.
  * @returns The memoized function.
  */
-export function singleton<T>(fn: () => T ) {
+export function singleton<T>(fn: () => T) {
   let isCached = false;
   let cachedResult: T;
   return () => {
@@ -12,5 +12,5 @@ export function singleton<T>(fn: () => T ) {
       cachedResult = fn();
     }
     return cachedResult;
-  }
+  };
 }
