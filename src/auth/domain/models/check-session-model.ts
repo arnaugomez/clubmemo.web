@@ -1,6 +1,6 @@
 import type { UserModel } from "./user-model";
 
-interface SessionModelData {
+export interface SessionModelData {
   id: string;
   expiresAt: Date;
   fresh: boolean;

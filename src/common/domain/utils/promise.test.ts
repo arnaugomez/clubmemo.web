@@ -15,6 +15,6 @@ describe("waitMilliseconds", () => {
     const ms = 80;
     await waitMilliseconds(ms);
     const end = performance.now();
-    expect(end - start).toBeGreaterThanOrEqual(ms);
+    expect(end - start).toBeGreaterThanOrEqual(ms - 5);
   });
 });

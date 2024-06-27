@@ -37,6 +37,9 @@ export class EnrolledCourseListItemModel {
     return this.data.newCount;
   }
 
+  /**
+   * Whether the course has any due or new cards left to practice.
+   */
   get shouldPractice() {
     return this.data.dueCount > 0 || this.data.newCount > 0;
   }

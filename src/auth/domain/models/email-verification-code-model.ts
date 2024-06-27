@@ -1,6 +1,6 @@
 import { isWithinExpirationDate } from "oslo";
 
-interface EmailVerificationCodeModelData {
+export interface EmailVerificationCodeModelData {
   userId: string;
   code: string;
   expiresAt: Date;
