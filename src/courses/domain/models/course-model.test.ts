@@ -55,8 +55,8 @@ describe("CourseModel", () => {
   it("canView is true if course is public or if permissionType is not undefined", () => {
     const course1 = new CourseModel({
       ...mockData,
-      permissionType: undefined,
       isPublic: true,
+      permissionType: null,
     });
     expect(course1.canView).toBe(true);
 
@@ -84,7 +84,7 @@ describe("CourseModel", () => {
     const course5 = new CourseModel({
       ...mockData,
       isPublic: false,
-      permissionType: undefined,
+      permissionType: null,
     });
     expect(course5.canView).toBe(false);
   });
@@ -110,7 +110,7 @@ describe("CourseModel", () => {
 
     const courseWithNoPermission = new CourseModel({
       ...mockData,
-      permissionType: undefined,
+      permissionType: null,
     });
     expect(courseWithNoPermission.canEdit).toBe(false);
   });
