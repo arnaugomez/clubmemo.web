@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
 import { describe, expect, it } from "vitest";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
-import { CourseDocTransformer } from "/Users/arnau/Desktop/pfg/clubmemo.web/src/courses/data/collections/courses-collection";
-import { CourseModel } from "/Users/arnau/Desktop/pfg/clubmemo.web/src/courses/domain/models/course-model";
+import { CourseDocTransformer } from "@/src/courses/data/collections/courses-collection";
+import { CourseModel } from "@/src/courses/domain/models/course-model";
 
 const courseId = new ObjectId();
 
