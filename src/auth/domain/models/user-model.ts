@@ -1,6 +1,6 @@
 import type { AuthTypeModel } from "./auth-type-model";
 
-interface UserModelData {
+export interface UserModelData {
   id: string;
   email: string;
   authTypes: AuthTypeModel[];
@@ -36,6 +36,6 @@ export class UserModel {
    * Whether the user has verified their email address
    */
   get isEmailVerified() {
-    return this.data.isEmailVerified;
+    return this.data.isEmailVerified ?? false;
   }
 }

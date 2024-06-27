@@ -1,7 +1,7 @@
 "use server";
 import { authLocator } from "@/src/auth/auth-locator";
 import { IncorrectPasswordError } from "@/src/auth/domain/errors/auth-errors";
-import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import type { ChangePasswordActionModel } from "../schemas/change-password-action-schema";
