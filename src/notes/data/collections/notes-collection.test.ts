@@ -1,14 +1,15 @@
 import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
 import { NoteDocTransformer } from "@/src/notes/data/collections/notes-collection";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
+import type { WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import { describe, expect, it } from "vitest";
 
 describe("NoteDocTransformer", () => {
   it("transforms NoteDoc to NoteModel correctly and sanitizes", () => {
-    const mockNoteDoc: NoteDoc = {
-      _id: new ObjectId("507f191e810c19729de860ea"),
-      courseId: new ObjectId("507f191e810c19729de860eb"),
+    const mockNoteDoc: WithId<NoteDoc> = {
+      _id: new ObjectId(),
+      courseId: new ObjectId(),
       front: '<script>alert("xss")</script><p>Front content</p>',
       back: '<img src="x" onerror="alert(\'xss\')"/><p>Back content</p>',
       createdAt: new Date("2023-01-01"),
