@@ -2,6 +2,9 @@ import { collection } from "@/src/common/data/utils/mongo";
 import type { ObjectId, WithId } from "mongodb";
 import { ProfileModel } from "../../domain/models/profile-model";
 
+/**
+ * The data of a profile as it is stored in the database
+ */
 export interface ProfileDoc {
   userId: ObjectId;
   displayName?: string;
@@ -19,9 +22,17 @@ export interface ProfileDoc {
  */
 export const profilesCollection = collection<ProfileDoc>("profiles");
 
+/**
+ * Converts the profile data of the database document into a `ProfileModel`
+ * object of the domain layer
+ */
 export class ProfileDocTransformer {
   constructor(private readonly doc: WithId<ProfileDoc>) {}
 
+  /**
+   * Converts the profile data into a `ProfileModel` object of the
+   * domain layer
+   */
   toDomain(): ProfileModel {
     return new ProfileModel({
       id: this.doc._id.toString(),

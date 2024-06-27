@@ -8,6 +8,9 @@ export const GetNextPracticeCardsActionSchema = z.object({
   courseId: ObjectIdSchema,
 });
 
+/**
+ * The parameters of `getNextPracticeCardsAction`
+ */
 export type GetNextPracticeCardsActionModel = z.infer<
   typeof GetNextPracticeCardsActionSchema
 >;

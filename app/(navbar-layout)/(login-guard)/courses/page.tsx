@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "Mis cursos",
 };
 
+/**
+ * Shows a list of courses that the profile has created or enrolled in.
+ */
 export default function CoursesPage({
   searchParams,
 }: {
@@ -23,8 +26,6 @@ export default function CoursesPage({
     page?: string;
   };
 }) {
-  const page = Number(searchParams?.page) || 1;
-
   return (
     <main>
       <div className="h-20" />
@@ -37,7 +38,7 @@ export default function CoursesPage({
         </div>
       </div>
       <div className="h-10" />
-      <CoursesPageContent page={page} />
+      <CoursesPageLoader page={Number(searchParams?.page) || 1} />
     </main>
   );
 }
@@ -46,7 +47,10 @@ interface CoursesPageContentProps {
   page: number;
 }
 
-async function CoursesPageContent({ page }: CoursesPageContentProps) {
+/**
+ * Gets the data of the list of courses that the profile has created or enrolled in.
+ */
+async function CoursesPageLoader({ page }: CoursesPageContentProps) {
   const profile = await fetchMyProfile();
   if (!profile) {
     return null;

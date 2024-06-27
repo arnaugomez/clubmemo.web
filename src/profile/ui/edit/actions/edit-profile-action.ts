@@ -7,6 +7,10 @@ import { revalidatePath } from "next/cache";
 import type { EditProfileActionModel } from "../schemas/edit-profile-action-schema";
 import { EditProfileActionSchema } from "../schemas/edit-profile-action-schema";
 
+/**
+ * Changes the data of the profile of the currently logged in user.
+ * @param input The data of the profile that will be updated
+ */
 export async function editProfileAction(input: EditProfileActionModel) {
   try {
     const parsed = EditProfileActionSchema.parse(input);

@@ -10,6 +10,12 @@ export const metadata: Metadata = {
   title: "Practicar curso",
 };
 
+/**
+ * Shows an interactive practice page for a course, where the user
+ * can practice the cards of the course.
+ *
+ * Before showing the practice page, it loads the data of the cards.
+ */
 export default async function PracticePage({
   params: { id },
 }: PropsWithIdParam) {

@@ -35,17 +35,52 @@ interface State {
   nextCards: PracticeCardModel[];
 }
 
+/**
+ * Actions and data of the practice session.
+ *
+ * Contains the possible actions that the user can take when practicing
+ * a cards. It also contains the current state of the practice.
+ */
 interface PracticeContextValue {
+  /**
+   * The next card that the user should practice.
+   *
+   * If the practice session is finished, its value is `null`.
+   */
   currentCard: PracticeCardModel | null;
+  /**
+   * A number from 0 to 1 that shows the fraction of practice cards
+   */
   progress: number;
+  /**
+   * The numbers of days until the next review for each possible
+   * answer in the practice
+   */
   daysToNextReview: DaysToNextReviewModel;
-  rate: (rating: PracticeCardRatingModel) => void;
+  /**
+   * It is `true` if there are more cards to practice. Otherwise,
+   * it is `false`.
+   */
   canStartNextPractice: boolean;
+  /**
+   * Triggered when the user answers an exercise in the practice session.
+   * @param rating The rating of the user for the current card. If the user
+   * remembers the card, the rating is high, otherwise it is low.
+   */
+  rate: (rating: PracticeCardRatingModel) => void;
+
+  /**
+   * Loads more cards and sets up the state for the next practice session.
+   */
   startNextPractice: () => void;
 }
 
 const PracticeContext = createNullContext<PracticeContextValue>();
 
+/**
+ * Manages the state of the practice session
+ * @see `PracticeWizard`
+ */
 export function PracticeProvider({
   course,
   enrollment,

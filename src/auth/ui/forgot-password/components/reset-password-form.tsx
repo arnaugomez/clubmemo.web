@@ -6,8 +6,9 @@ import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-bu
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 
 import { clientLocator } from "@/src/common/di/client-locator";
-import { waitMilliseconds } from "@/src/common/domain/utils/promises";
+import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
+import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
@@ -15,7 +16,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { resetPasswordAction } from "../actions/reset-password-action";
-import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 
 const ResetPasswordConfirmDialog = dynamic(() =>
   import("./reset-password-confirm-dialog").then(
@@ -23,6 +23,10 @@ const ResetPasswordConfirmDialog = dynamic(() =>
   ),
 );
 
+/**
+ * Form that the user fills in to change its password after receiving a reset
+ * password email.
+ */
 const FormSchema = z
   .object({
     password: PasswordSchema,

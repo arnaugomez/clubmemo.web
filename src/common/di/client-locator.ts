@@ -8,7 +8,10 @@ interface ClientLocator {
 }
 
 /**
- * A simple service locator for dependency injection.
+ * A simple service locator for dependency injection with the dependencies that are
+ * used both in the client and server side of the application.
+ *
+ * The other service locators contain dependencies that are only used in the server.
  */
 export const clientLocator: ClientLocator = {
   ErrorTrackingService: singleton(() => new ErrorTrackingServiceSentryImpl()),

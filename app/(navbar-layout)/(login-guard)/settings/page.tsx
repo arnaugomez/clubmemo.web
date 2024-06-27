@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "Ajustes",
 };
 
+/**
+ * Gets the data of the settings page and shows it
+ */
 export default async function SettingsPage() {
   const { user } = await fetchSession();
   if (!user) notFound();
@@ -23,6 +26,9 @@ interface SettingsPageLoadedProps {
   user: UserModel;
 }
 
+/**
+ * Shows the data of the settings page, with all its options.
+ */
 function SettingsPageLoaded({ user }: SettingsPageLoadedProps) {
   return (
     <main>

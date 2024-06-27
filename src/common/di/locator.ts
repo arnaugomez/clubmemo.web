@@ -29,6 +29,13 @@ import { clientLocator } from "./client-locator";
 import type { Dependency, Lazy } from "./locator-types";
 import { singleton } from "./locator-utils";
 
+/**
+ * A simple service locator for dependency injection.
+ * It contains functions that return the dependencies of the project.
+ *
+ * These depenencies are only used in the server. See `ClientLocator` for the dependencies
+ * that are used in both the client and server side of the application.
+ */
 interface Locator {
   EnvService: Dependency<EnvService>;
   DatabaseService: Dependency<DatabaseService>;

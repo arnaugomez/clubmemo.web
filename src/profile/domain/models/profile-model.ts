@@ -36,12 +36,24 @@ export class ProfileModel {
   get userId() {
     return this.data.userId;
   }
+  /**
+   * Name of the profile that is publicly visible (provided that
+   * the profile is public too).
+   */
   get displayName() {
     return this.data.displayName;
   }
+  /**
+   * Unique identifier of the profile that is publicly visible. It is
+   * commonly used on social networks. It can only contain letters,
+   * numbers and the underscore character (`_`).
+   */
   get handle() {
     return this.data.handle;
   }
+  /**
+   * Short description of the profile that appears after the `displayName`
+   */
   get bio() {
     return this.data.bio;
   }
@@ -54,9 +66,16 @@ export class ProfileModel {
   get website() {
     return this.data.website;
   }
+  /**
+   * Whether the profile can be seen by other users or not.
+   * If the profile is private, the value is `false`.
+   */
   get isPublic() {
     return this.data.isPublic;
   }
+  /**
+   * List of interests of the profile
+   */
   get tags() {
     return this.data.tags ?? [];
   }

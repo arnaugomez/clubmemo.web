@@ -4,6 +4,10 @@ interface AuthPageTitleProps {
   title: string;
   description?: string;
 }
+/**
+ * Reusable component that shows the title and description of the page.
+ * Used in the authentication pages to give them a consistent look.
+ */
 export function AuthPageTitle({ title, description }: AuthPageTitleProps) {
   return (
     <>

@@ -8,9 +8,15 @@ import { GenerateAiNotesPreview } from "./generate-ai-notes-preview";
 import { GenerateAiNotesSourceSelector } from "./generate-ai-notes-source-selector";
 
 interface GenerateAiNotesWizardProps {
+  /**
+   * Id of the course to add the notes
+   */
   courseId: string;
 }
 
+/**
+ * Displays a wizard (series of steps) to generate notes with AI.
+ */
 export function GenerateAiNotesWizard({
   courseId,
 }: GenerateAiNotesWizardProps) {

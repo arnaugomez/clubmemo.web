@@ -1,6 +1,6 @@
 import { isWithinExpirationDate } from "oslo";
 
-interface EmailVerificationCodeModelData {
+export interface EmailVerificationCodeModelData {
   userId: string;
   code: string;
   expiresAt: Date;
@@ -16,10 +16,16 @@ export class EmailVerificationCodeModel {
     return this.data.userId;
   }
 
+  /**
+   * The code that the user must enter to verify their email address
+   */
   get code() {
     return this.data.code;
   }
 
+  /**
+   * Is `true` if the verification code has reached its expiration date
+   */
   get hasExpired() {
     return !isWithinExpirationDate(this.data.expiresAt);
   }

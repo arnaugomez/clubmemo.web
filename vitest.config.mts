@@ -10,12 +10,14 @@ export default defineConfig(() => {
     // @ts-ignore
     plugins: [react(), tsconfigPaths()],
     test: {
+      globals: true,
       environment: "jsdom",
       include: [
         "./app/**/*.{test,spec}.{ts,tsx}",
         "./src/**/*.{test,spec}.{ts,tsx}",
         "./test/**/*.{test,spec}.{ts,tsx}",
       ],
+      setupFiles: "./test/utils/setup.ts",
     },
   });
 });

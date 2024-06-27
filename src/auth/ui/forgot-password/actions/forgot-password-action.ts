@@ -7,6 +7,10 @@ import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import type { ForgotPasswordActionModel } from "../schemas/forgot-password-action-schema";
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
 
+/**
+ * Sends an email to the user with a link to reset the password.
+ * @param input Data with the email of the user
+ */
 export async function forgotPasswordAction(input: ForgotPasswordActionModel) {
   try {
     const { email } = ForgotPasswordActionSchema.parse(input);

@@ -17,9 +17,11 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
 
   constructor(databaseService: DatabaseService) {
     this.collection = databaseService.collection(profilesCollection);
+    // Create indexes to optimize queries
     this.collection.createIndex({ userId: 1 });
     this.collection.createIndex({ handle: 1 });
   }
+
   async create(userId: string): Promise<void> {
     await this.collection.insertOne({
       userId: new ObjectId(userId),
