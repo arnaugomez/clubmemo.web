@@ -28,6 +28,11 @@ export class PaginationModel<T> {
     return this.data.totalCount;
   }
 
+  /**
+   * Creates an empty pagination model.
+   *
+   * @returns An empty pagination model
+   */
   static empty<T>(): PaginationModel<T> {
     return new PaginationModel<T>({
       results: [],
@@ -35,20 +40,33 @@ export class PaginationModel<T> {
     });
   }
 
+  /**
+   * Creates a serialized version of the pagination model.
+   *
+   * @param serializer Function to serialize the elements of the results list
+   * @returns A serialized version of the pagination model
+   */
   toData<U>(serializer: (data: T) => U): PaginationModelData<U> {
     return {
-      ...this.data,
       results: this.results.map(serializer),
+      totalCount: this.totalCount,
     };
   }
 
+  /**
+   * Creates a new pagination model from serialized data.
+   *
+   * @param data Serialized data
+   * @param deserializer Function that transforms a serialized element into the original type
+   * @returns A pagination model with the deserialized elements
+   */
   static fromData<T, U>(
     data: PaginationModelData<U>,
     deserializer: (data: U) => T,
   ): PaginationModel<T> {
     return new PaginationModel<T>({
-      ...data,
       results: data.results.map(deserializer),
+      totalCount: data.totalCount,
     });
   }
 }
