@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function SignupPage() {
   return (
     <>
-      <AuthPageTitle title="Crea tu usuario" />
+      <AuthPageTitle title="Crea tu usuario" testId="signup-title" />
       <div className="h-6"></div>
       <SignupForm />
     </>

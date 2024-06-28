@@ -40,6 +40,7 @@ export function InputFormField({
               placeholder={placeholder}
               autoComplete={autoComplete}
               onPaste={onPaste}
+              data-testid={name}
               {...field}
             />
           </FormControl>

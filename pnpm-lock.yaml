@@ -104,6 +104,9 @@ importers:
       dompurify:
         specifier: ^3.1.5
         version: 3.1.5
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       i18next:
         specifier: ^23.11.5
         version: 23.11.5
