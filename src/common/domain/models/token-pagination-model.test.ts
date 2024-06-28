@@ -24,6 +24,7 @@ describe("TokenPaginationModel", () => {
     const model = TokenPaginationModel.fromData(data, (str: string) =>
       parseInt(str),
     );
-    expect(model.data).toEqual({ token: data.token, results: [1, 2, 3] });
+    expect(model.results).toEqual([1, 2, 3]);
+    expect(model.token).toEqual(data.token);
   });
 });
