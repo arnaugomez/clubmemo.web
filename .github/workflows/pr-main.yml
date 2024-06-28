@@ -32,7 +32,7 @@ jobs:
       - name: Run unit tests with Vitest
         run: pnpm test:unit
         env:
-          BASE_URL: ${{vars.BASE_URL}}
+          PROJECT_URL: ${{vars.PROJECT_URL}}
           MONGODB_URL: ${{secrets.MONGODB_URL}}
           PASSWORD_PEPPER: ${{secrets.PASSWORD_PEPPER}}
           SEND_EMAIL: ${{vars.SEND_EMAIL}}
