@@ -24,6 +24,7 @@ export function CheckboxFormField({ name, label }: CheckboxFormFieldProps) {
               label={label}
               value={field.value}
               onChange={field.onChange}
+              data-testid={name}
             />
           </FormControl>
           <FormMessage />

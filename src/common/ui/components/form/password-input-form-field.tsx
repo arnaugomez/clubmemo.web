@@ -24,6 +24,7 @@ export function PasswordInputFormField({
             <PasswordInput
               placeholder={placeholder}
               autoComplete={autoComplete}
+              data-testid={name}
               {...field}
             />
           </FormControl>

@@ -20,6 +20,7 @@ export function VerifyEmailPageLoaded({
       <div className="h-6"></div>
       <AuthPageTitle
         title="¡Ya casi estamos!"
+        testId="verify-email-title"
         description={`Te hemos enviado un correo electrónico a ${user.email} con un código de verificación.`}
       />
       {hasExpired && (

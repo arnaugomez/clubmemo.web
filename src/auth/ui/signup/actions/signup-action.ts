@@ -15,7 +15,7 @@ export async function signupAction(input: SignupActionModel) {
     await useCase.execute(parsed);
   } catch (e) {
     if (e instanceof UserAlreadyExistsError) {
-      return ActionResponse.formError("name", {
+      return ActionResponse.formError("email", {
         type: "exists",
         message: "A user with this email already exists",
       });
