@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { CookieServiceNextImpl } from "/Users/arnau/Desktop/pfg/clubmemo.web/src/common/data/services/cookie-service-next-impl";
+import { CookieServiceNextImpl } from "@/src/common/data/services/cookie-service-next-impl";
 
 vi.mock("next/headers", () => {
   const mockGet = vi.fn();
