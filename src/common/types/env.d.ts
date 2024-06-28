@@ -7,7 +7,7 @@ declare namespace NodeJS {
     /** The Resend api key, used to send emails */
     readonly RESEND_API_KEY: string;
     /** The base url of the website */
-    readonly BASE_URL: string;
+    readonly PROJECT_URL: string;
     /**
      * Pepper code for the password hashing algorithm.
      * Adds an extra layer of protection to the password hash.

@@ -6,7 +6,7 @@ export interface EnvService {
   /** The Resend api key, used to send emails */
   readonly resendApiKey: string;
   /** The base url of the website, for example, https://example.com */
-  readonly baseUrl: string;
+  readonly projectUrl: string;
   /**
    * Pepper code for the password hashing algorithm.
    * Adds an extra layer of protection to the password hash.

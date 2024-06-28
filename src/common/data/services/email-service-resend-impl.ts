@@ -23,7 +23,7 @@ export class EmailServiceResendImpl implements EmailService {
   }
 
   async sendForgotPasswordLink(email: string, token: string): Promise<void> {
-    const url = new URL(this.envService.baseUrl);
+    const url = new URL(this.envService.projectUrl);
     url.pathname = "/auth/reset-password";
     url.search = new URLSearchParams({
       email,
