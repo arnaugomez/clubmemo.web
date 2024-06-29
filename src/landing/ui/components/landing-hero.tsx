@@ -59,10 +59,10 @@ function HeroStep({ text, icon }: HeroStepViewModel) {
 function HeroButtons() {
   return (
     <div className="mx-auto flex w-fit space-x-8 px-8">
-      <Button variant="ghost" asChild>
+      <Button data-testid="login-button-1" variant="ghost" asChild>
         <Link href="/auth/login">Login</Link>
       </Button>
-      <Button asChild>
+      <Button data-testid="signup-button-1" asChild>
         <Link href="/auth/signup">Crear cuenta</Link>
       </Button>
     </div>

@@ -41,9 +41,11 @@ setup:
 test:
     ./nvm-exec.sh pnpm test:unit
 
-# Run end-to-end tests
+# Run end-to-end tests. For example: just e2e --ui
 e2e *args:
     ./nvm-exec.sh pnpm exec playwright test {{ args }}
 
+e2e-install:
+    ./nvm-exec.sh pnpm exec playwright install
 
 alias i := install

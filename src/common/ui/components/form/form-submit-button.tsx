@@ -13,7 +13,12 @@ export function FormSubmitButton({
 }: FormSubmitButtonProps) {
   const { isSubmitting } = useFormState();
   return (
-    <Button type="submit" disabled={disabled || isSubmitting} {...props}>
+    <Button
+      data-testid="submit"
+      type="submit"
+      disabled={disabled || isSubmitting}
+      {...props}
+    >
       {isSubmitting && <Loader2 className="mr-3 animate-spin" />}
       {children}
     </Button>
