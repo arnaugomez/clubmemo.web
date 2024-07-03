@@ -1,15 +1,16 @@
+import type { NoteModelData } from "@/src/notes/domain/models/note-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
+import { State } from "ts-fsrs";
 import { describe, expect, it } from "vitest";
 import type { PracticeCardModelData } from "./practice-card-model";
 import { PracticeCardModel } from "./practice-card-model";
 import { PracticeCardStateModel } from "./practice-card-state-model";
-import { State } from "ts-fsrs";
 
 describe("PracticeCardModel", () => {
   const data: PracticeCardModelData = {
     id: "id",
     courseEnrollmentId: "courseEnrollmentId",
-    note: {},
+    note: {} as NoteModelData,
     provisionalId: 123,
     due: new Date(),
     stability: 234,
