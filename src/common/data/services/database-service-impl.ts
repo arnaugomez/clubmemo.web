@@ -23,7 +23,7 @@ export class DatabaseServiceImpl implements DatabaseService {
    */
   private readonly db: Db;
 
-  constructor(envService: EnvService) {
+  constructor(envService: EnvService, dbName?: string) {
     global.mongoClient ??= new MongoClient(envService.mongodbUrl, {
       serverApi: {
         version: ServerApiVersion.v1,
@@ -31,7 +31,7 @@ export class DatabaseServiceImpl implements DatabaseService {
       },
     });
     this.client = global.mongoClient;
-    this.db = this.client.db();
+    this.db = this.client.db(dbName);
   }
 
   collection<TSchema extends Document = Document>(
