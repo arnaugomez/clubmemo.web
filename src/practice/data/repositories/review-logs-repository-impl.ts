@@ -34,8 +34,10 @@ export class ReviewLogsRepositoryImpl implements ReviewLogsRepository {
       scheduledDays: input.data.scheduledDays,
       review: input.data.review,
     });
-    input.data.id = result.insertedId.toString();
-    return new ReviewLogModel(input.data);
+    return new ReviewLogModel({
+      ...input.data,
+      id: result.insertedId.toString(),
+    });
   }
 
   async getReviewsOfNewCardsCount(courseEnrollmentId: string): Promise<number> {

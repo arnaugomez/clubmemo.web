@@ -1,6 +1,6 @@
 import type { CoursePermissionTypeModel } from "./course-permission-type-model";
 
-interface CourseAuthorModelData {
+export interface CourseAuthorModelData {
   courseId: string;
   permissionType: CoursePermissionTypeModel;
 

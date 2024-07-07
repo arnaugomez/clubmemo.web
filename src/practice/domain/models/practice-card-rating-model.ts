@@ -1,5 +1,9 @@
 import { Rating } from "ts-fsrs";
 
+/**
+ * It describes how well the user remembered a card on a certain practice. The
+ * next review date of the card depends on the rating.
+ */
 export enum PracticeCardRatingModel {
   again = "again",
   easy = "easy",
@@ -8,8 +12,16 @@ export enum PracticeCardRatingModel {
   manual = "manual",
 }
 
+/**
+ * The days until the next practice of a card, based on the rating given by the
+ * user.
+ */
 export type DaysToNextReviewModel = Record<PracticeCardRatingModel, number>;
 
+/**
+ * Converts the domain model `PracticeCardRatingModel` to and from the `Rating`
+ * model used by the FSRS algorithm.
+ */
 export class PracticeCardRatingTransformer {
   constructor(private readonly domain: PracticeCardRatingModel) {}
   toFsrs() {
