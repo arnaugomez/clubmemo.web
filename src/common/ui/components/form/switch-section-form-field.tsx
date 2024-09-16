@@ -1,4 +1,3 @@
-import { Switch } from "@radix-ui/react-switch";
 import {
   FormControl,
   FormDescription,
@@ -6,6 +5,7 @@ import {
   FormItem,
   FormLabel,
 } from "../shadcn/ui/form";
+import { Switch } from "../shadcn/ui/switch";
 
 interface SwitchSectionFormFieldProps {
   name: string;
