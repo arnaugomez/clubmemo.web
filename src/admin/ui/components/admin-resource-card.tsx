@@ -10,20 +10,20 @@ interface AdminResourceCardProps {
 export function AdminResourceCard({ resource }: AdminResourceCardProps) {
   return (
     <Link
-      href={`/admin/resources/${resource.type}`}
+      href={`/admin/resources/${resource.resourceType}`}
       className="block rounded-lg border border-gray-200 p-4 shadow-sm hover:bg-gray-50"
     >
       <AdminResourceIcon
-        adminResourceType={resource.type}
+        adminResourceType={resource.resourceType}
         className="text-gray-500"
       />
       <div className="h-2" />
       <h4 className={textStyles.h4}>
-        {translateAdminKey(resource.type, "label")}
+        {translateAdminKey(resource.resourceType, "label")}
       </h4>
       <div className="h-1" />
       <p className={textStyles.muted}>
-        {translateAdminKey(resource.type, "description")}
+        {translateAdminKey(resource.resourceType, "description")}
       </p>
     </Link>
   );

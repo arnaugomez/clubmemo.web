@@ -10,7 +10,10 @@ export function AdminResourcesSection() {
         <div className="h-3" />
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {adminResourcesConfig.map((resource) => (
-            <AdminResourceCard key={resource.type} resource={resource} />
+            <AdminResourceCard
+              key={resource.resourceType}
+              resource={resource}
+            />
           ))}
         </div>
       </div>
