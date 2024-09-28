@@ -168,8 +168,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.13)
       ts-fsrs:
-        specifier: ^3.5.7
-        version: 3.5.7
+        specifier: ^4.3.1
+        version: 4.3.1
       use-debounce:
         specifier: ^10.0.3
         version: 10.0.3(react@18.3.1)
@@ -5210,9 +5210,6 @@ packages:
     resolution: {integrity: sha512-pN/yOAvcC+5rQ5nERGuwrjLlYvLTbCibnZ1I7B1LaiAz9BRBlE9GMgE/eqV30P7aJQUf7Ddimy/RsbYO/GrVGg==}
     engines: {node: '>= 10.13.0'}
 
-  seedrandom@3.0.5:
-    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
-
   selderee@0.11.0:
     resolution: {integrity: sha512-5TF+l7p4+OsnP8BCCvSyZiSPc4x4//p5uPwK8TCnVPJYRmU2aYKMpOXvw8zM5a5JvuuCGN1jmsMwuU2W02ukfA==}
 
@@ -5496,9 +5493,9 @@ packages:
     peerDependencies:
       typescript: '>=4.2.0'
 
-  ts-fsrs@3.5.7:
-    resolution: {integrity: sha512-xA18Igi1adkuCNgNjKkorjYgZq842+HdgRjatQPDERcrAWMlzM+3BwIbrF/Q0ijYEyw3NcTp3yJIMSO7agBLKQ==}
-    engines: {node: '>=16.0.0'}
+  ts-fsrs@4.3.1:
+    resolution: {integrity: sha512-R54vwvfiPm8sfs/gD4uHzvyQR+QUeEb6ceRYonyREtv+SfL6clpjGW2is1Pb0r+J+h9AlqU4MeRcbnI6x7WJHA==}
+    engines: {node: '>=18.0.0'}
 
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
@@ -11572,8 +11569,6 @@ snapshots:
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
 
-  seedrandom@3.0.5: {}
-
   selderee@0.11.0:
     dependencies:
       parseley: 0.12.1
@@ -11861,9 +11856,7 @@ snapshots:
     dependencies:
       typescript: 5.6.2
 
-  ts-fsrs@3.5.7:
-    dependencies:
-      seedrandom: 3.0.5
+  ts-fsrs@4.3.1: {}
 
   ts-interface-checker@0.1.13: {}
 
