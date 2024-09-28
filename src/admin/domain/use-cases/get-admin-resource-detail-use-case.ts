@@ -4,6 +4,7 @@ import { getAdminResourceByType } from "../config/admin-resources-config";
 import type { AdminResourceData } from "../models/admin-resource-data";
 import type { AdminResourceTypeModel } from "../models/admin-resource-model";
 import { transformDataAfterGet } from "../models/admin-resource-model";
+import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 interface GetAdminResourceDetailUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
@@ -11,12 +12,16 @@ interface GetAdminResourceDetailUseCaseInputModel {
 }
 
 export class GetAdminResourceDetailUseCase {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
+  ) {}
 
-  async createAdminResourceUseCase({
+  async execute({
     resourceType,
     id,
   }: GetAdminResourceDetailUseCaseInputModel): Promise<AdminResourceData | null> {
+    await this.checkIsAdminUseCase.execute();
     const objectId = new ObjectId(id);
     const resource = getAdminResourceByType(resourceType);
     const data = await this.databaseService.client

@@ -2,6 +2,7 @@ import type { DatabaseService } from "@/src/common/domain/interfaces/database-se
 import { ObjectId } from "mongodb";
 import { getAdminResourceHook } from "../config/admin-resource-hooks-config";
 import type { AdminResourceTypeModel } from "../models/admin-resource-model";
+import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 interface DeleteAdminResourceUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
@@ -9,12 +10,16 @@ interface DeleteAdminResourceUseCaseInputModel {
 }
 
 export class DeleteAdminResourceUseCase {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
+  ) {}
 
-  async createAdminResourceUseCase({
+  async execute({
     resourceType,
     id,
   }: DeleteAdminResourceUseCaseInputModel): Promise<void> {
+    await this.checkIsAdminUseCase.execute();
     const objectId = new ObjectId(id);
     const db = this.databaseService.client.db();
     const data = await db.collection(resourceType).findOne({ _id: objectId });

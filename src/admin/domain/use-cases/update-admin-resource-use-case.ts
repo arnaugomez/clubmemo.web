@@ -7,6 +7,7 @@ import {
   createValidationSchemaOfAdminResource,
   transformDataBeforeCreateOrUpdate,
 } from "../models/admin-resource-model";
+import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 interface UpdateAdminResourceUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
@@ -15,13 +16,17 @@ interface UpdateAdminResourceUseCaseInputModel {
 }
 
 export class UpdateAdminResourceUseCase {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
+  ) {}
 
-  async createAdminResourceUseCase({
+  async execute({
     resourceType,
     id,
     data,
   }: UpdateAdminResourceUseCaseInputModel) {
+    await this.checkIsAdminUseCase.execute();
     const objectId = new ObjectId(id);
     const resource = getAdminResourceByType(resourceType);
     const validationSchema = createValidationSchemaOfAdminResource(resource);
