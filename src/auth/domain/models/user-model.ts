@@ -5,6 +5,7 @@ export interface UserModelData {
   email: string;
   authTypes: AuthTypeModel[];
   isEmailVerified?: boolean;
+  isAdmin?: boolean;
 }
 
 /**
@@ -37,5 +38,12 @@ export class UserModel {
    */
   get isEmailVerified() {
     return this.data.isEmailVerified ?? false;
+  }
+
+  /**
+   * Whether the user can access the admin panel
+   */
+  get isAdmin() {
+    return this.data.isAdmin ?? false;
   }
 }

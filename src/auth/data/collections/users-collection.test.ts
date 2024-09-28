@@ -19,12 +19,14 @@ describe("UserDocTransformer", () => {
       authTypes: [AuthTypeModel.email],
       hashed_password: "hashedPassword",
       isEmailVerified: true,
+      isAdmin: false,
     };
     const transformer = new UserDocTransformer(mockUserDoc);
     const userModel = transformer.toDomain();
     expect(userModel).toBeInstanceOf(UserModel);
     expect(userModel.id).toBe(mockUserDoc._id.toString());
     expect(userModel.email).toBe(mockUserDoc.email);
+    expect(userModel.isAdmin).toBe(mockUserDoc.isAdmin);
   });
 });
 
@@ -36,11 +38,13 @@ describe("LuciaUserTransformer", () => {
       authTypes: [AuthTypeModel.email],
       id: new ObjectId(),
       isEmailVerified: true,
+      isAdmin: true,
     };
     const transformer = new LuciaUserTransformer(mockLuciaUser);
     const userModel = transformer.toDomain();
     expect(userModel).toBeInstanceOf(UserModel);
     expect(userModel.id).toBe(mockLuciaUser.id.toString());
     expect(userModel.email).toBe(mockLuciaUser.email);
+    expect(userModel.isAdmin).toBe(mockLuciaUser.isAdmin);
   });
 });

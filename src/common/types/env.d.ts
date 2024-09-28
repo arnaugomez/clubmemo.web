@@ -26,5 +26,11 @@ declare namespace NodeJS {
     readonly AWS_ACCESS_KEY_ID: string;
 
     readonly AWS_SECRET_ACCESS_KEY: string;
+
+    /**
+     * Email of the first admin user. When a user with this email is created,
+     * it is automatically set to admin
+     */
+    readonly ADMIN_EMAIL: string;
   }
 }
