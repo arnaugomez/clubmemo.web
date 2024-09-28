@@ -1,4 +1,6 @@
-import type { OptionModel } from "@/src/common/domain/models/option-model";
+import { ObjectId } from "mongodb";
+import { z } from "zod";
+import type { AdminResourceData } from "./admin-resource-data";
 
 export enum AdminResourceTypeModel {
   courseEnrollments = "courseEnrollments",
@@ -18,23 +20,26 @@ export enum AdminResourceTypeModel {
 }
 
 export interface AdminResourceModel {
-  type: AdminResourceTypeModel;
+  resourceType: AdminResourceTypeModel;
   fields: AdminFieldModel[];
+  /**
+   * Forbid creating resources of this type
+   */
+  cannotCreate?: boolean;
 }
 
 interface AdminFieldModel {
   name: string;
   isReadonly?: boolean;
-  type: AdminFieldTypeModel;
+  fieldType: AdminFieldTypeModel;
   /**
    * Sub-fields of the field. Used when the field type is `AdminFieldTypeModel.form`.
    */
   fields?: AdminFieldModel[];
-
   /**
    * Options for the field. Used when the field type is `AdminFieldTypeModel.select` or similar.
    */
-  options?: OptionModel[];
+  options?: string[];
 }
 
 export enum AdminFieldTypeModel {
@@ -47,4 +52,55 @@ export enum AdminFieldTypeModel {
   tags = "tags",
   richText = "richText",
   select = "select",
+}
+
+export function createValidationSchemaOfAdminResource(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _adminResource: AdminResourceModel,
+) {
+  return z.any();
+}
+
+export function transformDataBeforeCreateOrUpdate(
+  fields: AdminFieldModel[],
+  data: AdminResourceData,
+): AdminResourceData {
+  for (const field of fields) {
+    if (field.isReadonly) {
+      delete data[field.name];
+    } else if (field.fieldType === AdminFieldTypeModel.objectId) {
+      const value = data[field.name];
+      if (typeof value === "string" && ObjectId.isValid(value)) {
+        data[field.name] = new ObjectId(value);
+      } else {
+        data[field.name] = null;
+      }
+    } else if (field.fieldType === AdminFieldTypeModel.form) {
+      data[field.name] = transformDataBeforeCreateOrUpdate(
+        field.fields ?? [],
+        data[field.name] ?? {},
+      );
+    }
+  }
+  return data;
+}
+
+export function transformDataAfterGet(
+  fields: AdminFieldModel[],
+  data: AdminResourceData,
+): AdminResourceData {
+  const newData: AdminResourceData = {};
+  for (const field of fields) {
+    if (field.fieldType === AdminFieldTypeModel.objectId) {
+      newData[field.name] = data[field.name]?.toString();
+    } else if (field.fieldType === AdminFieldTypeModel.form) {
+      newData[field.name] = transformDataAfterGet(
+        field.fields ?? [],
+        data[field.name] ?? {},
+      );
+    } else {
+      newData[field.name] = data[field.name];
+    }
+  }
+  return newData;
 }
