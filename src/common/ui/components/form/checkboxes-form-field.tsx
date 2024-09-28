@@ -1,4 +1,5 @@
-import { CheckboxesInput, type Option } from "../input/checkboxes-input";
+import type { OptionModel } from "@/src/common/domain/models/option-model";
+import { CheckboxesInput } from "../input/checkboxes-input";
 import {
   FormControl,
   FormField,
@@ -10,7 +11,7 @@ interface CheckboxesFormFieldProps {
   name: string;
   label: string;
   description: string;
-  options: Option[];
+  options: OptionModel[];
 }
 
 export function CheckboxesFormField({

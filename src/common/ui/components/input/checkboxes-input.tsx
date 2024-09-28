@@ -1,14 +1,11 @@
+import type { OptionModel } from "@/src/common/domain/models/option-model";
 import { FormDescription, FormLabel } from "../shadcn/ui/form";
 import { CheckboxInput } from "./checkbox-input";
 
-export interface Option {
-  label: string;
-  value: string;
-}
 interface CheckboxesInputProps {
   name: string;
   value: string[];
-  options: Option[];
+  options: OptionModel[];
   onChange: (value: string[]) => void;
   label?: string;
   description?: string;
