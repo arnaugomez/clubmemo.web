@@ -1,5 +1,6 @@
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { redirect } from "next/navigation";
+import type { PropsWithChildren } from "react";
 
 /**
  * Checks that the user is logged in and has verified the email. Otherwise, it
@@ -20,9 +21,7 @@ async function loginGuard() {
  */
 export default async function LoginGuardLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: PropsWithChildren) {
   await loginGuard();
   return <>{children}</>;
 }

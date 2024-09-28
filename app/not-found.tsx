@@ -3,14 +3,14 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { SearchX } from "lucide-react";
 import Link from "next/link";
-import AdminLayout from "./(admin-layout)/layout";
+import FullscreenLayout from "./(fullscreen-layout)/layout";
 
 /**
  * This page is shown when a user tries to access a route that does not exist.
  */
 export default function NotFoundPage() {
   return (
-    <AdminLayout>
+    <FullscreenLayout>
       <main className="absolute inset-0 flex flex-col items-center justify-center px-4">
         <div className="h-2"></div>
         <SearchX className="size-8 flex-none text-slate-500" />
@@ -24,6 +24,6 @@ export default function NotFoundPage() {
         </Button>
         <div className="h-2"></div>
       </main>
-    </AdminLayout>
+    </FullscreenLayout>
   );
 }
