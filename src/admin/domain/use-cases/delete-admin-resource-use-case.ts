@@ -4,7 +4,7 @@ import { getAdminResourceHook } from "../config/admin-resource-hooks-config";
 import type { AdminResourceTypeModel } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
-interface DeleteAdminResourceUseCaseInputModel {
+export interface DeleteAdminResourceUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
   id: string;
 }

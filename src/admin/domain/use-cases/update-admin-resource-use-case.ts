@@ -9,7 +9,7 @@ import {
 } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
-interface UpdateAdminResourceUseCaseInputModel {
+export interface UpdateAdminResourceUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
   id: string;
   data: unknown;
@@ -25,7 +25,7 @@ export class UpdateAdminResourceUseCase {
     resourceType,
     id,
     data,
-  }: UpdateAdminResourceUseCaseInputModel) {
+  }: UpdateAdminResourceUseCaseInputModel): Promise<void> {
     await this.checkIsAdminUseCase.execute();
     const objectId = new ObjectId(id);
     const resource = getAdminResourceByType(resourceType);

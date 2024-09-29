@@ -8,7 +8,7 @@ import {
 } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
-interface CreateAdminResourceUseCaseInputModel {
+export interface CreateAdminResourceUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
   data: unknown;
 }

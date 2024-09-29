@@ -31,7 +31,10 @@ const globalErrors = {
   aiGeneratorRateLimitError:
     "El generador de IA ha alcanzado su límite de peticiones. Por favor, inténtalo más tarde y avisa al equipo de clubmemo para que aumente los recursos del generador de AI.",
   userDoesNotAcceptTerms:
-    "El usuario no ha aceptado los términos y condiciones",
+    "El usuario no ha aceptado los términos y condiciones.",
+  invalidAdminResourceType:
+    "Tipo de recurso inválido. Elige uno de los recursos disponibles en el panel de administración.",
+  userIsNotAdmin: "El usuario no tiene permisos de administrador.",
 };
 type GlobalErrorType = keyof typeof globalErrors;
 
@@ -61,10 +64,10 @@ export class ActionResponse {
     };
   }
 
-  static formSuccess<T>(data: T): FormActionResponse<T> {
+  static formSuccess<T>(data?: T): FormActionResponse<T> {
     return {
       errors: {},
-      data,
+      data: data ?? null,
     };
   }
 

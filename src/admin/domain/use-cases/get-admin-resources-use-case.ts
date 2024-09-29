@@ -13,13 +13,13 @@ import {
 } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
-interface GetAdminResourceDetailUseCaseInputModel {
+export interface GetAdminResourcesUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
   page: number;
   pageSize: number;
 }
 
-export class GetAdminResourceDetailUseCase {
+export class GetAdminResourcesUseCase {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
@@ -29,7 +29,7 @@ export class GetAdminResourceDetailUseCase {
     resourceType,
     page = 1,
     pageSize = 10,
-  }: GetAdminResourceDetailUseCaseInputModel): Promise<
+  }: GetAdminResourcesUseCaseInputModel): Promise<
     PaginationModel<AdminResourceData>
   > {
     await this.checkIsAdminUseCase.execute();

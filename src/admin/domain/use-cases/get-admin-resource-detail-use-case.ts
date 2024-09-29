@@ -6,7 +6,7 @@ import type { AdminResourceTypeModel } from "../models/admin-resource-model";
 import { transformDataAfterGet } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
-interface GetAdminResourceDetailUseCaseInputModel {
+export interface GetAdminResourceDetailUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
   id: string;
 }
