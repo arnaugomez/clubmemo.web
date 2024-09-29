@@ -162,7 +162,10 @@ export function ResourceListTable({ resource }: ResourceListTableProps) {
                 </Link>
               </TableCell>
               {resource.fields.map((field) => (
-                <TableCell className="min-w-[100px] truncate" key={field.name}>
+                <TableCell
+                  className="min-w-[100px] max-w-[500px] truncate"
+                  key={field.name}
+                >
                   {resourceData[field.name]?.toString() || "-"}
                 </TableCell>
               ))}
