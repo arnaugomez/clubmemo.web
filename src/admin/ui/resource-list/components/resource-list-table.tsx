@@ -155,7 +155,7 @@ export function ResourceListTable({ resource }: ResourceListTableProps) {
             <TableRow key={resourceData._id}>
               <TableCell className="min-w-[100px]">
                 <Link
-                  href={`/admin/${resource.resourceType}/detail/${resourceData._id}`}
+                  href={`/admin/resources/${resource.resourceType}/detail/${resourceData._id}`}
                   className="hover:underline"
                 >
                   {resourceData._id}

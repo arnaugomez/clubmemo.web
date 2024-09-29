@@ -4,6 +4,7 @@ import { AdminResourceIcon } from "../../components/admin-resource-icon";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import type { PropsWithResourceTypeParam } from "../../models/props-with-resource-type-param";
 import { ResourceListTable } from "../components/resource-list-table";
+import { ResourceListTopButtons } from "../components/resource-list-top-buttons";
 
 export function ResourceListPage({
   params: { resourceType },
@@ -11,9 +12,14 @@ export function ResourceListPage({
   const resource = getAdminResourceByType(resourceType);
   return (
     <main>
-      <div className="h-24" />
+      <div className="h-20" />
+
       <div className="px-4">
         <div className="mx-auto max-w-screen-lg">
+          <ResourceListTopButtons resource={resource} />
+
+          <div className="h-4"></div>
+
           <h1 className={textStyles.h2}>
             <AdminResourceIcon
               adminResourceType={resource.resourceType}
@@ -26,12 +32,10 @@ export function ResourceListPage({
             {translateAdminKey(resource.resourceType, "description")}
           </p>
         </div>
-      </div>
-      <div className="h-10" />
-      <div className="px-4">
-        <div className="mx-auto max-w-screen-lg">
-          <ResourceListTable resource={resource} />
-        </div>
+
+        <div className="h-10" />
+
+        <ResourceListTable resource={resource} />
       </div>
     </main>
   );

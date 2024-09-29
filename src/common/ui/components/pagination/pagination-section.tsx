@@ -38,9 +38,7 @@ export function PaginationSection({
 
         {page !== 1 && (
           <PaginationItem>
-            <PaginationLink href={getHref(page - 1)}>
-              {page - 1}
-            </PaginationLink>
+            <PaginationLink href={getHref(page - 1)}>{page - 1}</PaginationLink>
           </PaginationItem>
         )}
         <PaginationItem>
@@ -50,9 +48,7 @@ export function PaginationSection({
         </PaginationItem>
         {page !== pagesCount && (
           <PaginationItem>
-            <PaginationLink href={getHref(page + 1)}>
-              {page + 1}
-            </PaginationLink>
+            <PaginationLink href={getHref(page + 1)}>{page + 1}</PaginationLink>
           </PaginationItem>
         )}
 
