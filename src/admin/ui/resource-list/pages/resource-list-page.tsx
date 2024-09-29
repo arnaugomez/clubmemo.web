@@ -31,11 +31,11 @@ export function ResourceListPage({
           <p className={textStyles.p}>
             {translateAdminKey(resource.resourceType, "description")}
           </p>
+
+          <div className="h-10" />
+
+          <ResourceListTable resource={resource} />
         </div>
-
-        <div className="h-10" />
-
-        <ResourceListTable resource={resource} />
       </div>
     </main>
   );
