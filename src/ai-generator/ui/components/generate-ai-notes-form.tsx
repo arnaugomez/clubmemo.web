@@ -1,7 +1,6 @@
 import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
-import { clientLocator } from "@/src/common/di/client-locator";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import { CheckboxesFormField } from "@/src/common/ui/components/form/checkboxes-form-field";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
@@ -19,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface GenerateAiNotesFormProps {
   /**
@@ -158,7 +158,7 @@ export function GenerateAiNotesForm({
       }
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

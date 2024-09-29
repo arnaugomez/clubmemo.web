@@ -1,6 +1,7 @@
 import { z } from "@/i18n/zod";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
+import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Dialog,
@@ -17,8 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createNoteAction } from "../actions/create-note-action";
-import { clientLocator } from "@/src/common/di/client-locator";
-import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface CreateNoteDialogProps {
   courseId: string;
@@ -55,7 +55,7 @@ export function CreateNoteDialog({
       }
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

@@ -1,7 +1,9 @@
 import { z } from "@/i18n/zod";
-import { clientLocator } from "@/src/common/di/client-locator";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
+import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
+import { SwitchSectionFormField } from "@/src/common/ui/components/form/switch-section-form-field";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Dialog,
@@ -19,8 +21,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { default_maximum_interval } from "ts-fsrs";
 import { editCourseConfigAction } from "../actions/edit-course-config-action";
-import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
-import { SwitchSectionFormField } from "@/src/common/ui/components/form/switch-section-form-field";
 
 const EditCourseConfigSchema = z.object({
   enableFuzz: z.boolean(),
@@ -64,7 +64,7 @@ export function EditCourseConfigDialog({
       }
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

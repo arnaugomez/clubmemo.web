@@ -4,7 +4,6 @@ import { z } from "@/i18n/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { clientLocator } from "@/src/common/di/client-locator";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
@@ -14,6 +13,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { useEffect, useRef } from "react";
 import { logoutAction } from "../../actions/logout-action";
 import { verifyEmailAction } from "../actions/verify-email-action";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 const FormSchema = z.object({
   code: z.string().length(6),
@@ -37,7 +37,7 @@ export function VerifyEmailForm() {
       if (!handler.hasErrors) waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

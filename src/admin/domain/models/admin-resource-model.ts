@@ -89,7 +89,9 @@ export function transformDataAfterGet(
   fields: AdminFieldModel[],
   data: AdminResourceData,
 ): AdminResourceData {
-  const newData: AdminResourceData = {};
+  const newData: AdminResourceData = {
+    _id: data._id.toString(),
+  };
   for (const field of fields) {
     if (field.fieldType === AdminFieldTypeModel.objectId) {
       newData[field.name] = data[field.name]?.toString();

@@ -1,4 +1,8 @@
 import {
+  InvalidAdminResourceTypeError,
+  UserIsNotAdminError,
+} from "@/src/admin/domain/models/admin-errors";
+import {
   AiGeneratorEmptyMessageError,
   AiGeneratorError,
   AiGeneratorRateLimitError,
@@ -18,14 +22,10 @@ import { EnrollmentDoesNotExistError } from "@/src/courses/domain/models/enrollm
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { DailyRateLimitError } from "@/src/rate-limits/domain/errors/rate-limits-errors";
 import { ZodError } from "zod";
-import { clientLocator } from "../../di/client-locator";
 import { NoPermissionError } from "../../domain/models/app-errors";
 import type { FormActionResponse } from "../models/server-form-errors";
 import { ActionResponse } from "../models/server-form-errors";
-import {
-  InvalidAdminResourceTypeError,
-  UserIsNotAdminError,
-} from "@/src/admin/domain/models/admin-errors";
+import { locator_common_ErrorTrackingService } from "../../locators/locator_error-tracking-service";
 
 export class ActionErrorHandler {
   static handle(e: unknown): FormActionResponse {
@@ -64,7 +64,7 @@ export class ActionErrorHandler {
     } else if (e instanceof ZodError) {
       return ActionResponse.formZodError(e);
     } else {
-      clientLocator.ErrorTrackingService().captureError(e);
+      locator_common_ErrorTrackingService().captureError(e);
       return ActionResponse.formGlobalError("general");
     }
   }

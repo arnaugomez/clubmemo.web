@@ -1,12 +1,16 @@
 "use client";
 
 import { z } from "@/i18n/zod";
-import { clientLocator } from "@/src/common/di/client-locator";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import { HandleSchema } from "@/src/common/schemas/handle-schema";
 
+import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
+import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
+import { SwitchSectionFormField } from "@/src/common/ui/components/form/switch-section-form-field";
+import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
+import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Dialog,
@@ -28,11 +32,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editProfileAction } from "../actions/edit-profile-action";
 import { editProfileUploadAction } from "../actions/edit-profile-upload-action";
-import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
-import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
-import { SwitchSectionFormField } from "@/src/common/ui/components/form/switch-section-form-field";
-import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
-import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface EditProfileSectionProps {
   profileData: ProfileModelData;
@@ -145,7 +145,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
         }
       }
     } catch (e) {
-      clientLocator.ErrorTrackingService().captureError(e);
+      locator_common_ErrorTrackingService().captureError(e);
       toast.error("Error al subir las imágenes");
       return;
     }
@@ -174,7 +174,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       }
       handler.setErrors();
     } catch (e) {
-      clientLocator.ErrorTrackingService().captureError(e);
+      locator_common_ErrorTrackingService().captureError(e);
       FormResponseHandler.setGlobalError(form);
     }
   });

@@ -25,7 +25,7 @@ import type { DateTimeService } from "../domain/interfaces/date-time-service";
 import type { EmailService } from "../domain/interfaces/email-service";
 import type { EnvService } from "../domain/interfaces/env-service";
 import type { IpService } from "../domain/interfaces/ip-service";
-import { clientLocator } from "./client-locator";
+import { locator_common_ErrorTrackingService } from "../locators/locator_error-tracking-service";
 import type { Dependency, Lazy } from "./locator-types";
 import { singleton } from "./locator-utils";
 
@@ -187,7 +187,7 @@ export const locator: Locator = {
     );
     return new file.AiNotesGeneratorServiceOpenaiImpl(
       envService,
-      clientLocator.ErrorTrackingService(),
+      locator_common_ErrorTrackingService(),
     );
   },
   // Practice

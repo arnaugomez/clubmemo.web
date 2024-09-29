@@ -1,9 +1,6 @@
 "use client";
 
 import { z } from "@/i18n/zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { clientLocator } from "@/src/common/di/client-locator";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { EmailSchema } from "@/src/common/schemas/email-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
@@ -14,8 +11,11 @@ import { InputFormField } from "@/src/common/ui/components/form/input-form-field
 import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { FormProvider, useForm } from "react-hook-form";
 import { signupAction } from "../actions/signup-action";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 const SignupFormSchema = z.object({
   email: EmailSchema,
@@ -42,7 +42,7 @@ export function SignupForm() {
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });
