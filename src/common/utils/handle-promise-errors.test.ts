@@ -2,12 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import { handlePromiseError } from "./handle-promise-error";
 
 const captureError = vi.fn();
-vi.mock("../di/client-locator", () => ({
-  clientLocator: {
-    ErrorTrackingService: () => ({
-      captureError,
-    }),
-  },
+vi.mock("../locators/locator_error-tracking-service.ts", () => ({
+  locator_common_ErrorTrackingService: () => ({
+    captureError,
+  }),
 }));
 
 describe("handlePromiseError", () => {

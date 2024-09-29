@@ -4,6 +4,7 @@ import type { AdminResourceModel } from "@/src/admin/domain/models/admin-resourc
 import type { GetAdminResourcesUseCaseInputModel } from "@/src/admin/domain/use-cases/get-admin-resources-use-case";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { PaginationSection } from "@/src/common/ui/components/pagination/pagination-section";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import {
   Table,
@@ -15,7 +16,8 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/table";
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getAdminResourcesAction } from "../../actions/get-admin-resources-action";
 import { translateAdminKey } from "../../i18n/admin-translations";
 
@@ -35,11 +37,22 @@ type AdminQueueOperation = QueueOperation<
 >;
 
 export function ResourceListTable({ resource }: ResourceListTableProps) {
+  const params = useSearchParams();
+  const page = Number(params.get("page")) || 1;
+  const previousPageRef = useRef(page);
+  const pathname = usePathname();
+
+  function getHref(page: number) {
+    const newParams = new URLSearchParams(params);
+    newParams.set("page", page.toString());
+    return `${pathname}?${newParams.toString()}`;
+  }
+
   const [queue, setQueue] = useState<AdminQueueOperation[]>(() => [
     {
       input: {
         resourceType: resource.resourceType,
-        page: 1,
+        page: page,
         pageSize: 10,
       },
       status: "pending",
@@ -47,12 +60,9 @@ export function ResourceListTable({ resource }: ResourceListTableProps) {
   ]);
 
   const first = queue[0];
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isLoading =
     !first || first.status === "loading" || first.status === "pending";
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isError = first?.status === "error";
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const result = useMemo(() => {
     return queue.find((operation) => operation.status === "success")?.result;
   }, [queue]);
@@ -100,8 +110,7 @@ export function ResourceListTable({ resource }: ResourceListTableProps) {
     }
   }, [handleOperation, queue]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function loadMore(input: GetAdminResourcesUseCaseInputModel) {
+  const loadMore = useCallback((input: GetAdminResourcesUseCaseInputModel) => {
     setQueue((prev) => [
       {
         input,
@@ -109,7 +118,18 @@ export function ResourceListTable({ resource }: ResourceListTableProps) {
       },
       ...prev,
     ]);
-  }
+  }, []);
+
+  useEffect(() => {
+    if (page !== previousPageRef.current) {
+      previousPageRef.current = page;
+      loadMore({
+        resourceType: resource.resourceType,
+        page: page,
+        pageSize: 10,
+      });
+    }
+  }, [loadMore, page, resource.resourceType]);
 
   return (
     <>
@@ -151,11 +171,27 @@ export function ResourceListTable({ resource }: ResourceListTableProps) {
           ))}
         </TableBody>
       </Table>
+      {isError && (
+        <div className="flex h-[530px] items-center justify-center text-red-500">
+          Error al cargar los datos
+        </div>
+      )}
       {isLoading &&
         !result?.results.length &&
         Array.from({ length: 10 }).map((_, i) => (
           <Skeleton key={i} className="mt-1 h-[49px] rounded-sm" />
         ))}
+      {result && (
+        <>
+          <div className="h-8" />
+          <PaginationSection
+            resultsCount={result.totalCount}
+            pageSize={10}
+            page={page}
+            getHref={getHref}
+          />
+        </>
+      )}
     </>
   );
 }

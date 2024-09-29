@@ -1,8 +1,8 @@
-import { PaginationSection } from "@/src/common/ui/components/pagination/pagination-section";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { CreateCourseButton } from "@/src/courses/ui/create/components/create-course-button";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
+import { MyCoursesPaginationSection } from "@/src/courses/ui/my-courses/components/my-courses-pagination-section";
 import { MyCoursesTable } from "@/src/courses/ui/my-courses/components/my-courses-table";
 import { fetchHasCourses } from "@/src/courses/ui/my-courses/fetch/fetch-has-courses";
 import type { FetchMyCoursesPaginationModel } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
@@ -92,7 +92,7 @@ interface CoursesPagePaginationProps {
 async function CoursesPagePagination({ arg }: CoursesPagePaginationProps) {
   const { totalCount: count } = await fetchMyCoursesPagination(arg);
 
-  return <PaginationSection resultsCount={count} pageSize={10} />;
+  return <MyCoursesPaginationSection resultsCount={count} />;
 }
 
 function MyCoursesLoading() {
