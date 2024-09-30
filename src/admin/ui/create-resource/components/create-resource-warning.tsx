@@ -12,7 +12,6 @@ interface CreateResourceWarningProps {
 }
 
 export function CreateResourceAlert({ resource }: CreateResourceWarningProps) {
-  if (!resource.showCreationWarning) return null;
   return (
     <Alert>
       <TriangleAlert size={16} />

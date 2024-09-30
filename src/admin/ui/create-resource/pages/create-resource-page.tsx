@@ -23,7 +23,12 @@ export function CreateResourcePage({
             Crear {translateAdminKey(resourceType, "singular")}
           </h1>
           <div className="h-10" />
-          <CreateResourceAlert resource={resource} />
+          {resource.showCreationWarning && (
+            <>
+              <CreateResourceAlert resource={resource} />
+              <div className="h-8" />
+            </>
+          )}
           <CreateResourceForm resourceType={resourceType} />
         </div>
       </div>
