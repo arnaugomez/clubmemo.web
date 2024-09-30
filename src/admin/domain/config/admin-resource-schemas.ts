@@ -77,7 +77,11 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     reps: z.number().int(),
     lapses: z.number().int(),
     state: PracticeCardStateModelSchema,
-    lastReview: z.date().optional().nullable(),
+    lastReview: z
+      .date()
+      .optional()
+      .nullish()
+      .transform((x) => x ?? undefined),
   }),
   [AdminResourceTypeModel.profiles]: z.object({
     userId: ObjectIdSchema,

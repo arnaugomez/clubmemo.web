@@ -17,6 +17,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createAdminResourceAction } from "../../actions/create-admin-resource-action";
 import { translateAdminKey } from "../../i18n/admin-translations";
+import { AdminField } from "../../resource-form/components/admin-field";
 
 interface CreateResourceFormProps {
   resourceType: AdminResourceTypeModel;
@@ -59,6 +60,13 @@ export function CreateResourceForm({ resourceType }: CreateResourceFormProps) {
   return (
     <FormProvider {...form}>
       <form onSubmit={onSubmit} className="space-y-6">
+        {resource.fields.map((field) => (
+          <AdminField
+            key={field.name}
+            field={field}
+            resourceType={resourceType}
+          />
+        ))}
         <FormGlobalErrorMessage />
         <div className="flex justify-between space-x-6">
           <Button variant="ghost" asChild>
