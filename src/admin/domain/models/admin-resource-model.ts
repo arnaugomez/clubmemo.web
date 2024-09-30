@@ -26,6 +26,7 @@ export interface AdminResourceModel {
    * Forbid creating resources of this type
    */
   cannotCreate?: boolean;
+  showCreationWarning?: boolean;
 }
 
 interface AdminFieldModel {
@@ -52,6 +53,7 @@ export enum AdminFieldTypeModel {
   tags = "tags",
   richText = "richText",
   select = "select",
+  selectMultiple = "selectMultiple",
 }
 
 export function createValidationSchemaOfAdminResource(

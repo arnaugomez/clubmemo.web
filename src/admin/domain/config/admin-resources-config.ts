@@ -103,6 +103,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     ],
   },
   {
+    cannotCreate: true,
     resourceType: AdminResourceTypeModel.forgotPasswordTokens,
     fields: [
       { name: "userId", fieldType: AdminFieldTypeModel.objectId },
@@ -171,6 +172,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     ],
   },
   {
+    showCreationWarning: true,
     resourceType: AdminResourceTypeModel.users,
     fields: [
       { name: "email", fieldType: AdminFieldTypeModel.string },
@@ -180,8 +182,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       { name: "newPassword", fieldType: AdminFieldTypeModel.boolean },
       {
         name: "authTypes",
-        isReadonly: true,
-        fieldType: AdminFieldTypeModel.select,
+        fieldType: AdminFieldTypeModel.selectMultiple,
         options: [AuthTypeModel.email],
       },
     ],
