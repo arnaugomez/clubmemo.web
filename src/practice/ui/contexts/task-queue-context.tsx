@@ -1,6 +1,6 @@
 "use client";
-import { clientLocator } from "@/src/common/di/client-locator";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import {
   createContextHook,
   createNullContext,
@@ -106,7 +106,7 @@ export function TaskQueueProvider({ children }: PropsWithChildren) {
         setStatus(task.fn, Status.done);
         task.status = Status.done;
       } catch (e) {
-        clientLocator.ErrorTrackingService().captureError(e);
+        locator_common_ErrorTrackingService().captureError(e);
         // Run the error manager callback
         task.onError?.(e);
         // Wait for 1 second before retrying the task

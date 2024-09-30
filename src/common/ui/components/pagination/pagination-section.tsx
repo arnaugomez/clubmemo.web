@@ -1,4 +1,3 @@
-"use client";
 import {
   Pagination,
   PaginationContent,
@@ -8,34 +7,27 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/src/common/ui/components/shadcn/ui/pagination";
-import { usePathname, useSearchParams } from "next/navigation";
 
-interface MyCoursesPaginationProps {
+interface PaginationSectionProps {
+  page: number;
   resultsCount: number;
   pageSize?: number;
+  getHref: (page: number) => string;
 }
 
 export function PaginationSection({
+  page,
   resultsCount,
   pageSize = 10,
-}: MyCoursesPaginationProps) {
-  const pagesCount = Math.ceil(resultsCount / pageSize);
-  const params = useSearchParams();
-  const pathname = usePathname();
-
-  function getPaginationLink(page: number) {
-    const newParams = new URLSearchParams(params);
-    newParams.set("page", page.toString());
-    return `${pathname}?${newParams.toString()}`;
-  }
-
-  const page = Number(params.get("page")) || 1;
+  getHref,
+}: PaginationSectionProps) {
+  const pagesCount = Math.max(Math.ceil(resultsCount / pageSize), 1);
 
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href={getPaginationLink(1)} />
+          <PaginationPrevious href={getHref(1)} />
         </PaginationItem>
 
         {page > 2 && (
@@ -46,21 +38,17 @@ export function PaginationSection({
 
         {page !== 1 && (
           <PaginationItem>
-            <PaginationLink href={getPaginationLink(page - 1)}>
-              {page - 1}
-            </PaginationLink>
+            <PaginationLink href={getHref(page - 1)}>{page - 1}</PaginationLink>
           </PaginationItem>
         )}
         <PaginationItem>
-          <PaginationLink href={getPaginationLink(page)} isActive>
+          <PaginationLink href={getHref(page)} isActive>
             {page}
           </PaginationLink>
         </PaginationItem>
         {page !== pagesCount && (
           <PaginationItem>
-            <PaginationLink href={getPaginationLink(page + 1)}>
-              {page + 1}
-            </PaginationLink>
+            <PaginationLink href={getHref(page + 1)}>{page + 1}</PaginationLink>
           </PaginationItem>
         )}
 
@@ -71,7 +59,7 @@ export function PaginationSection({
         )}
 
         <PaginationItem>
-          <PaginationNext href={getPaginationLink(pagesCount)} />
+          <PaginationNext href={getHref(pagesCount)} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

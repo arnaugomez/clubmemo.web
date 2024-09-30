@@ -1,6 +1,6 @@
 "use client";
 
-import { clientLocator } from "@/src/common/di/client-locator";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import type { ErrorPageProps } from "@/src/common/ui/models/props-with-error";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
@@ -14,7 +14,7 @@ import { useEffect } from "react";
  */
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   useEffect(() => {
-    clientLocator.ErrorTrackingService().captureError(error);
+    locator_common_ErrorTrackingService().captureError(error);
   }, [error]);
   return (
     <main className="absolute inset-0 flex flex-col items-center justify-center px-4">

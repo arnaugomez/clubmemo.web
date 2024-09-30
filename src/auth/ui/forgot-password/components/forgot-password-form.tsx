@@ -1,6 +1,5 @@
 "use client";
 
-import { clientLocator } from "@/src/common/di/client-locator";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -15,6 +14,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { forgotPasswordAction } from "../actions/forgot-password-action";
 import type { ForgotPasswordActionModel } from "../schemas/forgot-password-action-schema";
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 const ForgotPasswordConfirmDialog = dynamic(() =>
   import("./forgot-password-confirm-dialog").then(
@@ -46,7 +46,7 @@ export function ForgotPasswordForm() {
       }
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

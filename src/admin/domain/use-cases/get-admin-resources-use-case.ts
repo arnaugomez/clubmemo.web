@@ -11,23 +11,28 @@ import {
   transformDataAfterGet,
   type AdminResourceTypeModel,
 } from "../models/admin-resource-model";
+import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
-interface GetAdminResourceDetailUseCaseInputModel {
+export interface GetAdminResourcesUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
   page: number;
   pageSize: number;
 }
 
-export class GetAdminResourceDetailUseCase {
-  constructor(private readonly databaseService: DatabaseService) {}
+export class GetAdminResourcesUseCase {
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
+  ) {}
 
-  async createAdminResourceUseCase({
+  async execute({
     resourceType,
     page = 1,
     pageSize = 10,
-  }: GetAdminResourceDetailUseCaseInputModel): Promise<
+  }: GetAdminResourcesUseCaseInputModel): Promise<
     PaginationModel<AdminResourceData>
   > {
+    await this.checkIsAdminUseCase.execute();
     const resource = getAdminResourceByType(resourceType);
     const skip = (page - 1) * pageSize;
     const limit = pageSize;

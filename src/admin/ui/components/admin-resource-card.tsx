@@ -19,7 +19,7 @@ export function AdminResourceCard({ resource }: AdminResourceCardProps) {
       />
       <div className="h-2" />
       <h4 className={textStyles.h4}>
-        {translateAdminKey(resource.resourceType, "label")}
+        {translateAdminKey(resource.resourceType, "plural")}
       </h4>
       <div className="h-1" />
       <p className={textStyles.muted}>
