@@ -11,6 +11,7 @@ import { EditIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { deleteAdminResourceAction } from "../../actions/delete-admin-resource-action";
+import { translateAdminKey } from "../../i18n/admin-translations";
 
 interface ResourceListTableRowProps {
   resource: AdminResourceModel;
@@ -74,8 +75,8 @@ export function ResourceListTableRow({
         <ConfirmDialog
           onAccept={handleRemove}
           onClose={() => setIsDeleteDialogOpen(false)}
-          title="Eliminar recurso?"
-          description="¿Estás seguro que deseas eliminar este recurso? Esta acción no se puede deshacer"
+          title={`Eliminar ${translateAdminKey(resource.resourceType, "singular")}?`}
+          description="¿Estás seguro que deseas eliminar este recurso? Esta acción no se puede deshacer."
           acceptButtonText="Eliminar"
           acceptButtonVariant="destructive"
         />
