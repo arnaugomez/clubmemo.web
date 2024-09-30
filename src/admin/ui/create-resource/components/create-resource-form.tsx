@@ -59,7 +59,7 @@ export function CreateResourceForm({ resourceType }: CreateResourceFormProps) {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {resource.fields.map((field) => (
           <AdminField
             key={field.name}
