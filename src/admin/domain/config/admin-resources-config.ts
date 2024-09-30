@@ -2,10 +2,10 @@ import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
 import { InvalidAdminResourceTypeError } from "../models/admin-errors";
+import type { AdminResourceModel } from "../models/admin-resource-model";
 import {
   AdminFieldTypeModel,
   AdminResourceTypeModel,
-  type AdminResourceModel,
 } from "../models/admin-resource-model";
 
 const practiceCardStateOptions = [
