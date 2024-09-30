@@ -1,6 +1,7 @@
 "use client";
+import { getAdminResourceByType } from "@/src/admin/domain/config/admin-resources-config";
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
-import type { AdminResourceModel } from "@/src/admin/domain/models/admin-resource-model";
+import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import type { GetAdminResourcesUseCaseInputModel } from "@/src/admin/domain/use-cases/get-admin-resources-use-case";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
@@ -23,7 +24,7 @@ import { translateAdminKey } from "../../i18n/admin-translations";
 import { ResourceListTableRow } from "./resource-list-table-row";
 
 interface ResourceListTableProps {
-  resource: AdminResourceModel;
+  resourceType: AdminResourceTypeModel;
 }
 
 interface QueueOperation<T, U> {
@@ -37,7 +38,8 @@ type AdminQueueOperation = QueueOperation<
   PaginationModel<AdminResourceData>
 >;
 
-export function ResourceListTable({ resource }: ResourceListTableProps) {
+export function ResourceListTable({ resourceType }: ResourceListTableProps) {
+  const resource = getAdminResourceByType(resourceType);
   const params = useSearchParams();
   const page = Number(params.get("page")) || 1;
   const previousPageRef = useRef(page);

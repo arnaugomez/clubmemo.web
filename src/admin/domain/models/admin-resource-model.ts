@@ -1,5 +1,4 @@
 import { ObjectId } from "mongodb";
-import { z } from "zod";
 import type { AdminResourceData } from "./admin-resource-data";
 
 export enum AdminResourceTypeModel {
@@ -56,11 +55,45 @@ export enum AdminFieldTypeModel {
   selectMultiple = "selectMultiple",
 }
 
-export function createValidationSchemaOfAdminResource(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _adminResource: AdminResourceModel,
-) {
-  return z.any();
+export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
+  const values: Record<string, unknown> = {};
+  for (const field of fields) {
+    switch (field.fieldType) {
+      case AdminFieldTypeModel.boolean:
+        values[field.name] = false;
+        break;
+      case AdminFieldTypeModel.date:
+        values[field.name] = null;
+        break;
+      case AdminFieldTypeModel.number:
+        values[field.name] = 0;
+        break;
+      case AdminFieldTypeModel.string:
+        values[field.name] = "";
+        break;
+      case AdminFieldTypeModel.tags:
+        values[field.name] = [];
+        break;
+      case AdminFieldTypeModel.select:
+        values[field.name] = null;
+        break;
+      case AdminFieldTypeModel.selectMultiple:
+        values[field.name] = [];
+        break;
+      case AdminFieldTypeModel.form:
+        values[field.name] = getDefaultValuesOfAdminResource(
+          field.fields ?? [],
+        );
+        break;
+      case AdminFieldTypeModel.richText:
+        values[field.name] = "";
+        break;
+      case AdminFieldTypeModel.objectId:
+        values[field.name] = "";
+        break;
+    }
+  }
+  return values;
 }
 
 export function transformDataBeforeCreateOrUpdate(

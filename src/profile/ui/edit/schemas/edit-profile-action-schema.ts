@@ -1,5 +1,6 @@
 import { z } from "@/i18n/zod";
 import { HandleSchema } from "@/src/common/schemas/handle-schema";
+import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 
 /**
  * Validates the parameters of `editProfileAction`
@@ -12,7 +13,7 @@ export const EditProfileActionSchema = z.object({
   isPublic: z.boolean(),
   picture: z.string().optional(),
   backgroundPicture: z.string().optional(),
-  tags: z.array(z.string().trim().min(1).max(50)).max(10),
+  tags: TagsSchema,
 });
 
 /**

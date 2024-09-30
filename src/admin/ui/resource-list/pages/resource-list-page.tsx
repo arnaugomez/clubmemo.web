@@ -34,7 +34,7 @@ export function ResourceListPage({
 
           <div className="h-10" />
 
-          <ResourceListTable resource={resource} />
+          <ResourceListTable resourceType={resourceType} />
         </div>
       </div>
     </main>

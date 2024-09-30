@@ -1,11 +1,9 @@
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { getAdminResourceHook } from "../config/admin-resource-hooks-config";
+import { getAdminResourceSchema } from "../config/admin-resource-schemas";
 import { getAdminResourceByType } from "../config/admin-resources-config";
 import type { AdminResourceTypeModel } from "../models/admin-resource-model";
-import {
-  createValidationSchemaOfAdminResource,
-  transformDataBeforeCreateOrUpdate,
-} from "../models/admin-resource-model";
+import { transformDataBeforeCreateOrUpdate } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 export interface CreateAdminResourceUseCaseInputModel {
@@ -29,7 +27,10 @@ export class CreateAdminResourceUseCase {
   }: CreateAdminResourceUseCaseInputModel): Promise<CreateAdminResourceUseCaseResultModel> {
     await this.checkIsAdminUseCase.execute();
     const resource = getAdminResourceByType(resourceType);
-    const validationSchema = createValidationSchemaOfAdminResource(resource);
+    const validationSchema = getAdminResourceSchema({
+      resourceType,
+      isCreate: true,
+    });
     const parsed = validationSchema.parse(data);
     const transformed = transformDataBeforeCreateOrUpdate(
       resource.fields,

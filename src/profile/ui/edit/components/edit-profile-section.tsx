@@ -4,6 +4,7 @@ import { z } from "@/i18n/zod";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import { HandleSchema } from "@/src/common/schemas/handle-schema";
 
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -32,7 +33,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editProfileAction } from "../actions/edit-profile-action";
 import { editProfileUploadAction } from "../actions/edit-profile-upload-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 
 interface EditProfileSectionProps {
   profileData: ProfileModelData;
@@ -70,7 +71,7 @@ const EditProfileSchema = z.object({
   bio: z.string().trim().min(0).max(255),
   website: z.string().url().max(2083).or(z.string().max(0)),
   isPublic: z.boolean(),
-  tags: z.array(z.string().trim().min(1).max(50)).max(10),
+  tags: TagsSchema,
   picture: z.string().or(FileSchema).optional(),
   backgroundPicture: z.string().or(FileSchema).optional(),
 });
