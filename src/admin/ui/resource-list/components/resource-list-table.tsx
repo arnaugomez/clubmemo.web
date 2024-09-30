@@ -5,6 +5,7 @@ import type { GetAdminResourcesUseCaseInputModel } from "@/src/admin/domain/use-
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { PaginationSection } from "@/src/common/ui/components/pagination/pagination-section";
+import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import {
   Table,
@@ -15,6 +16,7 @@ import {
   TableRow,
 } from "@/src/common/ui/components/shadcn/ui/table";
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
+import { EditIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -151,27 +153,38 @@ export function ResourceListTable({ resource }: ResourceListTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {result?.results.map((resourceData) => (
-            <TableRow key={resourceData._id}>
-              <TableCell className="min-w-[100px]">
-                <Link
-                  href={`/admin/resources/${resource.resourceType}/detail/${resourceData._id}`}
-                  className="hover:underline"
-                >
-                  {resourceData._id}
-                </Link>
-              </TableCell>
-              {resource.fields.map((field) => (
-                <TableCell
-                  className="min-w-[100px] max-w-[500px] truncate"
-                  key={field.name}
-                >
-                  {resourceData[field.name]?.toString() || "-"}
+          {result?.results.map((resourceData) => {
+            const detailHref = `/admin/resources/${resource.resourceType}/detail/${resourceData._id}`;
+            return (
+              <TableRow key={resourceData._id}>
+                <TableCell className="min-w-[100px]">
+                  <Link href={detailHref} className="hover:underline">
+                    {resourceData._id}
+                  </Link>
                 </TableCell>
-              ))}
-              <TableCell className="w-[60px]">Ver</TableCell>
-            </TableRow>
-          ))}
+                {resource.fields.map((field) => (
+                  <TableCell
+                    className="min-w-[100px] max-w-[500px] truncate"
+                    key={field.name}
+                  >
+                    {resourceData[field.name]?.toString() || "-"}
+                  </TableCell>
+                ))}
+                <TableCell className="flex h-[53px] items-center space-x-2 py-0">
+                  <Button variant="secondary" size="icon" asChild>
+                    <Link href={detailHref}>
+                      <EditIcon />
+                      <span className="sr-only">Editar</span>
+                    </Link>
+                  </Button>
+                  <Button variant="destructive" size="icon">
+                    <Trash2Icon />
+                    <span className="sr-only">Eliminar</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       {isError && (
