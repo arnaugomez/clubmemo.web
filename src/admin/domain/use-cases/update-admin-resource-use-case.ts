@@ -3,8 +3,8 @@ import { ObjectId } from "mongodb";
 import { getAdminResourceHook } from "../config/admin-resource-hooks-config";
 import { getAdminResourceSchema } from "../config/admin-resource-schemas";
 import { getAdminResourceByType } from "../config/admin-resources-config";
+import { transformDataBeforeCreateOrUpdate } from "../methods/transform-data-before-create-or-update";
 import type { AdminResourceTypeModel } from "../models/admin-resource-model";
-import { transformDataBeforeCreateOrUpdate } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 export interface UpdateAdminResourceUseCaseInputModel {

@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import type { AdminResourceData } from "./admin-resource-data";
 
 export enum AdminResourceTypeModel {
@@ -28,7 +27,7 @@ export interface AdminResourceModel {
   showCreationWarning?: boolean;
 }
 
-interface AdminFieldModel {
+export interface AdminFieldModel {
   name: string;
   isReadonly?: boolean;
   fieldType: AdminFieldTypeModel;
@@ -94,30 +93,6 @@ export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
     }
   }
   return values;
-}
-
-export function transformDataBeforeCreateOrUpdate(
-  fields: AdminFieldModel[],
-  data: AdminResourceData,
-): AdminResourceData {
-  for (const field of fields) {
-    if (field.isReadonly) {
-      delete data[field.name];
-    } else if (field.fieldType === AdminFieldTypeModel.objectId) {
-      const value = data[field.name];
-      if (typeof value === "string" && ObjectId.isValid(value)) {
-        data[field.name] = new ObjectId(value);
-      } else {
-        data[field.name] = null;
-      }
-    } else if (field.fieldType === AdminFieldTypeModel.form) {
-      data[field.name] = transformDataBeforeCreateOrUpdate(
-        field.fields ?? [],
-        data[field.name] ?? {},
-      );
-    }
-  }
-  return data;
 }
 
 export function transformDataAfterGet(
