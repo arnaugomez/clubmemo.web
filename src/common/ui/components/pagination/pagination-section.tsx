@@ -21,7 +21,7 @@ export function PaginationSection({
   pageSize = 10,
   getHref,
 }: PaginationSectionProps) {
-  const pagesCount = Math.ceil(resultsCount / pageSize);
+  const pagesCount = Math.max(Math.ceil(resultsCount / pageSize), 1);
 
   return (
     <Pagination>

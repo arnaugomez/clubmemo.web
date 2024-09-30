@@ -12,7 +12,7 @@ export async function updateAdminResourceAction(
     const parsed = UpdateAdminResourceActionSchema.parse(input);
     const useCase = locator_admin_UpdateAdminResourceUseCase();
     await useCase.execute(parsed);
-    return ActionResponse.formSuccess();
+    return ActionResponse.formSuccess(null);
   } catch (e) {
     return ActionErrorHandler.handle(e);
   }

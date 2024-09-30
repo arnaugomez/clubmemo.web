@@ -12,7 +12,7 @@ export async function deleteAdminResourceAction(
     const parsed = DeleteAdminResourceActionSchema.parse(input);
     const useCase = locator_admin_DeleteAdminResourceUseCase();
     await useCase.execute(parsed);
-    return ActionResponse.formSuccess();
+    return ActionResponse.formSuccess(null);
   } catch (e) {
     return ActionErrorHandler.handle(e);
   }

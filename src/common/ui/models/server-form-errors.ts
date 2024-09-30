@@ -64,10 +64,10 @@ export class ActionResponse {
     };
   }
 
-  static formSuccess<T>(data?: T): FormActionResponse<T> {
+  static formSuccess<T>(data: T): FormActionResponse<T> {
     return {
       errors: {},
-      data: data ?? null,
+      data: data,
     };
   }
 
