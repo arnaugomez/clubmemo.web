@@ -6,6 +6,7 @@ import {
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";
 import { DateInputFormField } from "@/src/common/ui/components/form/date-input-form-field";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
+import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
 import type { FunctionComponent } from "react";
 import { translateAdminKey } from "../../i18n/admin-translations";
 
@@ -84,9 +85,19 @@ function AdminFieldNumber({ resourceType, field }: ResourceFormFieldProps) {
   return null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AdminFieldObjectId({ resourceType, field }: ResourceFormFieldProps) {
-  return null;
+  return (
+    <InputFormField
+      name={field.name}
+      label={translateAdminKey(resourceType, "field", field.name, "label")}
+      placeholder={translateAdminKey(
+        resourceType,
+        "field",
+        field.name,
+        "placeholder",
+      )}
+    />
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -94,9 +105,19 @@ function AdminFieldTags({ resourceType, field }: ResourceFormFieldProps) {
   return null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AdminFieldRichText({ resourceType, field }: ResourceFormFieldProps) {
-  return null;
+  return (
+    <WysiwygFormField
+      name={field.name}
+      label={translateAdminKey(resourceType, "field", field.name, "label")}
+      placeholder={translateAdminKey(
+        resourceType,
+        "field",
+        field.name,
+        "placeholder",
+      )}
+    />
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

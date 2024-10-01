@@ -12,7 +12,6 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createAdminResourceAction } from "../../actions/create-admin-resource-action";
@@ -25,14 +24,10 @@ interface CreateResourceFormProps {
 export function CreateResourceForm({ resourceType }: CreateResourceFormProps) {
   const resource = getAdminResourceByType(resourceType);
   const { push } = useRouter();
-  const schema = useMemo(
-    () =>
-      getAdminResourceSchema({
-        resourceType,
-        isCreate: true,
-      }),
-    [resourceType],
-  );
+  const schema = getAdminResourceSchema({
+    resourceType,
+    isCreate: true,
+  });
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: getDefaultValuesOfAdminResource(resource.fields),

@@ -11,6 +11,7 @@ import {
 import type { ZodSchema } from "zod";
 import { z } from "zod";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
+import { default_maximum_interval } from "ts-fsrs";
 
 const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.courseEnrollments]: z.object({
@@ -20,9 +21,14 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     config: z
       .object({
         enableFuzz: z.boolean().optional(),
-        maximumInterval: z.number().int().optional(),
-        requestRetention: z.number().int().optional(),
-        dailyNewCardsCount: z.number().int().optional(),
+        maximumInterval: z
+          .number()
+          .int()
+          .min(1)
+          .max(default_maximum_interval)
+          .optional(),
+        requestRetention: z.number().min(0).max(1).optional(),
+        dailyNewCardsCount: z.number().int().min(1).max(100).optional(),
         showAdvancedRatingOptions: z.boolean().optional(),
       })
       .optional(),
