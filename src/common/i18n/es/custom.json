@@ -7,5 +7,6 @@
   "atLeastOneUpperCase": "Debe contener al menos una letra mayúscula",
   "atLeastOneNumber": "Debe contener al menos un número",
   "tagAlreadyExists": "Ya existe una etiqueta con ese nombre",
-  "handleAlreadyExists": "Ya existe un identificador de usuario con ese nombre"
+  "handleAlreadyExists": "Ya existe un identificador de usuario con ese nombre",
+  "tagInvalidCharacters": "Solo puede contener letras sin acento, números, guiones bajos y espacios"
 }

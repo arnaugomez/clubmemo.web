@@ -42,7 +42,7 @@ export function UpdateResourceForm() {
       const handler = new FormResponseHandler(response, form);
       if (handler.hasErrors) {
         return handler.setErrors();
-      } else if (handler.data) {
+      } else {
         toast.success("Recurso modificado correctamente");
       }
     } catch (error) {
