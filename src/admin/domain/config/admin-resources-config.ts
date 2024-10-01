@@ -1,4 +1,5 @@
 import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
+import { CoursePermissionTypeModel } from "@/src/courses/domain/models/course-permission-type-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
 import { InvalidAdminResourceTypeError } from "../models/admin-errors";
@@ -150,7 +151,15 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     fields: [
       { name: "courseId", fieldType: AdminFieldTypeModel.objectId },
       { name: "profileId", fieldType: AdminFieldTypeModel.objectId },
-      { name: "permissionType", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "permissionType",
+        fieldType: AdminFieldTypeModel.select,
+        options: [
+          CoursePermissionTypeModel.view,
+          CoursePermissionTypeModel.edit,
+          CoursePermissionTypeModel.own,
+        ],
+      },
     ],
   },
   {
