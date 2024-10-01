@@ -8,10 +8,10 @@ import {
   TagNameSchema,
   TagsSchema,
 } from "@/src/tags/domain/schemas/tags-schema";
+import { default_maximum_interval } from "ts-fsrs";
 import type { ZodSchema } from "zod";
 import { z } from "zod";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
-import { default_maximum_interval } from "ts-fsrs";
 
 const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.courseEnrollments]: z.object({
@@ -96,7 +96,7 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     bio: z.string().optional(),
     picture: z.string().optional(),
     backgroundPicture: z.string().optional(),
-    website: z.string().optional(),
+    website: z.string().url().max(2083).optional().or(z.string().max(0)),
     isPublic: z.boolean(),
     tags: TagsSchema,
   }),

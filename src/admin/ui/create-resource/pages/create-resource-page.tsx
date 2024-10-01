@@ -1,4 +1,5 @@
 import { getAdminResourceByType } from "@/src/admin/domain/config/admin-resources-config";
+import { ArrowLink } from "@/src/common/ui/components/button/arrow-link";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { AdminResourceIcon } from "../../components/admin-resource-icon";
 import { translateAdminKey } from "../../i18n/admin-translations";
@@ -12,9 +13,15 @@ export function CreateResourcePage({
   const resource = getAdminResourceByType(resourceType);
   return (
     <main>
-      <div className="h-24" />
+      <div className="h-20" />
       <div className="px-4">
-        <div className="mx-auto max-w-screen-lg">
+        <div className="mx-auto max-w-prose">
+          <ArrowLink href={`/admin/resources/${resourceType}`} isLeft>
+            Volver
+          </ArrowLink>
+
+          <div className="h-8" />
+
           <h1 className={textStyles.h2}>
             <AdminResourceIcon
               adminResourceType={resourceType}

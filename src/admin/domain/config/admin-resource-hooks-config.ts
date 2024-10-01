@@ -1,4 +1,6 @@
 import { Argon2id } from "oslo/password";
+import { checkIfHandleAlreadyExists } from "../hooks/check-if-handle-already-exists";
+import { checkIfTagAlreadyExists } from "../hooks/check-if-tag-already-exists";
 import type { AdminResourceHookModel } from "../models/admin-resouce-hook-model";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
 
@@ -38,19 +40,29 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
   },
   {
     resourceType: AdminResourceTypeModel.profiles,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     beforeCreate: async (data, db) => {
+      await checkIfHandleAlreadyExists(data, db);
       // TODO: ensure that the handle is unique
       return data;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    beforeUpdate: async (id, data, db) => {
-      // TODO: ensure that the handle is unique
+    beforeUpdate: async (_id, data, db) => {
+      await checkIfHandleAlreadyExists(data, db);
       return data;
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     afterDelete: async (id, data, db) => {
       // TODO: delete user, sessions and stuff
+    },
+  },
+  {
+    resourceType: AdminResourceTypeModel.tags,
+    beforeCreate: async (data, db) => {
+      await checkIfTagAlreadyExists(data.name, db);
+      return data;
+    },
+    beforeUpdate: async (_id, data, db) => {
+      await checkIfTagAlreadyExists(data.name, db);
+      return data;
     },
   },
 ];

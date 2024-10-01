@@ -3,10 +3,12 @@ import {
   AdminFieldTypeModel,
   type AdminFieldModel,
 } from "@/src/admin/domain/models/admin-resource-model";
+import type { OptionModel } from "@/src/common/domain/models/option-model";
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";
 import { DateInputFormField } from "@/src/common/ui/components/form/date-input-form-field";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
 import { NumberInputFormField } from "@/src/common/ui/components/form/number-input-form-field";
+import { SelectFormField } from "@/src/common/ui/components/form/select-form-field";
 import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
 import type { FunctionComponent } from "react";
@@ -58,7 +60,6 @@ function AdminFieldForm({ resourceType, field }: ResourceFormFieldProps) {
   return null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AdminFieldNumber({ resourceType, field }: ResourceFormFieldProps) {
   const props = useLabelAndPlaceholder({ resourceType, field });
   return <NumberInputFormField name={field.name} {...props} />;
@@ -69,7 +70,6 @@ function AdminFieldObjectId({ resourceType, field }: ResourceFormFieldProps) {
   return <InputFormField name={field.name} {...props} />;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AdminFieldTags({ resourceType, field }: ResourceFormFieldProps) {
   const props = useLabelAndPlaceholder({ resourceType, field });
   return <TagsFormField name={field.name} {...props} />;
@@ -80,18 +80,30 @@ function AdminFieldRichText({ resourceType, field }: ResourceFormFieldProps) {
   return <WysiwygFormField name={field.name} {...props} />;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AdminFieldSelect({ resourceType, field }: ResourceFormFieldProps) {
-  return null;
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return (
+    <SelectFormField
+      name={field.name}
+      options={getOptions({ resourceType, field })}
+      {...props}
+    />
+  );
 }
 
 function AdminFieldSelectMultiple({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   resourceType,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   field,
 }: ResourceFormFieldProps) {
-  return null;
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return (
+    <SelectFormField
+      isMultiple
+      name={field.name}
+      options={getOptions({ resourceType, field })}
+      {...props}
+    />
+  );
 }
 
 function useLabelAndPlaceholder({
@@ -107,4 +119,23 @@ function useLabelAndPlaceholder({
       "placeholder",
     ),
   };
+}
+
+function getOptions({
+  resourceType,
+  field,
+}: ResourceFormFieldProps): OptionModel[] {
+  return (
+    field.options?.map((option) => ({
+      label: translateAdminKey(
+        resourceType,
+        "field",
+        field.name,
+        "option",
+        option,
+        "label",
+      ),
+      value: option,
+    })) ?? []
+  );
 }
