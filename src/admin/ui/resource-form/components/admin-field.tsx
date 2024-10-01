@@ -6,6 +6,8 @@ import {
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";
 import { DateInputFormField } from "@/src/common/ui/components/form/date-input-form-field";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
+import { NumberInputFormField } from "@/src/common/ui/components/form/number-input-form-field";
+import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
 import type { FunctionComponent } from "react";
 import { translateAdminKey } from "../../i18n/admin-translations";
@@ -38,41 +40,17 @@ export function AdminField(props: ResourceFormFieldProps) {
 }
 
 function AdminFieldString({ resourceType, field }: ResourceFormFieldProps) {
-  return (
-    <InputFormField
-      name={field.name}
-      label={translateAdminKey(resourceType, "field", field.name, "label")}
-      placeholder={translateAdminKey(
-        resourceType,
-        "field",
-        field.name,
-        "placeholder",
-      )}
-    />
-  );
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return <InputFormField name={field.name} {...props} />;
 }
 function AdminFieldBoolean({ resourceType, field }: ResourceFormFieldProps) {
-  return (
-    <CheckboxFormField
-      name={field.name}
-      label={translateAdminKey(resourceType, "field", field.name, "label")}
-    />
-  );
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return <CheckboxFormField name={field.name} {...props} />;
 }
 
 function AdminFieldDate({ resourceType, field }: ResourceFormFieldProps) {
-  return (
-    <DateInputFormField
-      name={field.name}
-      label={translateAdminKey(resourceType, "field", field.name, "label")}
-      placeholder={translateAdminKey(
-        resourceType,
-        "field",
-        field.name,
-        "placeholder",
-      )}
-    />
-  );
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return <DateInputFormField name={field.name} {...props} />;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,42 +60,24 @@ function AdminFieldForm({ resourceType, field }: ResourceFormFieldProps) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AdminFieldNumber({ resourceType, field }: ResourceFormFieldProps) {
-  return null;
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return <NumberInputFormField name={field.name} {...props} />;
 }
 
 function AdminFieldObjectId({ resourceType, field }: ResourceFormFieldProps) {
-  return (
-    <InputFormField
-      name={field.name}
-      label={translateAdminKey(resourceType, "field", field.name, "label")}
-      placeholder={translateAdminKey(
-        resourceType,
-        "field",
-        field.name,
-        "placeholder",
-      )}
-    />
-  );
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return <InputFormField name={field.name} {...props} />;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AdminFieldTags({ resourceType, field }: ResourceFormFieldProps) {
-  return null;
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return <TagsFormField name={field.name} {...props} />;
 }
 
 function AdminFieldRichText({ resourceType, field }: ResourceFormFieldProps) {
-  return (
-    <WysiwygFormField
-      name={field.name}
-      label={translateAdminKey(resourceType, "field", field.name, "label")}
-      placeholder={translateAdminKey(
-        resourceType,
-        "field",
-        field.name,
-        "placeholder",
-      )}
-    />
-  );
+  const props = useLabelAndPlaceholder({ resourceType, field });
+  return <WysiwygFormField name={field.name} {...props} />;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -132,4 +92,19 @@ function AdminFieldSelectMultiple({
   field,
 }: ResourceFormFieldProps) {
   return null;
+}
+
+function useLabelAndPlaceholder({
+  resourceType,
+  field,
+}: ResourceFormFieldProps) {
+  return {
+    label: translateAdminKey(resourceType, "field", field.name, "label"),
+    placeholder: translateAdminKey(
+      resourceType,
+      "field",
+      field.name,
+      "placeholder",
+    ),
+  };
 }

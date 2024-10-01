@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { getAdminResourceHook } from "../config/admin-resource-hooks-config";
 import { getAdminResourceSchema } from "../config/admin-resource-schemas";
 import { getAdminResourceByType } from "../config/admin-resources-config";
+import { saveNewAdminResourceTags } from "../methods/handle-admin-tags-field";
 import { transformDataBeforeCreateOrUpdate } from "../methods/transform-data-before-create-or-update";
 import type { AdminResourceTypeModel } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
@@ -37,14 +38,17 @@ export class UpdateAdminResourceUseCase {
       parsed,
     );
     const hook = getAdminResourceHook(resourceType);
-    const dataAfterHook = await hook?.beforeUpdate?.(
-      objectId,
-      transformed,
-      this.databaseService.client.db(),
-    );
-    await this.databaseService.client
-      .db()
-      .collection(resourceType)
-      .updateOne({ _id: objectId }, { $set: dataAfterHook ?? transformed });
+    const db = this.databaseService.client.db();
+    const dataAfterHook =
+      (await hook?.beforeUpdate?.(objectId, transformed, db)) ?? transformed;
+    await Promise.all([
+      db
+        .collection(resourceType)
+        .updateOne({ _id: objectId }, { $set: dataAfterHook }),
+      saveNewAdminResourceTags({
+        data: dataAfterHook,
+        resource: resource,
+      }),
+    ]);
   }
 }
