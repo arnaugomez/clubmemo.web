@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { AdminResourceIcon } from "../../components/admin-resource-icon";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import { ResourceDetailTopButtons } from "../components/resource-detail-top-buttons";
+import { UpdateResourceForm } from "../components/update-resource-form";
 import { ResourceDetailContextProvider } from "../context/resource-detail-context";
 export interface ResourceDetailPageProps {
   params: {
@@ -37,9 +38,10 @@ export function ResourceDetailPage({
                 adminResourceType={resourceType}
                 className="mr-3 inline size-8 -translate-y-1"
               />
-              Editar {translateAdminKey(resourceType, "singular")}
+              {translateAdminKey(resourceType, "singular")}
             </h1>
             <div className="h-10" />
+            <UpdateResourceForm />
           </ResourceDetailContextProvider>
         </div>
       </div>

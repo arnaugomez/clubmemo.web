@@ -1,9 +1,11 @@
 import type { Db } from "mongodb";
 import { ZodError, ZodIssueCode } from "zod";
+import type { AdminResourceData } from "../models/admin-resource-data";
 
-export async function checkIfTagAlreadyExists(name: string, db: Db) {
-  const count = await db.collection("tags").countDocuments({ name });
-  if (count) {
+export async function checkIfTagAlreadyExists(data: AdminResourceData, db: Db) {
+  const document = await db.collection("tags").findOne({ name: data.name });
+  if (document) {
+    if (document._id.toString() === data._id) return;
     throw new ZodError([
       {
         path: ["name"],

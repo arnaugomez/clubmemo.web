@@ -1,8 +1,9 @@
 "use client";
+import { Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { DeleteResourceButton } from "../../components/delete-resource-button";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import { useResourceDetailContext } from "../context/resource-detail-context";
-import { DeleteResourceButton } from "../../components/delete-resource-button";
 
 export function ResourceDetailDeleteButton() {
   const { id, resourceType, data } = useResourceDetailContext();
@@ -15,6 +16,7 @@ export function ResourceDetailDeleteButton() {
       id={id}
       onDeleted={() => replace(`/admin/resources/${resourceType}`)}
     >
+      <Trash2Icon className="mr-2" />
       Eliminar {translateAdminKey(resourceType, "singular")}
     </DeleteResourceButton>
   );

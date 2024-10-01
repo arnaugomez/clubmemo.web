@@ -6,10 +6,11 @@ export async function checkIfHandleAlreadyExists(
   data: AdminResourceData,
   db: Db,
 ) {
-  const count = await db
+  const document = await db
     .collection("profiles")
-    .countDocuments({ handle: data.handle });
-  if (count) {
+    .findOne({ handle: data.handle });
+  if (document) {
+    if (document._id.toString() === data._id) return;
     throw new ZodError([
       {
         path: ["name"],
