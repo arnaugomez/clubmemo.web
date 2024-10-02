@@ -1,4 +1,6 @@
 import { Argon2id } from "oslo/password";
+import { ZodError, ZodIssueCode } from "zod";
+import { checkIfEmailAlreadyExists } from "../hooks/check-if-email-already-exists";
 import { checkIfHandleAlreadyExists } from "../hooks/check-if-handle-already-exists";
 import { checkIfTagAlreadyExists } from "../hooks/check-if-tag-already-exists";
 import type { AdminResourceHookModel } from "../models/admin-resouce-hook-model";
@@ -9,10 +11,17 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
     resourceType: AdminResourceTypeModel.users,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     beforeCreate: async (data, db) => {
-      // TODO: ensure that the email is unique
+      await checkIfEmailAlreadyExists(null, data, db);
       if (!data.newPassword) {
-        //
-        throw new Error("newPassword is required");
+        throw new ZodError([
+          {
+            path: ["newPassword"],
+            code: ZodIssueCode.invalid_type,
+            expected: "string",
+            received: "undefined",
+            message: "Campo requerido",
+          },
+        ]);
       }
       const newPassword = data.newPassword;
       delete data.newPassword;
@@ -21,9 +30,8 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
       data.hashed_password = await passwordHashingAlgorithm.hash(newPassword);
       return data;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     beforeUpdate: async (id, data, db) => {
-      // TODO: ensure that the email is unique
+      await checkIfEmailAlreadyExists(id, data, db);
       if (data.newPassword) {
         const newPassword = data.newPassword;
         delete data.newPassword;
@@ -41,12 +49,12 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
   {
     resourceType: AdminResourceTypeModel.profiles,
     beforeCreate: async (data, db) => {
-      await checkIfHandleAlreadyExists(data, db);
+      await checkIfHandleAlreadyExists(null, data, db);
       // TODO: ensure that the handle is unique
       return data;
     },
-    beforeUpdate: async (_id, data, db) => {
-      await checkIfHandleAlreadyExists(data, db);
+    beforeUpdate: async (id, data, db) => {
+      await checkIfHandleAlreadyExists(id, data, db);
       return data;
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -57,11 +65,11 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
   {
     resourceType: AdminResourceTypeModel.tags,
     beforeCreate: async (data, db) => {
-      await checkIfTagAlreadyExists(data.name, db);
+      await checkIfTagAlreadyExists(null, data, db);
       return data;
     },
-    beforeUpdate: async (_id, data, db) => {
-      await checkIfTagAlreadyExists(data.name, db);
+    beforeUpdate: async (id, data, db) => {
+      await checkIfTagAlreadyExists(id, data, db);
       return data;
     },
   },

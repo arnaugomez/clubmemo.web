@@ -1,5 +1,5 @@
 "use client";
-import { getAdminResourceSchema } from "@/src/admin/domain/config/admin-resource-schemas";
+import { getAdminResourceSchema } from "@/src/admin/domain/config/admin-resource-schemas-config";
 import { getAdminResourceByType } from "@/src/admin/domain/config/admin-resources-config";
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
 import { getDefaultValuesOfAdminResource } from "@/src/admin/domain/models/admin-resource-model";

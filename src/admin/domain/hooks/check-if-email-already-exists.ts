@@ -2,22 +2,20 @@ import type { Db, ObjectId } from "mongodb";
 import { ZodError, ZodIssueCode } from "zod";
 import type { AdminResourceData } from "../models/admin-resource-data";
 
-export async function checkIfHandleAlreadyExists(
+export async function checkIfEmailAlreadyExists(
   id: ObjectId | null,
   data: AdminResourceData,
   db: Db,
 ) {
-  const document = await db
-    .collection("profiles")
-    .findOne({ handle: data.handle });
+  const document = await db.collection("users").findOne({ email: data.email });
   if (document) {
     if (document._id.equals(id)) return;
     throw new ZodError([
       {
-        path: ["name"],
+        path: ["email"],
         code: ZodIssueCode.custom,
-        params: { i18n: "handleAlreadyExists" },
-        message: "Ya existe un identificador de usuario con ese nombre",
+        params: { i18n: "userAlreadyExistsError" },
+        message: "Ya existe un usuario con ese correo electrónico",
       },
     ]);
   }

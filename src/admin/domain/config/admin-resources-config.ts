@@ -255,7 +255,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       { name: "isAdmin", fieldType: AdminFieldTypeModel.boolean },
       {
         name: "newPassword",
-        fieldType: AdminFieldTypeModel.boolean,
+        fieldType: AdminFieldTypeModel.string,
         display: AdminFieldDisplayModel.password,
       },
       {
