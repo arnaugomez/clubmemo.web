@@ -12,6 +12,7 @@ import { default_maximum_interval } from "ts-fsrs";
 import type { ZodSchema } from "zod";
 import { z } from "zod";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
+import { AcceptTermsSchema } from "@/src/common/schemas/accept-terms-schema";
 
 const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.courseEnrollments]: z.object({
@@ -126,7 +127,7 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.users]: z.object({
     email: z.string().email(),
     authTypes: z.array(z.enum([AuthTypeModel.email])).min(1),
-    acceptTerms: z.boolean(),
+    acceptTerms: AcceptTermsSchema,
     isEmailVerified: z.boolean().optional(),
     isAdmin: z.boolean().optional(),
     newPassword: PasswordSchema.or(z.literal("").optional()),
@@ -138,7 +139,7 @@ const adminResourceCreateSchemas: Partial<
   [AdminResourceTypeModel.users]: z.object({
     email: z.string().email(),
     authTypes: z.array(z.enum([AuthTypeModel.email])).min(1),
-    acceptTerms: z.boolean(),
+    acceptTerms: AcceptTermsSchema,
     isEmailVerified: z.boolean().optional(),
     isAdmin: z.boolean().optional(),
     newPassword: PasswordSchema,
