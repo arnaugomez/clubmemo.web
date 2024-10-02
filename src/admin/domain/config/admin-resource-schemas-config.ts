@@ -94,7 +94,9 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.profiles]: z.object({
     userId: ObjectIdSchema,
     displayName: z.string().optional(),
-    handle: HandleSchema.optional(),
+    handle: HandleSchema.optional().or(
+      z.literal("").transform((value) => value || undefined),
+    ),
     bio: z.string().optional(),
     picture: z.string().optional(),
     backgroundPicture: z.string().optional(),
