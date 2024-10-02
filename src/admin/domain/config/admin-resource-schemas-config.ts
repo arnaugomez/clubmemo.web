@@ -1,4 +1,6 @@
 import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
+import { AcceptTermsSchema } from "@/src/common/schemas/accept-terms-schema";
+import { HandleSchema } from "@/src/common/schemas/handle-schema";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import { CoursePermissionTypeModel } from "@/src/courses/domain/models/course-permission-type-model";
@@ -12,7 +14,6 @@ import { default_maximum_interval } from "ts-fsrs";
 import type { ZodSchema } from "zod";
 import { z } from "zod";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
-import { AcceptTermsSchema } from "@/src/common/schemas/accept-terms-schema";
 
 const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.courseEnrollments]: z.object({
@@ -93,7 +94,7 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.profiles]: z.object({
     userId: ObjectIdSchema,
     displayName: z.string().optional(),
-    handle: z.string().optional(),
+    handle: HandleSchema.optional(),
     bio: z.string().optional(),
     picture: z.string().optional(),
     backgroundPicture: z.string().optional(),
