@@ -5,6 +5,7 @@ import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-ca
 import { InvalidAdminResourceTypeError } from "../models/admin-errors";
 import type { AdminResourceModel } from "../models/admin-resource-model";
 import {
+  AdminFieldDisplayModel,
   AdminFieldTypeModel,
   AdminResourceTypeModel,
 } from "../models/admin-resource-model";
@@ -65,7 +66,11 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       { name: "userId", fieldType: AdminFieldTypeModel.objectId },
       { name: "displayName", fieldType: AdminFieldTypeModel.string },
       { name: "handle", fieldType: AdminFieldTypeModel.string },
-      { name: "bio", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "bio",
+        fieldType: AdminFieldTypeModel.string,
+        display: AdminFieldDisplayModel.textarea,
+      },
       { name: "picture", fieldType: AdminFieldTypeModel.string },
       { name: "backgroundPicture", fieldType: AdminFieldTypeModel.string },
       { name: "website", fieldType: AdminFieldTypeModel.string },
@@ -98,8 +103,8 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     resourceType: AdminResourceTypeModel.notes,
     fields: [
       { name: "courseId", fieldType: AdminFieldTypeModel.objectId },
-      { name: "front", fieldType: AdminFieldTypeModel.string },
-      { name: "back", fieldType: AdminFieldTypeModel.string },
+      { name: "front", fieldType: AdminFieldTypeModel.richText },
+      { name: "back", fieldType: AdminFieldTypeModel.richText },
       { name: "createdAt", fieldType: AdminFieldTypeModel.date },
     ],
   },
@@ -166,7 +171,11 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     resourceType: AdminResourceTypeModel.courses,
     fields: [
       { name: "name", fieldType: AdminFieldTypeModel.string },
-      { name: "description", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "description",
+        fieldType: AdminFieldTypeModel.string,
+        display: AdminFieldDisplayModel.textarea,
+      },
       { name: "picture", fieldType: AdminFieldTypeModel.string },
       { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
       { name: "tags", fieldType: AdminFieldTypeModel.tags },
@@ -188,7 +197,11 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       { name: "acceptTerms", fieldType: AdminFieldTypeModel.boolean },
       { name: "isEmailVerified", fieldType: AdminFieldTypeModel.boolean },
       { name: "isAdmin", fieldType: AdminFieldTypeModel.boolean },
-      { name: "newPassword", fieldType: AdminFieldTypeModel.boolean },
+      {
+        name: "newPassword",
+        fieldType: AdminFieldTypeModel.boolean,
+        display: AdminFieldDisplayModel.password,
+      },
       {
         name: "authTypes",
         fieldType: AdminFieldTypeModel.selectMultiple,

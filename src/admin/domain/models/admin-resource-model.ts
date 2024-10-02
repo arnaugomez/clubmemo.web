@@ -39,6 +39,7 @@ export interface AdminFieldModel {
    * Options for the field. Used when the field type is `AdminFieldTypeModel.select` or similar.
    */
   options?: string[];
+  display?: AdminFieldDisplayModel;
 }
 
 export enum AdminFieldTypeModel {
@@ -52,6 +53,11 @@ export enum AdminFieldTypeModel {
   richText = "richText",
   select = "select",
   selectMultiple = "selectMultiple",
+}
+
+export enum AdminFieldDisplayModel {
+  textarea = "textarea",
+  password = "password",
 }
 
 export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {

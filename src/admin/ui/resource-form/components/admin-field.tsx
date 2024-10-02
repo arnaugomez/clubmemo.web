@@ -1,5 +1,6 @@
 import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import {
+  AdminFieldDisplayModel,
   AdminFieldTypeModel,
   type AdminFieldModel,
 } from "@/src/admin/domain/models/admin-resource-model";
@@ -8,8 +9,10 @@ import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form
 import { DateInputFormField } from "@/src/common/ui/components/form/date-input-form-field";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
 import { NumberInputFormField } from "@/src/common/ui/components/form/number-input-form-field";
+import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { SelectFormField } from "@/src/common/ui/components/form/select-form-field";
 import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
+import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { BracesIcon } from "lucide-react";
@@ -50,6 +53,12 @@ export function AdminField(props: ResourceFormFieldProps) {
 
 function AdminFieldString({ resourceType, field }: ResourceFormFieldProps) {
   const props = useAdminFieldProps({ resourceType, field });
+  switch (field.display) {
+    case AdminFieldDisplayModel.textarea:
+      return <TextareaFormField {...props} />;
+    case AdminFieldDisplayModel.password:
+      return <PasswordInputFormField {...props} />;
+  }
   return <InputFormField {...props} />;
 }
 function AdminFieldBoolean({ resourceType, field }: ResourceFormFieldProps) {
@@ -129,6 +138,7 @@ function useAdminFieldProps({ resourceType, field }: ResourceFormFieldProps) {
   return {
     name: getName(field.name),
     label: translateAdminKey(resourceType, "field", field.name, "label"),
+    disabled: field.isReadonly,
     placeholder: translateAdminKey(
       resourceType,
       "field",
