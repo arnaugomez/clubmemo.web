@@ -1,6 +1,6 @@
 {
   "file": "No es un archivo válido",
-  "objectId": "No es un ObjectId válido",
+  "objectId": "No es un identificador (ObjectId) válido",
   "passwordsDoNotMatch": "Las contraseñas no coinciden",
   "handleInvalidCharacters": "Solo puede contener letras, números y guiones bajos",
   "atLeastOneLowerCase": "Debe contener al menos una letra minúscula",
