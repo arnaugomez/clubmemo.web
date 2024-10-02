@@ -42,6 +42,10 @@ export interface AdminFieldModel {
   display?: AdminFieldDisplayModel;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   extraProps?: Record<string, any>;
+  /**
+   * Resource type of the ObjectId. Used when the field type is `AdminFieldTypeModel.objectId`.
+   */
+  resourceType?: AdminResourceTypeModel;
 }
 
 export enum AdminFieldTypeModel {
