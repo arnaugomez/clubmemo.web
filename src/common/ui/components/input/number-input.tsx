@@ -10,17 +10,25 @@ export interface InputProps {
   className?: string;
 }
 
+function stringToNumber(value: string): number | null {
+  const numberValue = Number(value);
+  if (isNaN(numberValue)) {
+    return null;
+  } else {
+    return numberValue;
+  }
+}
+
 const NumberInput = forwardRef<HTMLInputElement, InputProps>(
   ({ className, name, placeholder, onChange, value, id }, ref) => {
-    const [stringValue, setStringValue] = useState(value?.toString() ?? "");
+    const [stringValue, setStringValue] = useState("");
+
     useEffect(() => {
-      const number = Number(stringValue);
-      if (isNaN(number)) {
-        onChange(null);
-      } else {
-        onChange(number);
+      if (value !== stringToNumber(stringValue)) {
+        setStringValue(value?.toString() ?? "");
       }
-    }, [onChange, stringValue]);
+    }, [stringValue, value]);
+
     return (
       <input
         type="number"
@@ -33,7 +41,12 @@ const NumberInput = forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         value={stringValue}
         placeholder={placeholder}
-        onChange={(event) => setStringValue(event.target.value)}
+        onChange={(event) => {
+          const value = event.target.value;
+          onChange(stringToNumber(value));
+          setStringValue(value);
+        }}
+        formNoValidate
       />
     );
   },

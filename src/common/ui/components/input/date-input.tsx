@@ -11,17 +11,25 @@ export interface InputProps {
   className?: string;
 }
 
+function stringToDate(value: string): Date | null {
+  const date = new Date(value);
+  if (dayjs(date).isValid()) {
+    return date;
+  } else {
+    return null;
+  }
+}
+
 const DateInput = forwardRef<HTMLInputElement, InputProps>(
   ({ className, name, placeholder, onChange, value, id }, ref) => {
-    const [stringValue, setStringValue] = useState(value?.toDateString() ?? "");
+    const [stringValue, setStringValue] = useState("");
+
     useEffect(() => {
-      const date = new Date(stringValue);
-      if (dayjs(date).isValid()) {
-        onChange(date);
-      } else {
-        onChange(null);
+      if (value !== stringToDate(stringValue)) {
+        setStringValue(value?.toString() ?? "");
       }
-    }, [onChange, stringValue]);
+    }, [stringValue, value]);
+
     return (
       <input
         type="date"
@@ -34,7 +42,12 @@ const DateInput = forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         value={stringValue}
         placeholder={placeholder}
-        onChange={(event) => setStringValue(event.target.value)}
+        onChange={(event) => {
+          const value = event.target.value;
+          onChange(stringToDate(value));
+          setStringValue(value);
+        }}
+        formNoValidate
       />
     );
   },
