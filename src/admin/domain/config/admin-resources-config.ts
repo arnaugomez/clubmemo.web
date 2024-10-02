@@ -2,6 +2,7 @@ import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
 import { CoursePermissionTypeModel } from "@/src/courses/domain/models/course-permission-type-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
+import { default_maximum_interval } from "ts-fsrs";
 import { InvalidAdminResourceTypeError } from "../models/admin-errors";
 import type { AdminResourceModel } from "../models/admin-resource-model";
 import {
@@ -179,10 +180,32 @@ export const adminResourcesConfig: AdminResourceModel[] = [
         name: "config",
         fieldType: AdminFieldTypeModel.form,
         fields: [
+          {
+            name: "maximumInterval",
+            fieldType: AdminFieldTypeModel.number,
+            display: AdminFieldDisplayModel.slider,
+            extraProps: {
+              max: default_maximum_interval,
+            },
+          },
+          {
+            name: "requestRetention",
+            fieldType: AdminFieldTypeModel.number,
+            display: AdminFieldDisplayModel.slider,
+            extraProps: {
+              step: 0.01,
+              max: 1,
+            },
+          },
+          {
+            name: "dailyNewCardsCount",
+            fieldType: AdminFieldTypeModel.number,
+            display: AdminFieldDisplayModel.slider,
+            extraProps: {
+              max: 100,
+            },
+          },
           { name: "enableFuzz", fieldType: AdminFieldTypeModel.boolean },
-          { name: "maximumInterval", fieldType: AdminFieldTypeModel.number },
-          { name: "requestRetention", fieldType: AdminFieldTypeModel.number },
-          { name: "dailyNewCardsCount", fieldType: AdminFieldTypeModel.number },
           {
             name: "showAdvancedRatingOptions",
             fieldType: AdminFieldTypeModel.boolean,

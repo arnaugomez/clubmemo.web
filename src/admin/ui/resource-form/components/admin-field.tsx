@@ -12,6 +12,7 @@ import { NumberInputFormField } from "@/src/common/ui/components/form/number-inp
 import { ObjectIdInputFormField } from "@/src/common/ui/components/form/objectid-input-form-field";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { SelectFormField } from "@/src/common/ui/components/form/select-form-field";
+import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
 import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
 import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
@@ -95,6 +96,10 @@ function AdminFieldForm({ resourceType, field }: ResourceFormFieldProps) {
 
 function AdminFieldNumber({ resourceType, field }: ResourceFormFieldProps) {
   const props = useAdminFieldProps({ resourceType, field });
+  switch (field.display) {
+    case AdminFieldDisplayModel.slider:
+      return <SliderFormField max={100} {...props} />;
+  }
   return <NumberInputFormField {...props} />;
 }
 

@@ -64,6 +64,7 @@ export enum AdminFieldTypeModel {
 export enum AdminFieldDisplayModel {
   textarea = "textarea",
   password = "password",
+  slider = "slider",
 }
 
 export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
