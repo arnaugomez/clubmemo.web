@@ -9,6 +9,7 @@ import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form
 import { DateInputFormField } from "@/src/common/ui/components/form/date-input-form-field";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
 import { NumberInputFormField } from "@/src/common/ui/components/form/number-input-form-field";
+import { ObjectIdInputFormField } from "@/src/common/ui/components/form/objectid-input-form-field";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { SelectFormField } from "@/src/common/ui/components/form/select-form-field";
 import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
@@ -99,7 +100,9 @@ function AdminFieldNumber({ resourceType, field }: ResourceFormFieldProps) {
 
 function AdminFieldObjectId({ resourceType, field }: ResourceFormFieldProps) {
   const props = useAdminFieldProps({ resourceType, field });
-  return <InputFormField {...props} />;
+  return (
+    <ObjectIdInputFormField resourceType={field.resourceType} {...props} />
+  );
 }
 
 function AdminFieldTags({ resourceType, field }: ResourceFormFieldProps) {
