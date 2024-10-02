@@ -7,7 +7,6 @@ import { locator_common_ErrorTrackingService } from "@/src/common/locators/locat
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
-import { FormItem, FormLabel } from "@/src/common/ui/components/shadcn/ui/form";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +17,7 @@ import { updateAdminResourceAction } from "../../actions/update-admin-resource-a
 import { translateAdminKey } from "../../i18n/admin-translations";
 import { AdminFields } from "../../resource-form/admin-fields";
 import { useResourceDetailContext } from "../context/resource-detail-context";
+import { ResourceFormId } from "./resource-form-id";
 
 export function UpdateResourceForm() {
   const { data, id, resourceType } = useResourceDetailContext();
@@ -54,10 +54,7 @@ export function UpdateResourceForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormItem>
-          <FormLabel>Identificador del recurso </FormLabel>
-          <div>{id}</div>
-        </FormItem>
+        <ResourceFormId id={id} />
         <FormContent />
         <FormGlobalErrorMessage />
         <div className="flex justify-between space-x-6">
