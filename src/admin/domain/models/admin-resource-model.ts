@@ -40,6 +40,8 @@ export interface AdminFieldModel {
    */
   options?: string[];
   display?: AdminFieldDisplayModel;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  extraProps?: Record<string, any>;
 }
 
 export enum AdminFieldTypeModel {

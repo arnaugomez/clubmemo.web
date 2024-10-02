@@ -193,7 +193,11 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     showCreationWarning: true,
     resourceType: AdminResourceTypeModel.users,
     fields: [
-      { name: "email", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "email",
+        fieldType: AdminFieldTypeModel.string,
+        extraProps: { type: "email" },
+      },
       { name: "acceptTerms", fieldType: AdminFieldTypeModel.boolean },
       { name: "isEmailVerified", fieldType: AdminFieldTypeModel.boolean },
       { name: "isAdmin", fieldType: AdminFieldTypeModel.boolean },

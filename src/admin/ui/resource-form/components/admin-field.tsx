@@ -145,6 +145,7 @@ function useAdminFieldProps({ resourceType, field }: ResourceFormFieldProps) {
       field.name,
       "placeholder",
     ),
+    ...field.extraProps,
   };
 }
 
