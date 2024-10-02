@@ -18,7 +18,8 @@
     "ai-generator",
     "practice",
     "common",
-    "landing"
+    "landing",
+    "admin"
   ],
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

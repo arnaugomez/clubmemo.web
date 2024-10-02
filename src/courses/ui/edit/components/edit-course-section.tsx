@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "@/i18n/zod";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
@@ -29,7 +30,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editCourseAction } from "../actions/edit-course-action";
 import { editCourseUploadAction } from "../actions/edit-course-upload-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 
 interface CourseDetailEditSectionProps {
   courseData: CourseModelData;
@@ -60,7 +61,7 @@ const EditCourseSchema = z.object({
   name: z.string().trim().min(1).max(50),
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),
-  tags: z.array(z.string().trim().min(1).max(50)).max(10),
+  tags: TagsSchema,
   picture: z.string().or(FileSchema).optional(),
 });
 

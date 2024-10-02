@@ -1,11 +1,13 @@
 import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
+import { CoursePermissionTypeModel } from "@/src/courses/domain/models/course-permission-type-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
 import { InvalidAdminResourceTypeError } from "../models/admin-errors";
+import type { AdminResourceModel } from "../models/admin-resource-model";
 import {
+  AdminFieldDisplayModel,
   AdminFieldTypeModel,
   AdminResourceTypeModel,
-  type AdminResourceModel,
 } from "../models/admin-resource-model";
 
 const practiceCardStateOptions = [
@@ -23,8 +25,16 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   {
     resourceType: AdminResourceTypeModel.reviewLogs,
     fields: [
-      { name: "cardId", fieldType: AdminFieldTypeModel.objectId },
-      { name: "courseEnrollmentId", fieldType: AdminFieldTypeModel.objectId },
+      {
+        name: "cardId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.practiceCards,
+      },
+      {
+        name: "courseEnrollmentId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.courseEnrollments,
+      },
       {
         name: "rating",
         fieldType: AdminFieldTypeModel.select,
@@ -61,10 +71,18 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   {
     resourceType: AdminResourceTypeModel.profiles,
     fields: [
-      { name: "userId", fieldType: AdminFieldTypeModel.objectId },
+      {
+        name: "userId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
+      },
       { name: "displayName", fieldType: AdminFieldTypeModel.string },
       { name: "handle", fieldType: AdminFieldTypeModel.string },
-      { name: "bio", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "bio",
+        fieldType: AdminFieldTypeModel.string,
+        display: AdminFieldDisplayModel.textarea,
+      },
       { name: "picture", fieldType: AdminFieldTypeModel.string },
       { name: "backgroundPicture", fieldType: AdminFieldTypeModel.string },
       { name: "website", fieldType: AdminFieldTypeModel.string },
@@ -75,8 +93,16 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   {
     resourceType: AdminResourceTypeModel.practiceCards,
     fields: [
-      { name: "courseEnrollmentId", fieldType: AdminFieldTypeModel.objectId },
-      { name: "noteId", fieldType: AdminFieldTypeModel.objectId },
+      {
+        name: "courseEnrollmentId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.courseEnrollments,
+      },
+      {
+        name: "noteId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.notes,
+      },
       { name: "due", fieldType: AdminFieldTypeModel.date },
       { name: "stability", fieldType: AdminFieldTypeModel.number },
       { name: "difficulty", fieldType: AdminFieldTypeModel.number },
@@ -96,16 +122,25 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   {
     resourceType: AdminResourceTypeModel.notes,
     fields: [
-      { name: "courseId", fieldType: AdminFieldTypeModel.objectId },
-      { name: "front", fieldType: AdminFieldTypeModel.string },
-      { name: "back", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "courseId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.courses,
+      },
+      { name: "front", fieldType: AdminFieldTypeModel.richText },
+      { name: "back", fieldType: AdminFieldTypeModel.richText },
       { name: "createdAt", fieldType: AdminFieldTypeModel.date },
     ],
   },
   {
+    cannotCreate: true,
     resourceType: AdminResourceTypeModel.forgotPasswordTokens,
     fields: [
-      { name: "userId", fieldType: AdminFieldTypeModel.objectId },
+      {
+        name: "userId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
+      },
       {
         name: "tokenHash",
         isReadonly: true,
@@ -117,7 +152,11 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   {
     resourceType: AdminResourceTypeModel.emailVerificationCodes,
     fields: [
-      { name: "userId", fieldType: AdminFieldTypeModel.objectId },
+      {
+        name: "userId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
+      },
       { name: "code", fieldType: AdminFieldTypeModel.string },
       { name: "expiresAt", fieldType: AdminFieldTypeModel.date },
     ],
@@ -125,8 +164,16 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   {
     resourceType: AdminResourceTypeModel.courseEnrollments,
     fields: [
-      { name: "courseId", fieldType: AdminFieldTypeModel.objectId },
-      { name: "profileId", fieldType: AdminFieldTypeModel.objectId },
+      {
+        name: "courseId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.courses,
+      },
+      {
+        name: "profileId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.profiles,
+      },
       { name: "isFavorite", fieldType: AdminFieldTypeModel.boolean },
       {
         name: "config",
@@ -147,16 +194,36 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   {
     resourceType: AdminResourceTypeModel.coursePermissions,
     fields: [
-      { name: "courseId", fieldType: AdminFieldTypeModel.objectId },
-      { name: "profileId", fieldType: AdminFieldTypeModel.objectId },
-      { name: "permissionType", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "courseId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.courses,
+      },
+      {
+        name: "profileId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.profiles,
+      },
+      {
+        name: "permissionType",
+        fieldType: AdminFieldTypeModel.select,
+        options: [
+          CoursePermissionTypeModel.view,
+          CoursePermissionTypeModel.edit,
+          CoursePermissionTypeModel.own,
+        ],
+      },
     ],
   },
   {
     resourceType: AdminResourceTypeModel.courses,
     fields: [
       { name: "name", fieldType: AdminFieldTypeModel.string },
-      { name: "description", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "description",
+        fieldType: AdminFieldTypeModel.string,
+        display: AdminFieldDisplayModel.textarea,
+      },
       { name: "picture", fieldType: AdminFieldTypeModel.string },
       { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
       { name: "tags", fieldType: AdminFieldTypeModel.tags },
@@ -167,21 +234,33 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     cannotCreate: true,
     fields: [
       { name: "expires_at", fieldType: AdminFieldTypeModel.date },
-      { name: "user_id", fieldType: AdminFieldTypeModel.objectId },
+      {
+        name: "user_id",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
+      },
     ],
   },
   {
+    showCreationWarning: true,
     resourceType: AdminResourceTypeModel.users,
     fields: [
-      { name: "email", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "email",
+        fieldType: AdminFieldTypeModel.string,
+        extraProps: { type: "email" },
+      },
       { name: "acceptTerms", fieldType: AdminFieldTypeModel.boolean },
       { name: "isEmailVerified", fieldType: AdminFieldTypeModel.boolean },
       { name: "isAdmin", fieldType: AdminFieldTypeModel.boolean },
-      { name: "newPassword", fieldType: AdminFieldTypeModel.boolean },
+      {
+        name: "newPassword",
+        fieldType: AdminFieldTypeModel.boolean,
+        display: AdminFieldDisplayModel.password,
+      },
       {
         name: "authTypes",
-        isReadonly: true,
-        fieldType: AdminFieldTypeModel.select,
+        fieldType: AdminFieldTypeModel.selectMultiple,
         options: [AuthTypeModel.email],
       },
     ],

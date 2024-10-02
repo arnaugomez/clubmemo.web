@@ -1,9 +1,12 @@
 {
   "file": "No es un archivo válido",
-  "objectId": "No es un ObjectId válido",
+  "objectId": "No es un identificador (ObjectId) válido",
   "passwordsDoNotMatch": "Las contraseñas no coinciden",
   "handleInvalidCharacters": "Solo puede contener letras, números y guiones bajos",
   "atLeastOneLowerCase": "Debe contener al menos una letra minúscula",
   "atLeastOneUpperCase": "Debe contener al menos una letra mayúscula",
-  "atLeastOneNumber": "Debe contener al menos un número"
+  "atLeastOneNumber": "Debe contener al menos un número",
+  "tagAlreadyExists": "Ya existe una etiqueta con ese nombre",
+  "handleAlreadyExists": "Ya existe un identificador de usuario con ese nombre",
+  "tagInvalidCharacters": "Solo puede contener letras sin acento, números, guiones bajos y espacios"
 }

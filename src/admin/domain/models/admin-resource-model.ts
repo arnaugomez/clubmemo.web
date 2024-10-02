@@ -1,5 +1,3 @@
-import { ObjectId } from "mongodb";
-import { z } from "zod";
 import type { AdminResourceData } from "./admin-resource-data";
 
 export enum AdminResourceTypeModel {
@@ -26,9 +24,10 @@ export interface AdminResourceModel {
    * Forbid creating resources of this type
    */
   cannotCreate?: boolean;
+  showCreationWarning?: boolean;
 }
 
-interface AdminFieldModel {
+export interface AdminFieldModel {
   name: string;
   isReadonly?: boolean;
   fieldType: AdminFieldTypeModel;
@@ -40,6 +39,13 @@ interface AdminFieldModel {
    * Options for the field. Used when the field type is `AdminFieldTypeModel.select` or similar.
    */
   options?: string[];
+  display?: AdminFieldDisplayModel;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  extraProps?: Record<string, any>;
+  /**
+   * Resource type of the ObjectId. Used when the field type is `AdminFieldTypeModel.objectId`.
+   */
+  resourceType?: AdminResourceTypeModel;
 }
 
 export enum AdminFieldTypeModel {
@@ -52,37 +58,53 @@ export enum AdminFieldTypeModel {
   tags = "tags",
   richText = "richText",
   select = "select",
+  selectMultiple = "selectMultiple",
 }
 
-export function createValidationSchemaOfAdminResource(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _adminResource: AdminResourceModel,
-) {
-  return z.any();
+export enum AdminFieldDisplayModel {
+  textarea = "textarea",
+  password = "password",
 }
 
-export function transformDataBeforeCreateOrUpdate(
-  fields: AdminFieldModel[],
-  data: AdminResourceData,
-): AdminResourceData {
+export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
+  const values: Record<string, unknown> = {};
   for (const field of fields) {
-    if (field.isReadonly) {
-      delete data[field.name];
-    } else if (field.fieldType === AdminFieldTypeModel.objectId) {
-      const value = data[field.name];
-      if (typeof value === "string" && ObjectId.isValid(value)) {
-        data[field.name] = new ObjectId(value);
-      } else {
-        data[field.name] = null;
-      }
-    } else if (field.fieldType === AdminFieldTypeModel.form) {
-      data[field.name] = transformDataBeforeCreateOrUpdate(
-        field.fields ?? [],
-        data[field.name] ?? {},
-      );
+    switch (field.fieldType) {
+      case AdminFieldTypeModel.boolean:
+        values[field.name] = false;
+        break;
+      case AdminFieldTypeModel.date:
+        values[field.name] = null;
+        break;
+      case AdminFieldTypeModel.number:
+        values[field.name] = 0;
+        break;
+      case AdminFieldTypeModel.string:
+        values[field.name] = "";
+        break;
+      case AdminFieldTypeModel.tags:
+        values[field.name] = [];
+        break;
+      case AdminFieldTypeModel.select:
+        values[field.name] = null;
+        break;
+      case AdminFieldTypeModel.selectMultiple:
+        values[field.name] = [];
+        break;
+      case AdminFieldTypeModel.form:
+        values[field.name] = getDefaultValuesOfAdminResource(
+          field.fields ?? [],
+        );
+        break;
+      case AdminFieldTypeModel.richText:
+        values[field.name] = "";
+        break;
+      case AdminFieldTypeModel.objectId:
+        values[field.name] = "";
+        break;
     }
   }
-  return data;
+  return values;
 }
 
 export function transformDataAfterGet(
