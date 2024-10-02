@@ -11,8 +11,15 @@ import { NumberInputFormField } from "@/src/common/ui/components/form/number-inp
 import { SelectFormField } from "@/src/common/ui/components/form/select-form-field";
 import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
+import { textStyles } from "@/src/common/ui/styles/text-styles";
+import { BracesIcon } from "lucide-react";
 import type { FunctionComponent } from "react";
 import { translateAdminKey } from "../../i18n/admin-translations";
+import { AdminFields } from "../admin-fields";
+import {
+  AdminFormFieldContextProvider,
+  useAdminFormFieldContext,
+} from "../context/admin-form-field-context";
 
 export interface ResourceFormFieldProps {
   resourceType: AdminResourceTypeModel;
@@ -42,52 +49,64 @@ export function AdminField(props: ResourceFormFieldProps) {
 }
 
 function AdminFieldString({ resourceType, field }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
-  return <InputFormField name={field.name} {...props} />;
+  const props = useAdminFieldProps({ resourceType, field });
+  return <InputFormField {...props} />;
 }
 function AdminFieldBoolean({ resourceType, field }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
-  return <CheckboxFormField name={field.name} {...props} />;
+  const props = useAdminFieldProps({ resourceType, field });
+  return <CheckboxFormField {...props} />;
 }
 
 function AdminFieldDate({ resourceType, field }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
-  return <DateInputFormField name={field.name} {...props} />;
+  const props = useAdminFieldProps({ resourceType, field });
+  return <DateInputFormField {...props} />;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AdminFieldForm({ resourceType, field }: ResourceFormFieldProps) {
-  return null;
+  const { label, name } = useAdminFieldProps({ resourceType, field });
+  return (
+    <div>
+      <h3 className={textStyles.h4}>
+        <BracesIcon className="mr-2 inline size-5 -translate-y-px" />
+        {label}
+      </h3>
+      <div className="h-2"></div>
+      <div className="ml-[9px] space-y-4 border-l-2 border-slate-200 py-2 pl-5">
+        <AdminFormFieldContextProvider prefix={name}>
+          <AdminFields
+            resourceType={resourceType}
+            fields={field.fields ?? []}
+          />
+        </AdminFormFieldContextProvider>
+      </div>
+    </div>
+  );
 }
 
 function AdminFieldNumber({ resourceType, field }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
-  return <NumberInputFormField name={field.name} {...props} />;
+  const props = useAdminFieldProps({ resourceType, field });
+  return <NumberInputFormField {...props} />;
 }
 
 function AdminFieldObjectId({ resourceType, field }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
-  return <InputFormField name={field.name} {...props} />;
+  const props = useAdminFieldProps({ resourceType, field });
+  return <InputFormField {...props} />;
 }
 
 function AdminFieldTags({ resourceType, field }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
-  return <TagsFormField name={field.name} {...props} />;
+  const props = useAdminFieldProps({ resourceType, field });
+  return <TagsFormField {...props} />;
 }
 
 function AdminFieldRichText({ resourceType, field }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
-  return <WysiwygFormField name={field.name} {...props} />;
+  const props = useAdminFieldProps({ resourceType, field });
+  return <WysiwygFormField {...props} />;
 }
 
 function AdminFieldSelect({ resourceType, field }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
+  const props = useAdminFieldProps({ resourceType, field });
   return (
-    <SelectFormField
-      name={field.name}
-      options={getOptions({ resourceType, field })}
-      {...props}
-    />
+    <SelectFormField options={getOptions({ resourceType, field })} {...props} />
   );
 }
 
@@ -95,22 +114,20 @@ function AdminFieldSelectMultiple({
   resourceType,
   field,
 }: ResourceFormFieldProps) {
-  const props = useLabelAndPlaceholder({ resourceType, field });
+  const props = useAdminFieldProps({ resourceType, field });
   return (
     <SelectFormField
       isMultiple
-      name={field.name}
       options={getOptions({ resourceType, field })}
       {...props}
     />
   );
 }
 
-function useLabelAndPlaceholder({
-  resourceType,
-  field,
-}: ResourceFormFieldProps) {
+function useAdminFieldProps({ resourceType, field }: ResourceFormFieldProps) {
+  const { getName } = useAdminFormFieldContext();
   return {
+    name: getName(field.name),
     label: translateAdminKey(resourceType, "field", field.name, "label"),
     placeholder: translateAdminKey(
       resourceType,

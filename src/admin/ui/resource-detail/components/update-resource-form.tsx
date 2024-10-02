@@ -16,7 +16,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { updateAdminResourceAction } from "../../actions/update-admin-resource-action";
 import { translateAdminKey } from "../../i18n/admin-translations";
-import { AdminField } from "../../resource-form/components/admin-field";
+import { AdminFields } from "../../resource-form/admin-fields";
 import { useResourceDetailContext } from "../context/resource-detail-context";
 
 export function UpdateResourceForm() {
@@ -94,15 +94,5 @@ function FormContent() {
     return <div>Este recurso no existe.</div>;
   }
   const resource = getAdminResourceByType(resourceType);
-  return (
-    <>
-      {resource.fields.map((field) => (
-        <AdminField
-          key={field.name}
-          field={field}
-          resourceType={resourceType}
-        />
-      ))}
-    </>
-  );
+  return <AdminFields resourceType={resourceType} fields={resource.fields} />;
 }
