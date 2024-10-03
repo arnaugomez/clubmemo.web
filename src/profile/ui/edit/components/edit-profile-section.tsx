@@ -23,6 +23,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
+import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-action";
 import type { ProfileModelData } from "@/src/profile/domain/models/profile-model";
 import { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
@@ -33,7 +34,6 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editProfileAction } from "../actions/edit-profile-action";
-import { editProfileUploadAction } from "../actions/edit-profile-upload-action";
 
 interface EditProfileSectionProps {
   profileData: ProfileModelData;
@@ -100,49 +100,44 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      const uploadActionResponse = await editProfileUploadAction({
-        pictureContentType:
-          data.picture instanceof File ? data.picture.type : "",
-        backgroundPictureContentType:
-          data.backgroundPicture instanceof File
-            ? data.backgroundPicture.type
-            : "",
-        uploadPicture: data.picture instanceof File,
-        uploadBackgroundPicture: data.backgroundPicture instanceof File,
-      });
-      const uploadActionHandler = new FormResponseHandler(
-        uploadActionResponse,
-        form,
-      );
-      if (uploadActionHandler.hasErrors) {
-        uploadActionHandler.setErrors();
-        return;
-      }
-      if (uploadActionHandler.data) {
-        if (uploadActionHandler.data.picture && data.picture instanceof File) {
+      if (data.picture instanceof File) {
+        const response = await uploadFileAction({
+          collection: "profiles",
+          field: "picture",
+          contentType: data.picture.type,
+        });
+        const handler = new FormResponseHandler(response, form);
+        if (handler.hasErrors) {
+          handler.setErrors();
+          return;
+        } else if (handler.data) {
           const fileUploadService =
             locator_fileUpload_ClientFileUploadService();
           await fileUploadService.uploadPresignedUrl({
             file: data.picture,
-            presignedUrl: uploadActionHandler.data.picture.presignedUrl,
+            presignedUrl: handler.data.presignedUrl,
           });
-
-          data.picture = uploadActionHandler.data.picture.url;
+          data.picture = handler.data.url;
         }
-        if (
-          uploadActionHandler.data.backgroundPicture &&
-          data.backgroundPicture instanceof File
-        ) {
+      }
+      if (data.backgroundPicture instanceof File) {
+        const response = await uploadFileAction({
+          collection: "profiles",
+          field: "backgroundPicture",
+          contentType: data.backgroundPicture.type,
+        });
+        const handler = new FormResponseHandler(response, form);
+        if (handler.hasErrors) {
+          handler.setErrors();
+          return;
+        } else if (handler.data) {
           const fileUploadService =
             locator_fileUpload_ClientFileUploadService();
           await fileUploadService.uploadPresignedUrl({
             file: data.backgroundPicture,
-            presignedUrl:
-              uploadActionHandler.data.backgroundPicture.presignedUrl,
+            presignedUrl: handler.data.presignedUrl,
           });
-
-          data.backgroundPicture =
-            uploadActionHandler.data.backgroundPicture.url;
+          data.backgroundPicture = handler.data.url;
         }
       }
     } catch (e) {

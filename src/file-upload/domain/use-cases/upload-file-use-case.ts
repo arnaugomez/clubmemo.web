@@ -2,6 +2,10 @@ import { UserDoesNotExistError } from "@/src/auth/domain/errors/auth-errors";
 import type { GetSessionUseCase } from "@/src/auth/domain/use-cases/get-session-use-case";
 import type { FileUploadsRepository } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
+import type {
+  FileUploadCollectionModel,
+  FileUploadFieldModel,
+} from "../models/file-upload-field-model";
 
 /**
  * Uploads the files of a course, such as the picture, before making changes to
@@ -28,7 +32,7 @@ export class UploadFileUseCase {
    * @returns Relevant data to upload the files of the course, such as a presigned
    * URL to upload the file on the client side
    */
-  async execute({ keyPrefix, fileName, contentType }: UploadFileInputModel) {
+  async execute({ collection, field, contentType }: UploadFileInputModel) {
     const { user } = await this.getSessionUseCase.execute();
     if (!user) throw new UserDoesNotExistError();
 
@@ -39,9 +43,10 @@ export class UploadFileUseCase {
     );
 
     const picture = await this.fileUploadsRepository.create({
-      keyPrefix,
-      fileName,
+      collection,
+      field,
       contentType,
+      userId: user.id,
     });
     await this.rateLimitsRepository.increment(rateLimitKey);
     return picture;
@@ -49,7 +54,7 @@ export class UploadFileUseCase {
 }
 
 interface UploadFileInputModel {
-  keyPrefix: string;
-  fileName: string;
+  collection: FileUploadCollectionModel;
+  field: FileUploadFieldModel;
   contentType: string;
 }

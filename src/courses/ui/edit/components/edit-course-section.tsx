@@ -23,6 +23,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { CourseModelData } from "@/src/courses/domain/models/course-model";
 import { CourseModel } from "@/src/courses/domain/models/course-model";
 import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
+import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-action";
 import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
@@ -30,7 +31,6 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editCourseAction } from "../actions/edit-course-action";
-import { editCourseUploadAction } from "../actions/edit-course-upload-action";
 
 interface CourseDetailEditSectionProps {
   courseData: CourseModelData;
@@ -81,29 +81,24 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      const uploadActionResponse = await editCourseUploadAction({
-        courseId: course.id,
-        pictureContentType:
-          data.picture instanceof File ? data.picture.type : "",
-        uploadPicture: data.picture instanceof File,
-      });
-      const uploadActionHandler = new FormResponseHandler(
-        uploadActionResponse,
-        form,
-      );
-      if (uploadActionHandler.hasErrors) {
-        uploadActionHandler.setErrors();
-        return;
-      }
-      if (uploadActionHandler.data) {
-        if (uploadActionHandler.data.picture && data.picture instanceof File) {
+      if (data.picture instanceof File) {
+        const response = await uploadFileAction({
+          collection: "profiles",
+          field: "picture",
+          contentType: data.picture.type,
+        });
+        const handler = new FormResponseHandler(response, form);
+        if (handler.hasErrors) {
+          handler.setErrors();
+          return;
+        } else if (handler.data) {
           const fileUploadService =
             locator_fileUpload_ClientFileUploadService();
           await fileUploadService.uploadPresignedUrl({
             file: data.picture,
-            presignedUrl: uploadActionHandler.data.picture.presignedUrl,
+            presignedUrl: handler.data.presignedUrl,
           });
-          data.picture = uploadActionHandler.data.picture.url;
+          data.picture = handler.data.url;
         }
       }
     } catch (e) {

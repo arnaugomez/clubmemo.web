@@ -1,12 +1,10 @@
 import { locator } from "../common/di/locator";
 import type { Lazy } from "../common/di/locator-types";
-import { locator_fileUpload_FileUploadsRepository } from "../file-upload/locators/locator_file-uploads-repository";
 import { profileLocator } from "../profile/profile-locator";
 import type { CopyCourseUseCase } from "./domain/use-cases/copy-course-use-case";
 import type { CreateCourseUseCase } from "./domain/use-cases/create-course-use-case";
 import type { DeleteCourseUseCase } from "./domain/use-cases/delete-course-use-case";
 import type { EditCourseConfigUseCase } from "./domain/use-cases/edit-course-config-use-case";
-import type { EditCourseUploadUseCase } from "./domain/use-cases/edit-course-upload-use-case";
 import type { EditCourseUseCase } from "./domain/use-cases/edit-course-use-case";
 import type { FavoriteCourseUseCase } from "./domain/use-cases/favorite-course-use-case";
 import type { GetInterestingCoursesUseCase } from "./domain/use-cases/get-interesting-courses-use-case";
@@ -18,7 +16,6 @@ interface CoursesLocator {
   CreateCourseUseCase: Lazy<CreateCourseUseCase>;
   DeleteCourseUseCase: Lazy<DeleteCourseUseCase>;
   FavoriteCourseUseCase: Lazy<FavoriteCourseUseCase>;
-  EditCourseUploadUseCase: Lazy<EditCourseUploadUseCase>;
   EditCourseConfigUseCase: Lazy<EditCourseConfigUseCase>;
 }
 
@@ -29,7 +26,6 @@ export const coursesLocator: CoursesLocator = {
       await profileLocator.GetMyProfileUseCase(),
       await locator.TagsRepository(),
       await locator.CoursesRepository(),
-      locator_fileUpload_FileUploadsRepository(),
     );
   },
   CopyCourseUseCase: async () => {
@@ -68,15 +64,6 @@ export const coursesLocator: CoursesLocator = {
     return new file.FavoriteCourseUseCase(
       await profileLocator.GetMyProfileUseCase(),
       await locator.CourseEnrollmentsRepository(),
-    );
-  },
-  async EditCourseUploadUseCase() {
-    const file = await import("./domain/use-cases/edit-course-upload-use-case");
-    return new file.EditCourseUploadUseCase(
-      await profileLocator.GetMyProfileUseCase(),
-      locator.RateLimitsRepository(),
-      await locator.CoursesRepository(),
-      locator_fileUpload_FileUploadsRepository(),
     );
   },
   async EditCourseConfigUseCase() {

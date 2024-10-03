@@ -163,6 +163,24 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     ],
   },
   {
+    resourceType: AdminResourceTypeModel.fileUploads,
+    fields: [
+      {
+        name: "collection",
+        fieldType: AdminFieldTypeModel.select,
+        options: ["profiles", "courses"],
+      },
+      { name: "field", fieldType: AdminFieldTypeModel.string },
+      { name: "contentType", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "createdByUserId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
+      },
+      { name: "createdAt", fieldType: AdminFieldTypeModel.date },
+    ],
+  },
+  {
     resourceType: AdminResourceTypeModel.courseEnrollments,
     fields: [
       {

@@ -45,8 +45,8 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     ]),
   }),
   [AdminResourceTypeModel.courses]: z.object({
-    name: z.string().min(1),
-    description: z.string().optional(),
+    name: z.string().trim().min(1).max(50),
+    description: z.string().trim().min(0).max(255),
     picture: z.string().optional(),
     isPublic: z.boolean(),
     tags: TagsSchema,
@@ -57,11 +57,12 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     expiresAt: z.date(),
   }),
   [AdminResourceTypeModel.fileUploads]: z.object({
-    key: z.string(),
-    keyPrefix: z.string(),
-    count: z.number().int(),
+    collection: z.enum(["profiles", "courses"]),
+    field: z.string().min(1),
     url: z.string().url(),
-    isCurrent: z.boolean(),
+    key: z.string().min(1),
+    contentType: z.string(),
+    createdByUserId: ObjectIdSchema,
     createdAt: z.date(),
   }),
   [AdminResourceTypeModel.forgotPasswordTokens]: z.object({
