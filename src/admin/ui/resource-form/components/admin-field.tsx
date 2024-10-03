@@ -161,7 +161,7 @@ function useAdminFieldProps({ resourceType, field }: ResourceFormFieldProps) {
   const { getName } = useAdminFormFieldContext();
   return {
     name: getName(field.name),
-    label: translateAdminKey(resourceType, "field", field.name, "label"),
+    label: `${translateAdminKey(resourceType, "field", field.name, "label")} (${field.name})`,
     disabled: field.isReadonly,
     placeholder: translateAdminKey(
       resourceType,

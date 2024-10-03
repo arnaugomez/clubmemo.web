@@ -2,7 +2,7 @@ import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
 import { CoursePermissionTypeModel } from "@/src/courses/domain/models/course-permission-type-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
-import { default_maximum_interval } from "ts-fsrs";
+import { default_maximum_interval, default_request_retention } from "ts-fsrs";
 import { InvalidAdminResourceTypeError } from "../models/admin-errors";
 import type { AdminResourceModel } from "../models/admin-resource-model";
 import {
@@ -207,6 +207,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
             extraProps: {
               max: default_maximum_interval,
             },
+            defaultValue: default_maximum_interval,
           },
           {
             name: "requestRetention",
@@ -216,6 +217,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
               step: 0.01,
               max: 1,
             },
+            defaultValue: default_request_retention,
           },
           {
             name: "dailyNewCardsCount",
@@ -224,11 +226,17 @@ export const adminResourcesConfig: AdminResourceModel[] = [
             extraProps: {
               max: 100,
             },
+            defaultValue: 10,
           },
-          { name: "enableFuzz", fieldType: AdminFieldTypeModel.boolean },
+          {
+            name: "enableFuzz",
+            fieldType: AdminFieldTypeModel.boolean,
+            defaultValue: true,
+          },
           {
             name: "showAdvancedRatingOptions",
             fieldType: AdminFieldTypeModel.boolean,
+            defaultValue: true,
           },
         ],
       },
@@ -305,6 +313,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
         name: "authTypes",
         fieldType: AdminFieldTypeModel.selectMultiple,
         options: [AuthTypeModel.email],
+        defaultValue: [AuthTypeModel.email],
       },
     ],
   },
