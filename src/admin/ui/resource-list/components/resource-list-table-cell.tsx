@@ -19,14 +19,14 @@ export function ResourceListTableCell({
   field,
   data,
 }: ResourceListTableCellProps) {
-  function getOptionLabel(fieldName: string, value: unknown) {
+  function getOptionLabel(value: unknown) {
     return value
       ? translateAdminKey(
           resourceType,
           "field",
           field.name,
           "option",
-          value.toString(),
+          value?.toString(),
           "label",
         )
       : "-";
@@ -41,10 +41,10 @@ export function ResourceListTableCell({
         const date = dayjs(value);
         return date.isValid() ? date.format("DD/MM/YYYY") : "Fecha inválida";
       case AdminFieldTypeModel.select:
-        return getOptionLabel(field.name, value.toString());
+        return getOptionLabel(value);
       case AdminFieldTypeModel.selectMultiple:
         return Array.isArray(value)
-          ? value.map((v: unknown) => getOptionLabel(field.name, v)).join(", ")
+          ? value.map(getOptionLabel).join(", ")
           : "-";
     }
     return value?.toString() || "-";
