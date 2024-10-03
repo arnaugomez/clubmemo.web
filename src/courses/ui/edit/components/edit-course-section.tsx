@@ -2,7 +2,7 @@
 
 import { z } from "@/i18n/zod";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
-import { FileSchema } from "@/src/common/schemas/file-schema";
+import { FileFieldSchema } from "@/src/common/schemas/file-schema";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -62,7 +62,7 @@ const EditCourseSchema = z.object({
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),
   tags: TagsSchema,
-  picture: z.string().or(FileSchema).optional(),
+  picture: FileFieldSchema.optional(),
 });
 
 type FormValues = z.infer<typeof EditCourseSchema>;
@@ -101,8 +101,8 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
           data.picture = handler.data.url;
         }
       }
-    } catch (e) {
-      locator_common_ErrorTrackingService().captureError(e);
+    } catch (error) {
+      locator_common_ErrorTrackingService().captureError(error);
       toast.error("Error al subir la imagen");
       return;
     }

@@ -7,6 +7,7 @@ import {
 import type { OptionModel } from "@/src/common/domain/models/option-model";
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";
 import { DateInputFormField } from "@/src/common/ui/components/form/date-input-form-field";
+import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
 import { NumberInputFormField } from "@/src/common/ui/components/form/number-input-form-field";
 import { ObjectIdInputFormField } from "@/src/common/ui/components/form/objectid-input-form-field";
@@ -45,6 +46,7 @@ const componentMap: Record<
   [AdminFieldTypeModel.richText]: AdminFieldRichText,
   [AdminFieldTypeModel.select]: AdminFieldSelect,
   [AdminFieldTypeModel.selectMultiple]: AdminFieldSelectMultiple,
+  [AdminFieldTypeModel.file]: AdminFieldFile,
 };
 
 export function AdminField(props: ResourceFormFieldProps) {
@@ -136,6 +138,20 @@ function AdminFieldSelectMultiple({
     <SelectFormField
       isMultiple
       options={getOptions({ resourceType, field })}
+      {...props}
+    />
+  );
+}
+function AdminFieldFile({ resourceType, field }: ResourceFormFieldProps) {
+  const props = useAdminFieldProps({ resourceType, field });
+  return (
+    <FileFormField
+      accept={{
+        "image/png": [".png"],
+        "image/jpeg": [".jpeg", ".jpg"],
+      }}
+      isImage
+      maxSize={5 * 1024 * 1024}
       {...props}
     />
   );

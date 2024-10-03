@@ -8,8 +8,8 @@ import type {
 export interface FileUploadDoc {
   collection: FileUploadCollectionModel;
   field: FileUploadFieldModel;
-  url: string;
   key: string;
+  url: string;
   contentType: string;
   createdByUserId: ObjectId;
   createdAt: Date;

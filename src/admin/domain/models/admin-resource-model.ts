@@ -59,6 +59,7 @@ export enum AdminFieldTypeModel {
   richText = "richText",
   select = "select",
   selectMultiple = "selectMultiple",
+  file = "file",
 }
 
 export enum AdminFieldDisplayModel {
