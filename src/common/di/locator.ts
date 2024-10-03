@@ -7,8 +7,6 @@ import type { UsersRepository } from "../../auth/domain/interfaces/users-reposit
 import type { CourseAuthorsRepository } from "../../courses/domain/interfaces/course-authors-repository";
 import type { CourseEnrollmentsRepository } from "../../courses/domain/interfaces/course-enrollments-repository";
 import type { CoursesRepository } from "../../courses/domain/interfaces/courses-repository";
-import type { FileUploadService } from "../../file-upload/domain/interfaces/file-upload-service";
-import type { FileUploadsRepository } from "../../file-upload/domain/interfaces/file-uploads-repository";
 import type { NotesRepository } from "../../notes/domain/interfaces/notes-repository";
 import type { PracticeCardsRepository } from "../../practice/domain/interfaces/practice-cards-repository";
 import type { ReviewLogsRepository } from "../../practice/domain/interfaces/review-logs-repository";
@@ -41,7 +39,6 @@ interface Locator {
   DatabaseService: Dependency<DatabaseService>;
   EmailService: Lazy<EmailService>;
   DateTimeService: Lazy<DateTimeService>;
-  FileUploadService: Lazy<FileUploadService>;
   IpService: Lazy<IpService>;
 
   // Auth
@@ -63,8 +60,6 @@ interface Locator {
   // Practice
   PracticeCardsRepository: Lazy<PracticeCardsRepository>;
   ReviewLogsRepository: Lazy<ReviewLogsRepository>;
-  // File Uploads
-  FileUploadsRepository: Lazy<FileUploadsRepository>;
   // Rate Limits
   RateLimitsRepository: Dependency<RateLimitsRepository>;
 }
@@ -95,11 +90,7 @@ export const locator: Locator = {
       (file) => new file.DateTimeServiceImpl(),
     ),
   ),
-  FileUploadService: singleton(() =>
-    import("../../file-upload/data/services/file-upload-service-s3-impl").then(
-      (file) => new file.FileUploadServiceS3Impl(locator.EnvService()),
-    ),
-  ),
+
   CookieService: singleton(() => new CookieServiceNextImpl()),
 
   // Auth
@@ -207,16 +198,6 @@ export const locator: Locator = {
     return new file.ReviewLogsRepositoryImpl(
       this.DatabaseService(),
       await this.DateTimeService(),
-    );
-  },
-  // File Uploads
-  async FileUploadsRepository() {
-    const file = await import(
-      "../../file-upload/data/repositories/file-uploads-repository-impl"
-    );
-    return new file.FileUploadsRepositoryImpl(
-      await this.FileUploadService(),
-      this.DatabaseService(),
     );
   },
 

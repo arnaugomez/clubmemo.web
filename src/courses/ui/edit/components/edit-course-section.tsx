@@ -22,7 +22,8 @@ import {
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { CourseModelData } from "@/src/courses/domain/models/course-model";
 import { CourseModel } from "@/src/courses/domain/models/course-model";
-import { clientFileUploadLocator } from "@/src/file-upload/client-file-upload-locator";
+import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
+import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
@@ -30,7 +31,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editCourseAction } from "../actions/edit-course-action";
 import { editCourseUploadAction } from "../actions/edit-course-upload-action";
-import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 
 interface CourseDetailEditSectionProps {
   courseData: CourseModelData;
@@ -98,7 +98,7 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
       if (uploadActionHandler.data) {
         if (uploadActionHandler.data.picture && data.picture instanceof File) {
           const fileUploadService =
-            await clientFileUploadLocator.ClientFileUploadService();
+            locator_fileUpload_ClientFileUploadService();
           await fileUploadService.uploadPresignedUrl({
             file: data.picture,
             presignedUrl: uploadActionHandler.data.picture.presignedUrl,

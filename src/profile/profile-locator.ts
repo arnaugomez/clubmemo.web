@@ -1,6 +1,7 @@
 import { fetchSession } from "../auth/ui/fetch/fetch-session";
 import { locator } from "../common/di/locator";
 import type { Lazy } from "../common/di/locator-types";
+import { locator_fileUpload_FileUploadsRepository } from "../file-upload/locators/locator_file-uploads-repository";
 import type { EditProfileUploadUseCase } from "./domain/use-cases/edit-profile-upload-use-case";
 import { GetMyProfileUseCase } from "./domain/use-cases/get-my-profile-use-case";
 import type { UpdateProfileUseCase } from "./domain/use-cases/update-profile-use-case";
@@ -24,7 +25,7 @@ export const profileLocator: ProfileLocator = {
       await this.GetMyProfileUseCase(),
       await locator.TagsRepository(),
       await locator.ProfilesRepository(),
-      await locator.FileUploadsRepository(),
+      locator_fileUpload_FileUploadsRepository(),
     );
   },
   async EditProfileUploadUseCase() {
@@ -34,7 +35,7 @@ export const profileLocator: ProfileLocator = {
     return new file.EditProfileUploadUseCase(
       await this.GetMyProfileUseCase(),
       locator.RateLimitsRepository(),
-      await locator.FileUploadsRepository(),
+      locator_fileUpload_FileUploadsRepository(),
     );
   },
 };

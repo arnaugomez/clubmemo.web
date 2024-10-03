@@ -1,5 +1,6 @@
 import { locator } from "../common/di/locator";
 import type { Lazy } from "../common/di/locator-types";
+import { locator_fileUpload_FileUploadsRepository } from "../file-upload/locators/locator_file-uploads-repository";
 import { profileLocator } from "../profile/profile-locator";
 import type { CopyCourseUseCase } from "./domain/use-cases/copy-course-use-case";
 import type { CreateCourseUseCase } from "./domain/use-cases/create-course-use-case";
@@ -28,7 +29,7 @@ export const coursesLocator: CoursesLocator = {
       await profileLocator.GetMyProfileUseCase(),
       await locator.TagsRepository(),
       await locator.CoursesRepository(),
-      await locator.FileUploadsRepository(),
+      locator_fileUpload_FileUploadsRepository(),
     );
   },
   CopyCourseUseCase: async () => {
@@ -75,7 +76,7 @@ export const coursesLocator: CoursesLocator = {
       await profileLocator.GetMyProfileUseCase(),
       locator.RateLimitsRepository(),
       await locator.CoursesRepository(),
-      await locator.FileUploadsRepository(),
+      locator_fileUpload_FileUploadsRepository(),
     );
   },
   async EditCourseConfigUseCase() {

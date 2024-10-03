@@ -40,7 +40,6 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
       contentType: input.contentType,
     });
 
-    await this.fileUploads.deleteMany({ keyPrefix: input.keyPrefix });
     const url = presignedUrl.url + presignedUrl.fields.key;
     await this.fileUploads.insertOne({
       key,

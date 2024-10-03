@@ -22,9 +22,10 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { clientFileUploadLocator } from "@/src/file-upload/client-file-upload-locator";
+import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
 import type { ProfileModelData } from "@/src/profile/domain/models/profile-model";
 import { ProfileModel } from "@/src/profile/domain/models/profile-model";
+import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editProfileAction } from "../actions/edit-profile-action";
 import { editProfileUploadAction } from "../actions/edit-profile-upload-action";
-import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 
 interface EditProfileSectionProps {
   profileData: ProfileModelData;
@@ -121,7 +121,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       if (uploadActionHandler.data) {
         if (uploadActionHandler.data.picture && data.picture instanceof File) {
           const fileUploadService =
-            await clientFileUploadLocator.ClientFileUploadService();
+            locator_fileUpload_ClientFileUploadService();
           await fileUploadService.uploadPresignedUrl({
             file: data.picture,
             presignedUrl: uploadActionHandler.data.picture.presignedUrl,
@@ -134,7 +134,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
           data.backgroundPicture instanceof File
         ) {
           const fileUploadService =
-            await clientFileUploadLocator.ClientFileUploadService();
+            locator_fileUpload_ClientFileUploadService();
           await fileUploadService.uploadPresignedUrl({
             file: data.backgroundPicture,
             presignedUrl:
