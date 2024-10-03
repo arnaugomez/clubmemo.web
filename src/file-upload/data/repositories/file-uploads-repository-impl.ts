@@ -56,7 +56,7 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
 
     for await (const item of cursor) {
       const { collection, field, url, key, _id } = item;
-      const count = db.collection(collection).countDocuments({ [field]: url });
+      const count = await db.collection(collection).findOne({ [field]: url });
       if (!count) {
         await this.fileUploadService.deleteFile(key);
         await this.fileUploads.deleteOne({ _id });
