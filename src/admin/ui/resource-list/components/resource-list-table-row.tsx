@@ -1,5 +1,8 @@
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
-import { type AdminResourceModel } from "@/src/admin/domain/models/admin-resource-model";
+import {
+  AdminResourceTypeModel,
+  type AdminResourceModel,
+} from "@/src/admin/domain/models/admin-resource-model";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   TableCell,
@@ -35,12 +38,14 @@ export function ResourceListTableRow({
         />
       ))}
       <TableCell className="flex h-[53px] items-center space-x-2 py-0">
-        <Button variant="secondary" size="icon" asChild>
-          <Link href={detailHref}>
-            <EditIcon />
-            <span className="sr-only">Editar</span>
-          </Link>
-        </Button>
+        {resource.resourceType !== AdminResourceTypeModel.sessions && (
+          <Button variant="secondary" size="icon" asChild>
+            <Link href={detailHref}>
+              <EditIcon />
+              <span className="sr-only">Editar</span>
+            </Link>
+          </Button>
+        )}
         <DeleteResourceButton
           size="icon"
           id={resourceData._id}
