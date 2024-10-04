@@ -308,6 +308,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
         name: "newPassword",
         fieldType: AdminFieldTypeModel.string,
         display: AdminFieldDisplayModel.password,
+        hideInList: true,
       },
       {
         name: "authTypes",

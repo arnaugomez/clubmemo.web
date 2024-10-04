@@ -20,7 +20,9 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { z } from "zod";
 import { getAdminResourcesAction } from "../../actions/get-admin-resources-action";
+import { ResourceListTableFilters } from "./resource-list-table-filters";
 import { ResourceListTableHead } from "./resource-list-table-head";
 import { ResourceListTableRow } from "./resource-list-table-row";
 
@@ -47,6 +49,17 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
   const sortOrder = getSortOrder(params.get("sortOrder"));
   const previousParamsRef = useRef(params.toString());
   const pathname = usePathname();
+  const query = params.get("query") ?? "";
+  const filtersString = params.get("filters") ?? "";
+
+  const filters = useMemo(() => {
+    try {
+      const object = JSON.parse(filtersString);
+      return z.record(z.unknown()).parse(object);
+    } catch {
+      return undefined;
+    }
+  }, [filtersString]);
 
   function getHref(page: number) {
     const newParams = new URLSearchParams(params);
@@ -62,6 +75,8 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         pageSize: 10,
         sortBy: sortBy ?? undefined,
         sortOrder,
+        query,
+        filters,
       },
       status: "pending",
     },
@@ -135,6 +150,8 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
       pageSize: 10,
       sortBy: sortBy ?? undefined,
       sortOrder,
+      query,
+      filters,
     });
 
   useEffect(() => {
@@ -146,17 +163,47 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         pageSize: 10,
         sortBy: sortBy ?? undefined,
         sortOrder,
+        query,
+        filters,
       });
     }
-  }, [loadMore, page, params, resource.resourceType, sortBy, sortOrder]);
+  }, [
+    filters,
+    loadMore,
+    page,
+    params,
+    query,
+    resource.resourceType,
+    sortBy,
+    sortOrder,
+  ]);
+
+  const configVisibleFields = resource.fields.filter(
+    (field) => !field.hideInList,
+  );
+  const fieldNames = configVisibleFields.map((field) => field.name);
+
+  const [visibleColumns, setVisibleColumns] = useState(fieldNames);
+
+  const visibleColumnsSet = new Set(visibleColumns);
+  const visibleFields = configVisibleFields.filter((field) =>
+    visibleColumnsSet.has(field.name),
+  );
 
   return (
     <>
+      <ResourceListTableFilters
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        fieldNames={fieldNames}
+        resource={resource}
+      />
+
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="min-w-[100px]">Identificador</TableHead>
-            {resource.fields.map((field) => (
+            {visibleFields.map((field) => (
               <ResourceListTableHead
                 key={field.name}
                 resourceType={resource.resourceType}
@@ -171,8 +218,9 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
             result?.results.map((resourceData) => (
               <ResourceListTableRow
                 key={resourceData._id}
-                resource={resource}
                 resourceData={resourceData}
+                resourceType={resourceType}
+                fields={visibleFields}
                 onReload={handleReload}
               />
             ))}
