@@ -1,6 +1,7 @@
 import { getAdminResourceByType } from "@/src/admin/domain/config/admin-resources-config";
 import { ArrowLink } from "@/src/common/ui/components/button/arrow-link";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
+import { notFound } from "next/navigation";
 import { AdminResourceIcon } from "../../components/admin-resource-icon";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import type { PropsWithResourceTypeParam } from "../../models/props-with-resource-type-param";
@@ -11,6 +12,7 @@ export function CreateResourcePage({
   params: { resourceType },
 }: PropsWithResourceTypeParam) {
   const resource = getAdminResourceByType(resourceType);
+  if (resource.cannotCreate) notFound();
   return (
     <main>
       <div className="h-20" />

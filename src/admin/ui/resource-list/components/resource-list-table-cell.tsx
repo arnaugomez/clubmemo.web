@@ -26,7 +26,7 @@ export function ResourceListTableCell({
           "field",
           field.name,
           "option",
-          value?.toString(),
+          value.toString(),
           "label",
         )
       : "-";
@@ -46,6 +46,8 @@ export function ResourceListTableCell({
         return Array.isArray(value)
           ? value.map(getOptionLabel).join(", ")
           : "-";
+      case AdminFieldTypeModel.form:
+        return value ? "Dato estructurado" : "-";
     }
     return value?.toString() || "-";
   }
