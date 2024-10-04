@@ -1,6 +1,7 @@
 import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
+import { cn } from "@/src/common/ui/utils/shadcn";
 import { FilterIcon } from "lucide-react";
 import { useState } from "react";
 import { translateAdminKey } from "../../i18n/admin-translations";
@@ -25,7 +26,10 @@ export function ResourceListTableFilters({
       <div className="flex space-x-4">
         <ResourceListTableSearch resourceType={resourceType} />
         <Button
-          className="w-32 flex-none"
+          className={cn(
+            "w-32 flex-none",
+            showFilters && "border-[1px] border-slate-300",
+          )}
           variant={showFilters ? "secondary" : "outline"}
           onClick={() => setShowFilters(!showFilters)}
         >
