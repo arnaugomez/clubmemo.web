@@ -54,6 +54,13 @@ export interface NotesRepository {
   delete(noteId: string): Promise<void>;
 
   /**
+   * Deletes all the notes of a course
+   *
+   * @param courseId The id of a course
+   */
+  deleteByCourseId(courseId: string): Promise<void>;
+
+  /**
    * Obtains the notes of a course
    *
    * @param input The query to get the notes, including the course id and a

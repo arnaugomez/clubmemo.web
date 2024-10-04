@@ -1,6 +1,6 @@
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { getAdminResourceHook } from "../config/admin-resource-hooks-config";
-import { getAdminResourceSchema } from "../config/admin-resource-schemas";
+import { getAdminResourceSchema } from "../config/admin-resource-schemas-config";
 import { getAdminResourceByType } from "../config/admin-resources-config";
 import { saveNewAdminResourceTags } from "../methods/handle-admin-tags-field";
 import { transformDataBeforeCreateOrUpdate } from "../methods/transform-data-before-create-or-update";

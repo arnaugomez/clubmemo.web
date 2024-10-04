@@ -6,3 +6,8 @@ export const DeleteAdminResourceActionSchema = z.object({
   resourceType: AdminResourceTypeSchema,
   id: ObjectIdSchema,
 });
+
+export const DeleteAdminResourceActionSchemaForSessions = z.object({
+  resourceType: AdminResourceTypeSchema,
+  id: z.string(),
+});

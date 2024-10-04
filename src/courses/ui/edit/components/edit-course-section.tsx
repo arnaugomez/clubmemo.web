@@ -2,7 +2,7 @@
 
 import { z } from "@/i18n/zod";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
-import { FileSchema } from "@/src/common/schemas/file-schema";
+import { FileFieldSchema } from "@/src/common/schemas/file-schema";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -22,15 +22,15 @@ import {
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { CourseModelData } from "@/src/courses/domain/models/course-model";
 import { CourseModel } from "@/src/courses/domain/models/course-model";
-import { clientFileUploadLocator } from "@/src/file-upload/client-file-upload-locator";
+import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
+import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-action";
+import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editCourseAction } from "../actions/edit-course-action";
-import { editCourseUploadAction } from "../actions/edit-course-upload-action";
-import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 
 interface CourseDetailEditSectionProps {
   courseData: CourseModelData;
@@ -62,7 +62,7 @@ const EditCourseSchema = z.object({
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),
   tags: TagsSchema,
-  picture: z.string().or(FileSchema).optional(),
+  picture: FileFieldSchema.optional(),
 });
 
 type FormValues = z.infer<typeof EditCourseSchema>;
@@ -81,33 +81,28 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      const uploadActionResponse = await editCourseUploadAction({
-        courseId: course.id,
-        pictureContentType:
-          data.picture instanceof File ? data.picture.type : "",
-        uploadPicture: data.picture instanceof File,
-      });
-      const uploadActionHandler = new FormResponseHandler(
-        uploadActionResponse,
-        form,
-      );
-      if (uploadActionHandler.hasErrors) {
-        uploadActionHandler.setErrors();
-        return;
-      }
-      if (uploadActionHandler.data) {
-        if (uploadActionHandler.data.picture && data.picture instanceof File) {
+      if (data.picture instanceof File) {
+        const response = await uploadFileAction({
+          collection: "profiles",
+          field: "picture",
+          contentType: data.picture.type,
+        });
+        const handler = new FormResponseHandler(response, form);
+        if (handler.hasErrors) {
+          handler.setErrors();
+          return;
+        } else if (handler.data) {
           const fileUploadService =
-            await clientFileUploadLocator.ClientFileUploadService();
+            locator_fileUpload_ClientFileUploadService();
           await fileUploadService.uploadPresignedUrl({
             file: data.picture,
-            presignedUrl: uploadActionHandler.data.picture.presignedUrl,
+            presignedUrl: handler.data.presignedUrl,
           });
-          data.picture = uploadActionHandler.data.picture.url;
+          data.picture = handler.data.url;
         }
       }
-    } catch (e) {
-      locator_common_ErrorTrackingService().captureError(e);
+    } catch (error) {
+      locator_common_ErrorTrackingService().captureError(error);
       toast.error("Error al subir la imagen");
       return;
     }

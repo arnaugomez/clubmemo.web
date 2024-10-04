@@ -7,11 +7,13 @@ import {
 import type { OptionModel } from "@/src/common/domain/models/option-model";
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";
 import { DateInputFormField } from "@/src/common/ui/components/form/date-input-form-field";
+import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
 import { NumberInputFormField } from "@/src/common/ui/components/form/number-input-form-field";
 import { ObjectIdInputFormField } from "@/src/common/ui/components/form/objectid-input-form-field";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { SelectFormField } from "@/src/common/ui/components/form/select-form-field";
+import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
 import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
 import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
@@ -44,6 +46,7 @@ const componentMap: Record<
   [AdminFieldTypeModel.richText]: AdminFieldRichText,
   [AdminFieldTypeModel.select]: AdminFieldSelect,
   [AdminFieldTypeModel.selectMultiple]: AdminFieldSelectMultiple,
+  [AdminFieldTypeModel.file]: AdminFieldFile,
 };
 
 export function AdminField(props: ResourceFormFieldProps) {
@@ -95,6 +98,10 @@ function AdminFieldForm({ resourceType, field }: ResourceFormFieldProps) {
 
 function AdminFieldNumber({ resourceType, field }: ResourceFormFieldProps) {
   const props = useAdminFieldProps({ resourceType, field });
+  switch (field.display) {
+    case AdminFieldDisplayModel.slider:
+      return <SliderFormField max={100} {...props} />;
+  }
   return <NumberInputFormField {...props} />;
 }
 
@@ -135,12 +142,26 @@ function AdminFieldSelectMultiple({
     />
   );
 }
+function AdminFieldFile({ resourceType, field }: ResourceFormFieldProps) {
+  const props = useAdminFieldProps({ resourceType, field });
+  return (
+    <FileFormField
+      accept={{
+        "image/png": [".png"],
+        "image/jpeg": [".jpeg", ".jpg"],
+      }}
+      isImage
+      maxSize={5 * 1024 * 1024}
+      {...props}
+    />
+  );
+}
 
 function useAdminFieldProps({ resourceType, field }: ResourceFormFieldProps) {
   const { getName } = useAdminFormFieldContext();
   return {
     name: getName(field.name),
-    label: translateAdminKey(resourceType, "field", field.name, "label"),
+    label: `${translateAdminKey(resourceType, "field", field.name, "label")} (${field.name})`,
     disabled: field.isReadonly,
     placeholder: translateAdminKey(
       resourceType,

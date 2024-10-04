@@ -44,9 +44,11 @@ export class DeleteUserUseCase {
       password,
     });
 
-    await this.profilesRepository.deleteByUserId(userId);
-    await this.usersRepository.delete(userId);
-    await this.authService.invalidateUserSessions(userId);
+    await Promise.all([
+      this.profilesRepository.deleteByUserId(userId),
+      this.usersRepository.delete(userId),
+      this.authService.invalidateUserSessions(userId),
+    ]);
   }
 }
 

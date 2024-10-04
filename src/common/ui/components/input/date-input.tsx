@@ -1,6 +1,6 @@
 import { cn } from "@/src/common/ui/utils/shadcn";
 import dayjs from "dayjs";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 
 export interface InputProps {
   name: string;
@@ -24,9 +24,12 @@ const DateInput = forwardRef<HTMLInputElement, InputProps>(
   ({ className, name, placeholder, onChange, value, id }, ref) => {
     const [stringValue, setStringValue] = useState("");
 
+    const avoidUpdateTimeout = useRef<NodeJS.Timeout>();
+    const avoidUpdate = useRef(false);
+
     useEffect(() => {
-      if (value !== stringToDate(stringValue)) {
-        setStringValue(value?.toString() ?? "");
+      if (value !== stringToDate(stringValue) && !avoidUpdate.current) {
+        setStringValue(value ? dayjs(value).format("YYYY-MM-DD") : "");
       }
     }, [stringValue, value]);
 
@@ -43,9 +46,16 @@ const DateInput = forwardRef<HTMLInputElement, InputProps>(
         value={stringValue}
         placeholder={placeholder}
         onChange={(event) => {
+          clearTimeout(avoidUpdateTimeout.current);
+          avoidUpdate.current = true;
+
           const value = event.target.value;
           onChange(stringToDate(value));
           setStringValue(value);
+
+          avoidUpdateTimeout.current = setTimeout(() => {
+            avoidUpdate.current = true;
+          }, 500);
         }}
         formNoValidate
       />

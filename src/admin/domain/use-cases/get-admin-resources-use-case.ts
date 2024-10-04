@@ -5,18 +5,22 @@ import {
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import type { Document, WithId } from "mongodb";
+import { SortOrderDataModelTransformer } from "../../data/models/sort-order-data-model";
 import { getAdminResourceByType } from "../config/admin-resources-config";
 import type { AdminResourceData } from "../models/admin-resource-data";
 import {
   transformDataAfterGet,
   type AdminResourceTypeModel,
 } from "../models/admin-resource-model";
+import type { SortOrderModel } from "../models/sort-order-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 export interface GetAdminResourcesUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
   page: number;
   pageSize: number;
+  sortBy?: string;
+  sortOrder?: SortOrderModel;
 }
 
 export class GetAdminResourcesUseCase {
@@ -29,6 +33,8 @@ export class GetAdminResourcesUseCase {
     resourceType,
     page = 1,
     pageSize = 10,
+    sortBy,
+    sortOrder,
   }: GetAdminResourcesUseCaseInputModel): Promise<
     PaginationModel<AdminResourceData>
   > {
@@ -46,9 +52,16 @@ export class GetAdminResourcesUseCase {
         //   $match: {
         //   },
         // },
-        // {
-        //   $sort: { createdAt: -1 },
-        // },
+        ...(sortBy && sortOrder
+          ? [
+              {
+                $sort: {
+                  [sortBy]:
+                    SortOrderDataModelTransformer.fromDomainModel(sortOrder),
+                },
+              },
+            ]
+          : []),
         {
           $facet: {
             metadata: [{ $count: "totalCount" }],

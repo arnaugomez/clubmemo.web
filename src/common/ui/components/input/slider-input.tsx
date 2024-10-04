@@ -22,7 +22,7 @@ export function SliderInput({
     <>
       <Slider
         name={name}
-        defaultValue={[value]}
+        value={[value]}
         onValueCommit={(e) => onChange(e[0])}
         onValueChange={(e) => setDisplayValue(e[0])}
         max={max}

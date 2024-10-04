@@ -7,7 +7,7 @@ export function ResourceFormId({ id }: { id: string }) {
   const { copyToClipboard } = useClipboard();
   return (
     <FormItem>
-      <FormLabel>Identificador del recurso</FormLabel>
+      <FormLabel>Identificador del recurso (_id)</FormLabel>
       <p className={textStyles.muted}>
         {id}
         <CopyIcon

@@ -1,4 +1,7 @@
 import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
+import { AcceptTermsSchema } from "@/src/common/schemas/accept-terms-schema";
+import { FileFieldSchema } from "@/src/common/schemas/file-schema";
+import { HandleSchema } from "@/src/common/schemas/handle-schema";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import { CoursePermissionTypeModel } from "@/src/courses/domain/models/course-permission-type-model";
@@ -43,9 +46,9 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     ]),
   }),
   [AdminResourceTypeModel.courses]: z.object({
-    name: z.string().min(1),
-    description: z.string().optional(),
-    picture: z.string().optional(),
+    name: z.string().trim().min(1).max(50),
+    description: z.string().trim().min(0).max(255),
+    picture: FileFieldSchema.optional(),
     isPublic: z.boolean(),
     tags: TagsSchema,
   }),
@@ -55,11 +58,12 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     expiresAt: z.date(),
   }),
   [AdminResourceTypeModel.fileUploads]: z.object({
-    key: z.string(),
-    keyPrefix: z.string(),
-    count: z.number().int(),
+    collection: z.enum(["profiles", "courses"]),
+    field: z.string().min(1),
     url: z.string().url(),
-    isCurrent: z.boolean(),
+    key: z.string().min(1),
+    contentType: z.string(),
+    createdByUserId: ObjectIdSchema,
     createdAt: z.date(),
   }),
   [AdminResourceTypeModel.forgotPasswordTokens]: z.object({
@@ -92,13 +96,15 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.profiles]: z.object({
     userId: ObjectIdSchema,
     displayName: z.string().optional(),
-    handle: z.string().optional(),
+    handle: HandleSchema.optional().or(
+      z.literal("").transform((value) => value || undefined),
+    ),
     bio: z.string().optional(),
-    picture: z.string().optional(),
-    backgroundPicture: z.string().optional(),
     website: z.string().url().max(2083).optional().or(z.string().max(0)),
     isPublic: z.boolean(),
     tags: TagsSchema,
+    picture: FileFieldSchema.optional(),
+    backgroundPicture: FileFieldSchema.optional(),
   }),
   [AdminResourceTypeModel.rateLimits]: z.object({
     name: z.string(),
@@ -126,7 +132,7 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.users]: z.object({
     email: z.string().email(),
     authTypes: z.array(z.enum([AuthTypeModel.email])).min(1),
-    acceptTerms: z.boolean(),
+    acceptTerms: AcceptTermsSchema,
     isEmailVerified: z.boolean().optional(),
     isAdmin: z.boolean().optional(),
     newPassword: PasswordSchema.or(z.literal("").optional()),
@@ -138,7 +144,7 @@ const adminResourceCreateSchemas: Partial<
   [AdminResourceTypeModel.users]: z.object({
     email: z.string().email(),
     authTypes: z.array(z.enum([AuthTypeModel.email])).min(1),
-    acceptTerms: z.boolean(),
+    acceptTerms: AcceptTermsSchema,
     isEmailVerified: z.boolean().optional(),
     isAdmin: z.boolean().optional(),
     newPassword: PasswordSchema,

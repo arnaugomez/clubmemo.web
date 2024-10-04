@@ -1,4 +1,6 @@
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { randomUUID } from "crypto";
+import { ObjectId } from "mongodb";
 import type { FileUploadService } from "../../domain/interfaces/file-upload-service";
 import type {
   CreateFileUploadInputModel,
@@ -12,70 +14,53 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
 
   constructor(
     private readonly fileUploadService: FileUploadService,
-    databaseService: DatabaseService,
+    private readonly databaseService: DatabaseService,
   ) {
     this.fileUploads = databaseService.collection(fileUploadsCollection);
     this.fileUploads.createIndex({ keyPrefix: 1 });
     this.fileUploads.createIndex({ key: 1 });
   }
 
-  async create(
-    input: CreateFileUploadInputModel,
-  ): Promise<CreateFileUploadOutputModel> {
-    const previous = await this.fileUploads
-      .find(
-        { keyPrefix: input.keyPrefix },
-        {
-          sort: { createdAt: -1 },
-          limit: 1,
-        },
-      )
-      .next();
-    const count = previous ? (previous.count + 1) % 1000 : 0;
-    const keySuffix = input.fileName + (count ? `-${count}` : "");
-    const key = `${input.keyPrefix}/${keySuffix}`;
-
+  async create({
+    collection,
+    contentType,
+    field,
+    userId,
+  }: CreateFileUploadInputModel): Promise<CreateFileUploadOutputModel> {
+    const key = `${collection}/${field}/${randomUUID()}`;
     const presignedUrl = await this.fileUploadService.generatePresignedUrl({
       key,
-      contentType: input.contentType,
+      contentType,
     });
 
-    await this.fileUploads.deleteMany({ keyPrefix: input.keyPrefix });
     const url = presignedUrl.url + presignedUrl.fields.key;
     await this.fileUploads.insertOne({
-      key,
-      keyPrefix: input.keyPrefix,
-      count,
+      collection,
+      field,
       url,
-      isCurrent: false,
+      key,
+      contentType,
+      createdByUserId: new ObjectId(userId),
       createdAt: new Date(),
     });
 
     return { presignedUrl, url };
   }
 
-  async setCurrent(url: string): Promise<void> {
-    const urlObject = new URL(url);
-    const key = urlObject.pathname;
-    const keyPrefix = key.split("/").slice(0, -1).join("/");
-    await this.fileUploads.updateMany(
-      { keyPrefix },
-      { $set: { isCurrent: false } },
-    );
-    await this.fileUploads.updateOne({ key }, { $set: { isCurrent: true } });
-  }
-
   async deleteOutdated(): Promise<void> {
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const cursor = this.fileUploads.find({
-      isCurrent: false,
       date: { $lt: oneDayAgo },
     });
+    const db = this.databaseService.client.db();
 
     for await (const item of cursor) {
-      const { key } = item;
-      await this.fileUploadService.deleteFile(key);
-      await this.fileUploads.deleteOne({ key });
+      const { collection, field, url, key, _id } = item;
+      const count = await db.collection(collection).findOne({ [field]: url });
+      if (!count) {
+        await this.fileUploadService.deleteFile(key);
+        await this.fileUploads.deleteOne({ _id });
+      }
     }
   }
 }

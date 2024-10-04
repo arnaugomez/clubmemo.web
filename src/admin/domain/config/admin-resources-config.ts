@@ -2,6 +2,7 @@ import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
 import { CoursePermissionTypeModel } from "@/src/courses/domain/models/course-permission-type-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
+import { default_maximum_interval, default_request_retention } from "ts-fsrs";
 import { InvalidAdminResourceTypeError } from "../models/admin-errors";
 import type { AdminResourceModel } from "../models/admin-resource-model";
 import {
@@ -83,8 +84,8 @@ export const adminResourcesConfig: AdminResourceModel[] = [
         fieldType: AdminFieldTypeModel.string,
         display: AdminFieldDisplayModel.textarea,
       },
-      { name: "picture", fieldType: AdminFieldTypeModel.string },
-      { name: "backgroundPicture", fieldType: AdminFieldTypeModel.string },
+      { name: "picture", fieldType: AdminFieldTypeModel.file },
+      { name: "backgroundPicture", fieldType: AdminFieldTypeModel.file },
       { name: "website", fieldType: AdminFieldTypeModel.string },
       { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
       { name: "tags", fieldType: AdminFieldTypeModel.tags },
@@ -162,6 +163,26 @@ export const adminResourcesConfig: AdminResourceModel[] = [
     ],
   },
   {
+    resourceType: AdminResourceTypeModel.fileUploads,
+    fields: [
+      {
+        name: "collection",
+        fieldType: AdminFieldTypeModel.select,
+        options: ["profiles", "courses"],
+      },
+      { name: "field", fieldType: AdminFieldTypeModel.string },
+      { name: "key", fieldType: AdminFieldTypeModel.string },
+      { name: "url", fieldType: AdminFieldTypeModel.string },
+      { name: "contentType", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "createdByUserId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
+      },
+      { name: "createdAt", fieldType: AdminFieldTypeModel.date },
+    ],
+  },
+  {
     resourceType: AdminResourceTypeModel.courseEnrollments,
     fields: [
       {
@@ -179,13 +200,43 @@ export const adminResourcesConfig: AdminResourceModel[] = [
         name: "config",
         fieldType: AdminFieldTypeModel.form,
         fields: [
-          { name: "enableFuzz", fieldType: AdminFieldTypeModel.boolean },
-          { name: "maximumInterval", fieldType: AdminFieldTypeModel.number },
-          { name: "requestRetention", fieldType: AdminFieldTypeModel.number },
-          { name: "dailyNewCardsCount", fieldType: AdminFieldTypeModel.number },
+          {
+            name: "maximumInterval",
+            fieldType: AdminFieldTypeModel.number,
+            display: AdminFieldDisplayModel.slider,
+            extraProps: {
+              max: default_maximum_interval,
+            },
+            defaultValue: default_maximum_interval,
+          },
+          {
+            name: "requestRetention",
+            fieldType: AdminFieldTypeModel.number,
+            display: AdminFieldDisplayModel.slider,
+            extraProps: {
+              step: 0.01,
+              max: 1,
+            },
+            defaultValue: default_request_retention,
+          },
+          {
+            name: "dailyNewCardsCount",
+            fieldType: AdminFieldTypeModel.number,
+            display: AdminFieldDisplayModel.slider,
+            extraProps: {
+              max: 100,
+            },
+            defaultValue: 10,
+          },
+          {
+            name: "enableFuzz",
+            fieldType: AdminFieldTypeModel.boolean,
+            defaultValue: true,
+          },
           {
             name: "showAdvancedRatingOptions",
             fieldType: AdminFieldTypeModel.boolean,
+            defaultValue: true,
           },
         ],
       },
@@ -224,7 +275,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
         fieldType: AdminFieldTypeModel.string,
         display: AdminFieldDisplayModel.textarea,
       },
-      { name: "picture", fieldType: AdminFieldTypeModel.string },
+      { name: "picture", fieldType: AdminFieldTypeModel.file },
       { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
       { name: "tags", fieldType: AdminFieldTypeModel.tags },
     ],
@@ -255,13 +306,14 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       { name: "isAdmin", fieldType: AdminFieldTypeModel.boolean },
       {
         name: "newPassword",
-        fieldType: AdminFieldTypeModel.boolean,
+        fieldType: AdminFieldTypeModel.string,
         display: AdminFieldDisplayModel.password,
       },
       {
         name: "authTypes",
         fieldType: AdminFieldTypeModel.selectMultiple,
         options: [AuthTypeModel.email],
+        defaultValue: [AuthTypeModel.email],
       },
     ],
   },

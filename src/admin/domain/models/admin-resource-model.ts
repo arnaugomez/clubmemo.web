@@ -46,6 +46,8 @@ export interface AdminFieldModel {
    * Resource type of the ObjectId. Used when the field type is `AdminFieldTypeModel.objectId`.
    */
   resourceType?: AdminResourceTypeModel;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  defaultValue?: any;
 }
 
 export enum AdminFieldTypeModel {
@@ -59,11 +61,13 @@ export enum AdminFieldTypeModel {
   richText = "richText",
   select = "select",
   selectMultiple = "selectMultiple",
+  file = "file",
 }
 
 export enum AdminFieldDisplayModel {
   textarea = "textarea",
   password = "password",
+  slider = "slider",
 }
 
 export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
@@ -102,6 +106,9 @@ export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
       case AdminFieldTypeModel.objectId:
         values[field.name] = "";
         break;
+    }
+    if (field.defaultValue !== undefined) {
+      values[field.name] = field.defaultValue;
     }
   }
   return values;
