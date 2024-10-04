@@ -122,7 +122,6 @@ export class GetAdminResourcesUseCase {
     if (!filters) {
       return [];
     }
-    console.log(filters);
 
     const match = [];
     for (const field of resource.fields) {
