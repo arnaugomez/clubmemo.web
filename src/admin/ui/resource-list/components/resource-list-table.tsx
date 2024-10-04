@@ -20,6 +20,7 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { z } from "zod";
 import { getAdminResourcesAction } from "../../actions/get-admin-resources-action";
 import { ResourceListTableFilters } from "./resource-list-table-filters";
 import { ResourceListTableHead } from "./resource-list-table-head";
@@ -49,6 +50,16 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
   const previousParamsRef = useRef(params.toString());
   const pathname = usePathname();
   const query = params.get("query") ?? "";
+  const filtersString = params.get("filters") ?? "";
+
+  const filters = useMemo(() => {
+    try {
+      const object = JSON.parse(filtersString);
+      return z.record(z.unknown()).parse(object);
+    } catch {
+      return undefined;
+    }
+  }, [filtersString]);
 
   function getHref(page: number) {
     const newParams = new URLSearchParams(params);
@@ -65,6 +76,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         sortBy: sortBy ?? undefined,
         sortOrder,
         query,
+        filters,
       },
       status: "pending",
     },
@@ -139,6 +151,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
       sortBy: sortBy ?? undefined,
       sortOrder,
       query,
+      filters,
     });
 
   useEffect(() => {
@@ -151,16 +164,29 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         sortBy: sortBy ?? undefined,
         sortOrder,
         query,
+        filters,
       });
     }
-  }, [loadMore, page, params, query, resource.resourceType, sortBy, sortOrder]);
+  }, [
+    filters,
+    loadMore,
+    page,
+    params,
+    query,
+    resource.resourceType,
+    sortBy,
+    sortOrder,
+  ]);
 
-  const fieldNames = resource.fields.map((field) => field.name);
+  const configVisibleFields = resource.fields.filter(
+    (field) => !field.hideInList,
+  );
+  const fieldNames = configVisibleFields.map((field) => field.name);
 
   const [visibleColumns, setVisibleColumns] = useState(fieldNames);
 
   const visibleColumnsSet = new Set(visibleColumns);
-  const visibleFields = resource.fields.filter((field) =>
+  const visibleFields = configVisibleFields.filter((field) =>
     visibleColumnsSet.has(field.name),
   );
 
@@ -170,7 +196,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         visibleColumns={visibleColumns}
         setVisibleColumns={setVisibleColumns}
         fieldNames={fieldNames}
-        resourceType={resourceType}
+        resource={resource}
       />
 
       <Table>

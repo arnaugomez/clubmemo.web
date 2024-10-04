@@ -4,8 +4,8 @@ import {
 } from "@/src/common/data/facets/pagination-facet";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
-import { escapeRegExp } from "lodash-es";
-import type { Document, WithId } from "mongodb";
+import { escapeRegExp, isDate } from "lodash-es";
+import { ObjectId, type Document, type WithId } from "mongodb";
 import { SortOrderDataModelTransformer } from "../../data/models/sort-order-data-model";
 import { getAdminResourceByType } from "../config/admin-resources-config";
 import type { AdminResourceData } from "../models/admin-resource-data";
@@ -25,6 +25,7 @@ export interface GetAdminResourcesUseCaseInputModel {
   sortBy?: string;
   sortOrder?: SortOrderModel;
   query?: string;
+  filters?: Record<string, unknown>;
 }
 
 export class GetAdminResourcesUseCase {
@@ -40,6 +41,7 @@ export class GetAdminResourcesUseCase {
     sortBy,
     sortOrder,
     query,
+    filters,
   }: GetAdminResourcesUseCaseInputModel): Promise<
     PaginationModel<AdminResourceData>
   > {
@@ -52,7 +54,8 @@ export class GetAdminResourcesUseCase {
       .db()
       .collection(resourceType)
       .aggregate<PaginationFacet<WithId<Document>>>([
-        ...this.getPipelineFromQuery(query ?? "", resource),
+        ...this.getPipelineFromFilters(resource, filters),
+        ...this.getPipelineFromQuery(resource, query),
         ...(sortBy && sortOrder
           ? [
               {
@@ -84,23 +87,97 @@ export class GetAdminResourcesUseCase {
   }
 
   private getPipelineFromQuery(
-    query: string,
     resource: AdminResourceModel,
+    query?: string,
   ): Document[] {
-    const trimmed = query.trim();
+    const trimmed = query?.trim();
     if (!trimmed) {
       return [];
     }
     const escaped = escapeRegExp(trimmed);
     const match = [];
     for (const field of resource.fields) {
-      if (field.fieldType === AdminFieldTypeModel.string) {
+      if (
+        field.fieldType === AdminFieldTypeModel.string ||
+        field.fieldType === AdminFieldTypeModel.richText
+      ) {
         match.push({ [field.name]: { $regex: escaped, $options: "i" } });
       }
     }
+
+    if (!match.length) {
+      return [];
+    }
+
     return [
       {
         $match: { $or: match },
+      },
+    ];
+  }
+  private getPipelineFromFilters(
+    resource: AdminResourceModel,
+    filters?: Record<string, unknown>,
+  ): Document[] {
+    if (!filters) {
+      return [];
+    }
+    console.log(filters);
+
+    const match = [];
+    for (const field of resource.fields) {
+      const value = filters[field.name];
+      if (value === undefined) continue;
+      switch (field.fieldType) {
+        case AdminFieldTypeModel.string || AdminFieldTypeModel.richText:
+          if (typeof value === "string") {
+            const trimmed = value.trim();
+            if (trimmed) {
+              const escaped = escapeRegExp(trimmed);
+              match.push({ [field.name]: { $regex: escaped, $options: "i" } });
+            }
+          }
+          break;
+        case AdminFieldTypeModel.boolean:
+          if (typeof value === "boolean") {
+            match.push({ [field.name]: { $eq: value } });
+          }
+          break;
+        case AdminFieldTypeModel.date:
+          if (isDate(value)) {
+            match.push({ [field.name]: { $eq: value } });
+          }
+          break;
+        case AdminFieldTypeModel.number:
+          if (typeof value === "number") {
+            match.push({ [field.name]: { $eq: value } });
+          }
+          break;
+        case AdminFieldTypeModel.select:
+          if (typeof value === "string") {
+            match.push({ [field.name]: { $eq: value } });
+          }
+          break;
+        case AdminFieldTypeModel.tags || AdminFieldTypeModel.selectMultiple:
+          if (Array.isArray(value) && value.length) {
+            match.push({ [field.name]: { $all: value } });
+          }
+          break;
+        case AdminFieldTypeModel.objectId:
+          if (typeof value == "string" && ObjectId.isValid(value)) {
+            match.push({ [field.name]: { $eq: new ObjectId(value) } });
+          }
+          break;
+      }
+    }
+
+    if (!match.length) {
+      return [];
+    }
+
+    return [
+      {
+        $match: { $and: match },
       },
     ];
   }

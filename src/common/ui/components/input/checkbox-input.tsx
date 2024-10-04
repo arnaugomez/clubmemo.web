@@ -5,8 +5,8 @@ import { FormLabel } from "../shadcn/ui/form";
 interface CheckboxInputProps {
   name: string;
   label: ReactNode;
-  value: boolean;
-  onChange: (value: boolean) => void;
+  value: boolean | null;
+  onChange: (value: boolean | null) => void;
   "data-testid"?: string;
 }
 
@@ -22,8 +22,10 @@ export function CheckboxInput({
       <Checkbox
         name={name}
         id={name}
-        checked={value}
-        onCheckedChange={(checked) => onChange(Boolean(checked))}
+        checked={value ?? "indeterminate"}
+        onCheckedChange={(checked) =>
+          onChange(checked === "indeterminate" ? null : checked)
+        }
         data-testid={props["data-testid"]}
       />
       <FormLabel htmlFor={name} className="font-normal leading-tight">

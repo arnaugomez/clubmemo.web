@@ -11,4 +11,5 @@ export const GetAdminResourcesActionSchema = z.object({
     .enum([SortOrderModel.ascending, SortOrderModel.descending])
     .optional(),
   query: z.string().optional(),
+  filters: z.record(z.unknown()).optional(),
 });

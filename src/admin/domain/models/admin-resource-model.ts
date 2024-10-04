@@ -48,6 +48,7 @@ export interface AdminFieldModel {
   resourceType?: AdminResourceTypeModel;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue?: any;
+  hideInList?: boolean;
 }
 
 export enum AdminFieldTypeModel {
