@@ -8,6 +8,7 @@ import type { EditCourseConfigUseCase } from "./domain/use-cases/edit-course-con
 import type { EditCourseUseCase } from "./domain/use-cases/edit-course-use-case";
 import type { FavoriteCourseUseCase } from "./domain/use-cases/favorite-course-use-case";
 import type { GetInterestingCoursesUseCase } from "./domain/use-cases/get-interesting-courses-use-case";
+import { locator_courses_CoursePermissionsRepository } from "./locators/locator_course-permissions-repository";
 
 interface CoursesLocator {
   EditCourseUseCase: Lazy<EditCourseUseCase>;
@@ -57,6 +58,9 @@ export const coursesLocator: CoursesLocator = {
     return new file.DeleteCourseUseCase(
       await profileLocator.GetMyProfileUseCase(),
       await locator.CoursesRepository(),
+      await locator.CourseEnrollmentsRepository(),
+      locator_courses_CoursePermissionsRepository(),
+      await locator.NotesRepository(),
     );
   },
   async FavoriteCourseUseCase() {

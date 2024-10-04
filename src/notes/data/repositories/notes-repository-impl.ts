@@ -64,6 +64,10 @@ export class NotesRepositoryImpl implements NotesRepository {
     ]);
   }
 
+  async deleteByCourseId(courseId: string): Promise<void> {
+    await this.notes.deleteMany({ courseId: new ObjectId(courseId) });
+  }
+
   async get({
     courseId,
     page = 1,

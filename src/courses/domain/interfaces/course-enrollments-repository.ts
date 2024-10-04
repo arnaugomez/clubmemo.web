@@ -40,6 +40,13 @@ export interface CourseEnrollmentsRepository {
   delete(input: CreateCourseEnrollmentInputModel): Promise<void>;
 
   /**
+   * Deletes all the enrollments of a course
+   *
+   * @param courseId The id of a course
+   */
+  deleteByCourseId(courseId: string): Promise<void>;
+
+  /**
    * Updates the configuration of a course enrollment. The configuration includes
    * the settings on how the course cards are practiced.
    *
