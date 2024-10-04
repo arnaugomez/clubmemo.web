@@ -22,7 +22,7 @@ export function ResourceListTableFilters({
   const [showFilters, setShowFilters] = useState(false);
   return (
     <>
-      <div className="flex space-x-4 pb-2">
+      <div className="flex space-x-4">
         <ResourceListTableSearch resourceType={resourceType} />
         <Button
           className="w-32 flex-none"
@@ -49,10 +49,11 @@ export function ResourceListTableFilters({
         </div>
       </div>
       {showFilters && (
-        <div className="rounded-md border-slate-400 bg-slate-100 p-4">
+        <div className="mt-2 rounded-md border-[1px] border-slate-300 bg-slate-100 p-4">
           <h3 className={textStyles.h4}>Filtros</h3>
         </div>
       )}
+      <div className="h-4"></div>
     </>
   );
 }
