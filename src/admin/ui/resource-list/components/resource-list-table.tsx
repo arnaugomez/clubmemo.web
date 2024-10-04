@@ -21,8 +21,10 @@ import { cn } from "@/src/common/ui/utils/shadcn";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getAdminResourcesAction } from "../../actions/get-admin-resources-action";
+import { translateAdminKey } from "../../i18n/admin-translations";
 import { ResourceListTableHead } from "./resource-list-table-head";
 import { ResourceListTableRow } from "./resource-list-table-row";
+import { ShowColumnsDropdown } from "./show-columns-dropdown";
 
 interface ResourceListTableProps {
   resourceType: AdminResourceTypeModel;
@@ -150,13 +152,40 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
     }
   }, [loadMore, page, params, resource.resourceType, sortBy, sortOrder]);
 
+  const fieldNames = resource.fields.map((field) => field.name);
+
+  const [visibleColumns, setVisibleColumns] = useState(fieldNames);
+
+  const visibleColumnsSet = new Set(visibleColumns);
+  const visibleFields = resource.fields.filter((field) =>
+    visibleColumnsSet.has(field.name),
+  );
+
   return (
     <>
+      <div className="flex">
+        <div className="flex-1"></div>
+        <div className="flex-none">
+          <ShowColumnsDropdown
+            value={visibleColumns}
+            options={fieldNames.map((value) => ({
+              value,
+              label: translateAdminKey(
+                resourceType,
+                "field",
+                value,
+                "tableHeader",
+              ),
+            }))}
+            onChange={setVisibleColumns}
+          />
+        </div>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="min-w-[100px]">Identificador</TableHead>
-            {resource.fields.map((field) => (
+            {visibleFields.map((field) => (
               <ResourceListTableHead
                 key={field.name}
                 resourceType={resource.resourceType}
@@ -171,8 +200,9 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
             result?.results.map((resourceData) => (
               <ResourceListTableRow
                 key={resourceData._id}
-                resource={resource}
                 resourceData={resourceData}
+                resourceType={resourceType}
+                fields={visibleFields}
                 onReload={handleReload}
               />
             ))}

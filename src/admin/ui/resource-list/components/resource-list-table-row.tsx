@@ -1,8 +1,6 @@
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
-import {
-  AdminResourceTypeModel,
-  type AdminResourceModel,
-} from "@/src/admin/domain/models/admin-resource-model";
+import type { AdminFieldModel } from "@/src/admin/domain/models/admin-resource-model";
+import { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   TableCell,
@@ -15,30 +13,32 @@ import { IdTableCell } from "./id-table-cell";
 import { ResourceListTableCell } from "./resource-list-table-cell";
 
 interface ResourceListTableRowProps {
-  resource: AdminResourceModel;
+  resourceType: AdminResourceTypeModel;
+  fields: AdminFieldModel[];
   resourceData: AdminResourceData;
   onReload: () => void;
 }
 
 export function ResourceListTableRow({
-  resource,
+  resourceType,
+  fields,
   resourceData,
   onReload,
 }: ResourceListTableRowProps) {
-  const detailHref = `/admin/resources/${resource.resourceType}/detail/${resourceData._id}`;
+  const detailHref = `/admin/resources/${resourceType}/detail/${resourceData._id}`;
   return (
     <TableRow key={resourceData._id}>
-      <IdTableCell id={resourceData._id} resourceType={resource.resourceType} />
-      {resource.fields.map((field) => (
+      <IdTableCell id={resourceData._id} resourceType={resourceType} />
+      {fields.map((field) => (
         <ResourceListTableCell
           key={field.name}
-          resourceType={resource.resourceType}
+          resourceType={resourceType}
           field={field}
           data={resourceData}
         />
       ))}
       <TableCell className="flex h-[53px] items-center space-x-2 py-0">
-        {resource.resourceType !== AdminResourceTypeModel.sessions && (
+        {resourceType !== AdminResourceTypeModel.sessions && (
           <Button variant="secondary" size="icon" asChild>
             <Link href={detailHref}>
               <EditIcon />
@@ -49,7 +49,7 @@ export function ResourceListTableRow({
         <DeleteResourceButton
           size="icon"
           id={resourceData._id}
-          resourceType={resource.resourceType}
+          resourceType={resourceType}
           onDeleted={onReload}
         >
           <Trash2Icon />
