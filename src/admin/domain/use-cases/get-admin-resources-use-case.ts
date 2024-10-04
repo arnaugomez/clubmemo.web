@@ -4,11 +4,14 @@ import {
 } from "@/src/common/data/facets/pagination-facet";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
+import { escapeRegExp } from "lodash-es";
 import type { Document, WithId } from "mongodb";
 import { SortOrderDataModelTransformer } from "../../data/models/sort-order-data-model";
 import { getAdminResourceByType } from "../config/admin-resources-config";
 import type { AdminResourceData } from "../models/admin-resource-data";
+import type { AdminResourceModel } from "../models/admin-resource-model";
 import {
+  AdminFieldTypeModel,
   transformDataAfterGet,
   type AdminResourceTypeModel,
 } from "../models/admin-resource-model";
@@ -21,6 +24,7 @@ export interface GetAdminResourcesUseCaseInputModel {
   pageSize: number;
   sortBy?: string;
   sortOrder?: SortOrderModel;
+  query?: string;
 }
 
 export class GetAdminResourcesUseCase {
@@ -35,6 +39,7 @@ export class GetAdminResourcesUseCase {
     pageSize = 10,
     sortBy,
     sortOrder,
+    query,
   }: GetAdminResourcesUseCaseInputModel): Promise<
     PaginationModel<AdminResourceData>
   > {
@@ -47,11 +52,7 @@ export class GetAdminResourcesUseCase {
       .db()
       .collection(resourceType)
       .aggregate<PaginationFacet<WithId<Document>>>([
-        // TODO: search and sort pagination query
-        // {
-        //   $match: {
-        //   },
-        // },
+        ...this.getPipelineFromQuery(query ?? "", resource),
         ...(sortBy && sortOrder
           ? [
               {
@@ -80,5 +81,27 @@ export class GetAdminResourcesUseCase {
     return new PaginationFacetTransformer(result).toDomain((data) =>
       transformDataAfterGet(resource.fields, data),
     );
+  }
+
+  private getPipelineFromQuery(
+    query: string,
+    resource: AdminResourceModel,
+  ): Document[] {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      return [];
+    }
+    const escaped = escapeRegExp(trimmed);
+    const match = [];
+    for (const field of resource.fields) {
+      if (field.fieldType === AdminFieldTypeModel.string) {
+        match.push({ [field.name]: { $regex: escaped, $options: "i" } });
+      }
+    }
+    return [
+      {
+        $match: { $or: match },
+      },
+    ];
   }
 }

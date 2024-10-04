@@ -21,10 +21,9 @@ import { cn } from "@/src/common/ui/utils/shadcn";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getAdminResourcesAction } from "../../actions/get-admin-resources-action";
-import { translateAdminKey } from "../../i18n/admin-translations";
+import { ResourceListTableFilters } from "./resource-list-table-filters";
 import { ResourceListTableHead } from "./resource-list-table-head";
 import { ResourceListTableRow } from "./resource-list-table-row";
-import { ShowColumnsDropdown } from "./show-columns-dropdown";
 
 interface ResourceListTableProps {
   resourceType: AdminResourceTypeModel;
@@ -49,6 +48,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
   const sortOrder = getSortOrder(params.get("sortOrder"));
   const previousParamsRef = useRef(params.toString());
   const pathname = usePathname();
+  const query = params.get("query") ?? "";
 
   function getHref(page: number) {
     const newParams = new URLSearchParams(params);
@@ -64,6 +64,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         pageSize: 10,
         sortBy: sortBy ?? undefined,
         sortOrder,
+        query,
       },
       status: "pending",
     },
@@ -137,6 +138,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
       pageSize: 10,
       sortBy: sortBy ?? undefined,
       sortOrder,
+      query,
     });
 
   useEffect(() => {
@@ -148,9 +150,10 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         pageSize: 10,
         sortBy: sortBy ?? undefined,
         sortOrder,
+        query,
       });
     }
-  }, [loadMore, page, params, resource.resourceType, sortBy, sortOrder]);
+  }, [loadMore, page, params, query, resource.resourceType, sortBy, sortOrder]);
 
   const fieldNames = resource.fields.map((field) => field.name);
 
@@ -163,24 +166,13 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
 
   return (
     <>
-      <div className="flex">
-        <div className="flex-1"></div>
-        <div className="flex-none">
-          <ShowColumnsDropdown
-            value={visibleColumns}
-            options={fieldNames.map((value) => ({
-              value,
-              label: translateAdminKey(
-                resourceType,
-                "field",
-                value,
-                "tableHeader",
-              ),
-            }))}
-            onChange={setVisibleColumns}
-          />
-        </div>
-      </div>
+      <ResourceListTableFilters
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        fieldNames={fieldNames}
+        resourceType={resourceType}
+      />
+
       <Table>
         <TableHeader>
           <TableRow>
