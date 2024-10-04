@@ -2,6 +2,7 @@
 import { getAdminResourceByType } from "@/src/admin/domain/config/admin-resources-config";
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
 import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
+import { SortOrderModel } from "@/src/admin/domain/models/sort-order-model";
 import type { GetAdminResourcesUseCaseInputModel } from "@/src/admin/domain/use-cases/get-admin-resources-use-case";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
@@ -20,7 +21,7 @@ import { cn } from "@/src/common/ui/utils/shadcn";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getAdminResourcesAction } from "../../actions/get-admin-resources-action";
-import { translateAdminKey } from "../../i18n/admin-translations";
+import { ResourceListTableHead } from "./resource-list-table-head";
 import { ResourceListTableRow } from "./resource-list-table-row";
 
 interface ResourceListTableProps {
@@ -42,7 +43,9 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
   const resource = getAdminResourceByType(resourceType);
   const params = useSearchParams();
   const page = Number(params.get("page")) || 1;
-  const previousPageRef = useRef(page);
+  const sortBy = params.get("sortBy");
+  const sortOrder = getSortOrder(params.get("sortOrder"));
+  const previousParamsRef = useRef(params.toString());
   const pathname = usePathname();
 
   function getHref(page: number) {
@@ -55,8 +58,10 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
     {
       input: {
         resourceType: resource.resourceType,
-        page: page,
+        page,
         pageSize: 10,
+        sortBy: sortBy ?? undefined,
+        sortOrder,
       },
       status: "pending",
     },
@@ -128,18 +133,22 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
       resourceType: resource.resourceType,
       page: page,
       pageSize: 10,
+      sortBy: sortBy ?? undefined,
+      sortOrder,
     });
 
   useEffect(() => {
-    if (page !== previousPageRef.current) {
-      previousPageRef.current = page;
+    if (params.toString() !== previousParamsRef.current) {
+      previousParamsRef.current = params.toString();
       loadMore({
         resourceType: resource.resourceType,
         page: page,
         pageSize: 10,
+        sortBy: sortBy ?? undefined,
+        sortOrder,
       });
     }
-  }, [loadMore, page, resource.resourceType]);
+  }, [loadMore, page, params, resource.resourceType, sortBy, sortOrder]);
 
   return (
     <>
@@ -148,14 +157,11 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
           <TableRow>
             <TableHead className="min-w-[100px]">Identificador</TableHead>
             {resource.fields.map((field) => (
-              <TableHead key={field.name} className="min-w-[100px]">
-                {translateAdminKey(
-                  resource.resourceType,
-                  "field",
-                  field.name,
-                  "tableHeader",
-                )}
-              </TableHead>
+              <ResourceListTableHead
+                key={field.name}
+                resourceType={resource.resourceType}
+                field={field}
+              />
             ))}
             <TableHead className="w-[60px]">Acciones</TableHead>
           </TableRow>
@@ -201,4 +207,13 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
       />
     </>
   );
+}
+
+function getSortOrder(value: string | null): SortOrderModel | undefined {
+  switch (value) {
+    case SortOrderModel.ascending:
+    case SortOrderModel.descending:
+      return value;
+  }
+  return undefined;
 }
