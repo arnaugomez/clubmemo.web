@@ -57,6 +57,22 @@ const adminTranslations: Record<string, string> = {
   "users.singular": "Usuario",
   "users.description":
     "Contienen las credenciales de acceso a la plataforma. Cada usuario se encuentra asociado a un perfil.",
+  "users.field.email.label": "Correo electrónico",
+  "users.field.email.placeholder": "ejemplo@clubmemo.com",
+  "users.field.acceptTerms.label": "Acepta los términos y condiciones",
+  "users.field.isEmailVerified.label": "Email verificado",
+  "users.field.isAdmin.label": "Es administrador",
+  "users.field.authTypes.label": "Modos de autenticación",
+  "users.createAlert.title": "Recuerda asociar el usuario a un perfil",
+  "users.createAlert.description":
+    "Después de crear el usuario, crea un perfil y enlázalo a este usuario para que pueda usar la plataforma.",
+  "users.field.newPassword.label": "Nueva contraseña",
+  "users.field.newPassword.placeholder": "Elige una contraseña segura",
+  "users.field.authTypes.placeholder": "Email y contraseña, con Google, etc.",
+  "users.field.authTypes.option.email.label": "Email y contraseña",
+  "users.deleteAlert.title": "También se eliminarán los perfiles asociados",
+  "users.deleteAlert.description":
+    "Cuando eliminas un usuario, también se eliminan todos los datos de perfiles y sesiones asociadas.",
 };
 
 export function translateAdminKey(...keys: string[]): string {

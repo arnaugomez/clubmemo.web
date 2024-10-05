@@ -56,7 +56,7 @@ export function ConfirmDialog({
           <DialogDescription>{description}</DialogDescription>
           {alertTitle && (
             <>
-              <div className="h-4"></div>
+              <div className="h-1"></div>
               <Alert>
                 <TriangleAlert size={16} />
                 <AlertTitle>{alertTitle}</AlertTitle>
@@ -64,7 +64,7 @@ export function ConfirmDialog({
                   <AlertDescription>{alertDescription}</AlertDescription>
                 )}
               </Alert>
-              <div className="h-4"></div>
+              <div className="h-1"></div>
             </>
           )}
         </DialogHeader>
