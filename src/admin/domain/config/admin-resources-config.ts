@@ -12,10 +12,10 @@ import {
 } from "../models/admin-resource-model";
 
 const practiceCardStateOptions = [
-  PracticeCardStateModel.learning,
   PracticeCardStateModel.new,
-  PracticeCardStateModel.relearning,
+  PracticeCardStateModel.learning,
   PracticeCardStateModel.review,
+  PracticeCardStateModel.relearning,
 ];
 
 export const adminResourcesConfig: AdminResourceModel[] = [
