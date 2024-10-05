@@ -27,7 +27,7 @@ const ObjectIdInput = forwardRef<HTMLInputElement, ObjectIdInputProps>(
     function renderLink() {
       if (!resourceType) return null;
 
-      const linkText = `${isValidObjectId ? "Ver" : "Buscar"} ${translateAdminKey(resourceType, "singular").toLowerCase()}`;
+      const linkText = `${isValidObjectId ? "Ver" : "Buscar"} ${translateAdminKey(resourceType, "singular")}`;
 
       return (
         <>

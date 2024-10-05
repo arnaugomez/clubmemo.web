@@ -99,7 +99,7 @@ export function CreateResourceForm({ resourceType }: CreateResourceFormProps) {
             <Link href={`/admin/resources/${resourceType}`}>Volver</Link>
           </Button>
           <FormSubmitButton>
-            Crear {translateAdminKey(resourceType, "singular")}
+            Crear {translateAdminKey(resourceType, "singular", "lowercase")}
           </FormSubmitButton>
         </div>
       </form>

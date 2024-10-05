@@ -39,20 +39,21 @@ export function ResourceListTableRow({
       ))}
       <TableCell className="flex h-[53px] items-center space-x-2 py-0">
         {resourceType !== AdminResourceTypeModel.sessions && (
-          <Button variant="secondary" size="icon" asChild>
+          <Button className="size-8" variant="secondary" size="icon" asChild>
             <Link href={detailHref}>
-              <EditIcon />
+              <EditIcon size={20} />
               <span className="sr-only">Editar</span>
             </Link>
           </Button>
         )}
         <DeleteResourceButton
+          className="size-8"
           size="icon"
           id={resourceData._id}
           resourceType={resourceType}
           onDeleted={onReload}
         >
-          <Trash2Icon />
+          <Trash2Icon size={20} />
           <span className="sr-only">Eliminar</span>
         </DeleteResourceButton>
       </TableCell>

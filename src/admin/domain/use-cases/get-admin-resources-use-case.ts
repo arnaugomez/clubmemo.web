@@ -4,6 +4,7 @@ import {
 } from "@/src/common/data/facets/pagination-facet";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
+import dayjs from "dayjs";
 import { escapeRegExp, isDate } from "lodash-es";
 import { ObjectId, type Document, type WithId } from "mongodb";
 import { SortOrderDataModelTransformer } from "../../data/models/sort-order-data-model";
@@ -143,12 +144,20 @@ export class GetAdminResourcesUseCase {
           }
           break;
         case AdminFieldTypeModel.date:
-          if (isDate(value)) {
-            match.push({ [field.name]: { $eq: value } });
+          if (typeof value === "string" || isDate(value)) {
+            const dateValue = dayjs(value);
+            if (dateValue.isValid()) {
+              match.push({
+                [field.name]: {
+                  $gte: dateValue.startOf("day").toDate(),
+                  $lte: dateValue.endOf("day").toDate(),
+                },
+              });
+            }
           }
           break;
         case AdminFieldTypeModel.number:
-          if (typeof value === "number") {
+          if (typeof value === "number" && !isNaN(value)) {
             match.push({ [field.name]: { $eq: value } });
           }
           break;

@@ -13,6 +13,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 import { ResourceListFiltersField } from "./resource-list-filters-field";
+import { FilterXIcon } from "lucide-react";
 
 interface ResourceListFiltersFormProps {
   resource: AdminResourceModel;
@@ -77,7 +78,10 @@ export function ResourceListFiltersForm({
       >
         <h3 className={cn(textStyles.h4)}>Filtros</h3>
         {chunk(configVisibleFields, 2).map((fields) => (
-          <div className="sm:flex sm:space-x-4" key={fields[0].name}>
+          <div
+            className="space-y-4 sm:flex sm:space-x-4 sm:space-y-0"
+            key={fields[0].name}
+          >
             {fields.map((field) => (
               <div className="flex-1" key={field.name}>
                 <ResourceListFiltersField
@@ -89,7 +93,10 @@ export function ResourceListFiltersForm({
           </div>
         ))}
         <div className="flex justify-between space-x-6">
-          <Button type="reset">Limpiar filtros</Button>
+          <Button variant="secondary" type="reset">
+            <FilterXIcon className="mr-2 size-4" />
+            Limpiar filtros
+          </Button>
           <Button type="button" onClick={onHideFilters}>
             Ocultar filtros
           </Button>

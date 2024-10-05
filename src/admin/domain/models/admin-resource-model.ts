@@ -24,6 +24,7 @@ export interface AdminResourceModel {
    * Forbid creating resources of this type
    */
   cannotCreate?: boolean;
+  showDeleteAlert?: boolean;
   showCreationWarning?: boolean;
 }
 
@@ -82,7 +83,7 @@ export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
         values[field.name] = null;
         break;
       case AdminFieldTypeModel.number:
-        values[field.name] = 0;
+        values[field.name] = null;
         break;
       case AdminFieldTypeModel.string:
         values[field.name] = "";

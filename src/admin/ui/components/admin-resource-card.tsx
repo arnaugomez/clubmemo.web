@@ -1,4 +1,5 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
+import { cn } from "@/src/common/ui/utils/shadcn";
 import Link from "next/link";
 import type { AdminResourceModel } from "../../domain/models/admin-resource-model";
 import { translateAdminKey } from "../i18n/admin-translations";
@@ -18,11 +19,11 @@ export function AdminResourceCard({ resource }: AdminResourceCardProps) {
         className="text-gray-500"
       />
       <div className="h-2" />
-      <h4 className={textStyles.h4}>
+      <h4 className={cn(textStyles.h4, "truncate")}>
         {translateAdminKey(resource.resourceType, "plural")}
       </h4>
       <div className="h-1" />
-      <p className={textStyles.muted}>
+      <p className={cn(textStyles.muted, "line-clamp-2")}>
         {translateAdminKey(resource.resourceType, "description")}
       </p>
     </Link>

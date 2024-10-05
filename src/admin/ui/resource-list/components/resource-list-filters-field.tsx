@@ -58,7 +58,11 @@ function AdminFieldBoolean({
   field,
 }: ResourceListFiltersFieldProps) {
   const props = useAdminFieldProps({ resourceType, field });
-  return <CheckboxFormField {...props} />;
+  return (
+    <div className="py-3">
+      <CheckboxFormField {...props} />
+    </div>
+  );
 }
 
 function AdminFieldDate({
@@ -130,7 +134,7 @@ function useAdminFieldProps({
   const { getName } = useAdminFormFieldContext();
   return {
     name: getName(field.name),
-    label: `${translateAdminKey(resourceType, "field", field.name, "label")} (${field.name})`,
+    label: `${translateAdminKey(resourceType, "field", field.name, "tableHeader")} (${field.name})`,
     disabled: field.isReadonly,
     placeholder: translateAdminKey(
       resourceType,

@@ -39,6 +39,7 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
             alt=""
             className="object-cover"
             priority
+            unoptimized
           />
         )}
       </div>

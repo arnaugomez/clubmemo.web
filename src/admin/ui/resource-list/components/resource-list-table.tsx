@@ -226,6 +226,18 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
             ))}
         </TableBody>
       </Table>
+      {!isError &&
+        Boolean(result?.results.length) &&
+        result?.results.length !== 10 && (
+          <div
+            style={{ height: 53 * (10 - (result?.results.length ?? 0)) }}
+            className="flex h-[54px] items-center justify-center text-center"
+          >
+            <p className={cn(textStyles.muted, "text-center")}>
+              No hay más resultados
+            </p>
+          </div>
+        )}
       {isError && (
         <div className="flex h-[530px] items-center justify-center text-red-500">
           Error al cargar los datos

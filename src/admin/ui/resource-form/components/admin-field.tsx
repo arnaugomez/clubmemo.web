@@ -100,7 +100,9 @@ function AdminFieldNumber({ resourceType, field }: ResourceFormFieldProps) {
   const props = useAdminFieldProps({ resourceType, field });
   switch (field.display) {
     case AdminFieldDisplayModel.slider:
-      return <SliderFormField max={100} {...props} />;
+      return (
+        <SliderFormField max={100} {...props} description={props.placeholder} />
+      );
   }
   return <NumberInputFormField {...props} />;
 }

@@ -37,7 +37,7 @@ export function ResourceListTableSearch({
     <Input
       type="search"
       name="search"
-      placeholder={`Buscar ${translateAdminKey(resourceType, "plural")}`}
+      placeholder={`Buscar ${translateAdminKey(resourceType, "plural", "lowercase")}`}
       className="flex-1"
       defaultValue={query}
       onChange={(e) => {

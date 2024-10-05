@@ -12,17 +12,122 @@ import {
 } from "../models/admin-resource-model";
 
 const practiceCardStateOptions = [
-  PracticeCardStateModel.learning,
   PracticeCardStateModel.new,
-  PracticeCardStateModel.relearning,
+  PracticeCardStateModel.learning,
   PracticeCardStateModel.review,
+  PracticeCardStateModel.relearning,
 ];
 
 export const adminResourcesConfig: AdminResourceModel[] = [
   {
-    resourceType: AdminResourceTypeModel.tags,
-    fields: [{ name: "name", fieldType: AdminFieldTypeModel.string }],
+    resourceType: AdminResourceTypeModel.users,
+    showCreationWarning: true,
+    showDeleteAlert: true,
+    fields: [
+      {
+        name: "email",
+        fieldType: AdminFieldTypeModel.string,
+        extraProps: { type: "email" },
+      },
+      { name: "acceptTerms", fieldType: AdminFieldTypeModel.boolean },
+      { name: "isEmailVerified", fieldType: AdminFieldTypeModel.boolean },
+      { name: "isAdmin", fieldType: AdminFieldTypeModel.boolean },
+      {
+        name: "newPassword",
+        fieldType: AdminFieldTypeModel.string,
+        display: AdminFieldDisplayModel.password,
+        hideInList: true,
+      },
+      {
+        name: "authTypes",
+        fieldType: AdminFieldTypeModel.selectMultiple,
+        options: [AuthTypeModel.email],
+        defaultValue: [AuthTypeModel.email],
+      },
+    ],
   },
+  {
+    resourceType: AdminResourceTypeModel.profiles,
+    showDeleteAlert: true,
+    fields: [
+      {
+        name: "userId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
+      },
+      { name: "displayName", fieldType: AdminFieldTypeModel.string },
+      { name: "handle", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "bio",
+        fieldType: AdminFieldTypeModel.string,
+        display: AdminFieldDisplayModel.textarea,
+      },
+      { name: "picture", fieldType: AdminFieldTypeModel.file },
+      { name: "backgroundPicture", fieldType: AdminFieldTypeModel.file },
+      { name: "website", fieldType: AdminFieldTypeModel.string },
+      { name: "tags", fieldType: AdminFieldTypeModel.tags },
+      { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
+    ],
+  },
+  {
+    resourceType: AdminResourceTypeModel.courses,
+    showDeleteAlert: true,
+    fields: [
+      { name: "name", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "description",
+        fieldType: AdminFieldTypeModel.string,
+        display: AdminFieldDisplayModel.textarea,
+      },
+      { name: "picture", fieldType: AdminFieldTypeModel.file },
+      { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
+      { name: "tags", fieldType: AdminFieldTypeModel.tags },
+    ],
+  },
+
+  {
+    resourceType: AdminResourceTypeModel.notes,
+    fields: [
+      {
+        name: "courseId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.courses,
+      },
+      { name: "front", fieldType: AdminFieldTypeModel.richText },
+      { name: "back", fieldType: AdminFieldTypeModel.richText },
+      { name: "createdAt", fieldType: AdminFieldTypeModel.date },
+    ],
+  },
+
+  {
+    resourceType: AdminResourceTypeModel.practiceCards,
+    fields: [
+      {
+        name: "courseEnrollmentId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.courseEnrollments,
+      },
+      {
+        name: "noteId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.notes,
+      },
+      { name: "due", fieldType: AdminFieldTypeModel.date },
+      { name: "stability", fieldType: AdminFieldTypeModel.number },
+      { name: "difficulty", fieldType: AdminFieldTypeModel.number },
+      { name: "elapsedDays", fieldType: AdminFieldTypeModel.number },
+      { name: "scheduledDays", fieldType: AdminFieldTypeModel.number },
+      { name: "reps", fieldType: AdminFieldTypeModel.number },
+      { name: "lapses", fieldType: AdminFieldTypeModel.number },
+      {
+        name: "state",
+        fieldType: AdminFieldTypeModel.select,
+        options: practiceCardStateOptions,
+      },
+      { name: "lastReview", fieldType: AdminFieldTypeModel.date },
+    ],
+  },
+
   {
     resourceType: AdminResourceTypeModel.reviewLogs,
     fields: [
@@ -59,127 +164,6 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       { name: "lastElapsedDays", fieldType: AdminFieldTypeModel.number },
       { name: "scheduledDays", fieldType: AdminFieldTypeModel.number },
       { name: "review", fieldType: AdminFieldTypeModel.date },
-    ],
-  },
-  {
-    resourceType: AdminResourceTypeModel.rateLimits,
-    fields: [
-      { name: "name", fieldType: AdminFieldTypeModel.string },
-      { name: "count", fieldType: AdminFieldTypeModel.number },
-      { name: "updatedAt", fieldType: AdminFieldTypeModel.date },
-    ],
-  },
-  {
-    resourceType: AdminResourceTypeModel.profiles,
-    fields: [
-      {
-        name: "userId",
-        fieldType: AdminFieldTypeModel.objectId,
-        resourceType: AdminResourceTypeModel.users,
-      },
-      { name: "displayName", fieldType: AdminFieldTypeModel.string },
-      { name: "handle", fieldType: AdminFieldTypeModel.string },
-      {
-        name: "bio",
-        fieldType: AdminFieldTypeModel.string,
-        display: AdminFieldDisplayModel.textarea,
-      },
-      { name: "picture", fieldType: AdminFieldTypeModel.file },
-      { name: "backgroundPicture", fieldType: AdminFieldTypeModel.file },
-      { name: "website", fieldType: AdminFieldTypeModel.string },
-      { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
-      { name: "tags", fieldType: AdminFieldTypeModel.tags },
-    ],
-  },
-  {
-    resourceType: AdminResourceTypeModel.practiceCards,
-    fields: [
-      {
-        name: "courseEnrollmentId",
-        fieldType: AdminFieldTypeModel.objectId,
-        resourceType: AdminResourceTypeModel.courseEnrollments,
-      },
-      {
-        name: "noteId",
-        fieldType: AdminFieldTypeModel.objectId,
-        resourceType: AdminResourceTypeModel.notes,
-      },
-      { name: "due", fieldType: AdminFieldTypeModel.date },
-      { name: "stability", fieldType: AdminFieldTypeModel.number },
-      { name: "difficulty", fieldType: AdminFieldTypeModel.number },
-      { name: "elapsedDays", fieldType: AdminFieldTypeModel.number },
-      { name: "scheduledDays", fieldType: AdminFieldTypeModel.number },
-      { name: "reps", fieldType: AdminFieldTypeModel.number },
-      { name: "lapses", fieldType: AdminFieldTypeModel.number },
-      {
-        name: "state",
-        fieldType: AdminFieldTypeModel.select,
-        options: practiceCardStateOptions,
-      },
-      { name: "lastReview", fieldType: AdminFieldTypeModel.date },
-    ],
-  },
-
-  {
-    resourceType: AdminResourceTypeModel.notes,
-    fields: [
-      {
-        name: "courseId",
-        fieldType: AdminFieldTypeModel.objectId,
-        resourceType: AdminResourceTypeModel.courses,
-      },
-      { name: "front", fieldType: AdminFieldTypeModel.richText },
-      { name: "back", fieldType: AdminFieldTypeModel.richText },
-      { name: "createdAt", fieldType: AdminFieldTypeModel.date },
-    ],
-  },
-  {
-    cannotCreate: true,
-    resourceType: AdminResourceTypeModel.forgotPasswordTokens,
-    fields: [
-      {
-        name: "userId",
-        fieldType: AdminFieldTypeModel.objectId,
-        resourceType: AdminResourceTypeModel.users,
-      },
-      {
-        name: "tokenHash",
-        isReadonly: true,
-        fieldType: AdminFieldTypeModel.string,
-      },
-      { name: "expiresAt", fieldType: AdminFieldTypeModel.date },
-    ],
-  },
-  {
-    resourceType: AdminResourceTypeModel.emailVerificationCodes,
-    fields: [
-      {
-        name: "userId",
-        fieldType: AdminFieldTypeModel.objectId,
-        resourceType: AdminResourceTypeModel.users,
-      },
-      { name: "code", fieldType: AdminFieldTypeModel.string },
-      { name: "expiresAt", fieldType: AdminFieldTypeModel.date },
-    ],
-  },
-  {
-    resourceType: AdminResourceTypeModel.fileUploads,
-    fields: [
-      {
-        name: "collection",
-        fieldType: AdminFieldTypeModel.select,
-        options: ["profiles", "courses"],
-      },
-      { name: "field", fieldType: AdminFieldTypeModel.string },
-      { name: "key", fieldType: AdminFieldTypeModel.string },
-      { name: "url", fieldType: AdminFieldTypeModel.string },
-      { name: "contentType", fieldType: AdminFieldTypeModel.string },
-      {
-        name: "createdByUserId",
-        fieldType: AdminFieldTypeModel.objectId,
-        resourceType: AdminResourceTypeModel.users,
-      },
-      { name: "createdAt", fieldType: AdminFieldTypeModel.date },
     ],
   },
   {
@@ -266,20 +250,12 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       },
     ],
   },
+
   {
-    resourceType: AdminResourceTypeModel.courses,
-    fields: [
-      { name: "name", fieldType: AdminFieldTypeModel.string },
-      {
-        name: "description",
-        fieldType: AdminFieldTypeModel.string,
-        display: AdminFieldDisplayModel.textarea,
-      },
-      { name: "picture", fieldType: AdminFieldTypeModel.file },
-      { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
-      { name: "tags", fieldType: AdminFieldTypeModel.tags },
-    ],
+    resourceType: AdminResourceTypeModel.tags,
+    fields: [{ name: "name", fieldType: AdminFieldTypeModel.string }],
   },
+
   {
     resourceType: AdminResourceTypeModel.sessions,
     cannotCreate: true,
@@ -292,30 +268,57 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       },
     ],
   },
+
   {
-    showCreationWarning: true,
-    resourceType: AdminResourceTypeModel.users,
+    cannotCreate: true,
+    resourceType: AdminResourceTypeModel.forgotPasswordTokens,
     fields: [
       {
-        name: "email",
-        fieldType: AdminFieldTypeModel.string,
-        extraProps: { type: "email" },
+        name: "userId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
       },
-      { name: "acceptTerms", fieldType: AdminFieldTypeModel.boolean },
-      { name: "isEmailVerified", fieldType: AdminFieldTypeModel.boolean },
-      { name: "isAdmin", fieldType: AdminFieldTypeModel.boolean },
+      { name: "expiresAt", fieldType: AdminFieldTypeModel.date },
+    ],
+  },
+  {
+    resourceType: AdminResourceTypeModel.emailVerificationCodes,
+    fields: [
       {
-        name: "newPassword",
-        fieldType: AdminFieldTypeModel.string,
-        display: AdminFieldDisplayModel.password,
-        hideInList: true,
+        name: "userId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
       },
+      { name: "code", fieldType: AdminFieldTypeModel.string },
+      { name: "expiresAt", fieldType: AdminFieldTypeModel.date },
+    ],
+  },
+  {
+    resourceType: AdminResourceTypeModel.fileUploads,
+    fields: [
       {
-        name: "authTypes",
-        fieldType: AdminFieldTypeModel.selectMultiple,
-        options: [AuthTypeModel.email],
-        defaultValue: [AuthTypeModel.email],
+        name: "collection",
+        fieldType: AdminFieldTypeModel.select,
+        options: ["profiles", "courses"],
       },
+      { name: "field", fieldType: AdminFieldTypeModel.string },
+      { name: "key", fieldType: AdminFieldTypeModel.string },
+      { name: "url", fieldType: AdminFieldTypeModel.string },
+      { name: "contentType", fieldType: AdminFieldTypeModel.string },
+      {
+        name: "createdByUserId",
+        fieldType: AdminFieldTypeModel.objectId,
+        resourceType: AdminResourceTypeModel.users,
+      },
+      { name: "createdAt", fieldType: AdminFieldTypeModel.date },
+    ],
+  },
+  {
+    resourceType: AdminResourceTypeModel.rateLimits,
+    fields: [
+      { name: "name", fieldType: AdminFieldTypeModel.string },
+      { name: "count", fieldType: AdminFieldTypeModel.number },
+      { name: "updatedAt", fieldType: AdminFieldTypeModel.date },
     ],
   },
 ];

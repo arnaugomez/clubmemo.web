@@ -23,9 +23,9 @@ export function ResourceListTableFilters({
   const [showFilters, setShowFilters] = useState(false);
   return (
     <>
-      <div className="space-y-2 sm:flex sm:space-x-4 sm:space-y-0">
+      <div className="space-y-2 sm:flex sm:space-x-2 sm:space-y-0">
         <ResourceListTableSearch resourceType={resource.resourceType} />
-        <div className="flex flex-none space-x-4">
+        <div className="flex flex-none space-x-2">
           <Button
             className={cn(
               "w-32 flex-1 sm:flex-none",
