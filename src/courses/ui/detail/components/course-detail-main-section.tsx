@@ -21,7 +21,14 @@ export async function CourseDetailMainSection({
       <div className="px-4">
         <div className="relative h-40 overflow-hidden rounded-xl bg-slate-200 sm:h-52 lg:h-64">
           {course.picture && (
-            <Image fill src={course.picture} alt="" className="object-cover" />
+            <Image
+              fill
+              src={course.picture}
+              alt=""
+              className="object-cover"
+              unoptimized
+              priority
+            />
           )}
           <CourseDetailActionsSection course={course} />
         </div>
