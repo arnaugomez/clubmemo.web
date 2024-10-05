@@ -89,7 +89,9 @@ export function ResourceListFiltersForm({
           </div>
         ))}
         <div className="flex justify-between space-x-6">
-          <Button type="reset">Limpiar filtros</Button>
+          <Button variant="secondary" type="reset">
+            Limpiar filtros
+          </Button>
           <Button type="button" onClick={onHideFilters}>
             Ocultar filtros
           </Button>
