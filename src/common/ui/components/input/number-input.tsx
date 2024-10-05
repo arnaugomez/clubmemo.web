@@ -11,6 +11,9 @@ export interface InputProps {
 }
 
 function stringToNumber(value: string): number | null {
+  if (value === "") {
+    return null;
+  }
   const numberValue = Number(value);
   if (isNaN(numberValue)) {
     return null;

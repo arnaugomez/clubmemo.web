@@ -157,7 +157,7 @@ export class GetAdminResourcesUseCase {
           }
           break;
         case AdminFieldTypeModel.number:
-          if (typeof value === "number") {
+          if (typeof value === "number" && !isNaN(value)) {
             match.push({ [field.name]: { $eq: value } });
           }
           break;
