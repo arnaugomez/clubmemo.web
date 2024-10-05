@@ -68,7 +68,7 @@ export function DeleteResourceButton({
         <ConfirmDialog
           onAccept={handleRemove}
           onClose={() => setIsDeleteDialogOpen(false)}
-          title={`Eliminar ${translateAdminKey(resourceType, "singular")}?`}
+          title={`Eliminar ${translateAdminKey(resourceType, "singular", "lowercase")}?`}
           description="¿Estás seguro que deseas eliminar este recurso? Esta acción no se puede deshacer."
           acceptButtonText="Eliminar"
           acceptButtonVariant="destructive"

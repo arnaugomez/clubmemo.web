@@ -10,7 +10,11 @@ interface Props {
 }
 export function ResourceListTopButtons({ resource }: Props) {
   function getResourceName() {
-    const translated = translateAdminKey(resource.resourceType, "singular");
+    const translated = translateAdminKey(
+      resource.resourceType,
+      "singular",
+      "lowercase",
+    );
     if (translated.length > 10) {
       return translated.slice(0, 20) + "...";
     }

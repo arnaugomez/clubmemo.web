@@ -29,7 +29,7 @@ export function CreateResourcePage({
               adminResourceType={resourceType}
               className="mr-3 inline size-8 -translate-y-1"
             />
-            Crear {translateAdminKey(resourceType, "singular")}
+            Crear {translateAdminKey(resourceType, "singular", "lowercase")}
           </h1>
           <div className="h-10" />
           {resource.showCreationWarning && (
