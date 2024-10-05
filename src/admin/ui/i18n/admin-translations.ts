@@ -106,6 +106,17 @@ const adminTranslations: Record<string, string> = {
   "courses.field.picture.tableHeader": "Imagen",
   "courses.field.isPublic.tableHeader": "Público",
   "courses.field.tags.tableHeader": "Etiquetas",
+  "courses.field.name.label": "Nombre del curso",
+  "courses.field.name.placeholder": "Matematicas 101",
+  "courses.field.description.label": "Descripción",
+  "courses.field.description.placeholder": "Descripción del curso",
+  "courses.field.picture.label": "Imagen del curso",
+  "courses.field.isPublic.label": "Curso público",
+  "courses.field.tags.label": "Etiquetas del curso",
+  "courses.field.tags.placeholder": "Matemáticas, Física, Química...",
+  "courses.deleteAlert.title": "También se eliminarán los datos asociados",
+  "courses.deleteAlert.description":
+    "Se eliminarán los datos de permisos, inscripciones y notas asociadas al curso.",
 };
 
 export function translateAdminKey(...keys: string[]): string {
