@@ -117,6 +117,18 @@ const adminTranslations: Record<string, string> = {
   "courses.deleteAlert.title": "También se eliminarán los datos asociados",
   "courses.deleteAlert.description":
     "Se eliminarán los datos de permisos, inscripciones y notas asociadas al curso.",
+  "notes.field.courseId.tableHeader": "Id del curso",
+  "notes.field.courseId.placeholder": "El curso al que pertenece la nota",
+  "notes.field.front.tableHeader": "Cara",
+  "notes.field.back.tableHeader": "Revés",
+  "notes.field.createdAt.tableHeader": "Fecha de creación",
+  "notes.field.courseId.label": "Identificador del curso",
+  "notes.field.front.label": "Cara",
+  "notes.field.front.placeholder":
+    "La pregunta o concepto que quieres recordar",
+  "notes.field.back.label": "Revés",
+  "notes.field.back.placeholder": "La respuesta, definición o explicación",
+  "notes.field.createdAt.label": "Fecha de creación",
 };
 
 export function translateAdminKey(...keys: string[]): string {
