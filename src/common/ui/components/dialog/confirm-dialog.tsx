@@ -10,13 +10,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
+import { TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "../shadcn/ui/alert";
 
 interface ConfirmDialogProps {
   title: string;
   description: string;
   acceptButtonText: string;
   acceptButtonVariant?: "default" | "destructive";
+  alertTitle?: string;
+  alertDescription?: string;
 
   onClose: () => void;
   onAccept: () => Promise<boolean>;
@@ -27,6 +31,8 @@ export function ConfirmDialog({
   onAccept,
   title,
   description,
+  alertTitle,
+  alertDescription,
   acceptButtonText,
   acceptButtonVariant,
 }: ConfirmDialogProps) {
@@ -48,6 +54,19 @@ export function ConfirmDialog({
         <DialogHeader>
           <DialogTitle className="mr-4">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
+          {alertTitle && (
+            <>
+              <div className="h-4"></div>
+              <Alert>
+                <TriangleAlert size={16} />
+                <AlertTitle>{alertTitle}</AlertTitle>
+                {alertDescription && (
+                  <AlertDescription>{alertDescription}</AlertDescription>
+                )}
+              </Alert>
+              <div className="h-4"></div>
+            </>
+          )}
         </DialogHeader>
         <DialogFooter>
           <Button type="button" variant="secondary" onClick={onClose}>

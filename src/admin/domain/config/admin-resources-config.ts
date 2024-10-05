@@ -71,6 +71,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   },
   {
     resourceType: AdminResourceTypeModel.profiles,
+    showDeleteAlert: true,
     fields: [
       {
         name: "userId",
@@ -268,6 +269,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   },
   {
     resourceType: AdminResourceTypeModel.courses,
+    showDeleteAlert: true,
     fields: [
       { name: "name", fieldType: AdminFieldTypeModel.string },
       {
@@ -295,6 +297,7 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   {
     showCreationWarning: true,
     resourceType: AdminResourceTypeModel.users,
+    showDeleteAlert: true,
     fields: [
       {
         name: "email",

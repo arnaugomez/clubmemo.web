@@ -24,6 +24,7 @@ export interface AdminResourceModel {
    * Forbid creating resources of this type
    */
   cannotCreate?: boolean;
+  showDeleteAlert?: boolean;
   showCreationWarning?: boolean;
 }
 

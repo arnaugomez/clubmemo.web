@@ -3,6 +3,7 @@ import type { ButtonProps } from "@/src/common/ui/components/shadcn/ui/button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
 import { useState, type PropsWithChildren } from "react";
+import { getAdminResourceByType } from "../../domain/config/admin-resources-config";
 import type { AdminResourceTypeModel } from "../../domain/models/admin-resource-model";
 import { deleteAdminResourceAction } from "../actions/delete-admin-resource-action";
 import { translateAdminKey } from "../i18n/admin-translations";
@@ -35,6 +36,21 @@ export function DeleteResourceButton({
     responseHandler.toastErrors();
     return responseHandler.hasErrors;
   }
+
+  function getAlertProps() {
+    const resource = getAdminResourceByType(resourceType);
+    if (resource.showDeleteAlert) {
+      return {
+        alertTitle: translateAdminKey(resourceType, "deleteAlert", "title"),
+        alertDescription: translateAdminKey(
+          resourceType,
+          "deleteAlert",
+          "description",
+        ),
+      };
+    }
+    return {};
+  }
   return (
     <>
       <Button
@@ -53,6 +69,7 @@ export function DeleteResourceButton({
           description="¿Estás seguro que deseas eliminar este recurso? Esta acción no se puede deshacer."
           acceptButtonText="Eliminar"
           acceptButtonVariant="destructive"
+          {...getAlertProps()}
         />
       )}
     </>
