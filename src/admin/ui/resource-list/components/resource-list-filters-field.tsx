@@ -58,7 +58,11 @@ function AdminFieldBoolean({
   field,
 }: ResourceListFiltersFieldProps) {
   const props = useAdminFieldProps({ resourceType, field });
-  return <CheckboxFormField {...props} />;
+  return (
+    <div className="py-3">
+      <CheckboxFormField {...props} />
+    </div>
+  );
 }
 
 function AdminFieldDate({

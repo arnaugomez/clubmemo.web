@@ -65,8 +65,8 @@ export const adminResourcesConfig: AdminResourceModel[] = [
       { name: "picture", fieldType: AdminFieldTypeModel.file },
       { name: "backgroundPicture", fieldType: AdminFieldTypeModel.file },
       { name: "website", fieldType: AdminFieldTypeModel.string },
-      { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
       { name: "tags", fieldType: AdminFieldTypeModel.tags },
+      { name: "isPublic", fieldType: AdminFieldTypeModel.boolean },
     ],
   },
   {

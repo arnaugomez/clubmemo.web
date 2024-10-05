@@ -14,7 +14,7 @@ const adminTranslations: Record<string, string> = {
   "profiles.plural": "Perfiles",
   "profiles.singular": "Perfil",
   "profiles.description":
-    "Los perfiles contienen la información y preferencias del usuario, con las que interactúa con la plataforma y su comunidad.",
+    "Los perfiles contienen la información y preferencias del usuario, que definen sus interacciones con la plataforma y su comunidad.",
   "practiceCards.plural": "Tarjetas de práctica",
   "practiceCards.singular": "Tarjeta de práctica",
   "practiceCards.description":
@@ -73,6 +73,39 @@ const adminTranslations: Record<string, string> = {
   "users.deleteAlert.title": "También se eliminarán los perfiles asociados",
   "users.deleteAlert.description":
     "Cuando eliminas un usuario, también se eliminan todos los datos de perfiles y sesiones asociadas.",
+  "profiles.field.userId.tableHeader": "Id de usuario",
+  "profiles.field.displayName.tableHeader": "Nombre",
+  "profiles.field.handle.tableHeader": "Identificador (handle)",
+  "profiles.field.bio.tableHeader": "Bio",
+  "profiles.field.picture.tableHeader": "Foto de perfil",
+  "profiles.field.backgroundPicture.tableHeader": "Imagen de fondo",
+  "profiles.field.website.tableHeader": "Página web",
+  "profiles.field.isPublic.tableHeader": "Público",
+  "profiles.field.tags.tableHeader": "Etiquetas",
+  "profiles.deleteAlert.title": "También se eliminará el usuario asociado",
+  "profiles.deleteAlert.description":
+    "Cuando eliminas un perfil, también se eliminan los datos de sesiones y del usuario asociado.",
+  "profiles.field.displayName.label": "Nombre",
+  "profiles.field.displayName.placeholder": "Tu nombre de usuario",
+  "profiles.field.handle.label": "Identificador",
+  "profiles.field.handle.placeholder":
+    "Tu identificador, como en X o Instagram",
+  "profiles.field.bio.label": "Bio",
+  "profiles.field.bio.placeholder": "Cuéntanos algo sobre ti",
+  "profiles.field.picture.label": "Imagen de perfil",
+  "profiles.field.backgroundPicture.label": "Imagen de fondo",
+  "profiles.field.website.label": "Página web",
+  "profiles.field.website.placeholder":
+    "Enlace a tu página web o redes sociales",
+  "profiles.field.isPublic.label": "Perfil público",
+  "profiles.field.tags.label": "Etiquetas",
+  "profiles.field.tags.placeholder": "Tus intereses, asignaturas...",
+  "profiles.field.userId.placeholder": "El usuario asociado al perfil",
+  "courses.field.name.tableHeader": "Nombre",
+  "courses.field.description.tableHeader": "Descripción",
+  "courses.field.picture.tableHeader": "Imagen",
+  "courses.field.isPublic.tableHeader": "Público",
+  "courses.field.tags.tableHeader": "Etiquetas",
 };
 
 export function translateAdminKey(...keys: string[]): string {

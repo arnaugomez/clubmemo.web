@@ -77,7 +77,7 @@ export function ResourceListFiltersForm({
       >
         <h3 className={cn(textStyles.h4)}>Filtros</h3>
         {chunk(configVisibleFields, 2).map((fields) => (
-          <div className="sm:flex sm:space-x-4" key={fields[0].name}>
+          <div className="space-y-4 sm:space-y-0 sm:flex sm:space-x-4" key={fields[0].name}>
             {fields.map((field) => (
               <div className="flex-1" key={field.name}>
                 <ResourceListFiltersField
