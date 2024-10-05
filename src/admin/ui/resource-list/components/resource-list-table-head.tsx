@@ -65,7 +65,7 @@ export function ResourceListTableHead({
   return (
     <TableHead
       key={field.name}
-      className="min-w-[100px] truncate cursor-pointer hover:bg-slate-100"
+      className="min-w-[100px] cursor-pointer truncate hover:bg-slate-100"
       role="button"
       onClick={onClick}
     >

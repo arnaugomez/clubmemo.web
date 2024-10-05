@@ -278,11 +278,6 @@ export const adminResourcesConfig: AdminResourceModel[] = [
         fieldType: AdminFieldTypeModel.objectId,
         resourceType: AdminResourceTypeModel.users,
       },
-      {
-        name: "tokenHash",
-        isReadonly: true,
-        fieldType: AdminFieldTypeModel.string,
-      },
       { name: "expiresAt", fieldType: AdminFieldTypeModel.date },
     ],
   },

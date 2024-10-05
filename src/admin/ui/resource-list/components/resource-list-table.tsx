@@ -230,7 +230,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         Boolean(result?.results.length) &&
         result?.results.length !== 10 && (
           <div
-            style={{ height: 54 * (10 - (result?.results.length ?? 0)) }}
+            style={{ height: 53 * (10 - (result?.results.length ?? 0)) }}
             className="flex h-[54px] items-center justify-center text-center"
           >
             <p className={cn(textStyles.muted, "text-center")}>
@@ -239,14 +239,14 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
           </div>
         )}
       {isError && (
-        <div className="flex h-[540px] items-center justify-center text-red-500">
+        <div className="flex h-[530px] items-center justify-center text-red-500">
           Error al cargar los datos
         </div>
       )}
       {!isError && result && !isLoading && !result.results.length && (
         <div
           className={cn(
-            "flex h-[540px] items-center justify-center",
+            "flex h-[530px] items-center justify-center",
             textStyles.muted,
           )}
         >
@@ -256,7 +256,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
       {isLoading &&
         !result?.results.length &&
         Array.from({ length: 10 }).map((_, i) => (
-          <Skeleton key={i} className="mt-1 h-[50px] rounded-sm" />
+          <Skeleton key={i} className="mt-1 h-[49px] rounded-sm" />
         ))}
       <div className="h-8" />
       <PaginationSection

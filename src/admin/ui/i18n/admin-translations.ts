@@ -26,7 +26,7 @@ const adminTranslations: Record<string, string> = {
   "forgotPasswordTokens.plural": "Tokens de recuperación de contraseña",
   "forgotPasswordTokens.singular": "Token de recuperación de contraseña",
   "forgotPasswordTokens.description":
-    "Los tokens de recuperación de contraseña se utilizan para restablecer la contraseña de un usuario que ha olvidado su contraseña.",
+    "Los tokens de recuperación de contraseña se utilizan para restablecer la contraseña de un usuario que ha perdido sus credenciales de acceso.",
   "emailVerificationCodes.plural":
     "Códigos de verificación de correo electrónico",
   "emailVerificationCodes.singular":
@@ -37,10 +37,10 @@ const adminTranslations: Record<string, string> = {
   "fileUploads.singular": "Subida de fichero",
   "fileUploads.description":
     "Mantienen un registro de los ficheros subidos. Permiten comprobar el estado de las subidas y eliminar del sistema los ficheros que ya no se usan.",
-  "courseEnrollments.plural": "Inscripciones de cursos",
-  "courseEnrollments.singular": "Inscripción de curso",
+  "courseEnrollments.plural": "Inscripciones a cursos",
+  "courseEnrollments.singular": "Inscripción a curso",
   "courseEnrollments.description":
-    "Las inscripciones de cursos contienen la información de un perfil inscrito en un curso, incluido sus preferencias de cómo realizar las sesiones de práctica.",
+    "Las inscripciones a cursos contienen la información de un perfil inscrito en un curso, incluido sus preferencias de cómo realizar las sesiones de práctica.",
   "coursePermissions.plural": "Permisos de curso",
   "coursePermissions.singular": "Permiso de curso",
   "coursePermissions.description":
@@ -213,6 +213,114 @@ const adminTranslations: Record<string, string> = {
   "practiceCards.field.state.option.new.label": "Nueva sin practicar",
   "practiceCards.field.state.option.relearning.label": "Reaprendiendo",
   "practiceCards.field.state.option.review.label": "Revisando",
+  "courseEnrollments.field.courseId.label": "Id del curso",
+  "courseEnrollments.field.profileId.label": "Id del perfil",
+  "courseEnrollments.field.isFavorite.label": "Es favorito",
+  "courseEnrollments.field.config.label": "Configuración",
+  "courseEnrollments.field.courseId.placeholder":
+    "El curso al que se inscribe el perfil",
+  "courseEnrollments.field.profileId.placeholder":
+    "El perfil inscrito en el curso",
+  "courseEnrollments.field.courseId.tableHeader": "Id del curso",
+  "courseEnrollments.field.profileId.tableHeader": "Id del perfil",
+  "courseEnrollments.field.isFavorite.tableHeader": "Favorito",
+  "courseEnrollments.field.config.tableHeader": "Configuración",
+  "courseEnrollments.field.maximumInterval.label": "Intervalo máximo",
+  "courseEnrollments.field.maximumInterval.placeholder":
+    "El intervalo máximo entre repeticiones de una tarjeta (en días)",
+  "courseEnrollments.field.requestRetention.label": "Retención esperada",
+  "courseEnrollments.field.requestRetention.placeholder":
+    "Proporción de tarjetas que esperas responder correctamente. Se mide en tanto por 1. Es un parámetro importante del algoritmo: un valor alto implica una mayor carga de trabajo. Recomendamos un valor entre 0.70 y 0.97",
+  "courseEnrollments.field.dailyNewCardsCount.label":
+    "Cantidad diaria de tarjetas nuevas",
+  "courseEnrollments.field.dailyNewCardsCount.placeholder":
+    "Cuántas tarjetas quieres empezar a aprender cada día",
+  "courseEnrollments.field.enableFuzz.label": "Permitir aleatoriedad",
+  "courseEnrollments.field.showAdvancedRatingOptions.label":
+    "Mostrar opciones de calificación avanzadas",
+  "tags.field.name.tableHeader": "Nombre",
+  "tags.field.name.placeholder": "El texto de la etiqueta",
+  "tags.field.name.label": "Nombre",
+
+  "coursePermissions.field.courseId.label": "Id del curso",
+  "coursePermissions.field.profileId.label": "Id del perfil",
+  "coursePermissions.field.permissionType.label": "Tipo de permiso",
+  "coursePermissions.field.courseId.placeholder":
+    "El curso al que se asigna el permiso",
+  "coursePermissions.field.profileId.placeholder":
+    "El perfil al que se asigna el permiso",
+  "coursePermissions.field.permissionType.placeholder": "El tipo de permiso",
+  "coursePermissions.field.permissionType.option.own.label": "Propietario",
+  "coursePermissions.field.permissionType.option.edit.label": "Editar",
+  "coursePermissions.field.permissionType.option.view.label": "Ver",
+  "coursePermissions.field.courseId.tableHeader": "Id del curso",
+  "coursePermissions.field.profileId.tableHeader": "Id del perfil",
+  "coursePermissions.field.permissionType.tableHeader": "Tipo de permiso",
+  "sessions.field.expires_at.label": "Fecha de expiración",
+  "sessions.field.user_id.label": "Id de usuario",
+  "sessions.field.expires_at.placeholder": "La fecha en que expira la sesión",
+  "sessions.field.user_id.placeholder": "El usuario que inició la sesión",
+  "sessions.field.expires_at.tableHeader": "Fecha de expiración",
+  "sessions.field.user_id.tableHeader": "Id de usuario",
+  "forgotPasswordTokens.field.userId.label": "Id de usuario",
+  "forgotPasswordTokens.field.expiresAt.label": "Fecha de expiración",
+  "forgotPasswordTokens.field.userId.placeholder":
+    "El usuario que solicita el token",
+  "forgotPasswordTokens.field.expiresAt.placeholder":
+    "La fecha en que expira el token",
+  "forgotPasswordTokens.field.userId.tableHeader": "Id de usuario",
+  "forgotPasswordTokens.field.expiresAt.tableHeader": "Fecha de expiración",
+  "emailVerificationCodes.field.userId.label": "Id del usuario",
+  "emailVerificationCodes.field.code.label": "Código",
+  "emailVerificationCodes.field.expiresAt.label": "Fecha de expiración",
+  "emailVerificationCodes.field.userId.placeholder":
+    "El usuario que solicita el código",
+  "emailVerificationCodes.field.code.placeholder": "El código de verificación",
+  "emailVerificationCodes.field.expiresAt.placeholder":
+    "La fecha en que expira el código",
+  "emailVerificationCodes.field.userId.tableHeader": "Id de usuario",
+  "emailVerificationCodes.field.code.tableHeader": "Código",
+  "emailVerificationCodes.field.expiresAt.tableHeader": "Fecha de expiración",
+  "fileUploads.field.userId.label": "Id del usuario",
+  "fileUploads.field.collection.label": "Colección de base de datos",
+  "fileUploads.field.field.label": "Campo de la colección",
+  "fileUploads.field.key.label": "Clave",
+  "fileUploads.field.url.label": "URL",
+  "fileUploads.field.contentType.label": "Tipo de contenido",
+  "fileUploads.field.createdByUserId.label": "Id del usuario",
+  "fileUploads.field.createdAt.label": "Fecha de creación",
+  "fileUploads.field.collection.placeholder":
+    "La colección de la base de datos en la que se guarda la URL del archivo",
+  "fileUploads.field.field.placeholder":
+    "El campo de la colección en el que se guarda la URL del archivo",
+  "fileUploads.field.key.placeholder": "La clave del archivo en S3",
+  "fileUploads.field.url.placeholder": "La URL del archivo",
+  "fileUploads.field.contentType.placeholder":
+    "El tipo de contenido del archivo",
+  "fileUploads.field.createdByUserId.placeholder":
+    "El usuario que subió el archivo",
+  "fileUploads.field.collection.tableHeader": "Colección",
+  "fileUploads.field.field.tableHeader": "Campo",
+  "fileUploads.field.key.tableHeader": "Clave",
+  "fileUploads.field.url.tableHeader": "URL",
+  "fileUploads.field.contentType.tableHeader": "Tipo de contenido",
+  "fileUploads.field.createdByUserId.tableHeader": "Id del usuario",
+  "fileUploads.field.createdAt.tableHeader": "Fecha de creación",
+  "fileUploads.field.collection.option.profiles.label": "Perfiles",
+  "fileUploads.field.collection.option.courses.label": "Cursos",
+
+  "rateLimits.field.name.label": "Nombre de operación",
+  "rateLimits.field.count.label": "Contador",
+  "rateLimits.field.updatedAt.label": "Fecha de actualización",
+  "rateLimits.field.name.placeholder":
+    "Identificador de la operación realizada",
+  "rateLimits.field.count.placeholder":
+    "Veces que se ha realizado la operación desde que se reinició el contador",
+  "rateLimits.field.updatedAt.placeholder":
+    "La fecha de la última vez que se puso a cero el contador",
+  "rateLimits.field.name.tableHeader": "Nombre",
+  "rateLimits.field.count.tableHeader": "Contador",
+  "rateLimits.field.updatedAt.tableHeader": "Fecha de actualización",
 };
 
 export function translateAdminKey(...keys: string[]): string {

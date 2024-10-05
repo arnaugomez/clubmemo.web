@@ -14,6 +14,7 @@ interface DeleteResourceButtonProps extends PropsWithChildren {
   resourceType: AdminResourceTypeModel;
   onDeleted?: () => void;
   size?: ButtonProps["size"];
+  className?: string;
 }
 export function DeleteResourceButton({
   id,
@@ -22,6 +23,7 @@ export function DeleteResourceButton({
   onDeleted,
   children,
   size,
+  className,
 }: DeleteResourceButtonProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   async function handleRemove() {
@@ -58,6 +60,7 @@ export function DeleteResourceButton({
         size={size}
         disabled={disabled}
         onClick={() => setIsDeleteDialogOpen(true)}
+        className={className}
       >
         {children}
       </Button>
