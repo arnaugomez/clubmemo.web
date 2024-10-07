@@ -8,11 +8,12 @@ import { AdminResourceIcon } from "./admin-resource-icon";
 interface AdminResourceCardProps {
   resource: AdminResourceModel;
 }
+
 export function AdminResourceCard({ resource }: AdminResourceCardProps) {
   return (
     <Link
       href={`/admin/resources/${resource.resourceType}`}
-      className="block rounded-lg border border-gray-200 p-4 shadow-sm hover:bg-gray-50"
+      className="block min-w-0 rounded-lg border border-gray-200 p-4 shadow-sm hover:bg-gray-50"
     >
       <AdminResourceIcon
         adminResourceType={resource.resourceType}
