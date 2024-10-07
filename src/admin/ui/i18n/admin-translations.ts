@@ -340,7 +340,7 @@ const adminTranslations: Record<string, string> = {
   "users.field.acceptTerms.label": "Acepta los términos y condiciones",
   "users.field.authTypes.label": "Modos de autenticación",
   "users.field.authTypes.option.email.label": "Email y contraseña",
-  "users.field.authTypes.placeholder": "Email y contraseña, con Google, etc.",
+  "users.field.authTypes.placeholder": "Con email, con Google, etc.",
   "users.field.email.label": "Correo electrónico",
   "users.field.email.placeholder": "ejemplo@clubmemo.com",
   "users.field.isAdmin.label": "Es administrador",
