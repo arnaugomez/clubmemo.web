@@ -23,6 +23,12 @@ fix:
     ./nvm-exec.sh pnpm fix
     # just --unstable --fmt
 
+# Perform static code analysis
+check:
+    ./nvm-exec.sh pnpm check-format
+    ./nvm-exec.sh pnpm check-types
+    ./nvm-exec.sh pnpm lint
+
 # Add a new shadcn-ui component
 add-component component:
     ./nvm-exec.sh pnpm dlx shadcn-ui@latest add {{ component }}

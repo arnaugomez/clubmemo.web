@@ -50,7 +50,7 @@ export function GenerateAiNotesForm({
     text:
       sourceType === AiNotesGeneratorSourceType.file
         ? z.string().optional()
-        : z.string().min(1).max(20_000),
+        : z.string().min(1).max(60_000),
     file:
       sourceType === AiNotesGeneratorSourceType.file
         ? FileSchema
@@ -129,7 +129,7 @@ export function GenerateAiNotesForm({
           });
         }
       }
-      text = text.trim().slice(0, 20_000);
+      text = text.trim().slice(0, 60_000);
       if (!text) {
         form.setError("root.globalError", {
           type: "global",
