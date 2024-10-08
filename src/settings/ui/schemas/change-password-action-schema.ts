@@ -1,8 +1,9 @@
 import { z } from "@/i18n/zod";
+import { PasswordSchema } from "@/src/common/schemas/password-schema";
 export const ChangePasswordActionSchema = z
   .object({
     password: z.string(),
-    newPassword: z.string().min(8).max(256),
+    newPassword: PasswordSchema,
     repeatNewPassword: z.string(),
   })
   .superRefine(({ newPassword, repeatNewPassword }, ctx) => {

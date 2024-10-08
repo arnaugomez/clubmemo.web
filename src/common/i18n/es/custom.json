@@ -5,6 +5,8 @@
   "handleInvalidCharacters": "Solo puede contener letras, números y guiones bajos",
   "atLeastOneLowerCase": "Debe contener al menos una letra minúscula",
   "atLeastOneUpperCase": "Debe contener al menos una letra mayúscula",
+  "atLeastOneLetter": "Debe contener al menos una letra del alfabeto",
+  "atLeastOneSpecialCharacter": "Debe contener al menos un carácter especial",
   "atLeastOneNumber": "Debe contener al menos un número",
   "tagAlreadyExists": "Ya existe una etiqueta con ese nombre",
   "handleAlreadyExists": "Ya existe un identificador de usuario con ese nombre",
