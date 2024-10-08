@@ -1,11 +1,10 @@
-import { useState } from "react";
 import { textStyles } from "../../styles/text-styles";
 import { cn } from "../../utils/shadcn";
 import { Slider } from "../shadcn/ui/slider";
 
 interface SliderInputProps {
   name: string;
-  value: number;
+  value: number | null;
   onChange: (value: number) => void;
   max: number;
   step?: number;
@@ -17,18 +16,16 @@ export function SliderInput({
   step,
   name,
 }: SliderInputProps) {
-  const [displayValue, setDisplayValue] = useState(value);
   return (
     <>
       <Slider
         name={name}
-        value={[value]}
-        onValueCommit={(e) => onChange(e[0])}
-        onValueChange={(e) => setDisplayValue(e[0])}
+        value={[value ?? 0]}
+        onValueChange={(e) => onChange(e[0] ?? 0)}
         max={max}
         step={step}
       />
-      <div className={cn(textStyles.muted, "text-center")}>{displayValue}</div>
+      <div className={cn(textStyles.muted, "text-center")}>{value ?? 0}</div>
     </>
   );
 }
