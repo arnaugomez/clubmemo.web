@@ -1,3 +1,7 @@
+import type {
+  FileUploadCollectionModel,
+  FileUploadFieldModel,
+} from "../models/file-upload-field-model";
 import type { PresignedUrlModel } from "../models/presigned-url-model";
 
 /**
@@ -24,12 +28,6 @@ export interface FileUploadsRepository {
   ): Promise<CreateFileUploadOutputModel>;
 
   /**
-   * Sets a file upload as the current version of the file
-   * @param url the url of the file to set as current
-   */
-  setCurrent(url: string): Promise<void>;
-
-  /**
    * Deletes all the outdated versions of files that are still stored in the
    * external storage service
    */
@@ -37,8 +35,9 @@ export interface FileUploadsRepository {
 }
 
 export interface CreateFileUploadInputModel {
-  keyPrefix: string;
-  fileName: string;
+  collection: FileUploadCollectionModel;
+  field: FileUploadFieldModel;
+  userId: string;
   contentType: string;
 }
 

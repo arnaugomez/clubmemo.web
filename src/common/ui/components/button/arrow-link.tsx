@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 import { textStyles } from "../../styles/text-styles";
@@ -6,13 +6,17 @@ import { cn } from "../../utils/shadcn";
 
 interface ArrowLinkProps extends PropsWithChildren {
   href: string;
+  isLeft?: boolean;
 }
-export function ArrowLink({ href, children }: ArrowLinkProps) {
+export function ArrowLink({ href, children, isLeft }: ArrowLinkProps) {
   return (
     <Link href={href} className={cn(textStyles.mutedLink, "space-x-1 pt-1")}>
+      {isLeft && <ArrowLeft size={16} className="inline -translate-y-[1px]" />}
       <span>{children}</span>
 
-      <ArrowRight size={16} className="inline" />
+      {!isLeft && (
+        <ArrowRight size={16} className="inline -translate-y-[1px]" />
+      )}
     </Link>
   );
 }

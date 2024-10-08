@@ -1,4 +1,4 @@
-import PracticeLoadingPage from "@/app/(admin-layout)/courses/detail/[id]/practice/loading";
+import PracticeLoadingPage from "@/app/(fullscreen-layout)/courses/detail/[id]/practice/loading";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";

@@ -1,4 +1,4 @@
-import { clientLocator } from "../di/client-locator";
+import { locator_common_ErrorTrackingService } from "../locators/locator_error-tracking-service";
 
 export async function handlePromiseError<T>(
   promise: Promise<T>,
@@ -6,6 +6,6 @@ export async function handlePromiseError<T>(
   try {
     return await promise;
   } catch (e) {
-    clientLocator.ErrorTrackingService().captureError(e);
+    locator_common_ErrorTrackingService().captureError(e);
   }
 }

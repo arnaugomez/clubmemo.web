@@ -1,9 +1,10 @@
 "use client";
 
 import { z } from "@/i18n/zod";
-import { clientLocator } from "@/src/common/di/client-locator";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
+import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
+import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Dialog,
@@ -21,8 +22,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { deleteUserAction } from "../actions/delete-user-action";
-import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
-import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface SettingsDeleteUserSectionProps {
   email: string;
@@ -90,7 +90,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       if (!handler.hasErrors) router.push("/auth/signup");
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

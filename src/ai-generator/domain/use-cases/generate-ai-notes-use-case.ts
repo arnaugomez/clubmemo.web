@@ -36,6 +36,6 @@ export class GenerateAiNotesUseCase {
 
     const generated = await this.aiNotesGeneratorService.generate(input);
     await this.rateLimitsRepository.increment(rateLimitKey);
-    return generated.map(([front, back]) => ({ front, back }));
+    return generated;
   }
 }

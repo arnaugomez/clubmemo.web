@@ -5,7 +5,6 @@ import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-glo
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 
-import { clientLocator } from "@/src/common/di/client-locator";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
@@ -16,6 +15,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { resetPasswordAction } from "../actions/reset-password-action";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 const ResetPasswordConfirmDialog = dynamic(() =>
   import("./reset-password-confirm-dialog").then(
@@ -77,7 +77,7 @@ export function ResetPasswordForm({ email, token }: Props) {
       }
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

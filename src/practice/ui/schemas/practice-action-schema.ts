@@ -1,17 +1,7 @@
 import { z } from "@/i18n/zod";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
-import { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
-import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
-
-/**
- * Validates the values of the `PracticeCardStateModel` enum
- */
-const PracticeCardStateModelSchema = z.enum([
-  PracticeCardStateModel.learning,
-  PracticeCardStateModel.new,
-  PracticeCardStateModel.relearning,
-  PracticeCardStateModel.review,
-]);
+import { PracticeCardRatingModelSchema } from "../../domain/schemas/practice-card-rating-model-schema";
+import { PracticeCardStateModelSchema } from "../../domain/schemas/practice-card-state-model-schema";
 
 /**
  * Validates the parameters of `practiceAction`
@@ -43,13 +33,7 @@ export const PracticeActionSchema = z.object({
     id: z.string(),
     cardId: z.string(),
     courseEnrollmentId: z.string(),
-    rating: z.enum([
-      PracticeCardRatingModel.again,
-      PracticeCardRatingModel.easy,
-      PracticeCardRatingModel.good,
-      PracticeCardRatingModel.hard,
-      PracticeCardRatingModel.manual,
-    ]),
+    rating: PracticeCardRatingModelSchema,
     state: PracticeCardStateModelSchema,
     due: z.date(),
     stability: z.number(),

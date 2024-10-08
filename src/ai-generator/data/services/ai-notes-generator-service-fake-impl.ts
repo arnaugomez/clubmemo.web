@@ -1,3 +1,4 @@
+import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import type {
   AiNotesGeneratorService,
   GenerateAiNotesInputModel,
@@ -12,48 +13,52 @@ import type {
 export class AiNotesGeneratorServiceFakeImpl
   implements AiNotesGeneratorService
 {
-  async generate({}: GenerateAiNotesInputModel): Promise<string[][]> {
+  async generate({}: GenerateAiNotesInputModel): Promise<NoteRowModel[]> {
     return [
-      [
-        "¿Cómo se define una ecuación de segundo grado?",
-        "Es una ecuación algebraica cuyo mayor exponente de la incógnita es 2.",
-      ],
-      [
-        "¿Cuál es la forma general de una ecuación de segundo grado?",
-        "ax^2 + bx + c = 0",
-      ],
-      [
-        "¿Qué son las raíces de una ecuación de segundo grado?",
-        "Son los valores de x que satisfacen la ecuación y hacen que sea igual a cero.",
-      ],
-      [
-        "¿Qué es el discriminante en una ecuación de segundo grado?",
-        "Es la expresión b^2 - 4ac que se encuentra dentro de la fórmula cuadrática.",
-      ],
-      [
-        "¿Cuántas soluciones puede tener una ecuación de segundo grado?",
-        "Puede tener 0, 1 o 2 soluciones.",
-      ],
-      [
-        "¿Cuál es la fórmula general para hallar las soluciones de una ecuación de segundo grado?",
-        "x = (-b ± √(b^2 - 4ac)) / 2a",
-      ],
-      [
-        "¿Cómo se llama el proceso de encontrar las raíces de una ecuación de segundo grado?",
-        "Se llama resolver la ecuación.",
-      ],
-      [
-        "¿Qué tipo de gráfica representa una ecuación de segundo grado?",
-        "Representa una parábola.",
-      ],
-      [
-        "¿Qué relación existe entre los coeficientes a, b y c de una ecuación de segundo grado y las soluciones?",
-        "Los coeficientes determinan la naturaleza y cantidad de soluciones, según el discriminante.",
-      ],
-      [
-        "¿Qué ocurre si el discriminante es positivo en una ecuación de segundo grado?",
-        "La ecuación tiene dos soluciones reales y distintas.",
-      ],
+      {
+        front: "¿Cómo se define una ecuación de segundo grado?",
+        back: "Es una ecuación algebraica cuyo mayor exponente de la incógnita es 2.",
+      },
+      {
+        front: "¿Cuál es la forma general de una ecuación de segundo grado?",
+        back: "ax^2 + bx + c = 0",
+      },
+      {
+        front: "¿Qué son las raíces de una ecuación de segundo grado?",
+        back: "Son los valores de x que satisfacen la ecuación y hacen que sea igual a cero.",
+      },
+      {
+        front: "¿Qué es el discriminante en una ecuación de segundo grado?",
+        back: "Es la expresión b^2 - 4ac que se encuentra dentro de la fórmula cuadrática.",
+      },
+      {
+        front: "¿Cuántas soluciones puede tener una ecuación de segundo grado?",
+        back: "Puede tener 0, 1 o 2 soluciones.",
+      },
+      {
+        front:
+          "¿Cuál es la fórmula general para hallar las soluciones de una ecuación de segundo grado?",
+        back: "x = (-b ± √(b^2 - 4ac)) / 2a",
+      },
+      {
+        front:
+          "¿Cómo se llama el proceso de encontrar las raíces de una ecuación de segundo grado?",
+        back: "Se llama resolver la ecuación.",
+      },
+      {
+        front: "¿Qué tipo de gráfica representa una ecuación de segundo grado?",
+        back: "Representa una parábola.",
+      },
+      {
+        front:
+          "¿Qué relación existe entre los coeficientes a, b y c de una ecuación de segundo grado y las soluciones?",
+        back: "Los coeficientes determinan la naturaleza y cantidad de soluciones, según el discriminante.",
+      },
+      {
+        front:
+          "¿Qué ocurre si el discriminante es positivo en una ecuación de segundo grado?",
+        back: "La ecuación tiene dos soluciones reales y distintas.",
+      },
     ];
   }
 }

@@ -17,7 +17,7 @@ export async function signupAction(input: SignupActionModel) {
     if (e instanceof UserAlreadyExistsError) {
       return ActionResponse.formError("email", {
         type: "exists",
-        message: "A user with this email already exists",
+        message: "Ya existe un usuario con ese correo electrónico",
       });
     }
     return ActionErrorHandler.handle(e);

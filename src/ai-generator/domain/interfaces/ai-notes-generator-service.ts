@@ -1,3 +1,4 @@
+import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import type { AiGeneratorNoteType } from "../models/ai-generator-note-type";
 import type { AiNotesGeneratorSourceType } from "../models/ai-notes-generator-source-type";
 
@@ -14,7 +15,7 @@ export interface AiNotesGeneratorService {
    * consisting of two strings: the question (front side of the note) and the
    * answer (back side of the note)
    */
-  generate(input: GenerateAiNotesInputModel): Promise<string[][]>;
+  generate(input: GenerateAiNotesInputModel): Promise<NoteRowModel[]>;
 }
 
 /**

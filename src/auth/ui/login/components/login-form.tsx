@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { clientLocator } from "@/src/common/di/client-locator";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -17,6 +16,7 @@ import Link from "next/link";
 import { loginWithPasswordAction } from "../actions/login-with-password-action";
 import type { LoginWithPasswordActionModel } from "../schemas/login-with-password-action-schema";
 import { LoginWithPasswordActionSchema } from "../schemas/login-with-password-action-schema";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 export function LoginForm() {
   const form = useForm({
@@ -36,7 +36,7 @@ export function LoginForm() {
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

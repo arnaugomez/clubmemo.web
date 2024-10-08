@@ -1,7 +1,7 @@
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { NoPermissionError } from "../../domain/models/app-errors";
 import { ActionResponse } from "../models/server-form-errors";
-import { clientLocator } from "../../di/client-locator";
+import { locator_common_ErrorTrackingService } from "../../locators/locator_error-tracking-service";
 
 export class ApiErrorHandler {
   static handle(e: unknown) {
@@ -15,7 +15,7 @@ export class ApiErrorHandler {
         status: 403,
       });
     }
-    clientLocator.ErrorTrackingService().captureError(e);
+    locator_common_ErrorTrackingService().captureError(e);
     return new Response(e?.toString?.(), { status: 500 });
   }
 }

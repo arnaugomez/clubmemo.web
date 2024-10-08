@@ -13,7 +13,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { NoteModel } from "@/src/notes/domain/models/note-model";
 import { toast } from "sonner";
 import { deleteNoteAction } from "../actions/delete-note-action";
-import { clientLocator } from "@/src/common/di/client-locator";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface DeleteNoteDialogProps {
   note: NoteModel;
@@ -36,7 +36,7 @@ export function DeleteNoteDialog({
       }
       handler.toastErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       toast.error("Error al eliminar la tarjeta");
     }
   }

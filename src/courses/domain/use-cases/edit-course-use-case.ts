@@ -1,4 +1,3 @@
-import type { FileUploadsRepository } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
 import type { TagsRepository } from "@/src/tags/domain/interfaces/tags-repository";
@@ -30,7 +29,6 @@ export class EditCourseUseCase {
     private readonly getMyProfileUseCase: GetMyProfileUseCase,
     private readonly tagsRepository: TagsRepository,
     private readonly coursesRepository: CoursesRepository,
-    private readonly fileUploadsRepository: FileUploadsRepository,
   ) {}
 
   /**
@@ -59,10 +57,6 @@ export class EditCourseUseCase {
     });
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canEdit) throw new CannotEditCourseError();
-
-    if (input.picture && input.picture !== course.picture) {
-      await this.fileUploadsRepository.setCurrent(input.picture);
-    }
 
     await Promise.all([
       this.tagsRepository.create(input.tags),

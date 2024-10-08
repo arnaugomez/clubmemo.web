@@ -54,6 +54,12 @@ export class CourseEnrollmentsRepositoryImpl
     });
   }
 
+  async deleteByCourseId(courseId: string): Promise<void> {
+    await this.collection.deleteMany({
+      courseId: new ObjectId(courseId),
+    });
+  }
+
   async updateConfig(
     input: UpdateCourseEnrollmentConfigInputModel,
   ): Promise<void> {

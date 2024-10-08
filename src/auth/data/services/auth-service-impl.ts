@@ -42,6 +42,7 @@ interface DatabaseUserAttributes {
   authTypes: AuthTypeModel[];
   acceptTerms: boolean;
   isEmailVerified?: boolean;
+  isAdmin?: boolean;
 }
 
 type MyLucia = Lucia<
@@ -85,6 +86,7 @@ export class AuthServiceImpl implements AuthService {
           email: attributes.email,
           authTypes: attributes.authTypes,
           isEmailVerified: attributes.isEmailVerified,
+          isAdmin: attributes.isAdmin,
         };
       },
     });
@@ -161,6 +163,7 @@ export class AuthServiceImpl implements AuthService {
       hashed_password,
       acceptTerms,
       authTypes: [AuthTypeModel.email],
+      isAdmin: email === this.envService.adminEmail,
     });
     const userId = result.insertedId;
 

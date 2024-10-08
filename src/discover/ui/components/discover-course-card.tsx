@@ -16,7 +16,13 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
     <Card className="h-64 overflow-clip">
       <div className="relative h-24 bg-slate-300">
         {course.picture && (
-          <Image src={course.picture} alt="" fill className="object-cover" />
+          <Image
+            src={course.picture}
+            alt=""
+            fill
+            className="object-cover"
+            unoptimized
+          />
         )}
       </div>
       <div className="p-3">

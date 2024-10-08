@@ -1,6 +1,9 @@
 import type { EnvService } from "@/src/common/domain/interfaces/env-service";
 import type { ErrorTrackingService } from "@/src/common/domain/interfaces/error-tracking-service";
+import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import { OpenAI, OpenAIError, RateLimitError } from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
+import { z, ZodError } from "zod";
 import {
   AiGeneratorEmptyMessageError,
   AiGeneratorError,
@@ -20,6 +23,15 @@ declare module global {
    */
   let openaiClient: OpenAI;
 }
+
+const ValidationSchema = z.object({
+  flashcards: z.array(
+    z.object({
+      front: z.string(),
+      back: z.string(),
+    }),
+  ),
+});
 
 /**
  * Implementation of AiNotesGeneratorService using the gpt-3.5-turbo-0125
@@ -49,7 +61,7 @@ export class AiNotesGeneratorServiceOpenaiImpl
     noteTypes,
     notesCount,
     sourceType,
-  }: GenerateAiNotesInputModel): Promise<string[][]> {
+  }: GenerateAiNotesInputModel): Promise<NoteRowModel[]> {
     const typesMap = {
       [AiGeneratorNoteType.qa]: "a question and the answer",
       [AiGeneratorNoteType.definition]:
@@ -66,7 +78,7 @@ export class AiNotesGeneratorServiceOpenaiImpl
           {
             role: "system",
             content: `You are a flashard generator.
-Output a list of flashcards in JSON format. The JSON should be an array of arrays, where each sub-array contains two strings: the question and the answer.
+Output a list of flashcards. Each flashcard has a front side (the question) and a back side (the answer).
 The flashcards can contain: ${noteTypes.map((type) => typesMap[type]).join(", ")}.
 You must generate ${notesCount} flashcards based on the ${textOrTopic} provided by the user.
 The language of the flashcards should be the language of the ${textOrTopic} provided by the user.
@@ -77,16 +89,21 @@ The language of the flashcards should be the language of the ${textOrTopic} prov
             content: `Generate ${notesCount} flashcards to help me study this ${textOrTopic}: ${text}`,
           },
         ],
-        model: "gpt-3.5-turbo-0125",
-        response_format: { type: "json_object" },
+        model: "gpt-4o-mini",
+        response_format: zodResponseFormat(ValidationSchema, "flashcards"),
         n: 1,
       });
-      const responseText = completion.choices[0].message.content;
-      if (!responseText) {
+
+      const message = completion.choices[0].message;
+      const responseText = message.content;
+      if (message.refusal || !responseText) {
+        this.errorTrackingService.captureError(message);
         throw new AiGeneratorEmptyMessageError();
       }
+
       const response = JSON.parse(responseText);
-      return this.parseResponse(response);
+      const parsed = ValidationSchema.parse(response);
+      return parsed.flashcards;
     } catch (e) {
       if (e instanceof RateLimitError) {
         this.errorTrackingService.captureError(e);
@@ -94,34 +111,11 @@ The language of the flashcards should be the language of the ${textOrTopic} prov
       } else if (e instanceof OpenAIError) {
         this.errorTrackingService.captureError(e);
         throw new AiGeneratorError();
+      } else if (e instanceof ZodError) {
+        this.errorTrackingService.captureError(e);
+        throw new AiGeneratorError();
       }
       throw e;
     }
-  }
-
-  /**
-   * Analyzes the response from the AI, in search of a list of flashcards.
-   * Because the response from the AI cannot be predicted, this method
-   * traverses the response object to find the flashcards.
-   *
-   * @param response a JSON object with the response from the AI
-   * @returns an array of flashcards, where each flashcard is an array with two strings: the question and the answer
-   * @throws `AiGeneratorEmptyMessageError` if the response does not contain the expected data
-   */
-  private parseResponse(response: unknown): string[][] {
-    if (!response) {
-      throw new AiGeneratorEmptyMessageError();
-    }
-    if (Array.isArray(response)) {
-      return response;
-    }
-    if (typeof response === "object") {
-      for (const value of Object.values(response)) {
-        if (Array.isArray(value) && value.length) {
-          return value;
-        }
-      }
-    }
-    throw new AiGeneratorEmptyMessageError();
   }
 }

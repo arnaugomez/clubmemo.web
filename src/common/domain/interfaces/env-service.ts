@@ -24,4 +24,10 @@ export interface EnvService {
 
   /** The unique identifier of the AWS S3 bucket */
   readonly awsBucketName: string;
+
+  /**
+   * Email of the first admin user. When a user with this email is created,
+   * it is automatically set to admin
+   */
+  readonly adminEmail: string;
 }

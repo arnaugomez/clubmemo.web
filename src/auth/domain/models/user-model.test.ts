@@ -9,6 +9,7 @@ describe("UserModel", () => {
     email: "test@example.com",
     authTypes: [AuthTypeModel.email],
     isEmailVerified: true,
+    isAdmin: true,
   };
 
   it("should instantiate correctly with provided data", () => {
@@ -22,6 +23,7 @@ describe("UserModel", () => {
     expect(user.email).toBe(mockData.email);
     expect(user.authTypes).toEqual(mockData.authTypes);
     expect(user.isEmailVerified).toBe(mockData.isEmailVerified);
+    expect(user.isAdmin).toBe(true);
   });
 
   it("isEmailVerified should be false if the data value is undefined", () => {
@@ -40,5 +42,23 @@ describe("UserModel", () => {
     };
     const user = new UserModel(userDataWithEmailVerificationFalse);
     expect(user.isEmailVerified).toBe(false);
+  });
+
+  it("isAdmin should be false if the data value is undefined", () => {
+    const userDataWithEmailVerificationFalse = {
+      ...mockData,
+      isAdmin: undefined,
+    };
+    const user = new UserModel(userDataWithEmailVerificationFalse);
+    expect(user.isAdmin).toBe(false);
+  });
+
+  it("isAdmin should be false if the data value is false", () => {
+    const userDataWithEmailVerificationFalse = {
+      ...mockData,
+      isAdmin: false,
+    };
+    const user = new UserModel(userDataWithEmailVerificationFalse);
+    expect(user.isAdmin).toBe(false);
   });
 });

@@ -1,8 +1,8 @@
 "use client";
 
-import { clientLocator } from "@/src/common/di/client-locator";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
+import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Dialog,
@@ -21,7 +21,7 @@ import type { z } from "zod";
 import { changePasswordAction } from "../actions/change-password-action";
 import { ChangePasswordActionSchema } from "../schemas/change-password-action-schema";
 import { SettingsSectionTitle } from "./settings-section-title";
-import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 export function SettingsChangePasswordSection() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -64,7 +64,7 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
       }
       handler.setErrors();
     } catch (error) {
-      clientLocator.ErrorTrackingService().captureError(error);
+      locator_common_ErrorTrackingService().captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

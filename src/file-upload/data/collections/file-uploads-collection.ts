@@ -1,11 +1,17 @@
 import { collection } from "@/src/common/data/utils/mongo";
+import type { ObjectId } from "mongodb";
+import type {
+  FileUploadCollectionModel,
+  FileUploadFieldModel,
+} from "../../domain/models/file-upload-field-model";
 
 export interface FileUploadDoc {
+  collection: FileUploadCollectionModel;
+  field: FileUploadFieldModel;
   key: string;
-  keyPrefix: string;
-  count: number;
   url: string;
-  isCurrent: boolean;
+  contentType: string;
+  createdByUserId: ObjectId;
   createdAt: Date;
 }
 
