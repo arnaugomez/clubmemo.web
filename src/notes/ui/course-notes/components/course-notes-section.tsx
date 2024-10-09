@@ -27,16 +27,17 @@ export function CourseNotesSection({ course }: CourseNotesSectionProps) {
                 Tarjetas{" "}
                 <span className="hidden sm:inline">de aprendizaje</span>
               </h2>
-              <CreateNoteButton courseId={course.id} />
+              {course.canEdit && <CreateNoteButton courseId={course.id} />}
               <CourseNotesDropdown courseData={course.data} />
             </div>
-
-            {/* <ArrowLink href="/cards">Ver todas</ArrowLink> */}
           </div>
           <div className="h-6"></div>
           <div className="mx-auto max-w-prose">
             <Suspense fallback={<CourseNotesLoadingSkeletons />}>
-              <CourseNotesLoader courseId={course.id} />
+              <CourseNotesLoader
+                courseId={course.id}
+                canEdit={course.canEdit}
+              />
             </Suspense>
           </div>
         </CourseNotesProvider>
@@ -48,15 +49,20 @@ export function CourseNotesSection({ course }: CourseNotesSectionProps) {
 
 interface CourseNotesContentProps {
   courseId: string;
+  canEdit: boolean;
 }
 
-async function CourseNotesLoader({ courseId }: CourseNotesContentProps) {
+async function CourseNotesLoader({
+  courseId,
+  canEdit,
+}: CourseNotesContentProps) {
   const useCase = await notesLocator.GetNotesUseCase();
   const pagination = await useCase.execute({ courseId });
 
   return (
     <CourseNotesLoaded
       courseId={courseId}
+      canEdit={canEdit}
       initialData={pagination.toData((e) => e.data)}
     />
   );
