@@ -229,6 +229,7 @@ const adminTranslations: Record<string, string> = {
   "profiles.field.tags.label": "Etiquetas",
   "profiles.field.tags.placeholder": "Tus intereses, asignaturas...",
   "profiles.field.tags.tableHeader": "Etiquetas",
+  "profiles.field.userId.label": "Id del usuario",
   "profiles.field.userId.placeholder": "El usuario asociado al perfil",
   "profiles.field.userId.tableHeader": "Id de usuario",
   "profiles.field.website.label": "Página web",

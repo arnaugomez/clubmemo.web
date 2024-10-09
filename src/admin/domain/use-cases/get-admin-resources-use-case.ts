@@ -5,7 +5,8 @@ import {
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import dayjs from "dayjs";
-import { escapeRegExp, isDate } from "lodash-es";
+import escapeRegExp from "lodash/escapeRegExp";
+import isDate from "lodash/isDate";
 import { ObjectId, type Document, type WithId } from "mongodb";
 import { SortOrderDataModelTransformer } from "../../data/models/sort-order-data-model";
 import { getAdminResourceByType } from "../config/admin-resources-config";

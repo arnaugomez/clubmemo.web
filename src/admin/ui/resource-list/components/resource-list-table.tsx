@@ -18,6 +18,7 @@ import {
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
+import range from "lodash/range";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
@@ -255,8 +256,8 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
       )}
       {isLoading &&
         !result?.results.length &&
-        Array.from({ length: 10 }).map((_, i) => (
-          <Skeleton key={i} className="mt-1 h-[49px] rounded-sm" />
+        range(10).map((element) => (
+          <Skeleton key={element} className="mt-1 h-[49px] rounded-sm" />
         ))}
       <div className="h-8" />
       <PaginationSection

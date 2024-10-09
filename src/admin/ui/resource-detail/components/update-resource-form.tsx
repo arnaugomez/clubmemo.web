@@ -15,6 +15,7 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
 import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-action";
 import { zodResolver } from "@hookform/resolvers/zod";
+import range from "lodash/range";
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -114,8 +115,8 @@ function FormContent() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <div key={index} className="space-y-2">
+        {range(3).map((element) => (
+          <div key={element} className="space-y-2">
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-10" />
           </div>

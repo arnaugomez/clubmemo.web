@@ -13,6 +13,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { paginateDiscoverAction } from "../actions/paginate-discover-action";
 import { DiscoverCourseCard } from "./discover-course-card";
+import range from "lodash/range";
 
 interface DiscoverResultsSectionProps {
   data: TokenPaginationModelData<DiscoverCourseModelData>;
@@ -75,7 +76,7 @@ export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
           <DiscoverCourseCard course={course} key={course.id} />
         ))}
         {canLoadMore &&
-          Array.from({ length: 5 }).map((_, i) => (
+          range(5).map((_, i) => (
             <Skeleton
               key={i}
               ref={i ? undefined : ref}

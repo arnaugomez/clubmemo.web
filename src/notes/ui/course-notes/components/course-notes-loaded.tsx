@@ -10,6 +10,7 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { NoteModelData } from "@/src/notes/domain/models/note-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
+import range from "lodash/range";
 import { Layers } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -112,7 +113,7 @@ export function CourseNotesLoaded({
           />
         ))}
         {canLoadMore &&
-          Array.from({ length: 3 }).map((_, i) => (
+          range(3).map((_, i) => (
             <Skeleton
               key={i}
               ref={i ? undefined : ref}

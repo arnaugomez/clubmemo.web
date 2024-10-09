@@ -14,7 +14,7 @@ export async function checkIfHandleAlreadyExists(
     if (document._id.equals(id)) return;
     throw new ZodError([
       {
-        path: ["name"],
+        path: ["handle"],
         code: ZodIssueCode.custom,
         params: { i18n: "handleAlreadyExists" },
         message: "Ya existe un identificador de usuario con ese nombre",
