@@ -3,7 +3,7 @@
 import { locator } from "@/src/common/di/locator";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import type { EnrollCourseActionModel } from "../schemas/enroll-course-action-schema";
 import { EnrollCourseActionSchema } from "../schemas/enroll-course-action-schema";
@@ -22,7 +22,6 @@ export async function enrollCourseAction(input: EnrollCourseActionModel) {
     });
     revalidatePath(`/courses`);
     revalidatePath(`/learn`);
-    revalidateTag("hasCourses");
   } catch (error) {
     return ActionErrorHandler.handle(error);
   }

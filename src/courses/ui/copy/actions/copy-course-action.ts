@@ -2,7 +2,7 @@
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { coursesLocator } from "@/src/courses/courses-locator";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import type { CopyCourseActionModel } from "../schemas/copy-course-action-schema";
 import { CopyCourseActionSchema } from "../schemas/copy-course-action-schema";
 
@@ -15,7 +15,6 @@ export async function copyCourseAction(input: CopyCourseActionModel) {
 
     revalidatePath("/courses");
     revalidatePath("/learn");
-    revalidateTag("hasCourses");
 
     return ActionResponse.formSuccess(course.data);
   } catch (e) {

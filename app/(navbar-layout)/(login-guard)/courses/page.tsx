@@ -1,10 +1,10 @@
+import { locator } from "@/src/common/di/locator";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { CreateCourseButton } from "@/src/courses/ui/create/components/create-course-button";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
 import { MyCoursesPaginationSection } from "@/src/courses/ui/my-courses/components/my-courses-pagination-section";
 import { MyCoursesTable } from "@/src/courses/ui/my-courses/components/my-courses-table";
-import { fetchHasCourses } from "@/src/courses/ui/my-courses/fetch/fetch-has-courses";
 import type { FetchMyCoursesPaginationModel } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import { fetchMyCoursesPagination } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
@@ -55,7 +55,8 @@ async function CoursesPageLoader({ page }: CoursesPageContentProps) {
   if (!profile) {
     return null;
   }
-  const hasCourses = await fetchHasCourses(profile.id);
+  const coursesRepository = await locator.CoursesRepository();
+  const hasCourses = await coursesRepository.getHasCourses(profile.id);
 
   if (!hasCourses) {
     return <CreateCourseCtaLarge />;

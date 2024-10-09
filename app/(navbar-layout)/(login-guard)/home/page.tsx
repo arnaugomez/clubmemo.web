@@ -1,7 +1,7 @@
+import { locator } from "@/src/common/di/locator";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
 import { InterestingCoursesSection } from "@/src/courses/ui/interesting-courses-section";
 import { KeepLearningSection } from "@/src/courses/ui/keep-learning/components/keep-learning-section";
-import { fetchHasCourses } from "@/src/courses/ui/my-courses/fetch/fetch-has-courses";
 import { HomeGreeting } from "@/src/home/ui/components/home-greeting";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import type { Metadata } from "next";
@@ -18,7 +18,8 @@ export default async function HomePage() {
   if (!profile) {
     return null;
   }
-  const hasCourses = await fetchHasCourses(profile.id);
+  const coursesRepository = await locator.CoursesRepository();
+  const hasCourses = await coursesRepository.getHasCourses(profile.id);
   return (
     <main>
       <div className="h-24" />
