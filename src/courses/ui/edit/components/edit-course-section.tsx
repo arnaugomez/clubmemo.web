@@ -2,7 +2,7 @@
 
 import { z } from "@/i18n/zod";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
-import { FileFieldSchema } from "@/src/common/schemas/file-schema";
+import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -62,7 +62,7 @@ const EditCourseSchema = z.object({
   description: z.string().trim().min(0).max(255),
   isPublic: z.boolean(),
   tags: TagsSchema,
-  picture: FileFieldSchema.optional(),
+  picture: OptionalFileFieldSchema,
 });
 
 type FormValues = z.infer<typeof EditCourseSchema>;

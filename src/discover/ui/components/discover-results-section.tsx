@@ -76,7 +76,7 @@ export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
           <DiscoverCourseCard course={course} key={course.id} />
         ))}
         {canLoadMore &&
-          range(5).map((_, i) => (
+          range(6).map((_, i) => (
             <Skeleton
               key={i}
               ref={i ? undefined : ref}
