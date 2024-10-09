@@ -22,11 +22,13 @@ import { CourseNotesEmptyState } from "./course-notes-empty-state";
 interface CourseNotesLoadedProps {
   courseId: string;
   initialData: PaginationModelData<NoteModelData>;
+  canEdit: boolean;
 }
 
 export function CourseNotesLoaded({
   courseId,
   initialData,
+  canEdit,
 }: CourseNotesLoadedProps) {
   const initialPagination = useMemo(
     () => PaginationModel.fromData(initialData, (e) => new NoteModel(e)),
@@ -100,6 +102,7 @@ export function CourseNotesLoaded({
           <CourseNoteCard
             note={note}
             key={note.id}
+            canEdit={canEdit}
             onDelete={() => {
               setContextResults((notes) =>
                 notes.filter((n) => n.id !== note.id),

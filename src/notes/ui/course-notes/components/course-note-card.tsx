@@ -11,12 +11,14 @@ interface CourseNoteCardProps {
   note: NoteModel;
   onDelete: () => void;
   onEdit: (note: NoteModel) => void;
+  canEdit: boolean;
 }
 
 export function CourseNoteCard({
   note,
   onDelete,
   onEdit,
+  canEdit,
 }: CourseNoteCardProps) {
   return (
     <Card className="flex h-32 flex-col items-stretch overflow-clip">
@@ -27,9 +29,9 @@ export function CourseNoteCard({
             __html: note.frontText || "Sin contenido",
           }}
         />
-        <EditNoteButton note={note} onSuccess={onEdit} />
+        {canEdit && <EditNoteButton note={note} onSuccess={onEdit} />}
 
-        <DeleteNoteButton note={note} onSuccess={onDelete} />
+        {canEdit && <DeleteNoteButton note={note} onSuccess={onDelete} />}
       </div>
       <Separator />
       <div className="flex flex-1 items-center px-4">
