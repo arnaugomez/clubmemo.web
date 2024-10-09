@@ -1,7 +1,7 @@
 "use client";
 
 import { z } from "@/i18n/zod";
-import { FileFieldSchema } from "@/src/common/schemas/file-schema";
+import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
 import { HandleSchema } from "@/src/common/schemas/handle-schema";
 
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
@@ -72,8 +72,8 @@ const EditProfileSchema = z.object({
   website: z.string().url().max(2083).or(z.string().max(0)),
   isPublic: z.boolean(),
   tags: TagsSchema,
-  picture: FileFieldSchema.optional(),
-  backgroundPicture: FileFieldSchema.optional(),
+  picture: OptionalFileFieldSchema,
+  backgroundPicture: OptionalFileFieldSchema,
 });
 
 type FormValues = z.infer<typeof EditProfileSchema>;

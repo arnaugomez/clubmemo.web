@@ -21,16 +21,22 @@ export function CourseNoteCard({
   return (
     <Card className="flex h-32 flex-col items-stretch overflow-clip">
       <div className="flex flex-1 items-center space-x-3 px-4">
-        <h3 className="flex-1 truncate font-medium">
-          {note.frontText || "Sin contenido"}
-        </h3>
+        <h3
+          className="flex-1 truncate font-medium"
+          dangerouslySetInnerHTML={{
+            __html: note.frontText || "Sin contenido",
+          }}
+        />
         <EditNoteButton note={note} onSuccess={onEdit} />
 
         <DeleteNoteButton note={note} onSuccess={onDelete} />
       </div>
       <Separator />
       <div className="flex flex-1 items-center px-4">
-        <p className="flex-1 truncate">{note.backText || "Sin contenido"}</p>
+        <p
+          className="flex-1 truncate"
+          dangerouslySetInnerHTML={{ __html: note.backText || "Sin contenido" }}
+        />
       </div>
     </Card>
   );

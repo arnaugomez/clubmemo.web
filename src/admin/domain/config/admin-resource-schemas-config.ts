@@ -1,6 +1,6 @@
 import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
 import { AcceptTermsSchema } from "@/src/common/schemas/accept-terms-schema";
-import { FileFieldSchema } from "@/src/common/schemas/file-schema";
+import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
 import { HandleSchema } from "@/src/common/schemas/handle-schema";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
@@ -48,7 +48,7 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.courses]: z.object({
     name: z.string().trim().min(1).max(50),
     description: z.string().trim().min(0).max(255),
-    picture: FileFieldSchema.optional(),
+    picture: OptionalFileFieldSchema,
     isPublic: z.boolean(),
     tags: TagsSchema,
   }),
@@ -103,8 +103,8 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     website: z.string().url().max(2083).optional().or(z.string().max(0)),
     isPublic: z.boolean(),
     tags: TagsSchema,
-    picture: FileFieldSchema.optional(),
-    backgroundPicture: FileFieldSchema.optional(),
+    picture: OptionalFileFieldSchema,
+    backgroundPicture: OptionalFileFieldSchema,
   }),
   [AdminResourceTypeModel.rateLimits]: z.object({
     name: z.string(),
