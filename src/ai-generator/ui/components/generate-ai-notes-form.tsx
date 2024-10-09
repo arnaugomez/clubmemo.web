@@ -1,6 +1,7 @@
 import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import { CheckboxesFormField } from "@/src/common/ui/components/form/checkboxes-form-field";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
@@ -15,10 +16,10 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
 import { zodResolver } from "@hookform/resolvers/zod";
+import range from "lodash/range";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface GenerateAiNotesFormProps {
   /**
@@ -114,7 +115,7 @@ export function GenerateAiNotesForm({
               const numPages = pdf.numPages;
 
               const texts = await Promise.all(
-                Array.from({ length: numPages }).map(async (_, i) => {
+                range(numPages).map(async (_, i) => {
                   const page = await pdf.getPage(i + 1);
                   const content = await page.getTextContent();
                   return content.items

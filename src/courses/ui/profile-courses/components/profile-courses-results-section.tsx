@@ -8,6 +8,7 @@ import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { DiscoverCourseModelData } from "@/src/courses/domain/models/discover-course-model";
 import { DiscoverCourseModel } from "@/src/courses/domain/models/discover-course-model";
+import range from "lodash/range";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { DiscoverCourseCard } from "../../../../discover/ui/components/discover-course-card";
@@ -76,7 +77,7 @@ export function ProfileCoursesResultsSection({
           <DiscoverCourseCard course={course} key={course.id} />
         ))}
         {canLoadMore &&
-          Array.from({ length: 6 }).map((_, i) => (
+          range(6).map((_, i) => (
             <Skeleton
               key={i}
               ref={i ? undefined : ref}
