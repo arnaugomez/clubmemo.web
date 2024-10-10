@@ -112,6 +112,7 @@ export class NotesRepositoryImpl implements NotesRepository {
     const sourceCourseNotes = await this.notes
       .find({ courseId: new ObjectId(sourceCourseId) })
       .toArray();
+    if (!sourceCourseNotes.length) return;
     const newNotes = sourceCourseNotes.map((note) => {
       return {
         ...note,
@@ -138,6 +139,7 @@ export class NotesRepositoryImpl implements NotesRepository {
     courseIdString: string,
     notes: NoteRowModel[],
   ): Promise<NoteModel[]> {
+    if (!notes.length) return [];
     const courseId = new ObjectId(courseIdString);
     const now = new Date();
 

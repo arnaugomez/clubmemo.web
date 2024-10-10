@@ -5,7 +5,7 @@ import type {
 } from "@/src/admin/domain/models/admin-resource-model";
 import { AdminFieldTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { TableCell } from "@/src/common/ui/components/shadcn/ui/table";
-import dayjs from "dayjs";
+import { formatDate, isDate, isValid } from "date-fns";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import { FileTableCell } from "./file-table-cell";
 import { IdTableCell } from "./id-table-cell";
@@ -38,9 +38,10 @@ export function ResourceListTableCell({
       case AdminFieldTypeModel.boolean:
         return value ? "Sí" : "No";
       case AdminFieldTypeModel.date:
-        if (!value) return "-";
-        const date = dayjs(value);
-        return date.isValid() ? date.format("DD/MM/YYYY") : "Fecha inválida";
+        if (!value || !isDate(value)) return "-";
+        return isValid(value)
+          ? formatDate(value, "DD/MM/YYYY")
+          : "Fecha inválida";
       case AdminFieldTypeModel.select:
         return getOptionLabel(value);
       case AdminFieldTypeModel.selectMultiple:
