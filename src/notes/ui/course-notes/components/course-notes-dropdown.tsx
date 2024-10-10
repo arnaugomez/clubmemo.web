@@ -25,7 +25,7 @@ export function CourseNotesDropdown({ courseData }: CourseNotesDropdownProps) {
   const course = new CourseModel(courseData);
 
   const [showImportDialog, setShowImportDialog] = useState(false);
-  if (!course.canEdit) return <></>;
+  if (!course.canEdit) return null;
   return (
     <>
       <DropdownMenu>

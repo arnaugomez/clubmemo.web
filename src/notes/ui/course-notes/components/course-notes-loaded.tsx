@@ -91,7 +91,7 @@ export function CourseNotesLoaded({
     loadMore();
   }, [inView, loadMore]);
 
-  if (!results.length) {
+  if (!results.length && canEdit) {
     return <CourseNotesEmptyState courseId={courseId} />;
   }
 

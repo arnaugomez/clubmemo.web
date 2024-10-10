@@ -31,7 +31,7 @@ export function CourseNotesSection({ course }: CourseNotesSectionProps) {
               <CourseNotesDropdown courseData={course.data} />
             </div>
           </div>
-          <div className="h-6"></div>
+          <div className="h-6" />
           <div className="mx-auto max-w-prose">
             <Suspense fallback={<CourseNotesLoadingSkeletons />}>
               <CourseNotesLoader
