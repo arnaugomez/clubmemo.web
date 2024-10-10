@@ -4,9 +4,8 @@ import {
 } from "@/src/common/data/facets/pagination-facet";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
-import dayjs from "dayjs";
+import { endOfDay, isDate, isValid, startOfDay } from "date-fns";
 import escapeRegExp from "lodash/escapeRegExp";
-import isDate from "lodash/isDate";
 import { ObjectId, type Document, type WithId } from "mongodb";
 import { SortOrderDataModelTransformer } from "../../data/models/sort-order-data-model";
 import { getAdminResourceByType } from "../config/admin-resources-config";
@@ -146,12 +145,11 @@ export class GetAdminResourcesUseCase {
           break;
         case AdminFieldTypeModel.date:
           if (typeof value === "string" || isDate(value)) {
-            const dateValue = dayjs(value);
-            if (dateValue.isValid()) {
+            if (isValid(value)) {
               match.push({
                 [field.name]: {
-                  $gte: dateValue.startOf("day").toDate(),
-                  $lte: dateValue.endOf("day").toDate(),
+                  $gte: startOfDay(value),
+                  $lte: endOfDay(value),
                 },
               });
             }

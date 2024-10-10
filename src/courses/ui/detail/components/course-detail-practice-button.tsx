@@ -62,7 +62,7 @@ export function CourseDetailPracticeButtonLoaded({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            Nuevo: {coursePracticeCount.newCount} | Repasar:{" "}
+            Aprender: {coursePracticeCount.newCount} | Repasar:{" "}
             {coursePracticeCount.dueCount}
           </TooltipContent>
         </Tooltip>

@@ -62,7 +62,7 @@ function FavoriteCourseCardPracticeSection({
           </ArrowLink>
         </TooltipTrigger>
         <TooltipContent>
-          Nuevo: {course.newCount} | Repasar: {course.dueCount}
+          Aprender: {course.newCount} | Repasar: {course.dueCount}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

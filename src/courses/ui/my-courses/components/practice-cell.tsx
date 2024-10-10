@@ -43,7 +43,7 @@ export function PracticeCell({ courseData }: PracticeCellProps) {
           <TooltipTrigger>{cellContent()}</TooltipTrigger>
           <TooltipContent>
             {course.shouldPractice
-              ? `Nuevo: ${course.newCount} | Repasar: ${course.dueCount}`
+              ? `Aprender: ${course.newCount} | Repasar: ${course.dueCount}`
               : "Práctica terminada"}
           </TooltipContent>
         </Tooltip>

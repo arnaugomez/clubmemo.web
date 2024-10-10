@@ -1,5 +1,5 @@
 import { cn } from "@/src/common/ui/utils/shadcn";
-import dayjs from "dayjs";
+import { formatDate, isDate, isValid } from "date-fns";
 import { forwardRef, useEffect, useRef, useState } from "react";
 
 export interface InputProps {
@@ -13,7 +13,7 @@ export interface InputProps {
 
 function stringToDate(value: string): Date | null {
   const date = new Date(value);
-  if (dayjs(date).isValid()) {
+  if (isValid(date)) {
     return date;
   } else {
     return null;
@@ -29,7 +29,9 @@ const DateInput = forwardRef<HTMLInputElement, InputProps>(
 
     useEffect(() => {
       if (value !== stringToDate(stringValue) && !avoidUpdate.current) {
-        setStringValue(value ? dayjs(value).format("YYYY-MM-DD") : "");
+        setStringValue(
+          value && isDate(value) ? formatDate(value, "YYYY-MM-DD") : "",
+        );
       }
     }, [stringValue, value]);
 
