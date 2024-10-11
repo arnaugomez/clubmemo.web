@@ -30,7 +30,7 @@ const DateInput = forwardRef<HTMLInputElement, InputProps>(
     useEffect(() => {
       if (value !== stringToDate(stringValue) && !avoidUpdate.current) {
         setStringValue(
-          value && isDate(value) ? formatDate(value, "YYYY-MM-DD") : "",
+          value && isDate(value) ? formatDate(value, "yyyy-MM-dd") : "",
         );
       }
     }, [stringValue, value]);

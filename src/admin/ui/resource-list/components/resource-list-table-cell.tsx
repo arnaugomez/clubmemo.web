@@ -40,7 +40,7 @@ export function ResourceListTableCell({
       case AdminFieldTypeModel.date:
         if (!value || !isDate(value)) return "-";
         return isValid(value)
-          ? formatDate(value, "DD/MM/YYYY")
+          ? formatDate(value, "dd/MM/yyyy")
           : "Fecha inválida";
       case AdminFieldTypeModel.select:
         return getOptionLabel(value);
