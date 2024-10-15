@@ -1,4 +1,7 @@
-import type { AdminFieldModel } from "@/src/admin/domain/models/admin-resource-model";
+import type {
+  AdminFieldModel,
+  AdminJoinModel,
+} from "@/src/admin/domain/models/admin-resource-model";
 import {
   AdminFieldTypeModel,
   type AdminResourceModel,
@@ -14,11 +17,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 import { ResourceListFiltersField } from "./resource-list-filters-field";
+import { ResourceListJoinsField } from "./resource-list-joins-field";
 
 interface ResourceListFiltersFormProps {
   resource: AdminResourceModel;
   onHideFilters: () => void;
 }
+
 export function ResourceListFiltersForm({
   resource,
   onHideFilters,
@@ -27,6 +32,11 @@ export function ResourceListFiltersForm({
     () => resource.fields.filter((field) => !field.hideInList),
     [resource.fields],
   );
+  const defaultValues = useMemo(
+    () => getDefaultValues(configVisibleFields, resource.joins ?? []),
+    [configVisibleFields, resource.joins],
+  );
+
   const params = useSearchParams();
   const pathname = usePathname();
   const { push } = useRouter();
@@ -41,9 +51,7 @@ export function ResourceListFiltersForm({
   }, [filtersString]);
 
   const form = useForm({
-    defaultValues: Object.keys(filters).length
-      ? filters
-      : getDefaultValues(configVisibleFields),
+    defaultValues: Object.keys(filters).length ? filters : defaultValues,
   });
   const values = form.watch();
 
@@ -60,36 +68,61 @@ export function ResourceListFiltersForm({
   }, 500);
 
   useEffect(() => {
-    const cleanedValues = cleanValues(configVisibleFields, values);
+    const cleanedValues = cleanValues(
+      configVisibleFields,
+      resource.joins ?? [],
+      values,
+    );
     const stringValues = Object.keys(cleanedValues).length
       ? JSON.stringify(cleanedValues)
       : "";
     if (stringValues !== filtersString) {
       setQuery(cleanedValues);
     }
-  }, [configVisibleFields, filtersString, setQuery, values]);
+  }, [configVisibleFields, filtersString, resource.joins, setQuery, values]);
+
+  const fieldsAndJoins = [...(resource.joins ?? []), ...configVisibleFields];
 
   return (
     <FormProvider {...form}>
       <form
-        onReset={() => form.reset(getDefaultValues(configVisibleFields))}
+        onReset={() => form.reset(defaultValues)}
         onSubmit={form.handleSubmit(() => {})}
         className="mt-2 space-y-4 rounded-md border-[1px] border-slate-300 bg-slate-100 p-4"
       >
         <h3 className={cn(textStyles.h4)}>Filtros</h3>
-        {chunk(configVisibleFields, 2).map((fields) => (
+        {resource.joins?.map((join) => (
+          <div className="flex-1" key={join.name}></div>
+        ))}
+        {chunk(fieldsAndJoins, 2).map((group) => (
           <div
             className="space-y-4 sm:flex sm:space-x-4 sm:space-y-0"
-            key={fields[0].name}
+            key={group[0].name}
           >
-            {fields.map((field) => (
-              <div className="flex-1" key={field.name}>
-                <ResourceListFiltersField
-                  resourceType={resource.resourceType}
-                  field={field}
-                />
-              </div>
-            ))}
+            {group.map((fieldOrJoin) => {
+              function renderField() {
+                if ("foreignField" in fieldOrJoin) {
+                  return (
+                    <ResourceListJoinsField
+                      resourceType={resource.resourceType}
+                      join={fieldOrJoin}
+                    />
+                  );
+                } else {
+                  return (
+                    <ResourceListFiltersField
+                      resourceType={resource.resourceType}
+                      field={fieldOrJoin}
+                    />
+                  );
+                }
+              }
+              return (
+                <div className="flex-1" key={fieldOrJoin.name}>
+                  {renderField()}
+                </div>
+              );
+            })}
           </div>
         ))}
         <div className="flex justify-between space-x-6">
@@ -108,6 +141,7 @@ export function ResourceListFiltersForm({
 
 function cleanValues(
   fields: AdminFieldModel[],
+  joins: AdminJoinModel[],
   values: Record<string, unknown>,
 ) {
   const newValues: Record<string, unknown> = {};
@@ -136,10 +170,16 @@ function cleanValues(
         break;
     }
   }
+  for (const join of joins) {
+    const value = values[join.name];
+    if (value) {
+      newValues[join.name] = value;
+    }
+  }
   return newValues;
 }
 
-function getDefaultValues(fields: AdminFieldModel[]) {
+function getDefaultValues(fields: AdminFieldModel[], joins: AdminJoinModel[]) {
   const values: Record<string, unknown> = {};
   for (const field of fields) {
     switch (field.fieldType) {
@@ -158,6 +198,9 @@ function getDefaultValues(fields: AdminFieldModel[]) {
         values[field.name] = [];
         break;
     }
+  }
+  for (const join of joins) {
+    values[join.name] = "";
   }
   return values;
 }

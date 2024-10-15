@@ -34,9 +34,9 @@ const ValidationSchema = z.object({
 });
 
 /**
- * Implementation of AiNotesGeneratorService using the gpt-3.5-turbo-0125
- * model. It communicates with the model using the OpenAI SDK, which makes
- * requests to the OpenAI API.
+ * Implementation of AiNotesGeneratorService using the gpt-4o-mini model. It
+ * communicates with the model using the OpenAI SDK, which makes requests to the
+ * OpenAI API.
  */
 export class AiNotesGeneratorServiceOpenaiImpl
   implements AiNotesGeneratorService

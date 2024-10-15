@@ -15,6 +15,7 @@ interface ResourceListTableCellProps {
   field: AdminFieldModel;
   data: AdminResourceData;
 }
+
 export function ResourceListTableCell({
   resourceType,
   field,

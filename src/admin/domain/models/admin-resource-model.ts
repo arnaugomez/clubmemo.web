@@ -26,11 +26,11 @@ export interface AdminResourceModel {
   cannotCreate?: boolean;
   showDeleteAlert?: boolean;
   showCreationWarning?: boolean;
+  joins?: AdminJoinModel[];
 }
 
 export interface AdminFieldModel {
   name: string;
-  isReadonly?: boolean;
   fieldType: AdminFieldTypeModel;
   /**
    * Sub-fields of the field. Used when the field type is `AdminFieldTypeModel.form`.
@@ -70,6 +70,14 @@ export enum AdminFieldDisplayModel {
   textarea = "textarea",
   password = "password",
   slider = "slider",
+}
+
+export interface AdminJoinModel {
+  name: string;
+  displayField: string;
+  localField: string;
+  foreignField: string;
+  resourceType: AdminResourceTypeModel;
 }
 
 export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
@@ -119,6 +127,7 @@ export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
 export function transformDataAfterGet(
   fields: AdminFieldModel[],
   data: AdminResourceData,
+  joins: AdminJoinModel[],
 ): AdminResourceData {
   const newData: AdminResourceData = {};
   if (data._id) newData._id = data._id.toString();
@@ -129,10 +138,14 @@ export function transformDataAfterGet(
       newData[field.name] = transformDataAfterGet(
         field.fields ?? [],
         data[field.name] ?? {},
+        [],
       );
     } else {
       newData[field.name] = data[field.name];
     }
+  }
+  for (const join of joins) {
+    newData[join.name] = data[join.name];
   }
   return newData;
 }

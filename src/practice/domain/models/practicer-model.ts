@@ -40,9 +40,6 @@ export class PracticerModel {
     const fsrs = this.data.enrollment.fsrs;
     const fsrsCard = this.data.card.fsrsCard;
     this.recordLog = fsrs.repeat(fsrsCard, new Date());
-    for (const item of Object.values(this.recordLog)) {
-      item.card = fsrs.reschedule([item.card])[0] ?? item.card;
-    }
   }
 
   /**
