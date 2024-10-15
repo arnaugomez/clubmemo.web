@@ -10,17 +10,22 @@ import { ShowColumnsDropdown } from "./show-columns-dropdown";
 
 interface ResourceListTableFiltersProps {
   resource: AdminResourceModel;
-  fieldNames: string[];
   setVisibleColumns: (fieldNames: string[]) => void;
   visibleColumns: string[];
 }
 export function ResourceListTableFilters({
   visibleColumns,
-  fieldNames,
   resource,
   setVisibleColumns,
 }: ResourceListTableFiltersProps) {
   const [showFilters, setShowFilters] = useState(false);
+
+  const configVisibleFields = resource.fields.filter(
+    (field) => !field.hideInList,
+  );
+  const fieldNames = configVisibleFields.map((field) => field.name);
+  const joinNames = resource.joins?.map((join) => join.name) ?? [];
+  const fieldAndJoinNames = fieldNames.concat(joinNames);
   return (
     <>
       <div className="space-y-2 sm:flex sm:space-x-2 sm:space-y-0">
@@ -39,7 +44,7 @@ export function ResourceListTableFilters({
           </Button>
           <ShowColumnsDropdown
             value={visibleColumns}
-            options={fieldNames.map((value) => ({
+            options={fieldAndJoinNames.map((value) => ({
               value,
               label: translateAdminKey(
                 resource.resourceType,

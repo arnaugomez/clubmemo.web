@@ -45,7 +45,7 @@ export function ResourceListFiltersField(props: ResourceListFiltersFieldProps) {
   return <Component {...props} />;
 }
 
-function AdminFieldString({
+export function AdminFieldString({
   resourceType,
   field,
 }: ResourceListFiltersFieldProps) {
@@ -135,7 +135,6 @@ function useAdminFieldProps({
   return {
     name: getName(field.name),
     label: `${translateAdminKey(resourceType, "field", field.name, "tableHeader")} (${field.name})`,
-    disabled: field.isReadonly,
     placeholder: translateAdminKey(
       resourceType,
       "field",

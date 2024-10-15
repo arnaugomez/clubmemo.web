@@ -1,5 +1,8 @@
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
-import type { AdminFieldModel } from "@/src/admin/domain/models/admin-resource-model";
+import type {
+  AdminFieldModel,
+  AdminJoinModel,
+} from "@/src/admin/domain/models/admin-resource-model";
 import { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
@@ -11,10 +14,12 @@ import Link from "next/link";
 import { DeleteResourceButton } from "../../components/delete-resource-button";
 import { IdTableCell } from "./id-table-cell";
 import { ResourceListTableCell } from "./resource-list-table-cell";
+import { ResourceListTableJoinCell } from "./resource-list-table-join-cell";
 
 interface ResourceListTableRowProps {
   resourceType: AdminResourceTypeModel;
   fields: AdminFieldModel[];
+  joins: AdminJoinModel[];
   resourceData: AdminResourceData;
   onReload: () => void;
 }
@@ -22,6 +27,7 @@ interface ResourceListTableRowProps {
 export function ResourceListTableRow({
   resourceType,
   fields,
+  joins,
   resourceData,
   onReload,
 }: ResourceListTableRowProps) {
@@ -29,6 +35,14 @@ export function ResourceListTableRow({
   return (
     <TableRow key={resourceData._id}>
       <IdTableCell id={resourceData._id} resourceType={resourceType} />
+      {joins.map((join) => (
+        <ResourceListTableJoinCell
+          key={join.name}
+          resourceType={resourceType}
+          join={join}
+          data={resourceData}
+        />
+      ))}
       {fields.map((field) => (
         <ResourceListTableCell
           key={field.name}

@@ -55,13 +55,14 @@ export class GetAdminResourcesUseCase {
       .db()
       .collection(resourceType)
       .aggregate<PaginationFacet<WithId<Document>>>([
+        ...this.getPipelineFromJoins(resource),
         ...this.getPipelineFromFilters(resource, filters),
         ...this.getPipelineFromQuery(resource, query),
         ...(sortBy && sortOrder
           ? [
               {
                 $sort: {
-                  [sortBy]:
+                  [this.getSortByKey(resource, sortBy)]:
                     SortOrderDataModelTransformer.fromDomainModel(sortOrder),
                 },
               },
@@ -83,7 +84,49 @@ export class GetAdminResourcesUseCase {
       return PaginationModel.empty();
     }
     return new PaginationFacetTransformer(result).toDomain((data) =>
-      transformDataAfterGet(resource.fields, data),
+      transformDataAfterGet(resource.fields, data, resource.joins ?? []),
+    );
+  }
+
+  private getSortByKey(resource: AdminResourceModel, sortBy: string) {
+    const join = resource.joins?.find((join) => join.name === sortBy);
+    if (join) {
+      return `${join.name}.display`;
+    }
+    return sortBy;
+  }
+
+  private getPipelineFromJoins(resource: AdminResourceModel) {
+    return (
+      resource.joins?.flatMap((join) => [
+        {
+          $lookup: {
+            from: join.resourceType,
+            let: { localField: `$${join.localField}` },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: [`$${join.foreignField}`, "$$localField"],
+                  },
+                },
+              },
+              {
+                $project: {
+                  display: `$${join.displayField}`,
+                },
+              },
+              {
+                $limit: 1,
+              },
+            ],
+            as: join.name,
+          },
+        },
+        {
+          $unwind: { path: `$${join.name}`, preserveNullAndEmptyArrays: true },
+        },
+      ]) ?? []
     );
   }
 
@@ -106,6 +149,12 @@ export class GetAdminResourcesUseCase {
       }
     }
 
+    for (const join of resource.joins ?? []) {
+      match.push({
+        [`${join.name}.display`]: { $regex: escaped, $options: "i" },
+      });
+    }
+
     if (!match.length) {
       return [];
     }
@@ -116,6 +165,7 @@ export class GetAdminResourcesUseCase {
       },
     ];
   }
+
   private getPipelineFromFilters(
     resource: AdminResourceModel,
     filters?: Record<string, unknown>,
@@ -175,6 +225,20 @@ export class GetAdminResourcesUseCase {
             match.push({ [field.name]: { $eq: new ObjectId(value) } });
           }
           break;
+      }
+    }
+
+    for (const join of resource.joins ?? []) {
+      const value = filters[join.name];
+      if (value === undefined) continue;
+      if (typeof value === "string") {
+        const trimmed = value.trim();
+        if (trimmed) {
+          const escaped = escapeRegExp(trimmed);
+          match.push({
+            [`${join.name}.display`]: { $regex: escaped, $options: "i" },
+          });
+        }
       }
     }
 
