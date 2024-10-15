@@ -25,7 +25,7 @@ export function ResourceListTableFilters({
   );
   const fieldNames = configVisibleFields.map((field) => field.name);
   const joinNames = resource.joins?.map((join) => join.name) ?? [];
-  const fieldAndJoinNames = joinNames.concat(fieldNames);
+  const columnNames = joinNames.concat(fieldNames);
   return (
     <>
       <div className="space-y-2 sm:flex sm:space-x-2 sm:space-y-0">
@@ -44,7 +44,7 @@ export function ResourceListTableFilters({
           </Button>
           <ShowColumnsDropdown
             value={visibleColumns}
-            options={fieldAndJoinNames.map((value) => ({
+            options={columnNames.map((value) => ({
               value,
               label: translateAdminKey(
                 resource.resourceType,
