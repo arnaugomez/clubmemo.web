@@ -29,6 +29,6 @@ export class GetAdminResourceDetailUseCase {
       .collection(resourceType)
       .findOne({ _id: objectId });
     if (!data) return null;
-    return transformDataAfterGet(resource.fields, data);
+    return transformDataAfterGet(resource.fields, data, []);
   }
 }

@@ -45,6 +45,15 @@ export const adminResourcesConfig: AdminResourceModel[] = [
         defaultValue: [AuthTypeModel.email],
       },
     ],
+    joins: [
+      {
+        name: "profile",
+        displayField: "displayName",
+        localField: "_id",
+        foreignField: "userId",
+        resourceType: AdminResourceTypeModel.profiles,
+      },
+    ],
   },
   {
     resourceType: AdminResourceTypeModel.profiles,

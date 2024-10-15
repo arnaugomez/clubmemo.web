@@ -182,21 +182,27 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
   const configVisibleFields = resource.fields.filter(
     (field) => !field.hideInList,
   );
-  const fieldNames = configVisibleFields.map((field) => field.name);
 
-  const [visibleColumns, setVisibleColumns] = useState(fieldNames);
+  const joins = resource.joins ?? [];
+
+  const [visibleColumns, setVisibleColumns] = useState(() => {
+    const joinNames = joins.map((join) => join.name);
+    const fieldNames = configVisibleFields.map((field) => field.name);
+    return joinNames.concat(fieldNames);
+  });
 
   const visibleColumnsSet = new Set(visibleColumns);
+
   const visibleFields = configVisibleFields.filter((field) =>
     visibleColumnsSet.has(field.name),
   );
+  const visibleJoins = joins.filter((join) => visibleColumnsSet.has(join.name));
 
   return (
     <>
       <ResourceListTableFilters
         visibleColumns={visibleColumns}
         setVisibleColumns={setVisibleColumns}
-        fieldNames={fieldNames}
         resource={resource}
       />
 
@@ -204,11 +210,18 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
         <TableHeader>
           <TableRow>
             <TableHead className="min-w-[100px]">Identificador</TableHead>
+            {visibleJoins.map((join) => (
+              <ResourceListTableHead
+                key={join.name}
+                resourceType={resource.resourceType}
+                fieldName={join.name}
+              />
+            ))}
             {visibleFields.map((field) => (
               <ResourceListTableHead
                 key={field.name}
                 resourceType={resource.resourceType}
-                field={field}
+                fieldName={field.name}
               />
             ))}
             <TableHead className="w-[60px]">Acciones</TableHead>
@@ -221,6 +234,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
                 key={resourceData._id}
                 resourceData={resourceData}
                 resourceType={resourceType}
+                joins={visibleJoins}
                 fields={visibleFields}
                 onReload={handleReload}
               />

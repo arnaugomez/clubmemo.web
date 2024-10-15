@@ -8,9 +8,7 @@ export function transformDataBeforeCreateOrUpdate(
   data: AdminResourceData,
 ): AdminResourceData {
   for (const field of fields) {
-    if (field.isReadonly) {
-      delete data[field.name];
-    } else if (field.fieldType === AdminFieldTypeModel.objectId) {
+    if (field.fieldType === AdminFieldTypeModel.objectId) {
       const value = data[field.name];
       if (typeof value === "string" && ObjectId.isValid(value)) {
         data[field.name] = new ObjectId(value);
