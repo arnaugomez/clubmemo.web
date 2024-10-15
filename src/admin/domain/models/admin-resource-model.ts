@@ -145,7 +145,12 @@ export function transformDataAfterGet(
     }
   }
   for (const join of joins) {
-    newData[join.name] = data[join.name];
+    if (data[join.name]?._id) {
+      newData[join.name] = {
+        _id: data[join.name]._id.toString(),
+        display: data[join.name].display,
+      };
+    }
   }
   return newData;
 }

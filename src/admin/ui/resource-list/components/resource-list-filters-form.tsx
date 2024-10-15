@@ -32,10 +32,6 @@ export function ResourceListFiltersForm({
     () => resource.fields.filter((field) => !field.hideInList),
     [resource.fields],
   );
-  const defaultValues = useMemo(
-    () => getDefaultValues(configVisibleFields, resource.joins ?? []),
-    [configVisibleFields, resource.joins],
-  );
 
   const params = useSearchParams();
   const pathname = usePathname();
@@ -50,9 +46,15 @@ export function ResourceListFiltersForm({
     }
   }, [filtersString]);
 
+  const defaultValues = useMemo(
+    () => getDefaultValues(configVisibleFields, resource.joins ?? [], filters),
+    [configVisibleFields, filters, resource.joins],
+  );
+
   const form = useForm({
-    defaultValues: Object.keys(filters).length ? filters : defaultValues,
+    defaultValues,
   });
+
   const values = form.watch();
 
   const setQuery = useDebouncedCallback((values: Record<string, unknown>) => {
@@ -86,7 +88,9 @@ export function ResourceListFiltersForm({
   return (
     <FormProvider {...form}>
       <form
-        onReset={() => form.reset(defaultValues)}
+        onReset={() =>
+          form.reset(getResetValues(configVisibleFields, resource.joins ?? []))
+        }
         onSubmit={form.handleSubmit(() => {})}
         className="mt-2 space-y-4 rounded-md border-[1px] border-slate-300 bg-slate-100 p-4"
       >
@@ -179,7 +183,7 @@ function cleanValues(
   return newValues;
 }
 
-function getDefaultValues(fields: AdminFieldModel[], joins: AdminJoinModel[]) {
+function getResetValues(fields: AdminFieldModel[], joins: AdminJoinModel[]) {
   const values: Record<string, unknown> = {};
   for (const field of fields) {
     switch (field.fieldType) {
@@ -201,6 +205,46 @@ function getDefaultValues(fields: AdminFieldModel[], joins: AdminJoinModel[]) {
   }
   for (const join of joins) {
     values[join.name] = "";
+  }
+  return values;
+}
+
+function getDefaultValues(
+  fields: AdminFieldModel[],
+  joins: AdminJoinModel[],
+  filters: Record<string, unknown>,
+) {
+  const values = { ...filters };
+
+  for (const field of fields) {
+    const value = values[field.name];
+    switch (field.fieldType) {
+      case AdminFieldTypeModel.string:
+      case AdminFieldTypeModel.objectId:
+        if (typeof value !== "string") {
+          values[field.name] = "";
+        }
+        break;
+      case AdminFieldTypeModel.number:
+      case AdminFieldTypeModel.boolean:
+      case AdminFieldTypeModel.date:
+      case AdminFieldTypeModel.select:
+        if (value === undefined) {
+          values[field.name] = null;
+        }
+        break;
+      case AdminFieldTypeModel.selectMultiple:
+      case AdminFieldTypeModel.tags:
+        if (!Array.isArray(value)) {
+          values[field.name] = [];
+        }
+        break;
+    }
+  }
+  for (const join of joins) {
+    if (typeof values[join.name] !== "string") {
+      values[join.name] = "";
+    }
   }
   return values;
 }
