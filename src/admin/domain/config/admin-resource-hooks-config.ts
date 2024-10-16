@@ -8,6 +8,7 @@ import { checkIfHandleAlreadyExists } from "../hooks/check-if-handle-already-exi
 import { checkIfTagAlreadyExists } from "../hooks/check-if-tag-already-exists";
 import type { AdminResourceHookModel } from "../models/admin-resouce-hook-model";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
+import { locator_profiles_ProfilesRepository } from "@/src/profile/locators/locator_profiles-repository";
 
 const adminResourceHooksConfig: AdminResourceHookModel[] = [
   {
@@ -47,7 +48,7 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
     },
     afterDelete: async (id) => {
       const userId = id.toString();
-      const profilesRepository = await locator.ProfilesRepository();
+      const profilesRepository = locator_profiles_ProfilesRepository();
       const authService = locator.AuthService();
       await Promise.all([
         profilesRepository.deleteByUserId(userId),
@@ -68,7 +69,7 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
     afterDelete: async (_id, data) => {
       const userId = data.userId?.toString();
       if (!userId) return;
-      const profilesRepository = await locator.ProfilesRepository();
+      const profilesRepository = locator_profiles_ProfilesRepository();
       const usersRepository = await locator.UsersRepository();
       const authService = locator.AuthService();
       await Promise.all([

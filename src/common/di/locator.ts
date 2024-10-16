@@ -9,18 +9,8 @@ import type { CourseEnrollmentsRepository } from "../../courses/domain/interface
 import type { CoursesRepository } from "../../courses/domain/interfaces/courses-repository";
 import type { NotesRepository } from "../../notes/domain/interfaces/notes-repository";
 import type { PracticeCardsRepository } from "../../practice/domain/interfaces/practice-cards-repository";
-import type { ReviewLogsRepository } from "../../practice/domain/interfaces/review-logs-repository";
-import type { ProfilesRepository } from "../../profile/domain/interfaces/profiles-repository";
-import { RateLimitsRepositoryImpl } from "../../rate-limits/data/repositories/rate-limits-repository-impl";
-import type { RateLimitsRepository } from "../../rate-limits/domain/interfaces/rate-limits-repository";
-import type { TagsRepository } from "../../tags/domain/interfaces/tags-repository";
-import { CookieServiceNextImpl } from "../data/services/cookie-service-next-impl";
-import { DatabaseServiceImpl } from "../data/services/database-service-impl";
-import type { CookieService } from "../domain/interfaces/cookie-service";
-import type { DatabaseService } from "../domain/interfaces/database-service";
-import type { DateTimeService } from "../domain/interfaces/date-time-service";
-import type { EmailService } from "../domain/interfaces/email-service";
-import type { IpService } from "../domain/interfaces/ip-service";
+import { locator_common_DatabaseService } from "../locators/locator_database-service";
+import { locator_common_DateTimeService } from "../locators/locator_datetime-service";
 import { locator_common_EnvService } from "../locators/locator_env-service";
 import { locator_common_ErrorTrackingService } from "../locators/locator_error-tracking-service";
 import type { Dependency, Lazy } from "./locator-types";
@@ -34,68 +24,34 @@ import { singleton } from "./locator-utils";
  * that are used in both the client and server side of the application.
  */
 interface Locator {
-  DatabaseService: Dependency<DatabaseService>;
-  EmailService: Lazy<EmailService>;
-  DateTimeService: Lazy<DateTimeService>;
-  IpService: Lazy<IpService>;
-
   // Auth
   AuthService: Dependency<AuthService>;
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
   ForgotPasswordTokensRepository: Lazy<ForgotPasswordTokensRepository>;
   UsersRepository: Lazy<UsersRepository>;
-  CookieService: Dependency<CookieService>;
   // Profiles
-  ProfilesRepository: Lazy<ProfilesRepository>;
   // Courses
   CoursesRepository: Lazy<CoursesRepository>;
   CourseEnrollmentsRepository: Lazy<CourseEnrollmentsRepository>;
   CourseAuthorsRepository: Lazy<CourseAuthorsRepository>;
-  TagsRepository: Lazy<TagsRepository>;
   NotesRepository: Lazy<NotesRepository>;
   // Ai Generator
   AiNotesGeneratorService: Lazy<AiNotesGeneratorService>;
   // Practice
   PracticeCardsRepository: Lazy<PracticeCardsRepository>;
-  ReviewLogsRepository: Lazy<ReviewLogsRepository>;
   // Rate Limits
-  RateLimitsRepository: Dependency<RateLimitsRepository>;
 }
 
 /**
  * A simple service locator for dependency injection.
  */
 export const locator: Locator = {
-  DatabaseService: singleton(
-    () => new DatabaseServiceImpl(locator_common_EnvService()),
-  ),
-  IpService: singleton(async () => {
-    const file = await import("../data/services/ip-service-vercel-impl");
-    return new file.IpServiceVercelImpl();
-  }),
-  async EmailService() {
-    const envService = locator_common_EnvService();
-    if (envService.sendEmail) {
-      const file = await import("../data/services/email-service-resend-impl");
-      return new file.EmailServiceResendImpl(envService);
-    }
-    const file = await import("../data/services/email-service-fake-impl");
-    return new file.EmailServiceFakeImpl(envService);
-  },
-  DateTimeService: singleton(() =>
-    import("../data/services/date-time-service-impl").then(
-      (file) => new file.DateTimeServiceImpl(),
-    ),
-  ),
-
-  CookieService: singleton(() => new CookieServiceNextImpl()),
-
   // Auth
   AuthService: singleton(
     () =>
       new AuthServiceImpl(
         locator_common_EnvService(),
-        locator.DatabaseService(),
+        locator_common_DatabaseService(),
       ),
   ),
   async EmailVerificationCodesRepository() {
@@ -103,29 +59,25 @@ export const locator: Locator = {
       "../../auth/data/repositories/email-verification-codes-repository-impl"
     );
     return new file.EmailVerificationCodesRepositoryImpl(
-      this.DatabaseService(),
+      locator_common_DatabaseService(),
     );
   },
   async ForgotPasswordTokensRepository() {
     const file = await import(
       "../../auth/data/repositories/forgot-password-tokens-repository-impl"
     );
-    return new file.ForgotPasswordTokensRepositoryImpl(this.DatabaseService());
+    return new file.ForgotPasswordTokensRepositoryImpl(
+      locator_common_DatabaseService(),
+    );
   },
   async UsersRepository() {
     const file = await import(
       "../../auth/data/repositories/users-repository-impl"
     );
-    return new file.UsersRepositoryImpl(this.DatabaseService());
+    return new file.UsersRepositoryImpl(locator_common_DatabaseService());
   },
 
   // Profile
-  async ProfilesRepository() {
-    const file = await import(
-      "../../profile/data/repositories/profiles-repository-impl"
-    );
-    return new file.ProfilesRepositoryImpl(this.DatabaseService());
-  },
 
   // Courses
   async CoursesRepository() {
@@ -133,36 +85,33 @@ export const locator: Locator = {
       "../../courses/data/repositories/courses-repository-impl"
     );
     return new file.CoursesRepositoryImpl(
-      this.DatabaseService(),
-      await this.DateTimeService(),
+      locator_common_DatabaseService(),
+      locator_common_DateTimeService(),
     );
   },
   async CourseEnrollmentsRepository() {
     const file = await import(
       "../../courses/data/repositories/course-enrollments-repository-impl"
     );
-    return new file.CourseEnrollmentsRepositoryImpl(this.DatabaseService());
+    return new file.CourseEnrollmentsRepositoryImpl(
+      locator_common_DatabaseService(),
+    );
   },
   async CourseAuthorsRepository() {
     const file = await import(
       "../../courses/data/repositories/course-authors-repository-impl"
     );
-    return new file.CourseAuthorsRepositoryImpl(this.DatabaseService());
+    return new file.CourseAuthorsRepositoryImpl(
+      locator_common_DatabaseService(),
+    );
   },
 
-  // Tags
-  async TagsRepository() {
-    const file = await import(
-      "../../tags/data/repositories/tags-repository-impl"
-    );
-    return new file.TagsRepositoryImpl(this.DatabaseService());
-  },
   // Notes
   async NotesRepository() {
     const file = await import(
       "../../notes/data/repositories/notes-repository-impl"
     );
-    return new file.NotesRepositoryImpl(this.DatabaseService());
+    return new file.NotesRepositoryImpl(locator_common_DatabaseService());
   },
   // Ai Generator
   async AiNotesGeneratorService() {
@@ -188,22 +137,8 @@ export const locator: Locator = {
       "../../practice/data/repositories/practice-cards-repository-impl"
     );
     return new file.PracticeCardsRepositoryImpl(
-      this.DatabaseService(),
-      await this.DateTimeService(),
+      locator_common_DatabaseService(),
+      locator_common_DateTimeService(),
     );
   },
-  async ReviewLogsRepository() {
-    const file = await import(
-      "../../practice/data/repositories/review-logs-repository-impl"
-    );
-    return new file.ReviewLogsRepositoryImpl(
-      this.DatabaseService(),
-      await this.DateTimeService(),
-    );
-  },
-
-  // Rate Limits
-  RateLimitsRepository: singleton(
-    () => new RateLimitsRepositoryImpl(locator.DatabaseService()),
-  ),
 };

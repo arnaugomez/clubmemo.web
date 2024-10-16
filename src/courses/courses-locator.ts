@@ -1,6 +1,8 @@
 import { locator } from "../common/di/locator";
 import type { Lazy } from "../common/di/locator-types";
+import { locator_profiles_ProfilesRepository } from "../profile/locators/locator_profiles-repository";
 import { profileLocator } from "../profile/profile-locator";
+import { locator_tags_TagsRepository } from "../tags/locators/locator_tags-repository";
 import type { CopyCourseUseCase } from "./domain/use-cases/copy-course-use-case";
 import type { CreateCourseUseCase } from "./domain/use-cases/create-course-use-case";
 import type { DeleteCourseUseCase } from "./domain/use-cases/delete-course-use-case";
@@ -25,7 +27,7 @@ export const coursesLocator: CoursesLocator = {
     const file = await import("./domain/use-cases/edit-course-use-case");
     return new file.EditCourseUseCase(
       await profileLocator.GetMyProfileUseCase(),
-      await locator.TagsRepository(),
+      locator_tags_TagsRepository(),
       await locator.CoursesRepository(),
     );
   },
@@ -42,7 +44,7 @@ export const coursesLocator: CoursesLocator = {
       "./domain/use-cases/get-interesting-courses-use-case"
     );
     return new file.GetInterestingCoursesUseCase(
-      await locator.ProfilesRepository(),
+      locator_profiles_ProfilesRepository(),
       await locator.CoursesRepository(),
     );
   },

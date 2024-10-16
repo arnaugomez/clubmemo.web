@@ -5,6 +5,7 @@ import type { GetCoursePracticeCountUseCase } from "./domain/use-cases/get-cours
 import type { GetNextPracticeCardsUseCase } from "./domain/use-cases/get-next-practice-cards-use-case";
 import type { GetPracticeCardsUseCase } from "./domain/use-cases/get-practice-cards-use-case";
 import type { PracticeUseCase } from "./domain/use-cases/practice-use-case";
+import { locator_practice_ReviewLogsRepository } from "./locators/locator_review-logs-repository";
 
 /**
  * Interface of the service locator of the Practice module
@@ -36,13 +37,13 @@ export const practiceLocator: PracticeLocator = {
       await profileLocator.GetMyProfileUseCase(),
       await locator.CoursesRepository(),
       await locator.PracticeCardsRepository(),
-      await locator.ReviewLogsRepository(),
+      locator_practice_ReviewLogsRepository(),
     );
   },
   async GetPracticeCardsUseCase() {
     const file = await import("./domain/use-cases/get-practice-cards-use-case");
     return new file.GetPracticeCardsUseCase(
-      await locator.ReviewLogsRepository(),
+      locator_practice_ReviewLogsRepository(),
       await locator.PracticeCardsRepository(),
     );
   },
@@ -52,7 +53,7 @@ export const practiceLocator: PracticeLocator = {
     );
     return new file.GetCoursePracticeCountUseCase(
       await locator.PracticeCardsRepository(),
-      await locator.ReviewLogsRepository(),
+      locator_practice_ReviewLogsRepository(),
     );
   },
 };

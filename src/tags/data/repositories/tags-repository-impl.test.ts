@@ -1,24 +1,31 @@
 import { DatabaseServiceImpl } from "@/src/common/data/services/database-service-impl";
-import { locator } from "@/src/common/di/locator";
+import { singleton } from "@/src/common/di/locator-utils";
+import { locator_common_DatabaseService } from "@/src/common/locators/locator_database-service";
 import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { locator_tags_TagsRepository } from "../../locators/locator_tags-repository";
 import { tagsCollection } from "../collections/tags-collection";
+
+vi.mock("@/src/common/locators/locator_database-service", () => ({
+  locator_common_DatabaseService: singleton(
+    () =>
+      new DatabaseServiceImpl(
+        locator_common_EnvService(),
+        "TagsRepositoryImpl",
+      ),
+  ),
+}));
 
 describe("TagsRepositoryImpl", () => {
   beforeEach(async () => {
-    locator.DatabaseService = () =>
-      new DatabaseServiceImpl(
-        locator_common_EnvService(),
-        "ProfilesRepositoryImpl",
-      );
-    const databaseService = locator.DatabaseService();
+    const databaseService = locator_common_DatabaseService();
     await databaseService.collection(tagsCollection).deleteMany();
   });
 
   it("create creates a list of tags", async () => {
-    const repository = await locator.TagsRepository();
+    const repository = locator_tags_TagsRepository();
     await repository.create(["tag1", "tag2", "tag3"]);
-    const databaseService = locator.DatabaseService();
+    const databaseService = locator_common_DatabaseService();
     const tagsCount = await databaseService
       .collection(tagsCollection)
       .countDocuments();
@@ -37,10 +44,10 @@ describe("TagsRepositoryImpl", () => {
   });
 
   it("create ignores repeated tags", async () => {
-    const repository = await locator.TagsRepository();
+    const repository = locator_tags_TagsRepository();
     await repository.create(["tag1", "tag1", "tag7"]);
     await repository.create(["tag1"]);
-    const databaseService = locator.DatabaseService();
+    const databaseService = locator_common_DatabaseService();
     const tagsCount = await databaseService
       .collection(tagsCollection)
       .countDocuments();
@@ -48,9 +55,9 @@ describe("TagsRepositoryImpl", () => {
   });
 
   it("create does nothing when the argument is an empty array", async () => {
-    const repository = await locator.TagsRepository();
+    const repository = locator_tags_TagsRepository();
     await repository.create([]);
-    const databaseService = locator.DatabaseService();
+    const databaseService = locator_common_DatabaseService();
     const tagsCount = await databaseService
       .collection(tagsCollection)
       .countDocuments();
@@ -58,7 +65,7 @@ describe("TagsRepositoryImpl", () => {
   });
 
   it("getSuggestions returns a list of tags that start with the query", async () => {
-    const repository = await locator.TagsRepository();
+    const repository = locator_tags_TagsRepository();
     await repository.create([
       "apple",
       "banana",
@@ -77,7 +84,7 @@ describe("TagsRepositoryImpl", () => {
   });
 
   it("getSuggestions returns a maximum of 5 suggestions", async () => {
-    const repository = await locator.TagsRepository();
+    const repository = locator_tags_TagsRepository();
     await repository.create([
       "test1",
       "test2",
@@ -92,7 +99,7 @@ describe("TagsRepositoryImpl", () => {
   });
 
   it("getSuggestions returns all suggestions (but not more than 5) if the query is undefined or an empty string", async () => {
-    const repository = await locator.TagsRepository();
+    const repository = locator_tags_TagsRepository();
     await repository.create(["test1", "test2", "test3", "test4"]);
     let suggestions = await repository.getSuggestions();
     expect(suggestions).toHaveLength(4);
