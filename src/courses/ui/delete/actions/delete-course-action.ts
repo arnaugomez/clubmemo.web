@@ -1,15 +1,15 @@
 "use server";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 
-import { coursesLocator } from "@/src/courses/courses-locator";
 import { revalidatePath } from "next/cache";
 import type { DeleteCourseActionModel } from "../schemas/delete-course-action-schema";
 import { DeleteCourseActionSchema } from "../schemas/delete-course-action-schema";
+import { locator_courses_DeleteCourseUseCase } from "@/src/courses/locators/locator_delete-course-use-case";
 
 export async function deleteCourseAction(input: DeleteCourseActionModel) {
   try {
     const { id } = DeleteCourseActionSchema.parse(input);
-    const useCase = await coursesLocator.DeleteCourseUseCase();
+    const useCase = locator_courses_DeleteCourseUseCase();
     await useCase.execute(id);
 
     revalidatePath("/courses");

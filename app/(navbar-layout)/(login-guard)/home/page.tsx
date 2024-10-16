@@ -1,4 +1,4 @@
-import { locator } from "@/src/common/di/locator";
+import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
 import { InterestingCoursesSection } from "@/src/courses/ui/interesting-courses-section";
 import { KeepLearningSection } from "@/src/courses/ui/keep-learning/components/keep-learning-section";
@@ -18,7 +18,7 @@ export default async function HomePage() {
   if (!profile) {
     return null;
   }
-  const coursesRepository = await locator.CoursesRepository();
+  const coursesRepository = locator_courses_CoursesRepository();
   const hasCourses = await coursesRepository.getHasCourses(profile.id);
   return (
     <main>

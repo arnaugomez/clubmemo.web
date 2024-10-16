@@ -3,8 +3,8 @@
 import { InvalidFileFormatError } from "@/src/common/domain/models/app-errors";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { notesLocator } from "@/src/notes/notes-locator";
 import { ImportNotesActionSchema } from "../schemas/import-notes-action-schema";
+import { locator_notes_ImportNotesUseCase } from "@/src/notes/locators/locator_import-notes-use-case";
 
 export async function importNotesAction(formData: FormData) {
   try {
@@ -17,7 +17,7 @@ export async function importNotesAction(formData: FormData) {
       importType: formData.get("importType"),
     });
 
-    const importNotesUseCase = await notesLocator.ImportNotesUseCase();
+    const importNotesUseCase = locator_notes_ImportNotesUseCase();
     const result = await importNotesUseCase.execute({
       courseId: parsed.courseId,
       file: parsed.file,

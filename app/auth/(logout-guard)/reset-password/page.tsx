@@ -1,5 +1,6 @@
+import { locator_auth_ForgotPasswordTokensRepository } from "@/src/auth/locators/locator_forgot-password-tokens-repository";
+import { locator_auth_UsersRepository } from "@/src/auth/locators/locator_users-repository";
 import { ResetPasswordPageLoaded } from "@/src/auth/ui/forgot-password/pages/reset-password-page-loaded";
-import { locator } from "@/src/common/di/locator";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -20,12 +21,12 @@ async function resetPasswordPageGuard(searchParams: SearchParams) {
   if (!searchParams.email || !searchParams.token) {
     notFound();
   }
-  const usersRepository = await locator.UsersRepository();
+  const usersRepository = locator_auth_UsersRepository();
   const user = await usersRepository.getByEmail(searchParams.email);
   if (!user) notFound();
 
   const forgotPasswordTokensRepository =
-    await locator.ForgotPasswordTokensRepository();
+    locator_auth_ForgotPasswordTokensRepository();
   const forgotPasswordCode = await forgotPasswordTokensRepository.get(user.id);
   if (!forgotPasswordCode) notFound();
 

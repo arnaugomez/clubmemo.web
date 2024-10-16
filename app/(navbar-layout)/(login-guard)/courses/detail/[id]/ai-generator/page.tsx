@@ -1,5 +1,4 @@
 import { GenerateAiNotesWizard } from "@/src/ai-generator/ui/components/generate-ai-notes-wizard";
-import { locator } from "@/src/common/di/locator";
 import {
   Alert,
   AlertDescription,
@@ -8,6 +7,7 @@ import {
 import { invalidIdGuard } from "@/src/common/ui/guards/invalid-id-guard";
 import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
+import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import { GraduationCap, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
@@ -30,7 +30,7 @@ export default async function CourseAiGeneratorPage({
 
   const profile = await fetchMyProfile();
 
-  const coursesRepository = await locator.CoursesRepository();
+  const coursesRepository = locator_courses_CoursesRepository();
   const course = await coursesRepository.getDetail({
     id,
     profileId: profile?.id,

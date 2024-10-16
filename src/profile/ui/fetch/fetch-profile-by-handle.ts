@@ -1,5 +1,5 @@
-import { locator } from "@/src/common/di/locator";
 import { cache } from "react";
+import { locator_profiles_ProfilesRepository } from "../../locators/locator_profiles-repository";
 
 /**
  * Gets the data of the profile with the handle.
@@ -9,6 +9,6 @@ import { cache } from "react";
  * @returns The profile with the handle
  */
 export const fetchProfileByHandle = cache(async (handle: string) => {
-  const profilesRepository = await locator.ProfilesRepository();
+  const profilesRepository = locator_profiles_ProfilesRepository();
   return profilesRepository.getByHandle(handle);
 });

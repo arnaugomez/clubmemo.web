@@ -5,8 +5,8 @@
 - Entities: `*Model`
 - Use Case Controllers: `*UseCase`
 - Input and Output of methods: `*InputModel`, `*OutputModel`
-- Interfaces: does not have a specific suffix or prefix. Avoid using the `I` prefix or the `Interface` suffix.
-- Service locator: `*Locator`
+- Interfaces do not have a specific suffix or prefix. Avoid using the `I` prefix or the `Interface` suffix.
+- Service locator: `locator_<domain>_<interface>`
 
 ## Data layer
 

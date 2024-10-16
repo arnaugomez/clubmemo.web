@@ -1,18 +1,18 @@
 "use server";
 
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
-import { coursesLocator } from "@/src/courses/courses-locator";
 import { revalidatePath } from "next/cache";
 import {
   EditCourseActionSchema,
   type EditCourseActionModel,
 } from "../schemas/edit-course-action-schema";
+import { locator_courses_EditCourseUseCase } from "@/src/courses/locators/locator_edit-course-use-case";
 
 export async function editCourseAction(input: EditCourseActionModel) {
   try {
     const parsed = EditCourseActionSchema.parse(input);
 
-    const useCase = await coursesLocator.EditCourseUseCase();
+    const useCase = locator_courses_EditCourseUseCase();
     await useCase.execute(parsed);
 
     revalidatePath("/courses");

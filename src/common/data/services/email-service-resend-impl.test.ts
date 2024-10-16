@@ -1,8 +1,8 @@
 import { afterEach } from "node:test";
 import { Resend } from "resend";
 import { describe, expect, it, vi } from "vitest";
-import { locator } from "../../di/locator";
 import { EmailServiceResendImpl } from "./email-service-resend-impl";
+import { locator_common_EnvService } from "../../locators/locator_env-service";
 
 vi.mock("resend", () => {
   const sendMock = vi.fn();
@@ -23,7 +23,7 @@ describe("EmailServiceResendImpl", () => {
     const email = "test@example.com";
     const verificationCode = "123456";
 
-    const envService = locator.EnvService();
+    const envService = locator_common_EnvService();
 
     const emailService = new EmailServiceResendImpl(envService);
     await emailService.sendVerificationCode(email, verificationCode);
@@ -40,7 +40,7 @@ describe("EmailServiceResendImpl", () => {
     const email = "test@example.com";
     const token = "reset-token";
 
-    const envService = locator.EnvService();
+    const envService = locator_common_EnvService();
     const emailService = new EmailServiceResendImpl(envService);
     await emailService.sendForgotPasswordLink(email, token);
 

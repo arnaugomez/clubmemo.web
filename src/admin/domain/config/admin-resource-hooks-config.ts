@@ -1,5 +1,9 @@
-import { locator } from "@/src/common/di/locator";
+import { locator_auth_AuthService } from "@/src/auth/locators/locator_auth-service";
+import { locator_auth_UsersRepository } from "@/src/auth/locators/locator_users-repository";
+import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
+import { locator_courses_CourseEnrollmentsRepository } from "@/src/courses/locators/locator_course-enrollments-repository";
 import { locator_courses_CoursePermissionsRepository } from "@/src/courses/locators/locator_course-permissions-repository";
+import { locator_profiles_ProfilesRepository } from "@/src/profile/locators/locator_profiles-repository";
 import { Argon2id } from "oslo/password";
 import { ZodError, ZodIssueCode } from "zod";
 import { checkIfEmailAlreadyExists } from "../hooks/check-if-email-already-exists";
@@ -7,6 +11,7 @@ import { checkIfHandleAlreadyExists } from "../hooks/check-if-handle-already-exi
 import { checkIfTagAlreadyExists } from "../hooks/check-if-tag-already-exists";
 import type { AdminResourceHookModel } from "../models/admin-resouce-hook-model";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
+import { locator_notes_NotesRepository } from "@/src/notes/locators/locator_notes-repository";
 
 const adminResourceHooksConfig: AdminResourceHookModel[] = [
   {
@@ -26,7 +31,8 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
       }
       const newPassword = data.newPassword;
       delete data.newPassword;
-      const secret = new TextEncoder().encode(process.env.PASSWORD_PEPPER);
+      const passwordPepper = locator_common_EnvService().passwordPepper;
+      const secret = new TextEncoder().encode(passwordPepper);
       const passwordHashingAlgorithm = new Argon2id({ secret });
       data.hashed_password = await passwordHashingAlgorithm.hash(newPassword);
       return data;
@@ -36,7 +42,8 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
       if (data.newPassword) {
         const newPassword = data.newPassword;
         delete data.newPassword;
-        const secret = new TextEncoder().encode(process.env.PASSWORD_PEPPER);
+        const passwordPepper = locator_common_EnvService().passwordPepper;
+        const secret = new TextEncoder().encode(passwordPepper);
         const passwordHashingAlgorithm = new Argon2id({ secret });
         data.hashed_password = await passwordHashingAlgorithm.hash(newPassword);
       }
@@ -44,8 +51,8 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
     },
     afterDelete: async (id) => {
       const userId = id.toString();
-      const profilesRepository = await locator.ProfilesRepository();
-      const authService = locator.AuthService();
+      const profilesRepository = locator_profiles_ProfilesRepository();
+      const authService = locator_auth_AuthService();
       await Promise.all([
         profilesRepository.deleteByUserId(userId),
         authService.invalidateUserSessions(userId),
@@ -65,9 +72,9 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
     afterDelete: async (_id, data) => {
       const userId = data.userId?.toString();
       if (!userId) return;
-      const profilesRepository = await locator.ProfilesRepository();
-      const usersRepository = await locator.UsersRepository();
-      const authService = locator.AuthService();
+      const profilesRepository = locator_profiles_ProfilesRepository();
+      const usersRepository = locator_auth_UsersRepository();
+      const authService = locator_auth_AuthService();
       await Promise.all([
         profilesRepository.deleteByUserId(userId),
         usersRepository.delete(userId),
@@ -91,10 +98,10 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
     afterDelete: async (id) => {
       const courseId = id.toString();
       const courseEnrollmentsRepository =
-        await locator.CourseEnrollmentsRepository();
+        locator_courses_CourseEnrollmentsRepository();
       const coursePermissionsRepository =
         locator_courses_CoursePermissionsRepository();
-      const notesRepository = await locator.NotesRepository();
+      const notesRepository = locator_notes_NotesRepository();
       await Promise.all([
         courseEnrollmentsRepository.deleteByCourseId(courseId),
         coursePermissionsRepository.deleteByCourseId(courseId),
