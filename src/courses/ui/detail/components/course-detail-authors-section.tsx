@@ -1,4 +1,3 @@
-import { locator } from "@/src/common/di/locator";
 import {
   Avatar,
   AvatarFallback,
@@ -8,6 +7,7 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseAuthorModel } from "@/src/courses/domain/models/course-author-model";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
+import { locator_courses_CourseAuthorsRepository } from "@/src/courses/locators/locator_course-authors-repository";
 import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 import { User } from "lucide-react";
 import Link from "next/link";
@@ -19,7 +19,7 @@ interface CourseDetailAuthorSectionProps {
 export async function CourseDetailAuthorsSectionLoader({
   course,
 }: CourseDetailAuthorSectionProps) {
-  const authorsRepository = await locator.CourseAuthorsRepository();
+  const authorsRepository = locator_courses_CourseAuthorsRepository();
   const authors = await authorsRepository.get(course.id);
   return <CourseDetailAuthorsSectionLoaded authors={authors} />;
 }

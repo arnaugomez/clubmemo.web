@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { authLocator } from "../../auth-locator";
+import { locator_auth_GetSessionUseCase } from "../../locators/locator_get-session-use-case";
 
 /**
  * Obtains the current session of the user.
@@ -8,6 +8,6 @@ import { authLocator } from "../../auth-locator";
  * React Server Components request.
  */
 export const fetchSession = cache(async () => {
-  const useCase = authLocator.GetSessionUseCase();
+  const useCase = locator_auth_GetSessionUseCase();
   return await useCase.execute();
 });
