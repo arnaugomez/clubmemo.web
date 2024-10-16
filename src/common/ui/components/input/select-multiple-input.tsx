@@ -24,7 +24,7 @@ export function SelectMultipleInput({
 }: SelectMultipleInputProps) {
   return (
     <Select
-      id={id}
+      inputId={id}
       placeholder={placeholder}
       value={options.filter((option) => value.includes(option.value))}
       isMulti
