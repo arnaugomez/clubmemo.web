@@ -1,4 +1,5 @@
 import { locator } from "@/src/common/di/locator";
+import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
 import { locator_courses_CoursePermissionsRepository } from "@/src/courses/locators/locator_course-permissions-repository";
 import { Argon2id } from "oslo/password";
 import { ZodError, ZodIssueCode } from "zod";
@@ -26,7 +27,8 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
       }
       const newPassword = data.newPassword;
       delete data.newPassword;
-      const secret = new TextEncoder().encode(process.env.PASSWORD_PEPPER);
+      const passwordPepper = locator_common_EnvService().passwordPepper;
+      const secret = new TextEncoder().encode(passwordPepper);
       const passwordHashingAlgorithm = new Argon2id({ secret });
       data.hashed_password = await passwordHashingAlgorithm.hash(newPassword);
       return data;
@@ -36,7 +38,8 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
       if (data.newPassword) {
         const newPassword = data.newPassword;
         delete data.newPassword;
-        const secret = new TextEncoder().encode(process.env.PASSWORD_PEPPER);
+        const passwordPepper = locator_common_EnvService().passwordPepper;
+        const secret = new TextEncoder().encode(passwordPepper);
         const passwordHashingAlgorithm = new Argon2id({ secret });
         data.hashed_password = await passwordHashingAlgorithm.hash(newPassword);
       }

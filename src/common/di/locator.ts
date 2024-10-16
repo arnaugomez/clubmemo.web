@@ -16,13 +16,12 @@ import type { RateLimitsRepository } from "../../rate-limits/domain/interfaces/r
 import type { TagsRepository } from "../../tags/domain/interfaces/tags-repository";
 import { CookieServiceNextImpl } from "../data/services/cookie-service-next-impl";
 import { DatabaseServiceImpl } from "../data/services/database-service-impl";
-import { EnvServiceImpl } from "../data/services/env-service-impl";
 import type { CookieService } from "../domain/interfaces/cookie-service";
 import type { DatabaseService } from "../domain/interfaces/database-service";
 import type { DateTimeService } from "../domain/interfaces/date-time-service";
 import type { EmailService } from "../domain/interfaces/email-service";
-import type { EnvService } from "../domain/interfaces/env-service";
 import type { IpService } from "../domain/interfaces/ip-service";
+import { locator_common_EnvService } from "../locators/locator_env-service";
 import { locator_common_ErrorTrackingService } from "../locators/locator_error-tracking-service";
 import type { Dependency, Lazy } from "./locator-types";
 import { singleton } from "./locator-utils";
@@ -35,7 +34,6 @@ import { singleton } from "./locator-utils";
  * that are used in both the client and server side of the application.
  */
 interface Locator {
-  EnvService: Dependency<EnvService>;
   DatabaseService: Dependency<DatabaseService>;
   EmailService: Lazy<EmailService>;
   DateTimeService: Lazy<DateTimeService>;
@@ -68,16 +66,15 @@ interface Locator {
  * A simple service locator for dependency injection.
  */
 export const locator: Locator = {
-  EnvService: singleton(() => new EnvServiceImpl()),
   DatabaseService: singleton(
-    () => new DatabaseServiceImpl(locator.EnvService()),
+    () => new DatabaseServiceImpl(locator_common_EnvService()),
   ),
   IpService: singleton(async () => {
     const file = await import("../data/services/ip-service-vercel-impl");
     return new file.IpServiceVercelImpl();
   }),
   async EmailService() {
-    const envService = this.EnvService();
+    const envService = locator_common_EnvService();
     if (envService.sendEmail) {
       const file = await import("../data/services/email-service-resend-impl");
       return new file.EmailServiceResendImpl(envService);
@@ -95,7 +92,11 @@ export const locator: Locator = {
 
   // Auth
   AuthService: singleton(
-    () => new AuthServiceImpl(locator.EnvService(), locator.DatabaseService()),
+    () =>
+      new AuthServiceImpl(
+        locator_common_EnvService(),
+        locator.DatabaseService(),
+      ),
   ),
   async EmailVerificationCodesRepository() {
     const file = await import(
@@ -165,7 +166,7 @@ export const locator: Locator = {
   },
   // Ai Generator
   async AiNotesGeneratorService() {
-    const envService = this.EnvService();
+    const envService = locator_common_EnvService();
     if (envService.fakeOpenAiApi) {
       const file = await import(
         "../../ai-generator/data/services/ai-notes-generator-service-fake-impl"

@@ -1,5 +1,6 @@
 import { DatabaseServiceImpl } from "@/src/common/data/services/database-service-impl";
 import { locator } from "@/src/common/di/locator";
+import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
 import { ObjectId } from "mongodb";
 import { beforeEach } from "node:test";
 import { describe, expect, it } from "vitest";
@@ -11,7 +12,10 @@ import { reviewLogsCollection } from "../collections/review-logs-collection";
 describe("ReviewLogsRepositoryImpl", () => {
   beforeEach(async () => {
     locator.DatabaseService = () =>
-      new DatabaseServiceImpl(locator.EnvService(), "ReviewLogsRepositoryImpl");
+      new DatabaseServiceImpl(
+        locator_common_EnvService(),
+        "ReviewLogsRepositoryImpl",
+      );
     const databaseService = locator.DatabaseService();
     await databaseService.collection(reviewLogsCollection).deleteMany();
   });

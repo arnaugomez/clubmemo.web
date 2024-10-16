@@ -1,12 +1,16 @@
 import { DatabaseServiceImpl } from "@/src/common/data/services/database-service-impl";
 import { locator } from "@/src/common/di/locator";
+import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
 import { beforeEach, describe, expect, it } from "vitest";
 import { tagsCollection } from "../collections/tags-collection";
 
 describe("TagsRepositoryImpl", () => {
   beforeEach(async () => {
     locator.DatabaseService = () =>
-      new DatabaseServiceImpl(locator.EnvService(), "ProfilesRepositoryImpl");
+      new DatabaseServiceImpl(
+        locator_common_EnvService(),
+        "ProfilesRepositoryImpl",
+      );
     const databaseService = locator.DatabaseService();
     await databaseService.collection(tagsCollection).deleteMany();
   });
