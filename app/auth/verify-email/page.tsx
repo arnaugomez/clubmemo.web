@@ -1,6 +1,6 @@
+import { locator_auth_EmailVerificationCodesRepository } from "@/src/auth/locators/locator_email-verification-codes-repository";
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { VerifyEmailPageLoaded } from "@/src/auth/ui/verify-email/pages/verify-email-page-loaded";
-import { locator } from "@/src/common/di/locator";
 import { NullError } from "@/src/common/domain/models/app-errors";
 import { locator_common_EmailService } from "@/src/common/locators/locator_email-service";
 import type { Metadata } from "next";
@@ -33,7 +33,7 @@ async function handleVerificationCodeExpirationDate() {
   const { user } = await fetchSession();
   if (!user) throw new NullError("user");
 
-  const repository = await locator.EmailVerificationCodesRepository();
+  const repository = locator_auth_EmailVerificationCodesRepository();
   const verificationCode = await repository.getByUserId(user.id);
   if (!verificationCode || verificationCode.hasExpired) {
     const newVerificationCode = await repository.generate(user.id);

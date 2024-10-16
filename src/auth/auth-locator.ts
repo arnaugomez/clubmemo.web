@@ -1,4 +1,3 @@
-import { locator } from "../common/di/locator";
 import type { Dependency, Lazy } from "../common/di/locator-types";
 import { locator_common_CookieService } from "../common/locators/locator_cookie-service";
 import { locator_common_EmailService } from "../common/locators/locator_email-service";
@@ -15,6 +14,9 @@ import type { ResetPasswordUseCase } from "./domain/use-cases/reset-password-use
 import type { SignupUseCase } from "./domain/use-cases/signup-use-case";
 import type { VerifyEmailUseCase } from "./domain/use-cases/verify-email-use-case";
 import { locator_auth_AuthService } from "./locators/locator_auth-service";
+import { locator_auth_EmailVerificationCodesRepository } from "./locators/locator_email-verification-codes-repository";
+import { locator_auth_ForgotPasswordTokensRepository } from "./locators/locator_forgot-password-tokens-repository";
+import { locator_auth_UsersRepository } from "./locators/locator_users-repository";
 
 /**
  * Service locator for the auth module
@@ -57,7 +59,7 @@ export const authLocator: AuthLocator = {
     return new file.DeleteUserUseCase(
       authLocator.GetSessionUseCase(),
       locator_auth_AuthService(),
-      await locator.UsersRepository(),
+      locator_auth_UsersRepository(),
       locator_profiles_ProfilesRepository(),
     );
   },
@@ -83,8 +85,8 @@ export const authLocator: AuthLocator = {
     return new file.ForgotPasswordUseCase(
       locator_common_IpService(),
       locator_rateLimits_RateLimitsRepository(),
-      await locator.UsersRepository(),
-      await locator.ForgotPasswordTokensRepository(),
+      locator_auth_UsersRepository(),
+      locator_auth_ForgotPasswordTokensRepository(),
       locator_common_EmailService(),
     );
   },
@@ -93,9 +95,9 @@ export const authLocator: AuthLocator = {
     return new file.ResetPasswordUseCase(
       locator_common_IpService(),
       locator_rateLimits_RateLimitsRepository(),
-      await locator.UsersRepository(),
+      locator_auth_UsersRepository(),
       locator_auth_AuthService(),
-      await locator.ForgotPasswordTokensRepository(),
+      locator_auth_ForgotPasswordTokensRepository(),
     );
   },
   async SignupUseCase() {
@@ -105,7 +107,7 @@ export const authLocator: AuthLocator = {
       locator_rateLimits_RateLimitsRepository(),
       locator_auth_AuthService(),
       locator_profiles_ProfilesRepository(),
-      await locator.EmailVerificationCodesRepository(),
+      locator_auth_EmailVerificationCodesRepository(),
       locator_common_EmailService(),
       locator_common_CookieService(),
     );
@@ -114,7 +116,7 @@ export const authLocator: AuthLocator = {
     const file = await import("./domain/use-cases/verify-email-use-case");
     return new file.VerifyEmailUseCase(
       this.GetSessionUseCase(),
-      await locator.EmailVerificationCodesRepository(),
+      locator_auth_EmailVerificationCodesRepository(),
       locator_auth_AuthService(),
       locator_rateLimits_RateLimitsRepository(),
       locator_common_CookieService(),

@@ -1,7 +1,4 @@
 import type { AiNotesGeneratorService } from "../../ai-generator/domain/interfaces/ai-notes-generator-service";
-import type { EmailVerificationCodesRepository } from "../../auth/domain/interfaces/email-verification-codes-repository";
-import type { ForgotPasswordTokensRepository } from "../../auth/domain/interfaces/forgot-password-tokens-repository";
-import type { UsersRepository } from "../../auth/domain/interfaces/users-repository";
 import type { CourseAuthorsRepository } from "../../courses/domain/interfaces/course-authors-repository";
 import type { CourseEnrollmentsRepository } from "../../courses/domain/interfaces/course-enrollments-repository";
 import type { CoursesRepository } from "../../courses/domain/interfaces/courses-repository";
@@ -22,9 +19,6 @@ import type { Lazy } from "./locator-types";
  */
 interface Locator {
   // Auth
-  EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
-  ForgotPasswordTokensRepository: Lazy<ForgotPasswordTokensRepository>;
-  UsersRepository: Lazy<UsersRepository>;
   // Profiles
   // Courses
   CoursesRepository: Lazy<CoursesRepository>;
@@ -42,32 +36,6 @@ interface Locator {
  * A simple service locator for dependency injection.
  */
 export const locator: Locator = {
-  // Auth
-  async EmailVerificationCodesRepository() {
-    const file = await import(
-      "../../auth/data/repositories/email-verification-codes-repository-impl"
-    );
-    return new file.EmailVerificationCodesRepositoryImpl(
-      locator_common_DatabaseService(),
-    );
-  },
-  async ForgotPasswordTokensRepository() {
-    const file = await import(
-      "../../auth/data/repositories/forgot-password-tokens-repository-impl"
-    );
-    return new file.ForgotPasswordTokensRepositoryImpl(
-      locator_common_DatabaseService(),
-    );
-  },
-  async UsersRepository() {
-    const file = await import(
-      "../../auth/data/repositories/users-repository-impl"
-    );
-    return new file.UsersRepositoryImpl(locator_common_DatabaseService());
-  },
-
-  // Profile
-
   // Courses
   async CoursesRepository() {
     const file = await import(

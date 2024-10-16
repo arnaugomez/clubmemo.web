@@ -1,3 +1,4 @@
+import { locator_auth_AuthService } from "@/src/auth/locators/locator_auth-service";
 import { locator } from "@/src/common/di/locator";
 import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
 import { locator_courses_CoursePermissionsRepository } from "@/src/courses/locators/locator_course-permissions-repository";
@@ -9,7 +10,7 @@ import { checkIfHandleAlreadyExists } from "../hooks/check-if-handle-already-exi
 import { checkIfTagAlreadyExists } from "../hooks/check-if-tag-already-exists";
 import type { AdminResourceHookModel } from "../models/admin-resouce-hook-model";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
-import { locator_auth_AuthService } from "@/src/auth/locators/locator_auth-service";
+import { locator_auth_UsersRepository } from "@/src/auth/locators/locator_users-repository";
 
 const adminResourceHooksConfig: AdminResourceHookModel[] = [
   {
@@ -71,7 +72,7 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
       const userId = data.userId?.toString();
       if (!userId) return;
       const profilesRepository = locator_profiles_ProfilesRepository();
-      const usersRepository = await locator.UsersRepository();
+      const usersRepository = locator_auth_UsersRepository();
       const authService = locator_auth_AuthService();
       await Promise.all([
         profilesRepository.deleteByUserId(userId),
