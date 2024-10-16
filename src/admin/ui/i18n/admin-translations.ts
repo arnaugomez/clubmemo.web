@@ -254,10 +254,10 @@ const adminTranslations: Record<string, string> = {
   "rateLimits.field.updatedAt.placeholder":
     "La fecha de la última vez que se puso a cero el contador",
   "rateLimits.field.updatedAt.tableHeader": "Fecha de actualización",
-  "rateLimits.plural": "Límites de ratio",
-  "rateLimits.plural.lowercase": "límites de ratio",
-  "rateLimits.singular": "Límite de ratio",
-  "rateLimits.singular.lowercase": "límite de ratio",
+  "rateLimits.plural": "Límites de tasa",
+  "rateLimits.plural.lowercase": "límites de tasa",
+  "rateLimits.singular": "Límite de tasa",
+  "rateLimits.singular.lowercase": "límite de tasa",
   "reviewLogs.description":
     "Los registros de revisión contienen el resultado de practicar una tarjeta. Sirven para medir el desempeño del estudiante a lo largo del tiempo.",
   "reviewLogs.field.cardId.label": "Id de tarjeta",
