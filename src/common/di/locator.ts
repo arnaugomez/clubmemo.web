@@ -1,6 +1,4 @@
 import type { AiNotesGeneratorService } from "../../ai-generator/domain/interfaces/ai-notes-generator-service";
-import { AuthServiceImpl } from "../../auth/data/services/auth-service-impl";
-import type { AuthService } from "../../auth/domain/interfaces/auth-service";
 import type { EmailVerificationCodesRepository } from "../../auth/domain/interfaces/email-verification-codes-repository";
 import type { ForgotPasswordTokensRepository } from "../../auth/domain/interfaces/forgot-password-tokens-repository";
 import type { UsersRepository } from "../../auth/domain/interfaces/users-repository";
@@ -13,8 +11,7 @@ import { locator_common_DatabaseService } from "../locators/locator_database-ser
 import { locator_common_DateTimeService } from "../locators/locator_datetime-service";
 import { locator_common_EnvService } from "../locators/locator_env-service";
 import { locator_common_ErrorTrackingService } from "../locators/locator_error-tracking-service";
-import type { Dependency, Lazy } from "./locator-types";
-import { singleton } from "./locator-utils";
+import type { Lazy } from "./locator-types";
 
 /**
  * A simple service locator for dependency injection.
@@ -25,7 +22,6 @@ import { singleton } from "./locator-utils";
  */
 interface Locator {
   // Auth
-  AuthService: Dependency<AuthService>;
   EmailVerificationCodesRepository: Lazy<EmailVerificationCodesRepository>;
   ForgotPasswordTokensRepository: Lazy<ForgotPasswordTokensRepository>;
   UsersRepository: Lazy<UsersRepository>;
@@ -47,13 +43,6 @@ interface Locator {
  */
 export const locator: Locator = {
   // Auth
-  AuthService: singleton(
-    () =>
-      new AuthServiceImpl(
-        locator_common_EnvService(),
-        locator_common_DatabaseService(),
-      ),
-  ),
   async EmailVerificationCodesRepository() {
     const file = await import(
       "../../auth/data/repositories/email-verification-codes-repository-impl"

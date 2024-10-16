@@ -1,6 +1,7 @@
 import { locator } from "@/src/common/di/locator";
 import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
 import { locator_courses_CoursePermissionsRepository } from "@/src/courses/locators/locator_course-permissions-repository";
+import { locator_profiles_ProfilesRepository } from "@/src/profile/locators/locator_profiles-repository";
 import { Argon2id } from "oslo/password";
 import { ZodError, ZodIssueCode } from "zod";
 import { checkIfEmailAlreadyExists } from "../hooks/check-if-email-already-exists";
@@ -8,7 +9,7 @@ import { checkIfHandleAlreadyExists } from "../hooks/check-if-handle-already-exi
 import { checkIfTagAlreadyExists } from "../hooks/check-if-tag-already-exists";
 import type { AdminResourceHookModel } from "../models/admin-resouce-hook-model";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
-import { locator_profiles_ProfilesRepository } from "@/src/profile/locators/locator_profiles-repository";
+import { locator_auth_AuthService } from "@/src/auth/locators/locator_auth-service";
 
 const adminResourceHooksConfig: AdminResourceHookModel[] = [
   {
@@ -49,7 +50,7 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
     afterDelete: async (id) => {
       const userId = id.toString();
       const profilesRepository = locator_profiles_ProfilesRepository();
-      const authService = locator.AuthService();
+      const authService = locator_auth_AuthService();
       await Promise.all([
         profilesRepository.deleteByUserId(userId),
         authService.invalidateUserSessions(userId),
@@ -71,7 +72,7 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
       if (!userId) return;
       const profilesRepository = locator_profiles_ProfilesRepository();
       const usersRepository = await locator.UsersRepository();
-      const authService = locator.AuthService();
+      const authService = locator_auth_AuthService();
       await Promise.all([
         profilesRepository.deleteByUserId(userId),
         usersRepository.delete(userId),

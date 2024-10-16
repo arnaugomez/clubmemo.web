@@ -14,6 +14,7 @@ import type { LogoutUseCase } from "./domain/use-cases/logout-use-case";
 import type { ResetPasswordUseCase } from "./domain/use-cases/reset-password-use-case";
 import type { SignupUseCase } from "./domain/use-cases/signup-use-case";
 import type { VerifyEmailUseCase } from "./domain/use-cases/verify-email-use-case";
+import { locator_auth_AuthService } from "./locators/locator_auth-service";
 
 /**
  * Service locator for the auth module
@@ -36,7 +37,7 @@ interface AuthLocator {
 export const authLocator: AuthLocator = {
   GetSessionUseCase() {
     return new GetSessionUseCase(
-      locator.AuthService(),
+      locator_auth_AuthService(),
       locator_common_CookieService(),
     );
   },
@@ -45,7 +46,7 @@ export const authLocator: AuthLocator = {
       "./domain/use-cases/login-with-password-use-case"
     );
     return new file.LoginWithPasswordUseCase(
-      locator.AuthService(),
+      locator_auth_AuthService(),
       locator_common_IpService(),
       locator_rateLimits_RateLimitsRepository(),
       locator_common_CookieService(),
@@ -55,7 +56,7 @@ export const authLocator: AuthLocator = {
     const file = await import("./domain/use-cases/delete-user-use-case");
     return new file.DeleteUserUseCase(
       authLocator.GetSessionUseCase(),
-      locator.AuthService(),
+      locator_auth_AuthService(),
       await locator.UsersRepository(),
       locator_profiles_ProfilesRepository(),
     );
@@ -64,7 +65,7 @@ export const authLocator: AuthLocator = {
     const file = await import("./domain/use-cases/change-password-use-case");
     return new file.ChangePasswordUseCase(
       authLocator.GetSessionUseCase(),
-      locator.AuthService(),
+      locator_auth_AuthService(),
       locator_rateLimits_RateLimitsRepository(),
       locator_common_CookieService(),
     );
@@ -73,7 +74,7 @@ export const authLocator: AuthLocator = {
     const file = await import("./domain/use-cases/logout-use-case");
     return new file.LogoutUseCase(
       this.GetSessionUseCase(),
-      locator.AuthService(),
+      locator_auth_AuthService(),
       locator_common_CookieService(),
     );
   },
@@ -93,7 +94,7 @@ export const authLocator: AuthLocator = {
       locator_common_IpService(),
       locator_rateLimits_RateLimitsRepository(),
       await locator.UsersRepository(),
-      locator.AuthService(),
+      locator_auth_AuthService(),
       await locator.ForgotPasswordTokensRepository(),
     );
   },
@@ -102,7 +103,7 @@ export const authLocator: AuthLocator = {
     return new file.SignupUseCase(
       locator_common_IpService(),
       locator_rateLimits_RateLimitsRepository(),
-      locator.AuthService(),
+      locator_auth_AuthService(),
       locator_profiles_ProfilesRepository(),
       await locator.EmailVerificationCodesRepository(),
       locator_common_EmailService(),
@@ -114,7 +115,7 @@ export const authLocator: AuthLocator = {
     return new file.VerifyEmailUseCase(
       this.GetSessionUseCase(),
       await locator.EmailVerificationCodesRepository(),
-      locator.AuthService(),
+      locator_auth_AuthService(),
       locator_rateLimits_RateLimitsRepository(),
       locator_common_CookieService(),
     );
