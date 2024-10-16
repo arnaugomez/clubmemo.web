@@ -24,7 +24,7 @@ export function SelectInput({
 }: SelectInputProps) {
   return (
     <Select
-      id={id}
+      inputId={id}
       placeholder={placeholder}
       value={options.find((option) => option.value === value) ?? null}
       onChange={(selectedOption) => onChange(selectedOption?.value ?? null)}
