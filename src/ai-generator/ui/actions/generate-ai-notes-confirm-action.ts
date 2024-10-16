@@ -21,7 +21,7 @@ export async function generateAiNotesConfirmAction(
   try {
     const parsed = GenerateAiNotesConfirmActionSchema.parse(input);
 
-    const useCase = await locator_aiGenerator_GenerateAiNotesConfirmUseCase();
+    const useCase = locator_aiGenerator_GenerateAiNotesConfirmUseCase();
     await useCase.execute(parsed);
 
     revalidatePath("/courses/detail");

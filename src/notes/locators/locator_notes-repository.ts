@@ -3,6 +3,5 @@ import { locator_common_DatabaseService } from "@/src/common/locators/locator_da
 import { NotesRepositoryImpl } from "../data/repositories/notes-repository-impl";
 import type { NotesRepository } from "../domain/interfaces/notes-repository";
 
-export const locator_notes_NotesRepository: Dependency<
-  NotesRepository
-> = () => new NotesRepositoryImpl(locator_common_DatabaseService());
+export const locator_notes_NotesRepository: Dependency<NotesRepository> = () =>
+  new NotesRepositoryImpl(locator_common_DatabaseService());

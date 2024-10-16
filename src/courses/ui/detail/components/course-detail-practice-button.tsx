@@ -7,10 +7,10 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/tooltip";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import type { CoursePracticeCountModel } from "@/src/practice/domain/models/course-practice-count-model";
-import { practiceLocator } from "@/src/practice/practice-locator";
 import Link from "next/link";
 import { Suspense } from "react";
 import { CourseDetailPracticeButtonLoading } from "./course-detail-practice-button-loading";
+import { locator_practice_GetCoursePracticeCountUseCase } from "@/src/practice/locators/locator_get-course-practice-count-use-case";
 
 interface CourseDetailPracticeButtonProps {
   course: CourseModel;
@@ -30,7 +30,7 @@ async function CourseDetailPracticeButtonLoader({
   course,
 }: CourseDetailPracticeButtonProps) {
   if (!course.enrollment) return null;
-  const useCase = await practiceLocator.GetCoursePracticeCountUseCase();
+  const useCase = locator_practice_GetCoursePracticeCountUseCase();
   const coursePracticeCount = await useCase.execute(course.enrollment);
 
   return (
