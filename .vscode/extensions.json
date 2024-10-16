@@ -15,6 +15,7 @@
     "ms-playwright.playwright",
     "github.vscode-github-actions",
     "editorconfig.editorconfig",
-    "csstools.postcss"
+    "csstools.postcss",
+    "ph1p.zeit-co-vscode-schemas"
   ]
 }
