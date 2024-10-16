@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { profileLocator } from "../../profile-locator";
+import { locator_profile_GetMyProfileUseCase } from "../../locators/locator_get-my-profile-use-case";
 
 /**
  * Obtains the data of the profile of the currently logged in user.
@@ -7,6 +7,6 @@ import { profileLocator } from "../../profile-locator";
  * finish rendering
  */
 export const fetchMyProfile = cache(async () => {
-  const useCase = await profileLocator.GetMyProfileUseCase();
+  const useCase = locator_profile_GetMyProfileUseCase();
   return await useCase.execute();
 });

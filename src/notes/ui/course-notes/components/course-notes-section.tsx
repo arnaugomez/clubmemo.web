@@ -1,13 +1,13 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { notesLocator } from "@/src/notes/notes-locator";
 import { Suspense } from "react";
 import { CourseNotesProvider } from "../contexts/course-notes-context";
 import { CourseNotesDropdown } from "./course-notes-dropdown";
 import { CourseNotesLoaded } from "./course-notes-loaded";
 import { CourseNotesLoadingSkeletons } from "./course-notes-loading-skeletons";
 import { CreateNoteButton } from "./create-note-button";
+import { locator_notes_GetNotesUseCase } from "@/src/notes/locators/locator_get-notes-use-case";
 
 interface CourseNotesSectionProps {
   course: CourseModel;
@@ -56,7 +56,7 @@ async function CourseNotesLoader({
   courseId,
   canEdit,
 }: CourseNotesContentProps) {
-  const useCase = await notesLocator.GetNotesUseCase();
+  const useCase = locator_notes_GetNotesUseCase();
   const pagination = await useCase.execute({ courseId });
 
   return (

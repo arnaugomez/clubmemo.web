@@ -1,6 +1,6 @@
-import { locator } from "@/src/common/di/locator";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
+import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
 import { CreateCourseButton } from "@/src/courses/ui/create/components/create-course-button";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
 import { MyCoursesPaginationSection } from "@/src/courses/ui/my-courses/components/my-courses-pagination-section";
@@ -55,7 +55,7 @@ async function CoursesPageLoader({ page }: CoursesPageContentProps) {
   if (!profile) {
     return null;
   }
-  const coursesRepository = await locator.CoursesRepository();
+  const coursesRepository = locator_courses_CoursesRepository();
   const hasCourses = await coursesRepository.getHasCourses(profile.id);
 
   if (!hasCourses) {

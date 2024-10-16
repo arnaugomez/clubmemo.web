@@ -1,17 +1,17 @@
 "use server";
-import { authLocator } from "@/src/auth/auth-locator";
 import { UserAlreadyExistsError } from "@/src/auth/domain/errors/auth-errors";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { redirect } from "next/navigation";
 import type { SignupActionModel } from "../schemas/signup-action-schema";
 import { SignupActionSchema } from "../schemas/signup-action-schema";
+import { locator_auth_SignupUseCase } from "@/src/auth/locators/locator_signup-use-case";
 
 export async function signupAction(input: SignupActionModel) {
   try {
     const parsed = SignupActionSchema.parse(input);
 
-    const useCase = await authLocator.SignupUseCase();
+    const useCase = locator_auth_SignupUseCase();
     await useCase.execute(parsed);
   } catch (e) {
     if (e instanceof UserAlreadyExistsError) {

@@ -1,12 +1,12 @@
 "use server";
 
-import { locator } from "@/src/common/di/locator";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { revalidatePath } from "next/cache";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import type { UnenrollCourseActionModel } from "../schemas/unenroll-course-action-schema";
 import { UnenrollCourseActionSchema } from "../schemas/unenroll-course-action-schema";
+import { locator_courses_CourseEnrollmentsRepository } from "@/src/courses/locators/locator_course-enrollments-repository";
 
 export async function unenrollCourseAction(input: UnenrollCourseActionModel) {
   try {
@@ -16,7 +16,7 @@ export async function unenrollCourseAction(input: UnenrollCourseActionModel) {
     if (!profile) throw new ProfileDoesNotExistError();
 
     const courseEnrollmentsRepository =
-      await locator.CourseEnrollmentsRepository();
+      locator_courses_CourseEnrollmentsRepository();
     await courseEnrollmentsRepository.delete({
       courseId,
       profileId: profile.id,

@@ -7,6 +7,7 @@ interface Props {
   data: AdminResourceData;
   resource: AdminResourceModel;
 }
+
 export async function saveNewAdminResourceTags({ data, resource }: Props) {
   for (const field of resource.fields) {
     if (field.fieldType === AdminFieldTypeModel.tags) {

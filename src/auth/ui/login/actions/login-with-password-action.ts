@@ -1,5 +1,4 @@
 "use server";
-import { authLocator } from "@/src/auth/auth-locator";
 import {
   IncorrectPasswordError,
   UserDoesNotExistError,
@@ -12,6 +11,7 @@ import {
   LoginWithPasswordActionSchema,
   type LoginWithPasswordActionModel,
 } from "../schemas/login-with-password-action-schema";
+import { locator_auth_LoginWithPasswordUseCase } from "@/src/auth/locators/locator_login-with-password-use-case";
 
 /**
  * Checks that the user credentials (email and password) are valid and creates a
@@ -25,7 +25,7 @@ export async function loginWithPasswordAction(
   try {
     const parsed = LoginWithPasswordActionSchema.parse(input);
 
-    const useCase = await authLocator.LoginWithPasswordUseCase();
+    const useCase = locator_auth_LoginWithPasswordUseCase();
     await useCase.execute(parsed);
   } catch (e) {
     if (
