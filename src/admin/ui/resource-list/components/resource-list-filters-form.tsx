@@ -66,7 +66,7 @@ export function ResourceListFiltersForm({
       newParams.delete("filters");
     }
     newParams.set("page", "1");
-    push(`${pathname}?${newParams.toString()}`);
+    push(`${pathname}?${newParams.toString()}`, { scroll: false });
   }, 500);
 
   useEffect(() => {
