@@ -47,7 +47,7 @@ export function ResourceListTableHead({
         newParams.set("sortBy", fieldName);
         newParams.set("sortOrder", SortOrderModel.ascending);
     }
-    push(`${pathname}?${newParams.toString()}`);
+    push(`${pathname}?${newParams.toString()}`, { scroll: false });
   }
   function renderIcon() {
     switch (sortOrder) {

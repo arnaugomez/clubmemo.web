@@ -33,7 +33,7 @@ export function DiscoverFiltersSection() {
       params.delete("retries");
     }
 
-    router.replace(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, 300);
 
   return (
