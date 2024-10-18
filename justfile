@@ -21,7 +21,6 @@ start:
 fix:
     ./nvm-exec.sh pnpm format
     ./nvm-exec.sh pnpm fix
-    # just --unstable --fmt
 
 # Perform static code analysis
 check:
