@@ -8,6 +8,10 @@ import { translateAdminKey } from "../../i18n/admin-translations";
 interface Props {
   resource: AdminResourceModel;
 }
+/**
+ * Buttons that are displayed at the top of the resource list page. They allow
+ * the user to go back to the main admin page and create a new resource.
+ */
 export function ResourceListTopButtons({ resource }: Props) {
   function getResourceName() {
     const translated = translateAdminKey(

@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { AdminResourceTypeModel } from "../../domain/models/admin-resource-model";
 
+/**
+ * Validates if a value is one of the admin resource types
+ */
 export const AdminResourceTypeSchema = z.enum([
   AdminResourceTypeModel.courseEnrollments,
   AdminResourceTypeModel.coursePermissions,

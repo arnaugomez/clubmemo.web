@@ -5,6 +5,11 @@ import type { GetAdminResourcesUseCaseInputModel } from "../../domain/use-cases/
 import { locator_admin_GetAdminResourcesUseCase } from "../../locators/locator_get-admin-resources-use-case";
 import { GetAdminResourcesActionSchema } from "../schemas/get-admin-resources-action-schema";
 
+/**
+ * Server action to retrieve a paginated list of resources from the admin panel.
+ * It takes as parameters the resource type, the page number, the search filters
+ * and the sort order.
+ */
 export async function getAdminResourcesAction(
   input: GetAdminResourcesUseCaseInputModel,
 ) {

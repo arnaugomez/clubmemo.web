@@ -14,6 +14,10 @@ interface ResourceListTableJoinCellProps {
   data: AdminResourceData;
 }
 
+/**
+ * Displays the value of an admin resource when the value is coming from an
+ * external join. It displays it as a table cell in the resource list table.
+ */
 export function ResourceListTableJoinCell({
   resourceType,
   join,

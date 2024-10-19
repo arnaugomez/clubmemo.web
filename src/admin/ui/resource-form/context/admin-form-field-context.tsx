@@ -6,6 +6,9 @@ interface AdminFormFieldContextValue {
   getName: (name: string) => string;
 }
 
+/**
+ * Holds data of the field that contains another field. Used in nested fields.
+ */
 const AdminFormFieldContext = createContext<AdminFormFieldContextValue>({
   prefix: "",
   getName: (name: string) => name,
@@ -15,6 +18,10 @@ interface AdminFormFieldProviderProps extends PropsWithChildren {
   prefix: string;
 }
 
+/**
+ * Used with fields that contain nested fields, to provide the prefix for the
+ * field names to the nested fields.
+ */
 export function AdminFormFieldContextProvider({
   prefix,
   children,
@@ -30,6 +37,9 @@ export function AdminFormFieldContextProvider({
   );
 }
 
+/**
+ * Returns data of the field that contains the current field
+ */
 export function useAdminFormFieldContext() {
   return useContext(AdminFormFieldContext);
 }

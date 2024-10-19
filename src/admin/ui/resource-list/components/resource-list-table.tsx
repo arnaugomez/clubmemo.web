@@ -42,6 +42,10 @@ type AdminQueueOperation = QueueOperation<
   PaginationModel<AdminResourceData>
 >;
 
+/**
+ * Table that displays a list of resources of a certain type. It allows the user
+ * to sort, filter and search the resources.
+ */
 export function ResourceListTable({ resourceType }: ResourceListTableProps) {
   const resource = getAdminResourceByType(resourceType);
   const params = useSearchParams();

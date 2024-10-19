@@ -12,11 +12,20 @@ export interface ResourceListJoinsFieldProps {
   join: AdminJoinModel;
 }
 
+/**
+ * Displays a field in the admin resource filters form, when the
+ * field is a join.
+ */
 export function ResourceListJoinsField(props: ResourceListJoinsFieldProps) {
   const childProps = useAdminJoinProps(props);
   return <InputFormField {...childProps} />;
 }
 
+/**
+ * Get the props for the input field of a join field in the admin resource filters form.
+ *
+ * @returns The props for the input field.
+ */
 function useAdminJoinProps({
   resourceType,
   join,

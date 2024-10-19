@@ -8,6 +8,11 @@ import { translateAdminKey } from "../../i18n/admin-translations";
 import { ResourceDetailTopButtons } from "../components/resource-detail-top-buttons";
 import { UpdateResourceForm } from "../components/update-resource-form";
 import { ResourceDetailContextProvider } from "../context/resource-detail-context";
+
+/**
+ * Props for the Next.js page component of the resource detail page. Contains
+ * the path params for the resource type and resource id.
+ */
 export interface ResourceDetailPageProps {
   params: {
     resourceType: AdminResourceTypeModel;
@@ -15,6 +20,9 @@ export interface ResourceDetailPageProps {
   };
 }
 
+/**
+ * Displays the form to update a resource of a specific type.
+ */
 export function ResourceDetailPage({
   params: { resourceType, id },
 }: ResourceDetailPageProps) {

@@ -20,6 +20,10 @@ interface ResourceDetailContextValue {
   isLoading: boolean;
   hasError: boolean;
 }
+
+/**
+ * Holds the data of a resource detail and its loading status.
+ */
 const ResourceDetailContext = createContext<ResourceDetailContextValue>({
   data: null,
   resourceType: AdminResourceTypeModel.users,
@@ -86,6 +90,11 @@ export function ResourceDetailContextProvider({
   );
 }
 
+/**
+ * Hook to access the value of the resource detail and its loading status
+ *
+ * @returns The context value of the resource detail.
+ */
 export function useResourceDetailContext() {
   return useContext(ResourceDetailContext);
 }

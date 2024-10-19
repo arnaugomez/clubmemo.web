@@ -12,10 +12,19 @@ interface DeleteResourceButtonProps extends PropsWithChildren {
   id: string;
   disabled?: boolean;
   resourceType: AdminResourceTypeModel;
+  /**
+   * Is run after the resource is deleted successfully. Can be used to navigate
+   * to another page after the resource is deleted, or to reload the current page results.
+   */
   onDeleted?: () => void;
   size?: ButtonProps["size"];
   className?: string;
 }
+
+/**
+ * Button to delete a resource in the admin panel. It shows a confirmation dialog before
+ * the resource is deleted.
+ */
 export function DeleteResourceButton({
   id,
   disabled,
@@ -53,6 +62,7 @@ export function DeleteResourceButton({
     }
     return {};
   }
+
   return (
     <>
       <Button

@@ -5,6 +5,10 @@ import type { GetAdminResourceDetailUseCaseInputModel } from "../../domain/use-c
 import { locator_admin_GetAdminResourceDetailUseCase } from "../../locators/locator_get-admin-resource-detail-use-case";
 import { GetAdminResourceDetailActionSchema } from "../schemas/get-admin-resource-detail-action-schema";
 
+/**
+ * Server action to retrieve a resource from the admin panel. It receives the
+ * data with the resource type and the id of the resource.
+ */
 export async function getAdminResourceDetailAction(
   input: GetAdminResourceDetailUseCaseInputModel,
 ) {

@@ -8,6 +8,11 @@ import { translateAdminKey } from "../../i18n/admin-translations";
 interface ResourceListTableFiltersProps {
   resourceType: AdminResourceTypeModel;
 }
+
+/**
+ * Search field of the resource list table. It allows the user to search if
+ * any string field of the resource contains a specific query value
+ */
 export function ResourceListTableSearch({
   resourceType,
 }: ResourceListTableFiltersProps) {

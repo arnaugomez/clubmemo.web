@@ -8,7 +8,8 @@ export interface DeleteAdminResourceUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
   /**
    * The ID of the resource to delete. Should be the string representation of a
-   * valid ObjectId.
+   * valid ObjectId, unless the resource is a session, in which case it should be
+   * a string.
    */
   id: string;
 }

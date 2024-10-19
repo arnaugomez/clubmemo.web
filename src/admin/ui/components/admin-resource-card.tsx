@@ -9,6 +9,10 @@ interface AdminResourceCardProps {
   resource: AdminResourceModel;
 }
 
+/**
+ * Displays the data of an admin resource type, including its name, description,
+ * and a link to the page of that resource type.
+ */
 export function AdminResourceCard({ resource }: AdminResourceCardProps) {
   return (
     <Link

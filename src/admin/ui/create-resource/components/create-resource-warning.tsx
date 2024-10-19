@@ -11,6 +11,9 @@ interface CreateResourceWarningProps {
   resource: AdminResourceModel;
 }
 
+/**
+ * Custom alert to show when the user is about to create a resource.
+ */
 export function CreateResourceAlert({ resource }: CreateResourceWarningProps) {
   return (
     <Alert>

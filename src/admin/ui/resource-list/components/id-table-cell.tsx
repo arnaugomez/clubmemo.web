@@ -10,6 +10,12 @@ interface IdTableCellProps {
   id?: string;
   resourceType?: AdminResourceTypeModel;
 }
+
+/**
+ * Displays the id of a resource in a table cell. If the resource type is
+ * provided and the value is not empty, it will also display a link to the
+ * detail page of that resource.
+ */
 export function IdTableCell({ id, resourceType }: IdTableCellProps) {
   const { copyToClipboard } = useClipboard();
 

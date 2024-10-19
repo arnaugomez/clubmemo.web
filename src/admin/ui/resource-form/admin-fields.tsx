@@ -8,6 +8,10 @@ interface Props {
   resourceType: AdminResourceTypeModel;
   fields: AdminFieldModel[];
 }
+/**
+ * Displays a list of fields in the form of the admin panel.
+ *
+ */
 export function AdminFields({ resourceType, fields }: Props) {
   return (
     <>
