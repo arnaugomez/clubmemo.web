@@ -6,15 +6,29 @@ import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 export interface DeleteAdminResourceUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
+  /**
+   * The ID of the resource to delete. Should be the string representation of a
+   * valid ObjectId.
+   */
   id: string;
 }
 
+/**
+ * Deletes an instance of a resource from the database. For example, deletes a
+ * user record from the database. This use case is only accessible to admin
+ * users from the admin panel.
+ */
 export class DeleteAdminResourceUseCase {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
   ) {}
 
+  /**
+   * Deletes an instance of a resource from the database. For example, deletes a
+   * user record from the database. This use case is only accessible to admin
+   * users from the admin panel.
+   */
   async execute({
     resourceType,
     id,

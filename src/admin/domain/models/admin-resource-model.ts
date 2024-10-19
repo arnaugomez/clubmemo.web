@@ -1,5 +1,9 @@
 import type { AdminResourceData } from "./admin-resource-data";
 
+/**
+ * The type of the resource of the admin panel. For example, `users` or
+ * `courses`. Usually refers to the name of the collection in the database.
+ */
 export enum AdminResourceTypeModel {
   courseEnrollments = "courseEnrollments",
   coursePermissions = "coursePermissions",
@@ -17,20 +21,52 @@ export enum AdminResourceTypeModel {
   users = "users",
 }
 
+/**
+ * Describes a resource of the admin panel and its configuration. A resource is
+ * a representation of a database collection in the admin panel. The
+ * `AdminResourceModel` describes the fields of the resource, the type of the
+ * fields, and how the user interacts with the resource in the admin panel.
+ */
 export interface AdminResourceModel {
+  /**
+   * Unique identifier of the resource. Matches the name of the collection in
+   * the database.
+   */
   resourceType: AdminResourceTypeModel;
+  /**
+   * Describes how the fields of the database collection are displayed in the
+   * admin panel.
+   */
   fields: AdminFieldModel[];
   /**
    * Forbid creating resources of this type
    */
   cannotCreate?: boolean;
+  /**
+   * Show a custom warning text in the "delete resource" dialog
+   */
   showDeleteAlert?: boolean;
+  /**
+   * Show a warning when creating a new resource. Used to advise the user to
+   * perform a certain action after creating the resource.
+   */
   showCreationWarning?: boolean;
+  /**
+   * Lets you display fields from other collections in the admin panel.
+   */
   joins?: AdminJoinModel[];
 }
 
 export interface AdminFieldModel {
+  /**
+   * Unique identifier of the field. Matches the name of the field in the
+   * database collection.
+   */
   name: string;
+  /**
+   * Type of the field. Determines how the field is displayed in the admin panel
+   * and how it is stored in the database.
+   */
   fieldType: AdminFieldTypeModel;
   /**
    * Sub-fields of the field. Used when the field type is `AdminFieldTypeModel.form`.
@@ -40,15 +76,27 @@ export interface AdminFieldModel {
    * Options for the field. Used when the field type is `AdminFieldTypeModel.select` or similar.
    */
   options?: string[];
+  /**
+   * Display options for the field. Lets you customize how the field is
+   * displayed. For example, use a password field for a string field.
+   */
   display?: AdminFieldDisplayModel;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   extraProps?: Record<string, any>;
   /**
-   * Resource type of the ObjectId. Used when the field type is `AdminFieldTypeModel.objectId`.
+   * Resource type of the ObjectId. Used when the field type is
+   * `AdminFieldTypeModel.objectId`.
    */
   resourceType?: AdminResourceTypeModel;
+  /**
+   * Default value of the field when the resource is created.
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue?: any;
+  /**
+   * Do not show this field in the list or table view, but show it in the create
+   * and detail view
+   */
   hideInList?: boolean;
 }
 
@@ -73,13 +121,36 @@ export enum AdminFieldDisplayModel {
 }
 
 export interface AdminJoinModel {
+  /**
+   * Unique identifier of the join.
+   */
   name: string;
+  /**
+   * Field to display from the foreign collection. Must be a string field.
+   */
   displayField: string;
+  /**
+   * Local field to join on.
+   */
   localField: string;
+  /**
+   * Foreign field to join on.
+   */
   foreignField: string;
+  /**
+   * Resource type of the foreign collection.
+   */
   resourceType: AdminResourceTypeModel;
 }
 
+/**
+ * Gets the default values of a resource. Used to fill in the initial values of
+ * the form that is displayed when creating a new resource.
+ *
+ * @param fields: Fields of the resource
+ * @returns an object with the field names as keys and the default value of each
+ * field
+ */
 export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
   const values: Record<string, unknown> = {};
   for (const field of fields) {
@@ -124,6 +195,17 @@ export function getDefaultValuesOfAdminResource(fields: AdminFieldModel[]) {
   return values;
 }
 
+/**
+ * After retrieving a document from the database, it strips away any fields
+ * that are not defined in the admin resource configuration. It also serializes
+ * de data of the document so that it can be safely transformed to a JSON object.
+ * This serialization involves transforming ObjectId values into strings.
+ *
+ * @param fields The fields of the admin resource
+ * @param data The data of the document that was retrieved from the database
+ * @param joins The joins of the admin resource
+ * @returns The transformed data
+ */
 export function transformDataAfterGet(
   fields: AdminFieldModel[],
   data: AdminResourceData,

@@ -18,6 +18,11 @@ const practiceCardStateOptions = [
   PracticeCardStateModel.relearning,
 ];
 
+/**
+ * General configuration of the resources in the admin panel and their fields.
+ * It determines what collections and fields of the database are displayed in
+ * the admin panel, and how they are displayed.
+ */
 export const adminResourcesConfig: AdminResourceModel[] = [
   {
     resourceType: AdminResourceTypeModel.users,
@@ -332,6 +337,16 @@ export const adminResourcesConfig: AdminResourceModel[] = [
   },
 ];
 
+/**
+ * Gets the admin resource configuration of a certain admin resource. The
+ * resource configuration decides which fields of a database collection are
+ * displayed in the admin, and how they are displayed.
+ *
+ * @throws {InvalidAdminResourceTypeError} if the admin resource is not included
+ * in the configuration or if it does not exist
+ * @param resourceType
+ * @returns The admin resource
+ */
 export function getAdminResourceByType(
   resourceType: AdminResourceTypeModel,
 ): AdminResourceModel {

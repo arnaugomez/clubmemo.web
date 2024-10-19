@@ -16,6 +16,11 @@ import type { ZodSchema } from "zod";
 import { z } from "zod";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
 
+/**
+ * Validation schemas for the create and update forms of the admin panel. Each
+ * admin resource has different fields and therefore has different validation
+ * schema. The validation schemas are built with the Zod validation library.
+ */
 const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
   [AdminResourceTypeModel.courseEnrollments]: z.object({
     courseId: ObjectIdSchema,
@@ -138,6 +143,11 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
     newPassword: PasswordSchema.or(z.literal("").optional()),
   }),
 };
+
+/**
+ * Special validation schemas that are applied on the create form. If not
+ * available, the schema from `adminResourceSchemas` shall be used.
+ */
 const adminResourceCreateSchemas: Partial<
   Record<AdminResourceTypeModel, ZodSchema>
 > = {
@@ -152,9 +162,21 @@ const adminResourceCreateSchemas: Partial<
 };
 
 interface GetAdminResourceSchemaInput {
+  /**
+   * The type of admin resource
+   */
   resourceType: AdminResourceTypeModel;
+  /**
+   * Whether the schema should be used to validate the data from the create
+   * form, or the edit form.
+   */
   isCreate: boolean;
 }
+/**
+ * Gets a Zod validation schema for a form of a certain admin resource
+ *
+ * @returns The validation schema or `undefined` if it does not exist.
+ */
 export function getAdminResourceSchema({
   resourceType,
   isCreate,

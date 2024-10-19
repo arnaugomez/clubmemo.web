@@ -14,12 +14,23 @@ export interface UpdateAdminResourceUseCaseInputModel {
   data: unknown;
 }
 
+/**
+ * Updates the values of a document in the database. For example, updates the
+ * email of the user. This use case is only accessible to admin users from the
+ * admin panel.
+ */
 export class UpdateAdminResourceUseCase {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
   ) {}
 
+  /**
+   * Updates the values of a document in the database. For example, updates the
+   * email of the user. This use case is only accessible to admin users from the
+   * admin panel.
+   * @returns {Promise<void>} Does not return the updated document.
+   */
   async execute({
     resourceType,
     id,
