@@ -28,7 +28,7 @@ test("Sign up with email and password from landing page", async ({
   let titleText = await page.getByTestId("signup-title").textContent();
   expect(titleText).toBe("Crea tu usuario");
   await page.getByTestId("email").fill(createEmail(browserName));
-  await page.getByTestId("password").fill("TestPassword123");
+  await page.getByTestId("password").fill("test-password-123");
   await page.getByTestId("acceptTerms").click();
   await page.getByTestId("submit").click();
   titleText = await page.getByTestId("verify-email-title").textContent();
