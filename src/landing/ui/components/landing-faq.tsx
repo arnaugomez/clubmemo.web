@@ -81,7 +81,9 @@ export function LandingFaq() {
             />
             <FaqItem
               value="item-4"
-              question={'¿Por qué "clubmemo" se escribe en minúscula?'}
+              question={
+                '¿Por qué "clubmemo" sale escrito en minúscula en la aplicación?'
+              }
               answer={
                 <>
                   <Paragraph>
