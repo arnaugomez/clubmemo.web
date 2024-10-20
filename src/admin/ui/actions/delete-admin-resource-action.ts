@@ -9,6 +9,13 @@ import {
   DeleteAdminResourceActionSchemaForSessions,
 } from "../schemas/delete-admin-resource-action-schema";
 
+/**
+ * Server action for deleting a resource in the admin panel. It receives the
+ * id of the resource to delete, validates the input, and then calls the use
+ * case. If the input is invalid or the user does not have permission to delete
+ * the resource, it returns the errors to the client. Otherwise, it returns
+ * a success response.
+ */
 export async function deleteAdminResourceAction(
   input: DeleteAdminResourceUseCaseInputModel,
 ) {

@@ -2,6 +2,10 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { adminResourcesConfig } from "../../domain/config/admin-resources-config";
 import { AdminResourceCard } from "./admin-resource-card";
 
+/**
+ * Section of the admin panel with links to all available resource types of the
+ * admin panel.
+ */
 export function AdminResourcesSection() {
   return (
     <div className="px-4">

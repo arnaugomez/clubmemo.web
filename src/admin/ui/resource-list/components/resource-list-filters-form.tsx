@@ -24,6 +24,12 @@ interface ResourceListFiltersFormProps {
   onHideFilters: () => void;
 }
 
+/**
+ * Form to filter the resources in the admin resource list. It displays the
+ * fields associated with the resource and allows the user to filter the
+ * resources by their values. When the user edits a field, the URL query params
+ * are updated with the new values.
+ */
 export function ResourceListFiltersForm({
   resource,
   onHideFilters,

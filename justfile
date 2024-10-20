@@ -21,7 +21,6 @@ start:
 fix:
     ./nvm-exec.sh pnpm format
     ./nvm-exec.sh pnpm fix
-    # just --unstable --fmt
 
 # Perform static code analysis
 check:
@@ -51,6 +50,7 @@ test:
 e2e *args:
     ./nvm-exec.sh pnpm exec playwright test {{ args }}
 
+# Installs the necessary libraries and programs to perform end-to-end tests
 e2e-install:
     ./nvm-exec.sh pnpm exec playwright install
 

@@ -21,20 +21,55 @@ import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 export interface GetAdminResourcesUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
+  /**
+   * The page to retrieve. The first page is 1.
+   */
   page: number;
+  /**
+   * The number of resources to include in each page. Defaults to 10.
+   */
   pageSize: number;
+  /**
+   * The field to sort by.
+   */
   sortBy?: string;
+  /**
+   * Whether to sort in ascending or descending order.
+   */
   sortOrder?: SortOrderModel;
+  /**
+   * General search query. The query is applied to all string fields of the
+   * database. If any field matches the query, the resource is included in the
+   * results.
+   */
   query?: string;
+  /**
+   * Filters to apply to the resources. The filters are applied to the fields of
+   * the database. If all the fields of a resources match a given filter, the
+   * resource is included in the results. The filters are applied using the AND
+   * operator. The `filters` and the `query` are combined using the AND
+   * operator. That means, a resource must match the `query` and all the filters
+   * to be included in the results.
+   */
   filters?: Record<string, unknown>;
 }
 
+/**
+ * Gets a list of resources from the database. For example, gets a list of users.
+ * This use case is only accessible to admin users from the admin panel.
+ */
 export class GetAdminResourcesUseCase {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
   ) {}
 
+  /**
+   * Gets a list of resources from the database. For example, gets a list of users.
+   * This use case is only accessible to admin users from the admin panel.
+   * @returns {Promise<PaginationModel<AdminResourceData>>} A paginated list of resources.
+   * If there are no resources, an empty paginated list is returned.
+   */
   async execute({
     resourceType,
     page = 1,

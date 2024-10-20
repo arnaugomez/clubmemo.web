@@ -1,3 +1,6 @@
+/**
+ * Maps the admin keys to their translation
+ */
 const adminTranslations: Record<string, string> = {
   "courseEnrollments.description":
     "Las inscripciones a cursos contienen la información de un perfil inscrito en un curso, incluido sus preferencias de cómo realizar las sesiones de práctica.",
@@ -363,6 +366,13 @@ const adminTranslations: Record<string, string> = {
   "users.singular.lowercase": "usuario",
 };
 
+/**
+ * Generates a translation key. If the key is translated, it returns the
+ * translated text. If not, it returns the key.
+ *
+ * @param keys A list of strings that uniquely identify the admin key
+ * @returns The translation if it exists, otherwise the translation key
+ */
 export function translateAdminKey(...keys: string[]): string {
   const key = keys.join(".");
   return adminTranslations[key] || key;

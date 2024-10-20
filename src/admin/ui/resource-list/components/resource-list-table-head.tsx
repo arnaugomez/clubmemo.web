@@ -10,6 +10,10 @@ interface ResourceListTableHeadProps {
   fieldName: string;
 }
 
+/**
+ * Displays the headers of the table, with the name of the fields. The headers
+ * are clickable and they allow the user to sort the table by the field.
+ */
 export function ResourceListTableHead({
   resourceType,
   fieldName,

@@ -21,9 +21,16 @@ interface ResourceListTableRowProps {
   fields: AdminFieldModel[];
   joins: AdminJoinModel[];
   resourceData: AdminResourceData;
+  /**
+   * Callback to reload the list of resources.
+   */
   onReload: () => void;
 }
 
+/**
+ * Displays a row in the resource list table. It shows the data of a resource
+ * and allows the user to edit or delete it.
+ */
 export function ResourceListTableRow({
   resourceType,
   fields,

@@ -3,6 +3,7 @@ import { locator_auth_UsersRepository } from "@/src/auth/locators/locator_users-
 import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
 import { locator_courses_CourseEnrollmentsRepository } from "@/src/courses/locators/locator_course-enrollments-repository";
 import { locator_courses_CoursePermissionsRepository } from "@/src/courses/locators/locator_course-permissions-repository";
+import { locator_notes_NotesRepository } from "@/src/notes/locators/locator_notes-repository";
 import { locator_profiles_ProfilesRepository } from "@/src/profile/locators/locator_profiles-repository";
 import { Argon2id } from "oslo/password";
 import { ZodError, ZodIssueCode } from "zod";
@@ -11,7 +12,6 @@ import { checkIfHandleAlreadyExists } from "../hooks/check-if-handle-already-exi
 import { checkIfTagAlreadyExists } from "../hooks/check-if-tag-already-exists";
 import type { AdminResourceHookModel } from "../models/admin-resouce-hook-model";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
-import { locator_notes_NotesRepository } from "@/src/notes/locators/locator_notes-repository";
 
 const adminResourceHooksConfig: AdminResourceHookModel[] = [
   {
@@ -111,6 +111,13 @@ const adminResourceHooksConfig: AdminResourceHookModel[] = [
   },
 ];
 
+/**
+ * Gets the admin resource configuration of a certian type
+ *
+ * @param resourceType The type of resource
+ * @returns The admin resource configuration of the given type, or undefined if
+ * it does not exist.
+ */
 export function getAdminResourceHook(resourceType: AdminResourceTypeModel) {
   return adminResourceHooksConfig.find(
     (hook) => hook.resourceType === resourceType,

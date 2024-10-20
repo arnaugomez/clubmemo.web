@@ -26,6 +26,11 @@ import { AdminFields } from "../../resource-form/admin-fields";
 interface CreateResourceFormProps {
   resourceType: AdminResourceTypeModel;
 }
+
+/**
+ * Form that contains the fields of an admin resource. When the form is
+ * submitted, it creates a new resource with the data entered by the user.
+ */
 export function CreateResourceForm({ resourceType }: CreateResourceFormProps) {
   const resource = getAdminResourceByType(resourceType);
   const { push } = useRouter();

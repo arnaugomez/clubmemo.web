@@ -39,6 +39,9 @@ const componentMap: Record<
   [AdminFieldTypeModel.file]: () => null,
 };
 
+/**
+ * Displays a field in the admin resource list filters form.
+ */
 export function ResourceListFiltersField(props: ResourceListFiltersFieldProps) {
   const Component = componentMap[props.field.fieldType];
 

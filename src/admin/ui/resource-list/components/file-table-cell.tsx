@@ -7,6 +7,10 @@ import Link from "next/link";
 interface FileTableCellProps {
   href: string;
 }
+/**
+ * Displays a data of a file field in the cell of the admin resource list table.
+ * Shows a link to the file.
+ */
 export function FileTableCell({ href }: FileTableCellProps) {
   href = href?.trim();
 

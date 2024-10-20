@@ -49,6 +49,9 @@ const componentMap: Record<
   [AdminFieldTypeModel.file]: AdminFieldFile,
 };
 
+/**
+ * Displays a field of an admin resource in the form of the admin panel.
+ */
 export function AdminField(props: ResourceFormFieldProps) {
   const Component = componentMap[props.field.fieldType];
 

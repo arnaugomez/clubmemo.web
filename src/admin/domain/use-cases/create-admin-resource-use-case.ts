@@ -16,12 +16,22 @@ interface CreateAdminResourceUseCaseResultModel {
   id: string;
 }
 
+/**
+ * Creates a new instance of a resource of the database. For example, creates a
+ * new user. This use case is only accessible to admin users from the admin
+ * panel.
+ */
 export class CreateAdminResourceUseCase {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
   ) {}
 
+  /**
+   * Creates a new instance of a resource of the database. For example, creates a
+   * new user. This use case is only accessible to admin users from the admin
+   * panel.
+   */
   async execute({
     resourceType,
     data,

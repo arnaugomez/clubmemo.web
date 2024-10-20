@@ -6,13 +6,16 @@ import { useState } from "react";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import { ResourceListFiltersForm } from "./resource-list-filters-form";
 import { ResourceListTableSearch } from "./resource-list-table-search";
-import { ShowColumnsDropdown } from "./show-columns-dropdown";
+import { ShowColumnsDropdown } from "../../../../common/ui/components/input/show-columns-dropdown";
 
 interface ResourceListTableFiltersProps {
   resource: AdminResourceModel;
   setVisibleColumns: (fieldNames: string[]) => void;
   visibleColumns: string[];
 }
+/**
+ * Section that contains the search bar and the filters for the resource list table.
+ */
 export function ResourceListTableFilters({
   visibleColumns,
   resource,

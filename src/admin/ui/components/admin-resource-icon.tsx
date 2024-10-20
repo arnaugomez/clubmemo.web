@@ -42,6 +42,10 @@ interface AdminResourceIconProps extends Omit<LucideProps, "ref"> {
   adminResourceType: AdminResourceTypeModel;
 }
 
+/**
+ * Displays the icon associated with a certain resource type.
+ * Can be given a custom `className` and `style`.
+ */
 export const AdminResourceIcon = ({
   adminResourceType,
   ...props

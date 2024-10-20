@@ -16,6 +16,12 @@ interface ResourceListTableCellProps {
   data: AdminResourceData;
 }
 
+/**
+ * Displays a value of an admin resource in a cell of the resource list table.
+ *
+ * The value is displayed according to the field type. For example, if the field
+ * is a date, the value is formatted as a date.
+ */
 export function ResourceListTableCell({
   resourceType,
   field,

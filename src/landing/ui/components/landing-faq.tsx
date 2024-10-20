@@ -29,7 +29,7 @@ export function LandingFaq() {
                   <Paragraph>
                     Se trata de un proyecto de código abierto que busca mejorar
                     la educación. Forma parte del proyecto de fin de grado de
-                    Arnau Gómez, estudiante de ingeniería informática.
+                    Arnau Gómez, estudiante de Ingeniería Informática.
                   </Paragraph>
                 </>
               }
@@ -81,7 +81,9 @@ export function LandingFaq() {
             />
             <FaqItem
               value="item-4"
-              question={'¿Por qué "clubmemo" se escribe en minúscula?'}
+              question={
+                '¿Por qué "clubmemo" sale escrito en minúscula en la aplicación?'
+              }
               answer={
                 <>
                   <Paragraph>

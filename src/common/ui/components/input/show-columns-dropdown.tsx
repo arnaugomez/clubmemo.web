@@ -13,6 +13,11 @@ interface ShowColumnsDropdownProps {
   value: string[];
   onChange: (value: string[]) => void;
 }
+
+/**
+ *
+ * Dropdown menu that lets the user hide and show columns from a table
+ */
 export function ShowColumnsDropdown({
   options,
   value,

@@ -8,6 +8,10 @@ import type { PropsWithResourceTypeParam } from "../../models/props-with-resourc
 import { CreateResourceForm } from "../components/create-resource-form";
 import { CreateResourceAlert } from "../components/create-resource-warning";
 
+/**
+ * Page of the admin panel that contains the form to create a new resource of a
+ * specific type.
+ */
 export function CreateResourcePage({
   params: { resourceType },
 }: PropsWithResourceTypeParam) {

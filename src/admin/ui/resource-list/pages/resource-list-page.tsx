@@ -6,6 +6,9 @@ import type { PropsWithResourceTypeParam } from "../../models/props-with-resourc
 import { ResourceListTable } from "../components/resource-list-table";
 import { ResourceListTopButtons } from "../components/resource-list-top-buttons";
 
+/**
+ * Admin panel page that contains a table with the list of resources of a specific type.
+ */
 export function ResourceListPage({
   params: { resourceType },
 }: PropsWithResourceTypeParam) {
