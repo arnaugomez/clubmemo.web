@@ -29,7 +29,7 @@ export function LandingFaq() {
                   <Paragraph>
                     Se trata de un proyecto de código abierto que busca mejorar
                     la educación. Forma parte del proyecto de fin de grado de
-                    Arnau Gómez, estudiante de ingeniería informática.
+                    Arnau Gómez, estudiante de Ingeniería Informática.
                   </Paragraph>
                 </>
               }
