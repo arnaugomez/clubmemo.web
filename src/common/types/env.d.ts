@@ -32,5 +32,12 @@ declare namespace NodeJS {
      * it is automatically set to admin
      */
     readonly ADMIN_EMAIL: string;
+
+    /**
+     * Whether to cache the MongoDB client in the global scope.
+     * Useful for not creating multiple connections to the database in development
+     * mode, due to constant hot reloads.
+     */
+    readonly CACHE_MONGODB_CLIENT: string;
   }
 }

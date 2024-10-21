@@ -32,7 +32,7 @@ export interface EnvService {
   readonly adminEmail: string;
 
   /**
-   * Whether the Node environment is production or not.
+   * Whether to cache the MongoDB client in the global scope.
    */
-  readonly isProduction: boolean;
+  readonly cacheMongodbClient: boolean;
 }

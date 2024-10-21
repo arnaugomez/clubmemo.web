@@ -14,5 +14,5 @@ export class EnvServiceImpl implements EnvService {
   readonly awsRegion = process.env.AWS_REGION;
   readonly awsBucketName = process.env.AWS_BUCKET_NAME;
   readonly adminEmail = process.env.ADMIN_EMAIL ?? "";
-  readonly isProduction = process.env.NODE_ENV === "production";
+  readonly cacheMongodbClient = process.env.CACHE_MONGODB_CLIENT === "true";
 }
