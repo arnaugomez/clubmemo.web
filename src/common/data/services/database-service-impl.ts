@@ -32,11 +32,11 @@ export class DatabaseServiceImpl implements DatabaseService {
     envService: EnvService,
     private readonly dbName?: string,
   ) {
-    if (envService.isProduction) {
-      this.client = DatabaseServiceImpl.createClient(envService);
-    } else {
+    if (envService.cacheMongodbClient) {
       global.mongoClient ??= DatabaseServiceImpl.createClient(envService);
       this.client = global.mongoClient;
+    } else {
+      this.client = DatabaseServiceImpl.createClient(envService);
     }
   }
 

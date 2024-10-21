@@ -17,7 +17,6 @@ export class ReviewLogsRepositoryImpl implements ReviewLogsRepository {
     private readonly dateTimeService: DateTimeService,
   ) {
     this.reviewLogs = databaseService.collection(reviewLogsCollection);
-    this.reviewLogs.createIndex({ courseEnrollmentId: 1, review: 1, state: 1 });
   }
 
   async create(input: ReviewLogModel): Promise<ReviewLogModel> {
