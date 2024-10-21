@@ -30,4 +30,9 @@ export interface EnvService {
    * it is automatically set to admin
    */
   readonly adminEmail: string;
+
+  /**
+   * Whether the Node environment is production or not.
+   */
+  readonly isProduction: boolean;
 }
