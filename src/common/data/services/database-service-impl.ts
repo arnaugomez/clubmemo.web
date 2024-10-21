@@ -18,20 +18,33 @@ declare module global {
  */
 export class DatabaseServiceImpl implements DatabaseService {
   readonly client: MongoClient;
-  /**
-   *  The default database of the mongodb cluster
-   */
-  private readonly db: Db;
 
-  constructor(envService: EnvService, dbName?: string) {
-    global.mongoClient ??= new MongoClient(envService.mongodbUrl, {
+  private static createClient(envService: EnvService): MongoClient {
+    return new MongoClient(envService.mongodbUrl, {
       serverApi: {
         version: ServerApiVersion.v1,
         deprecationErrors: true,
       },
     });
-    this.client = global.mongoClient;
-    this.db = this.client.db(dbName);
+  }
+
+  constructor(
+    envService: EnvService,
+    private readonly dbName?: string,
+  ) {
+    if (envService.isProduction) {
+      this.client = DatabaseServiceImpl.createClient(envService);
+    } else {
+      global.mongoClient ??= DatabaseServiceImpl.createClient(envService);
+      this.client = global.mongoClient;
+    }
+  }
+
+  /**
+   *  The default database of the mongodb cluster
+   */
+  get db(): Db {
+    return this.client.db(this.dbName);
   }
 
   collection<TSchema extends Document = Document>(
