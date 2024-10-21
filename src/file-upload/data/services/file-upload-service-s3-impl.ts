@@ -35,6 +35,7 @@ export class FileUploadServiceS3Impl implements FileUploadService {
       Fields: {
         acl: "public-read",
         "Content-Type": contentType,
+        "Cache-Control": "max-age=31536000",
       },
       Expires: 600, // Seconds before the presigned post expires. 3600 by default.
     });

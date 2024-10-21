@@ -17,8 +17,6 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
     private readonly databaseService: DatabaseService,
   ) {
     this.fileUploads = databaseService.collection(fileUploadsCollection);
-    this.fileUploads.createIndex({ keyPrefix: 1 });
-    this.fileUploads.createIndex({ key: 1 });
   }
 
   async create({

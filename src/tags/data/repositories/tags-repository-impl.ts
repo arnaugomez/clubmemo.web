@@ -11,8 +11,8 @@ export class TagsRepositoryImpl implements TagsRepository {
 
   constructor(databaseService: DatabaseService) {
     this.tags = databaseService.collection(tagsCollection);
-    this.tags.createIndex({ name: 1 }, { unique: true });
   }
+
   async create(tags: string[]): Promise<void> {
     if (!tags.length) return;
     try {
