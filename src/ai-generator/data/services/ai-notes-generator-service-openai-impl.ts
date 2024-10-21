@@ -15,14 +15,6 @@ import type {
 } from "../../domain/interfaces/ai-notes-generator-service";
 import { AiGeneratorNoteType } from "../../domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "../../domain/models/ai-notes-generator-source-type";
-// eslint-disable-next-line @typescript-eslint/no-namespace
-declare module global {
-  /**
-   * Singleton instance of the OpenAI client. Avoids creating multiple instances
-   * of the client when the app hot reloads.
-   */
-  let openaiClient: OpenAI;
-}
 
 const ValidationSchema = z.object({
   flashcards: z.array(
@@ -50,10 +42,9 @@ export class AiNotesGeneratorServiceOpenaiImpl
     envService: EnvService,
     private readonly errorTrackingService: ErrorTrackingService,
   ) {
-    global.openaiClient ??= new OpenAI({
+    this.client = new OpenAI({
       apiKey: envService.openaiApiKey,
     });
-    this.client = global.openaiClient;
   }
 
   async generate({
