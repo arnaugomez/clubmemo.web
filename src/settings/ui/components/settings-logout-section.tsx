@@ -8,7 +8,7 @@ export function SettingsLogoutSection() {
     <>
       <SettingsSectionTitle>Cerrar sesión</SettingsSectionTitle>
       <AsyncButton onClick={() => logoutAction()} variant="secondary">
-        Logout
+        Cerrar sesión y salir
       </AsyncButton>
     </>
   );
