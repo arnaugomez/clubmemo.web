@@ -49,7 +49,11 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
             <div className="relative h-14">
               <div className="absolute bottom-0 left-0 grid size-28 place-items-center rounded-full bg-white">
                 <Avatar className="size-[104px]">
-                  <AvatarImage src={profile.picture} alt="Imagen de perfil" />
+                  <AvatarImage
+                    sizes="104px"
+                    src={profile.picture}
+                    alt="Imagen de perfil"
+                  />
                   <AvatarFallback className="text-slate-400">
                     <User size={56} strokeWidth={1.5} />
                   </AvatarFallback>

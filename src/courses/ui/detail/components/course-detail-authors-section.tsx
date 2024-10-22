@@ -39,7 +39,11 @@ export function CourseDetailAuthorsSectionLoaded({
         <div className="pb-3" key={author.profileId + author.permissionType}>
           <div className="flex w-full items-center space-x-3 py-1">
             <Avatar className="flex-none">
-              <AvatarImage src={author.picture} alt="Imagen de perfil" />
+              <AvatarImage
+                sizes="40px"
+                src={author.picture}
+                alt="Imagen de perfil"
+              />
               <AvatarFallback className="text-slate-500 hover:bg-slate-200">
                 <User />
               </AvatarFallback>

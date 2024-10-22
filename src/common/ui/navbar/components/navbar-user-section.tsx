@@ -28,7 +28,11 @@ export function NavbarUserSectionLoaded({
     <Link href={profile ? getProfilePagePath(profile) : ""}>
       <span className="sr-only">Página de perfil</span>
       <Avatar>
-        <AvatarImage src={profile?.picture} alt="Imagen de perfil" />
+        <AvatarImage
+          sizes="40px"
+          src={profile?.picture}
+          alt="Imagen de perfil"
+        />
         <AvatarFallback className="text-slate-500 hover:bg-slate-200">
           <User />
         </AvatarFallback>
