@@ -39,7 +39,7 @@ export async function ProfilePage({ profile }: ProfilePageProps) {
             alt=""
             className="object-cover"
             priority
-            unoptimized
+            sizes="100vw"
           />
         )}
       </div>

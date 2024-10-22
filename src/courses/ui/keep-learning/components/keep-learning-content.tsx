@@ -2,12 +2,12 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
+import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
 import { PartyPopper, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import { getCourseDetailPath } from "../../utils/get-course-detail-path";
-import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
 
 export async function KeepLearningContent() {
   const profile = await fetchMyProfile();
@@ -24,8 +24,8 @@ export async function KeepLearningContent() {
             fill
             alt=""
             className="object-cover"
-            unoptimized
             priority
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         )}
       </div>

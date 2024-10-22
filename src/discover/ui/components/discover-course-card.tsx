@@ -21,7 +21,7 @@ export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
             alt=""
             fill
             className="object-cover"
-            unoptimized
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         )}
       </div>
