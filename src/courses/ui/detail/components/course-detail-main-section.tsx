@@ -26,8 +26,8 @@ export async function CourseDetailMainSection({
               src={course.picture}
               alt=""
               className="object-cover"
-              unoptimized
               priority
+              sizes="(max-width: 768px) 100vw, 33vw"
             />
           )}
           <CourseDetailActionsSection course={course} />
