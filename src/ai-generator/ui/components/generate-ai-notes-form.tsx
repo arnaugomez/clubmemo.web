@@ -86,12 +86,8 @@ export function GenerateAiNotesForm({
           form.setError("file", { message: "Debes subir un archivo" });
           return;
         }
-        if (
-          data.file.type.includes("text/plain") ||
-          data.file.type.includes("md")
-        ) {
-          text = await data.file.text();
-        } else if (data.file.type.includes("pdf")) {
+
+        if (data.file.type === "application/pdf") {
           const fileReader = new FileReader();
           fileReader.readAsArrayBuffer(data.file);
           text = await new Promise((resolve, reject) => {
@@ -128,6 +124,8 @@ export function GenerateAiNotesForm({
               resolve(texts.join("\n"));
             };
           });
+        } else {
+          text = await data.file.text();
         }
       }
       text = text.trim().slice(0, 60_000);
