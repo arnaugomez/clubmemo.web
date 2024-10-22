@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { ObjectId, WithId } from "mongodb";
 import type { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
 import type { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
@@ -22,7 +22,7 @@ export interface ReviewLogDoc {
 /**
  * Collection of MongoDB documents of type `ReviewLogDoc`
  */
-export const reviewLogsCollection = collection<ReviewLogDoc>("reviewLogs");
+export const reviewLogsCollection = collection<ReviewLogDoc>()("reviewLogs");
 
 export class ReviewLogDocTransformer {
   constructor(private readonly doc: WithId<ReviewLogDoc>) {}

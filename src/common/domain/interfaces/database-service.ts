@@ -1,5 +1,5 @@
 import type { Collection, Document, MongoClient } from "mongodb";
-import type { CollectionType } from "../../data/utils/mongo";
+import type { CollectionType } from "../../data/utils/mongodb";
 
 /**
  * Service to interact with the MongoDB database.
@@ -18,7 +18,7 @@ export interface DatabaseService {
    * @param collectionType - The collection type object defined in the collection file with the `collection` function.
    * @see `collection` function in the MongoDB utils file.
    */
-  collection<TSchema extends Document = Document>(
+  collection<TSchema extends Document>(
     collectionType: CollectionType<TSchema>,
   ): Collection<TSchema>;
 }

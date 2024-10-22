@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { collection } from "./mongo";
+import { collection } from "./mongodb";
 
 interface MockDoc {
   foo: string;
@@ -9,7 +9,7 @@ interface MockDoc {
 describe("collection", () => {
   it("should return an object with the correct name property", () => {
     const collectionName = "testCollection";
-    const result = collection<MockDoc>(collectionName);
+    const result = collection<MockDoc>()(collectionName);
     expect(result.name).toBe(collectionName);
   });
 });

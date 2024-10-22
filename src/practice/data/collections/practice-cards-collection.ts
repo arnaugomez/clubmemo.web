@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
 import { NoteDocTransformer } from "@/src/notes/data/collections/notes-collection";
 import type { ObjectId, WithId } from "mongodb";
@@ -24,7 +24,7 @@ export interface PracticeCardDoc {
  * Collection of MongoDB documents of type `PracticeCardDoc`
  */
 export const practiceCardsCollection =
-  collection<PracticeCardDoc>("practiceCards");
+  collection<PracticeCardDoc>()("practiceCards");
 
 export class PracticeCardDocTransformer {
   constructor(private readonly doc: WithId<PracticeCardDoc>) {}
