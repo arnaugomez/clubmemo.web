@@ -42,7 +42,9 @@ export default async function CourseDetailPage({
 export async function generateMetadata({
   params: { id },
 }: PropsWithIdParam): Promise<Metadata> {
-  const course = await handlePromiseError(fetchCourseDetail(id));
+  const profile = await handlePromiseError(fetchMyProfile());
+  const course = await handlePromiseError(fetchCourseDetail(id, profile?.id));
+  if (!course || !course.canView) return {};
   return {
     title: course?.name,
     description: course?.description,

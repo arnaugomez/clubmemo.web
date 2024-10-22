@@ -1,3 +1,4 @@
+import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { verifyEmailGuard } from "@/src/auth/ui/guards/verify-email-guard";
 import { invalidIdGuard } from "@/src/common/ui/guards/invalid-id-guard";
 import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
@@ -28,8 +29,13 @@ export async function generateMetadata({
   params: { id },
 }: PropsWithIdParam): Promise<Metadata> {
   const profile = await handlePromiseError(fetchProfileById(id));
+  if (!profile) return {};
+  const { user } = await fetchSession();
+  if (!profile.isPublic && profile.userId !== user?.id) {
+    return {};
+  }
   return {
-    title: profile?.displayName ?? "Mi perfil",
-    description: profile?.bio,
+    title: profile.displayName ?? "Mi perfil",
+    description: profile.bio,
   };
 }
