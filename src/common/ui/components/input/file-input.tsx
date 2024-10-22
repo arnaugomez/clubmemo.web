@@ -1,8 +1,8 @@
 import { FileIcon, Upload } from "lucide-react";
 import type { PropsWithChildren, ReactNode } from "react";
 import { useCallback } from "react";
-import type { Accept } from "react-dropzone";
-import { useDropzone } from "react-dropzone";
+import type { Accept, FileError } from "react-dropzone";
+import { ErrorCode, useDropzone } from "react-dropzone";
 import { textStyles } from "../../styles/text-styles";
 import { cn } from "../../utils/shadcn";
 
@@ -75,12 +75,7 @@ export function FileInput({
       </div>
       {rejectedFile &&
         rejectedFile.errors.map((value) => (
-          <p
-            key={value.code}
-            className={"text-sm font-medium text-destructive"}
-          >
-            {value.message}
-          </p>
+          <FileInputErrorMessage key={value.code} value={value} />
         ))}
     </>
   );
@@ -149,6 +144,41 @@ function FileInputText({ children }: PropsWithChildren) {
   return (
     <p className={cn(textStyles.muted, "max-w-full break-words text-center")}>
       {children}
+    </p>
+  );
+}
+
+interface FileInputErrorMessageProps {
+  value: FileError;
+}
+
+export function FileInputErrorMessage({ value }: FileInputErrorMessageProps) {
+  function getText() {
+    switch (value.code) {
+      case ErrorCode.FileInvalidType:
+        return value.message.replace(
+          "File type must be",
+          "El archivo debe ser de tipo",
+        );
+      case ErrorCode.TooManyFiles:
+        return "Se han subido más archivos de los permitidos.";
+      case ErrorCode.FileTooLarge:
+        return value.message.replace(
+          "File is larger than",
+          "Archivo demasiado grande. El tamaño máximo es",
+        );
+      case ErrorCode.FileTooSmall:
+        return value.message.replace(
+          "File is smaller than",
+          "Archivo demasiado pequeño. El tamaño mínimo es",
+        );
+      default:
+        return value.message;
+    }
+  }
+  return (
+    <p key={value.code} className="text-sm font-medium text-destructive">
+      {getText()}
     </p>
   );
 }
