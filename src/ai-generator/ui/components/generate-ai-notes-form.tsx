@@ -51,7 +51,7 @@ export function GenerateAiNotesForm({
     text:
       sourceType === AiNotesGeneratorSourceType.file
         ? z.string().optional()
-        : z.string().min(1).max(60_000),
+        : z.string().trim().min(1).max(60_000),
     file:
       sourceType === AiNotesGeneratorSourceType.file
         ? FileSchema
@@ -134,7 +134,7 @@ export function GenerateAiNotesForm({
       if (!text) {
         form.setError("root.globalError", {
           type: "global",
-          message: "The text is empty.",
+          message: "El texto es vacío.",
         });
         return;
       }
