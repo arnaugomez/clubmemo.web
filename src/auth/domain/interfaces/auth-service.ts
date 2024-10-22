@@ -63,7 +63,9 @@ export interface AuthService {
    * @param input The email and password of the user to log in
    * @returns The session cookie
    */
-  loginWithPassword(input: LoginWithPasswordInputModel): Promise<Cookie>;
+  loginWithPassword(
+    input: LoginWithPasswordInputModel,
+  ): Promise<LoginWithPasswordResultModel>;
 
   /**
    * Creates a new user with an email and password. If the email is not already
@@ -139,6 +141,8 @@ export interface SignupWithPasswordResultModel {
   sessionCookie: Cookie;
   userId: string;
 }
+
+export type LoginWithPasswordResultModel = SignupWithPasswordResultModel;
 
 export interface UpdatePasswordInputModel {
   userId: string;

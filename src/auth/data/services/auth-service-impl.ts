@@ -19,6 +19,7 @@ import type {
   AuthService,
   CheckPasswordInputModel,
   LoginWithPasswordInputModel,
+  LoginWithPasswordResultModel,
   SignupWithPasswordInputModel,
   SignupWithPasswordResultModel,
   UpdatePasswordInputModel,
@@ -57,19 +58,19 @@ type MyLucia = Lucia<
 export class AuthServiceImpl implements AuthService {
   private readonly lucia: MyLucia;
 
-  private readonly usersCollection: typeof usersCollection.type;
+  private readonly users: typeof usersCollection.type;
 
   constructor(
     private readonly envService: EnvService,
     databaseService: DatabaseService,
   ) {
-    this.usersCollection = databaseService.collection(usersCollection);
+    this.users = databaseService.collection(usersCollection);
 
     const adapter = new MongodbAdapter(
       databaseService.collection(sessionsCollection) as unknown as Collection<
         SessionDoc & { _id: string }
       >,
-      this.usersCollection as unknown as Collection<WithId<UserDoc>>,
+      this.users as unknown as Collection<WithId<UserDoc>>,
     );
     this.lucia = new Lucia(adapter, {
       sessionCookie: {
@@ -124,25 +125,28 @@ export class AuthServiceImpl implements AuthService {
   async loginWithPassword({
     email,
     password,
-  }: LoginWithPasswordInputModel): Promise<Cookie> {
-    const existingUser = await this.usersCollection.findOne({
+  }: LoginWithPasswordInputModel): Promise<LoginWithPasswordResultModel> {
+    const user = await this.users.findOne({
       email,
     });
 
-    if (!existingUser) {
+    if (!user) {
       throw new UserDoesNotExistError();
     }
 
     const passwordIsCorrect = await this.passwordHashingAlgorithm.verify(
-      existingUser.hashed_password,
+      user.hashed_password,
       password,
     );
     if (!passwordIsCorrect) {
       throw new IncorrectPasswordError();
     }
 
-    const session = await this.lucia.createSession(existingUser._id, {});
-    return this.lucia.createSessionCookie(session.id);
+    const session = await this.lucia.createSession(user._id, {});
+    return {
+      userId: user._id.toString(),
+      sessionCookie: this.lucia.createSessionCookie(session.id),
+    };
   }
 
   async signupWithPassword({
@@ -150,7 +154,7 @@ export class AuthServiceImpl implements AuthService {
     password,
     acceptTerms,
   }: SignupWithPasswordInputModel): Promise<SignupWithPasswordResultModel> {
-    const existingUser = await this.usersCollection.findOne({
+    const existingUser = await this.users.findOne({
       email,
     });
     if (existingUser) {
@@ -158,7 +162,7 @@ export class AuthServiceImpl implements AuthService {
     }
 
     const hashed_password = await this.passwordHashingAlgorithm.hash(password);
-    const result = await this.usersCollection.insertOne({
+    const result = await this.users.insertOne({
       email,
       hashed_password,
       acceptTerms,
@@ -177,7 +181,7 @@ export class AuthServiceImpl implements AuthService {
 
   async verifyEmail(userId: string): Promise<Cookie> {
     const _id = new ObjectId(userId);
-    await this.usersCollection.findOneAndUpdate(
+    await this.users.findOneAndUpdate(
       { _id },
       { $set: { isEmailVerified: true } },
     );
@@ -190,14 +194,14 @@ export class AuthServiceImpl implements AuthService {
     password,
   }: UpdatePasswordInputModel): Promise<void> {
     const hashed_password = await this.passwordHashingAlgorithm.hash(password);
-    await this.usersCollection.updateOne(
+    await this.users.updateOne(
       { _id: new ObjectId(userId) },
       { $set: { hashed_password } },
     );
   }
 
   async checkPasswordIsCorrect(input: CheckPasswordInputModel): Promise<void> {
-    const existingUser = await this.usersCollection.findOne({
+    const existingUser = await this.users.findOne({
       _id: new ObjectId(input.userId),
     });
     if (!existingUser) {

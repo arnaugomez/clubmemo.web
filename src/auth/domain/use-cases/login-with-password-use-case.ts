@@ -1,5 +1,6 @@
 import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
 import type { IpService } from "@/src/common/domain/interfaces/ip-service";
+import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
 import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
 import { IncorrectPasswordError } from "../errors/auth-errors";
 import type {
@@ -19,6 +20,7 @@ export class LoginWithPasswordUseCase {
     private readonly ipService: IpService,
     private readonly rateLimitsRepository: RateLimitsRepository,
     private readonly cookieService: CookieService,
+    private readonly profilesRepository: ProfilesRepository,
   ) {}
 
   /**
@@ -32,7 +34,13 @@ export class LoginWithPasswordUseCase {
     const rateLimitKey = `LoginWithPasswordUseCase/${ip}`;
     await this.rateLimitsRepository.check(rateLimitKey);
     try {
-      const sessionCookie = await this.authService.loginWithPassword(input);
+      const { sessionCookie, userId } =
+        await this.authService.loginWithPassword(input);
+
+      const profile = await this.profilesRepository.getByUserId(userId);
+      if (!profile) {
+        await this.profilesRepository.create(userId);
+      }
 
       this.cookieService.set(sessionCookie);
     } catch (e) {
