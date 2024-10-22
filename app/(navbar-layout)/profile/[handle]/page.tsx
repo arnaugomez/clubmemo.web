@@ -1,3 +1,4 @@
+import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import type { PropsWithHandleParam } from "@/src/common/ui/models/props-with-handle-param";
 import { handlePromiseError } from "@/src/common/utils/handle-promise-error";
 import { ProfilePage } from "@/src/profile/ui/components/profile-page";
@@ -24,8 +25,13 @@ export async function generateMetadata({
   params: { handle },
 }: PropsWithHandleParam): Promise<Metadata> {
   const profile = await handlePromiseError(fetchProfileByHandle(handle));
+  if (!profile) return {};
+  const { user } = await fetchSession();
+  if (!profile.isPublic && profile.userId !== user?.id) {
+    return {};
+  }
   return {
-    title: profile?.displayName ?? "Mi perfil",
-    description: profile?.bio,
+    title: profile.displayName ?? "Mi perfil",
+    description: profile.bio,
   };
 }

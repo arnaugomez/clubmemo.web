@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { WithId } from "mongodb";
 import { CourseModel } from "../../domain/models/course-model";
 import type { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
@@ -16,7 +16,7 @@ export interface CourseDoc {
 /**
  * Collection of MongoDB documents of type `CourseDoc`
  */
-export const coursesCollection = collection<CourseDoc>("courses");
+export const coursesCollection = collection<CourseDoc>()("courses");
 
 export class CourseDocTransformer {
   constructor(private readonly course: WithId<CourseDoc>) {}

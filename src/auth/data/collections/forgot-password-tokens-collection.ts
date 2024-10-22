@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { ObjectId, WithId } from "mongodb";
 import { ForgotPasswordTokenModel } from "../../domain/models/forgot-password-token-model";
 
@@ -19,7 +19,7 @@ export interface ForgotPasswordTokenDoc {
  * Collection of MongoDB documents of type `ForgotPasswordTokenDoc`
  */
 export const forgotPasswordTokensCollection =
-  collection<ForgotPasswordTokenDoc>("forgotPasswordTokens");
+  collection<ForgotPasswordTokenDoc>()("forgotPasswordTokens");
 
 /**
  * Transforms a `ForgotPasswordTokenDoc` object from the Data layer to a

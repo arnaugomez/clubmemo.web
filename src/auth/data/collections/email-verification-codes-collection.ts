@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { ObjectId } from "mongodb";
 import { EmailVerificationCodeModel } from "../../domain/models/email-verification-code-model";
 
@@ -19,7 +19,7 @@ export interface EmailVerificationCodeDoc {
  * Collection of MongoDB documents of type `EmailVerificationCodeDoc`
  */
 export const emailVerificationCodesCollection =
-  collection<EmailVerificationCodeDoc>("emailVerificationCodes");
+  collection<EmailVerificationCodeDoc>()("emailVerificationCodes");
 
 /**
  * Transforms a `EmailVerificationCodeDoc` object from the database to a

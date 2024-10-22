@@ -43,6 +43,10 @@ export class DatabaseIndexesServiceImpl implements DatabaseIndexesService {
     this.fileUploads = databaseService.collection(fileUploadsCollection);
   }
 
+  /**
+   * Create all indexes in the database. Should be called once, when the
+   * application builds.
+   */
   async createIndexes() {
     await Promise.all([
       this.usersCollection.createIndex({ email: 1 }, { unique: true }),

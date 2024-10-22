@@ -1,8 +1,8 @@
-import type { Collection, Db, Document } from "mongodb";
+import type { Collection, Document } from "mongodb";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import type { DatabaseService } from "../../domain/interfaces/database-service";
 import type { EnvService } from "../../domain/interfaces/env-service";
-import type { CollectionType } from "../utils/mongo";
+import type { CollectionType } from "../utils/mongodb";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare module global {
   /**
@@ -17,16 +17,10 @@ declare module global {
  * Implementation of `DatabaseService` using the MongoDB Node.js driver.
  */
 export class DatabaseServiceImpl implements DatabaseService {
+  /**
+   * The MongoDB database client instance.
+   */
   readonly client: MongoClient;
-
-  private static createClient(envService: EnvService): MongoClient {
-    return new MongoClient(envService.mongodbUrl, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        deprecationErrors: true,
-      },
-    });
-  }
 
   constructor(
     envService: EnvService,
@@ -41,15 +35,30 @@ export class DatabaseServiceImpl implements DatabaseService {
   }
 
   /**
-   *  The default database of the mongodb cluster
+   * Creates a new instance of a MongoDB client. Each client instance initiates
+   * a new database connection.
+   *
+   * @param envService The service that provides environment variables.
+   * @returns The new instance of the MongoDB client.
    */
-  get db(): Db {
-    return this.client.db(this.dbName);
+  private static createClient(envService: EnvService): MongoClient {
+    return new MongoClient(envService.mongodbUrl, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        deprecationErrors: true,
+      },
+    });
   }
 
-  collection<TSchema extends Document = Document>(
+  /**
+   * Gets a MongoDB collection by its type.
+   *
+   * @param collectionType - The collection type object defined in the collection file with the `collection` function.
+   * @see `collection` function in the MongoDB utils file.
+   */
+  collection<TSchema extends Document>(
     collectionType: CollectionType<TSchema>,
   ): Collection<TSchema> {
-    return this.db.collection<TSchema>(collectionType.name);
+    return this.client.db(this.dbName).collection<TSchema>(collectionType.name);
   }
 }

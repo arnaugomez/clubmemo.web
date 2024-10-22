@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 
 export interface RateLimitDoc {
   name: string;
@@ -9,4 +9,4 @@ export interface RateLimitDoc {
 /**
  * Collection of MongoDB documents of type `RateLimitDoc`
  */
-export const rateLimitsCollection = collection<RateLimitDoc>("rateLimits");
+export const rateLimitsCollection = collection<RateLimitDoc>()("rateLimits");

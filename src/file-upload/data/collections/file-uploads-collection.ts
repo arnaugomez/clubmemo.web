@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { ObjectId } from "mongodb";
 import type {
   FileUploadCollectionModel,
@@ -18,4 +18,4 @@ export interface FileUploadDoc {
 /**
  * Collection of MongoDB documents of type `FileUploadDoc`
  */
-export const fileUploadsCollection = collection<FileUploadDoc>("fileUploads");
+export const fileUploadsCollection = collection<FileUploadDoc>()("fileUploads");

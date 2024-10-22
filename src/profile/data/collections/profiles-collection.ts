@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { ObjectId, WithId } from "mongodb";
 import { ProfileModel } from "../../domain/models/profile-model";
 
@@ -20,7 +20,7 @@ export interface ProfileDoc {
 /**
  * Collection of MongoDB documents of type `ProfileDoc`
  */
-export const profilesCollection = collection<ProfileDoc>("profiles");
+export const profilesCollection = collection<ProfileDoc>()("profiles");
 
 /**
  * Converts the profile data of the database document into a `ProfileModel`

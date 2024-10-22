@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import createDOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 import type { ObjectId, WithId } from "mongodb";
@@ -14,7 +14,7 @@ export interface NoteDoc {
 /**
  * Collection of MongoDB documents of type `NoteDoc`
  */
-export const notesCollection = collection<NoteDoc>("notes");
+export const notesCollection = collection<NoteDoc>()("notes");
 
 const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);

@@ -1,4 +1,4 @@
-import { collection } from "@/src/common/data/utils/mongo";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { Session } from "lucia";
 import type { ObjectId } from "mongodb";
 import { SessionModel } from "../../domain/models/check-session-model";
@@ -15,7 +15,7 @@ export interface SessionDoc {
 /**
  * Collection of MongoDB documents of type `SessionDoc`
  */
-export const sessionsCollection = collection<SessionDoc>("sessions");
+export const sessionsCollection = collection<SessionDoc>()("sessions");
 
 /**
  * Converts a `Session` object from the Data layer to a
