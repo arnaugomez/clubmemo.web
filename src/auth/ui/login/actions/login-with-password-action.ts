@@ -3,6 +3,7 @@ import {
   IncorrectPasswordError,
   UserDoesNotExistError,
 } from "@/src/auth/domain/errors/auth-errors";
+import { locator_auth_LoginWithPasswordUseCase } from "@/src/auth/locators/locator_login-with-password-use-case";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
@@ -11,7 +12,6 @@ import {
   LoginWithPasswordActionSchema,
   type LoginWithPasswordActionModel,
 } from "../schemas/login-with-password-action-schema";
-import { locator_auth_LoginWithPasswordUseCase } from "@/src/auth/locators/locator_login-with-password-use-case";
 
 /**
  * Checks that the user credentials (email and password) are valid and creates a
