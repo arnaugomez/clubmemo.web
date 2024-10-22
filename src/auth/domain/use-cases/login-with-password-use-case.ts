@@ -37,6 +37,7 @@ export class LoginWithPasswordUseCase {
       const { sessionCookie, userId } =
         await this.authService.loginWithPassword(input);
 
+      // If the user was accidentally created without a profile (it can happen in the Admin Panel), create one.
       const profile = await this.profilesRepository.getByUserId(userId);
       if (!profile) {
         await this.profilesRepository.create(userId);
