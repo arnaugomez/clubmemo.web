@@ -1,6 +1,7 @@
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
+import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import Image from "next/image";
 import { Suspense } from "react";
 import { TagsSection } from "../../../../tags/ui/components/tags-section";
@@ -10,10 +11,12 @@ import { CourseDetailMainActionsSection } from "./course-detail-main-actions-sec
 
 interface CourseDetailMainSectionProps {
   course: CourseModel;
+  profile: ProfileModel | null;
 }
 
 export async function CourseDetailMainSection({
   course,
+  profile,
 }: CourseDetailMainSectionProps) {
   return (
     <>
@@ -30,7 +33,7 @@ export async function CourseDetailMainSection({
               sizes="(max-width: 768px) 100vw, 33vw"
             />
           )}
-          <CourseDetailActionsSection course={course} />
+          {profile && <CourseDetailActionsSection course={course} />}
         </div>
         <div className="h-4" />
         <p className={textStyles.muted}>
@@ -44,7 +47,10 @@ export async function CourseDetailMainSection({
         </p>
         <TagsSection tags={course.tags} variant="secondary" />
         <div className="h-12" />
-        <CourseDetailMainActionsSection course={course} />
+        <CourseDetailMainActionsSection
+          course={course}
+          isLoggedIn={Boolean(profile)}
+        />
         <div className="h-6" />
       </div>
       <Suspense>
