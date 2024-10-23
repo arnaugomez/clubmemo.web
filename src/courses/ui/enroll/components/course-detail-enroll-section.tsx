@@ -51,7 +51,8 @@ function EnrollButton({ course, isLoggedIn }: EnrollButtonProps) {
         const handler = new FormResponseHandler(response);
         if (!handler.hasErrors) {
           setIsEnrolled(true);
-        } else if (handler.data) handler.toastErrors();
+        }
+        handler.toastErrors();
       }}
       className="w-full"
     >
