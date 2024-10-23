@@ -27,7 +27,7 @@ export default async function CourseDetailPage({
   return (
     <div className="absolute inset-0 divide-slate-200 overflow-y-auto md:flex md:items-stretch md:divide-x-[1px] md:overflow-y-visible">
       <div className="w-full flex-none md:max-w-sm md:overflow-y-auto lg:max-w-md xl:max-w-lg">
-        <CourseDetailMainSection course={course} />
+        <CourseDetailMainSection course={course} profile={profile} />
       </div>
       <div className="min-w-0 flex-1 bg-slate-100 md:overflow-y-auto">
         <CourseNotesSection course={course} />

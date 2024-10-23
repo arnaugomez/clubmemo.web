@@ -5,15 +5,22 @@ import { CourseDetailPracticeButtonLoading } from "./course-detail-practice-butt
 
 interface CourseDetailMainActionsSectionProps {
   course: CourseModel;
+  isLoggedIn: boolean;
 }
 
 export function CourseDetailMainActionsSection({
   course,
+  isLoggedIn,
 }: CourseDetailMainActionsSectionProps) {
   if (course.isEnrolled) {
     return <CourseDetailPracticeButton course={course} />;
   } else if (!course.isOwner) {
-    return <CourseDetailEnrollSection courseData={course.data} />;
+    return (
+      <CourseDetailEnrollSection
+        courseData={course.data}
+        isLoggedIn={isLoggedIn}
+      />
+    );
   }
   return <CourseDetailPracticeButtonLoading />;
 }

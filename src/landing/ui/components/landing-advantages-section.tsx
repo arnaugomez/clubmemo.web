@@ -54,7 +54,7 @@ interface LandingAdvantageCardViewModel {
 function LandingAdvantageCards() {
   const advantages: LandingAdvantageCardViewModel[] = [
     {
-      title: "Recuerdo activo",
+      title: "Recuperación activa",
       icon: <Dumbbell />,
       description:
         "Practicando lo aprendido con actividades dinámicas, reforzamos más la memoria que cuando nos limitamos a releer los apuntes.",
