@@ -90,7 +90,7 @@ export function CreateResourceForm({ resourceType }: CreateResourceFormProps) {
       }
     } catch (error) {
       locator_common_ErrorTrackingService().captureError(error);
-      toast.error("Error al crear el recurso");
+      FormResponseHandler.setGlobalError(form);
     }
   }
 

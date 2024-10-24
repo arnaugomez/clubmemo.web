@@ -2,6 +2,8 @@ import { Loader2 } from "lucide-react";
 import { forwardRef, useState } from "react";
 import type { ButtonProps } from "../shadcn/ui/button";
 import { Button } from "../shadcn/ui/button";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { toast } from "sonner";
 
 interface AsyncButtonProps extends ButtonProps {
   onClick?: (
@@ -16,8 +18,9 @@ const AsyncButton = forwardRef<HTMLButtonElement, AsyncButtonProps>(
       try {
         setIsLoading(true);
         await onClick?.(e);
-      } catch (e) {
-        throw e;
+      } catch (error) {
+        locator_common_ErrorTrackingService().captureError(error)
+        toast.error("Ha ocurrido un error")
       } finally {
         setIsLoading(false);
       }

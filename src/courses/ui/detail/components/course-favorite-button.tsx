@@ -3,6 +3,8 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { Bookmark } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { favoriteCourseAction } from "../actions/favorite-course-action";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { toast } from "sonner";
 
 interface CourseFavoriteButtonProps {
   courseId: string;
@@ -22,16 +24,21 @@ export function CourseFavoriteButton(props: CourseFavoriteButtonProps) {
     if (isPending) return;
 
     startTransition(async () => {
-      setOptimisticFavorite(!isFavorite);
-      const response = await favoriteCourseAction({
-        courseId: props.courseId,
-        isFavorite: !isFavorite,
-      });
-      const handler = new FormResponseHandler(response);
-      if (!handler.hasErrors) {
-        setIsFavorite(!isFavorite);
+      try {
+        setOptimisticFavorite(!isFavorite);
+        const response = await favoriteCourseAction({
+          courseId: props.courseId,
+          isFavorite: !isFavorite,
+        });
+        const handler = new FormResponseHandler(response);
+        if (!handler.hasErrors) {
+          setIsFavorite(!isFavorite);
+        }
+        handler.toastErrors();
+      } catch (error) {
+        locator_common_ErrorTrackingService().captureError(error)
+        toast.error("Ha ocurrido un error")
       }
-      handler.toastErrors();
     });
   }
 
