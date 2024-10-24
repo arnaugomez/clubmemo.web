@@ -29,7 +29,7 @@ export default function TagsInput({
 
       return handler.data?.map((tag) => ({ value: tag, label: tag })) ?? [];
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error)
+      locator_common_ErrorTrackingService().captureError(error);
       toast.error("Error al cargar etiquetas");
     }
     return [];

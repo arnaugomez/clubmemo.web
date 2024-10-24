@@ -36,8 +36,8 @@ export function CourseFavoriteButton(props: CourseFavoriteButtonProps) {
         }
         handler.toastErrors();
       } catch (error) {
-        locator_common_ErrorTrackingService().captureError(error)
-        toast.error("Ha ocurrido un error")
+        locator_common_ErrorTrackingService().captureError(error);
+        toast.error("Ha ocurrido un error");
       }
     });
   }

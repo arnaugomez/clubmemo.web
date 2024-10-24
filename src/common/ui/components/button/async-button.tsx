@@ -19,8 +19,8 @@ const AsyncButton = forwardRef<HTMLButtonElement, AsyncButtonProps>(
         setIsLoading(true);
         await onClick?.(e);
       } catch (error) {
-        locator_common_ErrorTrackingService().captureError(error)
-        toast.error("Ha ocurrido un error")
+        locator_common_ErrorTrackingService().captureError(error);
+        toast.error("Ha ocurrido un error");
       } finally {
         setIsLoading(false);
       }
