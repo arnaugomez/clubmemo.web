@@ -18,6 +18,11 @@ import type { LoginWithPasswordActionModel } from "../schemas/login-with-passwor
 import { LoginWithPasswordActionSchema } from "../schemas/login-with-password-action-schema";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
+/**
+ * Shows a form to log in the user with an email and password. When the user
+ * submits the form, it sends the credentials to the server and logs in the user
+ * if the credentials are correct, otherwise it shows an error message.
+ */
 export function LoginForm() {
   const form = useForm({
     resolver: zodResolver(LoginWithPasswordActionSchema),

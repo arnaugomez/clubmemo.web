@@ -20,6 +20,10 @@ const FormSchema = z.object({
   code: z.string().length(6),
 });
 
+/**
+ * Form that verifies the email of an existing user, by submitting an email
+ * verification code. When the form is submitted, the email is marked as verified.
+ */
 export function VerifyEmailForm() {
   const form = useForm({
     resolver: zodResolver(FormSchema),

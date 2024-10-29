@@ -16,9 +16,9 @@ export function ResetPasswordPageLoaded({
   return (
     <>
       <h1 className={textStyles.h2}>Nueva contraseña</h1>
-      <div className="h-2"></div>
+      <div className="h-2" />
       <p>Entra una nueva contraseña para el usuario {email}</p>
-      <div className="h-6"></div>
+      <div className="h-6" />
       <ResetPasswordForm email={email} token={token} />
     </>
   );
