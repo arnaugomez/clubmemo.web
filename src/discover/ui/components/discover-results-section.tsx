@@ -21,6 +21,10 @@ interface DiscoverResultsSectionProps {
   data: TokenPaginationModelData<DiscoverCourseModelData>;
 }
 
+/**
+ * Shows a list of search results (courses) in the Discover section.
+ * Loads more results when the user scrolls to the bottom of the page.
+ */
 export function DiscoverResultsSection({ data }: DiscoverResultsSectionProps) {
   const initialPagination = useMemo(
     () =>

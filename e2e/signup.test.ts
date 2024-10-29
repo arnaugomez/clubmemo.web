@@ -1,9 +1,19 @@
 import test, { expect } from "@playwright/test";
 import { MongoClient, ServerApiVersion } from "mongodb";
 
+/**
+ * Generates a unique email for each test
+ *
+ * @param browserName the name of the browser where the e2e test is running
+ * @returns an email string that is unique for each test
+ */
 const createEmail = (browserName: string) =>
   `signup-test-${browserName}@test.com`;
 
+/**
+ * Deletes the data from previous e2e tests so that
+ * it does not interfere with the current test
+ */
 test.beforeEach(async ({ page, browserName }) => {
   const mongoClient = new MongoClient(process.env.MONGODB_URL, {
     serverApi: {

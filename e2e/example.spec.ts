@@ -1,5 +1,9 @@
 import { test, expect } from "@playwright/test";
 
+/**
+ * Example test for the Playwright website. Used for demonstration purposes,
+ * to document how the end-to-end testing framework works.
+ */
 test("has title", async ({ page }) => {
   await page.goto("https://playwright.dev/");
 
