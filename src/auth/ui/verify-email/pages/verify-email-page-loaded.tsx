@@ -10,6 +10,9 @@ interface VerifyEmailPageLoadedProps {
   user: UserModel;
 }
 
+/**
+ * Content of the page that asks the user to verify their email.
+ */
 export function VerifyEmailPageLoaded({
   user,
   hasExpired,

@@ -4,7 +4,6 @@ import { VerifyEmailPageLoaded } from "@/src/auth/ui/verify-email/pages/verify-e
 import { NullError } from "@/src/common/domain/models/app-errors";
 import { locator_common_EmailService } from "@/src/common/locators/locator_email-service";
 import type { Metadata } from "next";
-
 import { redirect } from "next/navigation";
 
 /**

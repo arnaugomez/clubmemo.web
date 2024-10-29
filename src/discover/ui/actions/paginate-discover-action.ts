@@ -6,6 +6,10 @@ import { fetchDiscoverCourses } from "../fetch/fetch-discover-courses";
 import type { PaginateDiscoverActionModel } from "../schemas/paginate-discover-action-schema";
 import { PaginateDiscoverActionSchema } from "../schemas/paginate-discover-action-schema";
 
+/**
+ * Returns a paginated list of courses that match the search query
+ * in the Discover section.
+ */
 export async function paginateDiscoverAction(
   input: PaginateDiscoverActionModel,
 ) {

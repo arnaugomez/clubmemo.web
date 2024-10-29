@@ -7,6 +7,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
+/**
+ * Shows the search parameters of the Discover section. For example,
+ * the search bar. When the search parameters change, the page is
+ * updated with the new search results.
+ */
 export function DiscoverFiltersSection() {
   const router = useRouter();
   const pathname = usePathname();

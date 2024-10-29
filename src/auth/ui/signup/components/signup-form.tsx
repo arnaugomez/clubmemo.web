@@ -23,6 +23,10 @@ const SignupFormSchema = z.object({
   acceptTerms: z.boolean(),
 });
 
+/**
+ * Form that creates a new user account with an email and password. When the
+ * form is submitted, the user is created, or an error message is shown.
+ */
 export function SignupForm() {
   const form = useForm({
     resolver: zodResolver(SignupFormSchema),

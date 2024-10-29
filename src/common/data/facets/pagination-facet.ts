@@ -1,5 +1,8 @@
 import { PaginationModel } from "../../domain/models/pagination-model";
 
+/**
+ * Query result of the database that includes pagination metadata.
+ */
 export interface PaginationFacet<T> {
   metadata: {
     totalCount: number;
@@ -7,6 +10,9 @@ export interface PaginationFacet<T> {
   results: T[];
 }
 
+/**
+ * Transforms a pagination facet into a domain model.
+ */
 export class PaginationFacetTransformer<T> {
   constructor(private readonly facet: PaginationFacet<T>) {}
   toDomain<S>(mapFn: (data: T) => S): PaginationModel<S> {
