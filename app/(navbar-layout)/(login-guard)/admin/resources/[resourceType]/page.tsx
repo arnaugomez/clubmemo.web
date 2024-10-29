@@ -3,7 +3,9 @@ import { ResourceListPage } from "@/src/admin/ui/resource-list/pages/resource-li
 import { locator_common_DatabaseIndexesService } from "@/src/common/locators/locator_database-indexes-service";
 
 /**
- * https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
+ * If the browser visits a URL that does not match the defined
+ * values of the `resourceType` route segment, it will show a 404 page
+ * @see https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
  */
 export const dynamicParams = false;
 
