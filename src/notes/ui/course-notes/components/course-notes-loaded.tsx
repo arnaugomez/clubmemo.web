@@ -3,6 +3,7 @@
 import type { PaginationModelData } from "@/src/common/domain/models/pagination-model";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { PaginationEmptyState } from "@/src/common/ui/components/empty-state/pagination-empty-state";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
@@ -14,6 +15,7 @@ import range from "lodash/range";
 import { Layers } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { toast } from "sonner";
 import { paginateNotesAction } from "../actions/paginate-notes-action";
 import { useCourseNotesContext } from "../contexts/course-notes-context";
 import { CourseNoteCard } from "./course-note-card";
@@ -64,23 +66,29 @@ export function CourseNotesLoaded({
       await waitMilliseconds(1000);
     }
 
-    const result = await paginateNotesAction({
-      courseId,
-      page: Math.floor(contextResults.length / 10) + 1,
-    });
-    const handler = new FormResponseHandler(result);
+    try {
+      const result = await paginateNotesAction({
+        courseId,
+        page: Math.floor(contextResults.length / 10) + 1,
+      });
+      const handler = new FormResponseHandler(result);
 
-    if (handler.hasErrors) {
-      handler.toastErrors();
+      if (handler.hasErrors) {
+        handler.toastErrors();
+        await waitMilliseconds(1500);
+      } else if (handler.data) {
+        const pagination = PaginationModel.fromData(
+          handler.data,
+          (e) => new NoteModel(e),
+        );
+        const newResults = contextResults.concat(pagination.results);
+        setContextResults(newResults);
+        setCanLoadMore(newResults.length < pagination.totalCount);
+      }
+    } catch (error) {
+      locator_common_ErrorTrackingService().captureError(error);
+      toast.error("Error al cargar tarjetas");
       await waitMilliseconds(1500);
-    } else if (handler.data) {
-      const pagination = PaginationModel.fromData(
-        handler.data,
-        (e) => new NoteModel(e),
-      );
-      const newResults = contextResults.concat(pagination.results);
-      setContextResults(newResults);
-      setCanLoadMore(newResults.length < pagination.totalCount);
     }
 
     setIsLoading(false);

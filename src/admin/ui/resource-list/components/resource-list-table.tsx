@@ -117,8 +117,8 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
           }
           operation.status = "success";
         }
-      } catch (e) {
-        locator_common_ErrorTrackingService().captureError(e);
+      } catch (error) {
+        locator_common_ErrorTrackingService().captureError(error);
         operation.status = "error";
       }
       setQueue((prev) => [...prev]);

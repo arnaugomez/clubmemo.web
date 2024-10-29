@@ -11,6 +11,9 @@ interface DiscoverCourseCardProps {
   course: DiscoverCourseModel;
 }
 
+/**
+ * Shows a summary of a search result (a course) in the Discover section.
+ */
 export function DiscoverCourseCard({ course }: DiscoverCourseCardProps) {
   return (
     <Card className="h-64 overflow-clip">

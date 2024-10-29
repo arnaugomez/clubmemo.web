@@ -85,7 +85,7 @@ export function UpdateResourceForm() {
       }
     } catch (error) {
       locator_common_ErrorTrackingService().captureError(error);
-      toast.error("Error al modificar el recurso");
+      FormResponseHandler.setGlobalError(form);
     }
   }
 
