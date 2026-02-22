@@ -3,8 +3,9 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 import type { DatabaseService } from "../../domain/interfaces/database-service";
 import type { EnvService } from "../../domain/interfaces/env-service";
 import type { CollectionType } from "../utils/mongodb";
+
 // eslint-disable-next-line @typescript-eslint/no-namespace
-declare module global {
+declare namespace global {
   /**
    * Singleton instance of the MongoDB client. Avoids creating multiple
    * connections to the database in development environment, when doing

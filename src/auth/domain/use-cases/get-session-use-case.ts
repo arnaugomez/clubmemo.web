@@ -20,22 +20,22 @@ export class GetSessionUseCase {
    */
   async execute(): Promise<CheckSessionModel> {
     const sessionCookieName = this.authService.getSessionCookieName();
-    const sessionId = this.cookieService.get(sessionCookieName);
+    const sessionId = await this.cookieService.get(sessionCookieName);
     if (!sessionId) return emptyCheckSession;
 
     const result = await this.authService.validateSession(sessionId);
 
     // next.js throws when you attempt to set cookie in Server Components
     try {
-      if (result.session && result.session.fresh) {
+      if (result.session?.fresh) {
         const sessionCookie = this.authService.createSessionCookie(
           result.session.id,
         );
-        this.cookieService.set(sessionCookie);
+        await this.cookieService.set(sessionCookie);
       }
       if (!result.session) {
         const sessionCookie = this.authService.createBlankSessionCookie();
-        this.cookieService.set(sessionCookie);
+        await this.cookieService.set(sessionCookie);
       }
     } catch {}
     return result;

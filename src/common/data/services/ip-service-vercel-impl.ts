@@ -9,12 +9,13 @@ import type { IpService } from "../../domain/interfaces/ip-service";
  */
 export class IpServiceVercelImpl implements IpService {
   async getIp(): Promise<string> {
-    const forwardedFor = headers().get("x-forwarded-for");
+    const headerStore = await headers();
+    const forwardedFor = headerStore.get("x-forwarded-for");
 
     if (forwardedFor) {
       return forwardedFor.split(",")[0].trim();
     }
-    const realIp = headers().get("x-real-ip");
+    const realIp = headerStore.get("x-real-ip");
 
     if (realIp) {
       return realIp.trim();

@@ -1,11 +1,11 @@
+import type { WithId } from "mongodb";
+import { ObjectId } from "mongodb";
 import type { PaginationFacet } from "@/src/common/data/facets/pagination-facet";
 import { PaginationFacetTransformer } from "@/src/common/data/facets/pagination-facet";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import type { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
-import type { WithId } from "mongodb";
-import { ObjectId } from "mongodb";
 import type {
   CoursesRepository,
   GetCoursesByAuthorInputModel,

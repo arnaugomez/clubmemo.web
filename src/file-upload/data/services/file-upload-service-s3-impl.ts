@@ -6,8 +6,9 @@ import type {
   GeneratePresignedUrlInputModel,
 } from "../../domain/interfaces/file-upload-service";
 import type { PresignedUrlModel } from "../../domain/models/presigned-url-model";
+
 // eslint-disable-next-line @typescript-eslint/no-namespace
-declare module global {
+declare namespace global {
   let s3Client: S3Client;
 }
 

@@ -1,5 +1,5 @@
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { UsersRepository } from "../../domain/interfaces/users-repository";
 import type { UserModel } from "../../domain/models/user-model";
 import {

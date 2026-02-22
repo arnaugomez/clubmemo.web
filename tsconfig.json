@@ -10,7 +10,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -20,7 +20,8 @@
     "paths": {
       "@/*": ["./*"],
       "@/i18n/*": ["./src/common/i18n/*"]
-    }
+    },
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",
@@ -28,7 +29,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "vitest.config.mts",
-    "test/types/vitest.d.ts"
+    "test/types/vitest.d.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

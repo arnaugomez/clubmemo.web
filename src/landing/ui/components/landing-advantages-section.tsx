@@ -1,3 +1,5 @@
+import { CalendarCheck, Dumbbell, Shapes } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Card,
@@ -7,8 +9,6 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { CalendarCheck, Dumbbell, Shapes } from "lucide-react";
-import Link from "next/link";
 
 export function LandingAdvantagesSection() {
   return (
@@ -75,6 +75,7 @@ function LandingAdvantageCards() {
   return (
     <div className="mx-auto flex w-fit flex-col space-y-8 px-8 md:flex-row md:space-x-8 md:space-y-0">
       {advantages.map((advantage, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: static list
         <LandingAdvantageCard key={index} {...advantage} />
       ))}
     </div>

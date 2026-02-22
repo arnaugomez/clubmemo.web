@@ -1,9 +1,10 @@
 "use client";
 
-import { z } from "@/i18n/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-
+import { toast } from "sonner";
+import { z } from "@/i18n/zod";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
@@ -11,8 +12,6 @@ import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-glo
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { InputOtpFormField } from "@/src/common/ui/components/form/input-otp-form-field";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
 import { logoutAction } from "../../actions/logout-action";
 import { verifyEmailAction } from "../actions/verify-email-action";
 
@@ -33,19 +32,19 @@ export function VerifyEmailForm() {
   });
   const formRef = useRef<HTMLFormElement>(null);
 
-  const onSubmit = form.handleSubmit(async function (
-    data: z.infer<typeof FormSchema>,
-  ) {
-    try {
-      const response = await verifyEmailAction(data);
-      const handler = new FormResponseHandler(response, form);
-      if (!handler.hasErrors) waitMilliseconds(1000);
-      handler.setErrors();
-    } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
-      FormResponseHandler.setGlobalError(form);
-    }
-  });
+  const onSubmit = form.handleSubmit(
+    async (data: z.infer<typeof FormSchema>) => {
+      try {
+        const response = await verifyEmailAction(data);
+        const handler = new FormResponseHandler(response, form);
+        if (!handler.hasErrors) waitMilliseconds(1000);
+        handler.setErrors();
+      } catch (error) {
+        locator_common_ErrorTrackingService().captureError(error);
+        FormResponseHandler.setGlobalError(form);
+      }
+    },
+  );
   const code = form.watch("code");
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { z } from "../i18n/zod";
-const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+
+const checkForHexRegExp = /^[0-9a-fA-F]{24}$/;
 
 /**
  * Validates a string as a MongoDB BSON ObjectId.

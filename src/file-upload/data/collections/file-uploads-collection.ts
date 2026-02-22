@@ -1,5 +1,5 @@
-import { collection } from "@/src/common/data/utils/mongodb";
 import type { ObjectId } from "mongodb";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type {
   FileUploadCollectionModel,
   FileUploadFieldModel,

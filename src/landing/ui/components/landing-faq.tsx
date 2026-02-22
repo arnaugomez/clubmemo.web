@@ -1,3 +1,4 @@
+import type { PropsWithChildren, ReactNode } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -6,7 +7,6 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/accordion";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import type { PropsWithChildren, ReactNode } from "react";
 
 export function LandingFaq() {
   return (
@@ -85,12 +85,10 @@ export function LandingFaq() {
                 '¿Por qué "clubmemo" sale escrito en minúscula en la aplicación?'
               }
               answer={
-                <>
-                  <Paragraph>
-                    Nos pareció que te sorprendería este detalle y que así te
-                    acordarías de nuestro nombre 😉️
-                  </Paragraph>
-                </>
+                <Paragraph>
+                  Nos pareció que te sorprendería este detalle y que así te
+                  acordarías de nuestro nombre 😉️
+                </Paragraph>
               }
             />
           </Accordion>

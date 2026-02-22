@@ -1,8 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import type { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
-import { useState } from "react";
 import { GenerateAiNotesForm } from "./generate-ai-notes-form";
 import { GenerateAiNotesPreview } from "./generate-ai-notes-preview";
 import { GenerateAiNotesSourceSelector } from "./generate-ai-notes-source-selector";

@@ -1,3 +1,6 @@
+import { BookText, GraduationCap } from "lucide-react";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
@@ -8,9 +11,6 @@ import { MyCoursesTable } from "@/src/courses/ui/my-courses/components/my-course
 import type { FetchMyCoursesPaginationModel } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import { fetchMyCoursesPagination } from "@/src/courses/ui/my-courses/fetch/fetch-my-courses";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
-import { BookText, GraduationCap } from "lucide-react";
-import type { Metadata } from "next";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Mis cursos",
@@ -19,13 +19,12 @@ export const metadata: Metadata = {
 /**
  * Shows a list of courses that the profile has created or enrolled in.
  */
-export default function CoursesPage({
-  searchParams,
-}: {
-  searchParams?: {
+export default async function CoursesPage(props: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   return (
     <main>
       <div className="h-20" />

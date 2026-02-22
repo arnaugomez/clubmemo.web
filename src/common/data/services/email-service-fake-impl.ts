@@ -9,12 +9,9 @@ import type { EnvService } from "../../domain/interfaces/env-service";
 export class EmailServiceFakeImpl implements EmailService {
   constructor(private readonly envService: EnvService) {}
   async sendVerificationCode(
-    email: string,
-    verificationCode: string,
-  ): Promise<void> {
-    // eslint-disable-next-line no-console
-    console.table({ email, verificationCode });
-  }
+    _email: string,
+    _verificationCode: string,
+  ): Promise<void> {}
 
   async sendForgotPasswordLink(
     email: string,
@@ -26,7 +23,5 @@ export class EmailServiceFakeImpl implements EmailService {
       email,
       token: forgotPasswordCode,
     }).toString();
-    // eslint-disable-next-line no-console
-    console.table({ email, forgotPasswordCode, url: url.toString() });
   }
 }

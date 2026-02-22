@@ -2,9 +2,9 @@
 
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
+import { locator_practice_GetNextPracticeCardsUseCase } from "../../locators/locator_get-next-practice-cards-use-case";
 import type { GetNextPracticeCardsActionModel } from "../schemas/get-next-practice-cards-action-schema";
 import { GetNextPracticeCardsActionSchema } from "../schemas/get-next-practice-cards-action-schema";
-import { locator_practice_GetNextPracticeCardsUseCase } from "../../locators/locator_get-next-practice-cards-use-case";
 
 export async function getNextPracticeCardsAction(
   input: GetNextPracticeCardsActionModel,

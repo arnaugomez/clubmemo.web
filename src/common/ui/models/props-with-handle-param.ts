@@ -1,3 +1,3 @@
 export interface PropsWithHandleParam {
-  params: { handle: string };
+  params: Promise<{ handle: string }>;
 }

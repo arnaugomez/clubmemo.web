@@ -10,13 +10,13 @@ export interface CookieService {
    * @param name The name of the cookie to get
    * @returns The value of the cookie if it exists, `undefined` otherwise
    */
-  get(name: string): string | undefined;
+  get(name: string): Promise<string | undefined>;
   /**
    * Sets the value of a cookie.
    *
    * @param input The data to set a cookie: name, value and attributes such as the expiraton date.
    */
-  set(input: SetCookieInputModel): void;
+  set(input: SetCookieInputModel): Promise<void>;
 }
 
 export interface SetCookieInputModel {

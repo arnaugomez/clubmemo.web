@@ -1,13 +1,13 @@
+import type { User } from "lucia";
+import type { WithId } from "mongodb";
+import { ObjectId } from "mongodb";
+import { describe, expect, it } from "vitest";
 import type { UserDoc } from "@/src/auth/data/collections/users-collection";
 import {
   LuciaUserTransformer,
   UserDocTransformer,
 } from "@/src/auth/data/collections/users-collection";
 import { UserModel } from "@/src/auth/domain/models/user-model";
-import type { User } from "lucia";
-import type { WithId } from "mongodb";
-import { ObjectId } from "mongodb";
-import { describe, expect, it } from "vitest";
 import { AuthTypeModel } from "../../domain/models/auth-type-model";
 
 describe("UserDocTransformer", () => {

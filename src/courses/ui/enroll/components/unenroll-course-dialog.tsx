@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "sonner";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
@@ -11,9 +13,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { toast } from "sonner";
 import { unenrollCourseAction } from "../actions/unenroll-course-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface unenrollCourseDialogProps {
   course: CourseModel;

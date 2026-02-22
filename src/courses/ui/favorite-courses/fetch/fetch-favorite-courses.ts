@@ -1,8 +1,8 @@
 import { cache } from "react";
-import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
+import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 
-export const fetchFavoriteCourses = cache(async function () {
+export const fetchFavoriteCourses = cache(async () => {
   const profile = await fetchMyProfile();
   if (!profile) return [];
   const coursesRepository = locator_courses_CoursesRepository();

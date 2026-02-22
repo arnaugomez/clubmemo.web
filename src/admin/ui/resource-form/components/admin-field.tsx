@@ -1,8 +1,10 @@
+import { BracesIcon } from "lucide-react";
+import type { FunctionComponent } from "react";
 import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import {
   AdminFieldDisplayModel,
-  AdminFieldTypeModel,
   type AdminFieldModel,
+  AdminFieldTypeModel,
 } from "@/src/admin/domain/models/admin-resource-model";
 import type { OptionModel } from "@/src/common/domain/models/option-model";
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";
@@ -18,8 +20,6 @@ import { TagsFormField } from "@/src/common/ui/components/form/tags-form-field";
 import { TextareaFormField } from "@/src/common/ui/components/form/textarea-form-field";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { BracesIcon } from "lucide-react";
-import type { FunctionComponent } from "react";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import { AdminFields } from "../admin-fields";
 import {

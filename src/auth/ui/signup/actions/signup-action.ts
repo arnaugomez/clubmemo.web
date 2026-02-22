@@ -1,11 +1,11 @@
 "use server";
+import { redirect } from "next/navigation";
 import { UserAlreadyExistsError } from "@/src/auth/domain/errors/auth-errors";
+import { locator_auth_SignupUseCase } from "@/src/auth/locators/locator_signup-use-case";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { redirect } from "next/navigation";
 import type { SignupActionModel } from "../schemas/signup-action-schema";
 import { SignupActionSchema } from "../schemas/signup-action-schema";
-import { locator_auth_SignupUseCase } from "@/src/auth/locators/locator_signup-use-case";
 
 /**
  * Action to create a new user account with an email and password.

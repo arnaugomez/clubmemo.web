@@ -1,6 +1,6 @@
+import type { PropsWithChildren } from "react";
 import { AuthLeftPanel } from "@/src/auth/ui/components/auth-left-panel";
 import { AuthLogo } from "@/src/auth/ui/components/auth-logo";
-import type { PropsWithChildren } from "react";
 
 /**
  * Layout that is common to all the authentication-related pages. It shows two panels:

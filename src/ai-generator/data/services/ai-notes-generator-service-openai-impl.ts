@@ -1,9 +1,9 @@
+import { OpenAI, OpenAIError, RateLimitError } from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
+import { ZodError, z } from "zod";
 import type { EnvService } from "@/src/common/domain/interfaces/env-service";
 import type { ErrorTrackingService } from "@/src/common/domain/interfaces/error-tracking-service";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
-import { OpenAI, OpenAIError, RateLimitError } from "openai";
-import { zodResponseFormat } from "openai/helpers/zod";
-import { z, ZodError } from "zod";
 import {
   AiGeneratorEmptyMessageError,
   AiGeneratorError,

@@ -1,11 +1,11 @@
 "use server";
 
 import { UserDoesNotExistError } from "@/src/auth/domain/errors/auth-errors";
+import { locator_auth_ForgotPasswordUseCase } from "@/src/auth/locators/locator_forgot-password-use-case";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import type { ForgotPasswordActionModel } from "../schemas/forgot-password-action-schema";
 import { ForgotPasswordActionSchema } from "../schemas/forgot-password-action-schema";
-import { locator_auth_ForgotPasswordUseCase } from "@/src/auth/locators/locator_forgot-password-use-case";
 
 /**
  * Sends an email to the user with a link to reset the password.

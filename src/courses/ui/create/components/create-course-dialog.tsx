@@ -1,3 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -12,11 +17,6 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { z } from "zod";
 import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 import { createCourseAction } from "../actions/create-course-action";
 import { CreateCourseActionSchema } from "../schemas/create-course-action-schema";

@@ -1,8 +1,8 @@
-import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
-import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 import { SearchX } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
+import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 import { Button } from "../../common/ui/components/shadcn/ui/button";
 import { Skeleton } from "../../common/ui/components/shadcn/ui/skeleton";
 import { textStyles } from "../../common/ui/styles/text-styles";

@@ -1,4 +1,9 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CircleHelp, FileJson } from "lucide-react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "@/i18n/zod";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
@@ -13,12 +18,7 @@ import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { ImportNotesTypeModel } from "@/src/notes/domain/models/import-note-type-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleHelp, FileJson } from "lucide-react";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { importNotesAction } from "../actions/import-notes-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface ImportNotesJsonFormProps {
   courseId: string;

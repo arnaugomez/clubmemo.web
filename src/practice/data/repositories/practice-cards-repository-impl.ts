@@ -1,3 +1,5 @@
+import type { WithId } from "mongodb";
+import { ObjectId } from "mongodb";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
 import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
@@ -5,8 +7,6 @@ import {
   NoteDocTransformer,
   notesCollection,
 } from "@/src/notes/data/collections/notes-collection";
-import type { WithId } from "mongodb";
-import { ObjectId } from "mongodb";
 import type {
   GetDueInput,
   GetNewInput,

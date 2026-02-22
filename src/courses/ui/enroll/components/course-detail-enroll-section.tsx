@@ -1,12 +1,12 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { CourseModelData } from "@/src/courses/domain/models/course-model";
 import { CourseModel } from "@/src/courses/domain/models/course-model";
-import { useState } from "react";
-import { toast } from "sonner";
 import { CourseDetailPracticeButtonLoading } from "../../detail/components/course-detail-practice-button-loading";
 import { enrollCourseAction } from "../actions/enroll-course-action";
 

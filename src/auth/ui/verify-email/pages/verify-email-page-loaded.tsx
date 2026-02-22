@@ -1,6 +1,5 @@
-import type { UserModel } from "@/src/auth/domain/models/user-model";
-
 import { MailCheck } from "lucide-react";
+import type { UserModel } from "@/src/auth/domain/models/user-model";
 import { AuthPageTitle } from "../../components/auth-page-title";
 import { VerifyEmailExpiredAlert } from "../components/verify-email-expired-alert";
 import { VerifyEmailForm } from "../components/verify-email-form";

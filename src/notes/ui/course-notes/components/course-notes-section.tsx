@@ -1,13 +1,13 @@
+import { Suspense } from "react";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { Suspense } from "react";
+import { locator_notes_GetNotesUseCase } from "@/src/notes/locators/locator_get-notes-use-case";
 import { CourseNotesProvider } from "../contexts/course-notes-context";
 import { CourseNotesDropdown } from "./course-notes-dropdown";
 import { CourseNotesLoaded } from "./course-notes-loaded";
 import { CourseNotesLoadingSkeletons } from "./course-notes-loading-skeletons";
 import { CreateNoteButton } from "./create-note-button";
-import { locator_notes_GetNotesUseCase } from "@/src/notes/locators/locator_get-notes-use-case";
 
 interface CourseNotesSectionProps {
   course: CourseModel;

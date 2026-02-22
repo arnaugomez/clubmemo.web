@@ -1,5 +1,5 @@
-import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import range from "lodash/range";
+import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 
 export function CourseNotesLoadingSkeletons() {
   return (

@@ -28,7 +28,7 @@ describe("PaginationModel", () => {
       totalCount: 10,
     };
     expect(
-      PaginationModel.fromData(serialized, (element) => parseInt(element))
+      PaginationModel.fromData(serialized, (element) => parseInt(element, 10))
         .results,
     ).toEqual([1, 2, 3]);
     expect(serialized.totalCount).toEqual(10);

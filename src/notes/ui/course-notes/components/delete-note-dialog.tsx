@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "sonner";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
@@ -11,9 +13,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { NoteModel } from "@/src/notes/domain/models/note-model";
-import { toast } from "sonner";
 import { deleteNoteAction } from "../actions/delete-note-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface DeleteNoteDialogProps {
   note: NoteModel;

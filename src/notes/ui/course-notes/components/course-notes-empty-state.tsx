@@ -1,3 +1,5 @@
+import { Layers, Sparkles, SquarePen, Upload } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Card,
@@ -8,8 +10,6 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { Layers, Sparkles, SquarePen, Upload } from "lucide-react";
-import Link from "next/link";
 import { CreateNoteButton } from "./create-note-button";
 import { ImportNotesButton } from "./import-notes-button";
 

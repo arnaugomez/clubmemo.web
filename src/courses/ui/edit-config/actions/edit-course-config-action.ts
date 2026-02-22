@@ -1,11 +1,11 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { revalidatePath } from "next/cache";
+import { locator_courses_EditCourseConfigUseCase } from "@/src/courses/locators/locator_edit-course-config-use-case";
 import type { EditCourseConfigActionModel } from "../schema/edit-course-config-action-schema";
 import { EditCourseConfigActionSchema } from "../schema/edit-course-config-action-schema";
-import { locator_courses_EditCourseConfigUseCase } from "@/src/courses/locators/locator_edit-course-config-use-case";
 
 export async function editCourseConfigAction(
   data: EditCourseConfigActionModel,

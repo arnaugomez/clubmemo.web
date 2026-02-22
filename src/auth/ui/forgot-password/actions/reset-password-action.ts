@@ -1,11 +1,11 @@
 "use server";
 
+import { locator_auth_ResetPasswordUseCase } from "@/src/auth/locators/locator_reset-password-use-case";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import {
-  ResetPasswordActionSchema,
   type ResetPasswordActionModel,
+  ResetPasswordActionSchema,
 } from "../schemas/reset-password-action-schema";
-import { locator_auth_ResetPasswordUseCase } from "@/src/auth/locators/locator_reset-password-use-case";
 
 /**
  * Changes the password of a user. Used when the user forgot the password and

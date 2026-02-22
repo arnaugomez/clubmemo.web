@@ -1,9 +1,9 @@
-import type { ProfileDoc } from "@/src/profile/data/collections/profiles-collection";
-import { ProfileDocTransformer } from "@/src/profile/data/collections/profiles-collection";
-import { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import type { WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import { describe, expect, it } from "vitest";
+import type { ProfileDoc } from "@/src/profile/data/collections/profiles-collection";
+import { ProfileDocTransformer } from "@/src/profile/data/collections/profiles-collection";
+import { ProfileModel } from "@/src/profile/domain/models/profile-model";
 
 describe("ProfileDocTransformer", () => {
   it("transforms ProfileDoc to ProfileModel", () => {

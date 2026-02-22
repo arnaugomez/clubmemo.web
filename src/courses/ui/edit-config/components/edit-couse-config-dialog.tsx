@@ -1,3 +1,7 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { default_maximum_interval } from "ts-fsrs";
 import { z } from "@/i18n/zod";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
@@ -16,10 +20,6 @@ import {
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { default_maximum_interval } from "ts-fsrs";
 import { editCourseConfigAction } from "../actions/edit-course-config-action";
 
 const EditCourseConfigSchema = z.object({
@@ -99,6 +99,7 @@ export function EditCourseConfigDialog({
                   href="https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler"
                   className="underline hover:text-slate-700"
                   target="_blank"
+                  rel="noopener"
                 >
                   documentación del algoritmo
                 </a>

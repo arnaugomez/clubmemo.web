@@ -1,3 +1,4 @@
+import { BookType, SquarePen, Upload } from "lucide-react";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
@@ -9,7 +10,6 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { BookType, SquarePen, Upload } from "lucide-react";
 
 interface GenerateAiNotesSourceSelectorProps {
   setSource: (source: AiNotesGeneratorSourceType) => void;

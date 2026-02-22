@@ -9,7 +9,8 @@ import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 /**
  * Returns a txt file with the notes of a course in Anki (plain text) format.
  */
-export async function GET(_: Request, { params: { id } }: PropsWithIdParam) {
+export async function GET(_: Request, props: PropsWithIdParam) {
+  const { id } = await props.params;
   try {
     const profile = await fetchMyProfile();
     const coursesRepository = locator_courses_CoursesRepository();
@@ -28,7 +29,7 @@ export async function GET(_: Request, { params: { id } }: PropsWithIdParam) {
           .map((cell) => `"${cell}"\t`)
           .join(""),
       )
-      .map((row) => row + "\n")
+      .map((row) => `${row}\n`)
       .join("");
 
     return new Response(text, {

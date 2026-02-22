@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import Link from "next/link";
 import type { AdminResourceModel } from "../../domain/models/admin-resource-model";
 import { translateAdminKey } from "../i18n/admin-translations";
 import { AdminResourceIcon } from "./admin-resource-icon";

@@ -1,5 +1,5 @@
-import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { z } from "zod";
+import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { AdminResourceTypeSchema } from "./admin-resource-type-schema";
 
 /**

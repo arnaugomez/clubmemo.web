@@ -1,9 +1,9 @@
+import { ObjectId } from "mongodb";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DatabaseServiceImpl } from "@/src/common/data/services/database-service-impl";
 import { singleton } from "@/src/common/di/locator-utils";
 import { locator_common_DatabaseService } from "@/src/common/locators/locator_database-service";
 import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
-import { ObjectId } from "mongodb";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { locator_profiles_ProfilesRepository } from "../../locators/locator_profiles-repository";
 import { profilesCollection } from "../collections/profiles-collection";
 

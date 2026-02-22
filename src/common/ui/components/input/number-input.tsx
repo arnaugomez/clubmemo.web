@@ -1,5 +1,5 @@
-import { cn } from "@/src/common/ui/utils/shadcn";
 import { forwardRef, useEffect, useState } from "react";
+import { cn } from "@/src/common/ui/utils/shadcn";
 
 export interface InputProps {
   name: string;
@@ -15,7 +15,7 @@ function stringToNumber(value: string): number | null {
     return null;
   }
   const numberValue = Number(value);
-  if (isNaN(numberValue)) {
+  if (Number.isNaN(numberValue)) {
     return null;
   } else {
     return numberValue;

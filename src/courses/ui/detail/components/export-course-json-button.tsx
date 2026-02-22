@@ -1,6 +1,6 @@
+import { FileJson } from "lucide-react";
 import { DropdownMenuItem } from "@/src/common/ui/components/shadcn/ui/dropdown-menu";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { FileJson } from "lucide-react";
 
 interface ExportCourseJsonButtonProps {
   course: CourseModel;

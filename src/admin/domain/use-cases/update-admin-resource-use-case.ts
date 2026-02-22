@@ -1,5 +1,5 @@
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { getAdminResourceHook } from "../config/admin-resource-hooks-config";
 import { getAdminResourceSchema } from "../config/admin-resource-schemas-config";
 import { getAdminResourceByType } from "../config/admin-resources-config";

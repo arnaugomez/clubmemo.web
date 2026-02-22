@@ -1,3 +1,5 @@
+import { Bookmark } from "lucide-react";
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -8,8 +10,6 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/table";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { Bookmark } from "lucide-react";
-import Link from "next/link";
 import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 import type { FetchMyCoursesPaginationModel } from "../fetch/fetch-my-courses";
 import { fetchMyCoursesPagination } from "../fetch/fetch-my-courses";

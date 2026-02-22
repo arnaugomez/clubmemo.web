@@ -1,7 +1,7 @@
+import { Suspense } from "react";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { Suspense } from "react";
 import { KeepLearningContent } from "./keep-learning-content";
 
 export function KeepLearningSection() {

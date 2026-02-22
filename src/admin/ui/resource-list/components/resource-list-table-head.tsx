@@ -1,7 +1,8 @@
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type React from "react";
 import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { SortOrderModel } from "@/src/admin/domain/models/sort-order-model";
 import { TableHead } from "@/src/common/ui/components/shadcn/ui/table";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { translateAdminKey } from "../../i18n/admin-translations";
 
 interface ResourceListTableHeadProps {
@@ -17,7 +18,7 @@ interface ResourceListTableHeadProps {
 export function ResourceListTableHead({
   resourceType,
   fieldName,
-}: ResourceListTableHeadProps): JSX.Element {
+}: ResourceListTableHeadProps): React.JSX.Element {
   const pathname = usePathname();
   const { push } = useRouter();
   const params = useSearchParams();

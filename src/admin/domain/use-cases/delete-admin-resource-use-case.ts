@@ -1,5 +1,5 @@
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { getAdminResourceHook } from "../config/admin-resource-hooks-config";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";

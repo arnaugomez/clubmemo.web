@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Dialog,
@@ -7,8 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface ForgotPasswordConfirmDialogProps {
   email: string;

@@ -1,6 +1,6 @@
-import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import Link from "next/link";
 import { Suspense } from "react";
+import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { textStyles } from "../../styles/text-styles";
 import { cn } from "../../utils/shadcn";
 
@@ -25,5 +25,5 @@ interface NavbarTitleProps {
 }
 
 export function NavbarTitle({ isLoggedIn = false }: NavbarTitleProps) {
-  return isLoggedIn ? <Link href="/home">{title}</Link> : <>{title}</>;
+  return isLoggedIn ? <Link href="/home">{title}</Link> : title;
 }

@@ -1,3 +1,7 @@
+import { Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
@@ -8,10 +12,6 @@ import { ActionResponseHandler } from "@/src/common/ui/models/action-response-ha
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { getCourseDetailPath } from "@/src/courses/ui/utils/get-course-detail-path";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
-import { Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
 import { generateAiNotesConfirmAction } from "../actions/generate-ai-notes-confirm-action";
 
 interface GenerateAiNotesPreviewProps {
@@ -82,7 +82,8 @@ export function GenerateAiNotesPreview({
       <div className="space-y-4">
         {notes.map((note, index) => (
           <Card
-            key={"note" + index}
+            // biome-ignore lint/suspicious/noArrayIndexKey: static list
+            key={`note${index}`}
             className="flex flex-col items-stretch overflow-clip"
           >
             <div className="flex flex-1 space-x-3 px-4 py-3">

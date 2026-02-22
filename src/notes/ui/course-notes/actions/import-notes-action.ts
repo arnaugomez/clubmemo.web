@@ -3,8 +3,8 @@
 import { InvalidFileFormatError } from "@/src/common/domain/models/app-errors";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { ImportNotesActionSchema } from "../schemas/import-notes-action-schema";
 import { locator_notes_ImportNotesUseCase } from "@/src/notes/locators/locator_import-notes-use-case";
+import { ImportNotesActionSchema } from "../schemas/import-notes-action-schema";
 
 export async function importNotesAction(formData: FormData) {
   try {

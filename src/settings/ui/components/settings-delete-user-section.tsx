@@ -1,6 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "@/i18n/zod";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
@@ -17,12 +22,7 @@ import {
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
 import { deleteUserAction } from "../actions/delete-user-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface SettingsDeleteUserSectionProps {
   email: string;
@@ -83,7 +83,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       confirmation: "",
     },
   });
-  const onSubmit = form.handleSubmit(async function (data: FormValues) {
+  const onSubmit = form.handleSubmit(async (data: FormValues) => {
     try {
       const response = await deleteUserAction(data);
       const handler = new FormResponseHandler(response, form);

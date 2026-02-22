@@ -1,3 +1,5 @@
+import { User } from "lucide-react";
+import Link from "next/link";
 import {
   Avatar,
   AvatarFallback,
@@ -9,8 +11,6 @@ import type { CourseAuthorModel } from "@/src/courses/domain/models/course-autho
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import { locator_courses_CourseAuthorsRepository } from "@/src/courses/locators/locator_course-authors-repository";
 import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
-import { User } from "lucide-react";
-import Link from "next/link";
 
 interface CourseDetailAuthorSectionProps {
   course: CourseModel;

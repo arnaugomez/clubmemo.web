@@ -1,7 +1,7 @@
 "use client";
+import { toast } from "sonner";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
-import { toast } from "sonner";
 import { logoutAction } from "../../../auth/ui/actions/logout-action";
 import { SettingsSectionTitle } from "./settings-section-title";
 

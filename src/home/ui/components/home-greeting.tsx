@@ -1,5 +1,5 @@
-import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { Bot } from "lucide-react";
+import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { fetchMyProfile } from "../../../profile/ui/fetch/fetch-my-profile";
 
 export function HomeGreeting() {
@@ -25,5 +25,5 @@ async function ProfileName() {
   if (profile?.displayName) {
     return <>, {profile.displayName}</>;
   }
-  return <></>;
+  return null;
 }

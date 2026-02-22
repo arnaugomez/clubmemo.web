@@ -1,10 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Edit2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "@/i18n/zod";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
 import { HandleSchema } from "@/src/common/schemas/handle-schema";
-
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -27,12 +32,6 @@ import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-actio
 import type { ProfileModelData } from "@/src/profile/domain/models/profile-model";
 import { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { editProfileAction } from "../actions/edit-profile-action";
 
 interface EditProfileSectionProps {

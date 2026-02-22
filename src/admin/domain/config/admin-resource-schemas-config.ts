@@ -1,3 +1,6 @@
+import { default_maximum_interval } from "ts-fsrs";
+import type { ZodSchema } from "zod";
+import { z } from "zod";
 import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
 import { AcceptTermsSchema } from "@/src/common/schemas/accept-terms-schema";
 import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
@@ -11,9 +14,6 @@ import {
   TagNameSchema,
   TagsSchema,
 } from "@/src/tags/domain/schemas/tags-schema";
-import { default_maximum_interval } from "ts-fsrs";
-import type { ZodSchema } from "zod";
-import { z } from "zod";
 import { AdminResourceTypeModel } from "../models/admin-resource-model";
 
 /**

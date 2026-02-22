@@ -1,10 +1,10 @@
+import { CopyIcon } from "lucide-react";
+import Link from "next/link";
 import { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { TableCell } from "@/src/common/ui/components/shadcn/ui/table";
 import { useClipboard } from "@/src/common/ui/hooks/use-clipboard";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { CopyIcon } from "lucide-react";
-import Link from "next/link";
 
 interface IdTableCellProps {
   id?: string;

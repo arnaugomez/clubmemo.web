@@ -1,6 +1,6 @@
+import { describe, expect, it } from "vitest";
 import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
-import { describe, expect, it } from "vitest";
 import { PracticeCardModel } from "./practice-card-model";
 import { PracticeCardRatingModel } from "./practice-card-rating-model";
 import { PracticerModel } from "./practicer-model";

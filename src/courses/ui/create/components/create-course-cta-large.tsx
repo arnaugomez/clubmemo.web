@@ -1,8 +1,8 @@
+import { Sailboat } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { Sailboat } from "lucide-react";
-import Link from "next/link";
 import { CreateCourseButton } from "./create-course-button";
 
 export function CreateCourseCtaLarge() {

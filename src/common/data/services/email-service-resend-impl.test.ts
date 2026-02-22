@@ -1,8 +1,8 @@
 import { afterEach } from "node:test";
 import { Resend } from "resend";
 import { describe, expect, it, vi } from "vitest";
-import { EmailServiceResendImpl } from "./email-service-resend-impl";
 import { locator_common_EnvService } from "../../locators/locator_env-service";
+import { EmailServiceResendImpl } from "./email-service-resend-impl";
 
 vi.mock("resend", () => {
   const sendMock = vi.fn();

@@ -1,4 +1,5 @@
 "use server";
+import { redirect } from "next/navigation";
 import {
   IncorrectPasswordError,
   UserDoesNotExistError,
@@ -7,10 +8,9 @@ import { locator_auth_LoginWithPasswordUseCase } from "@/src/auth/locators/locat
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { redirect } from "next/navigation";
 import {
-  LoginWithPasswordActionSchema,
   type LoginWithPasswordActionModel,
+  LoginWithPasswordActionSchema,
 } from "../schemas/login-with-password-action-schema";
 
 /**

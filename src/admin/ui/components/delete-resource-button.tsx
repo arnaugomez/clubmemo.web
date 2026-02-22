@@ -1,8 +1,8 @@
+import { type PropsWithChildren, useState } from "react";
 import { ConfirmDialog } from "@/src/common/ui/components/dialog/confirm-dialog";
 import type { ButtonProps } from "@/src/common/ui/components/shadcn/ui/button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
-import { useState, type PropsWithChildren } from "react";
 import { getAdminResourceByType } from "../../domain/config/admin-resources-config";
 import type { AdminResourceTypeModel } from "../../domain/models/admin-resource-model";
 import { deleteAdminResourceAction } from "../actions/delete-admin-resource-action";

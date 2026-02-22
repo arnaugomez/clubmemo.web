@@ -9,7 +9,8 @@ import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 /**
  * Route handler that returns a JSON file with the notes of a course, in JSON format.
  */
-export async function GET(_: Request, { params: { id } }: PropsWithIdParam) {
+export async function GET(_: Request, props: PropsWithIdParam) {
+  const { id } = await props.params;
   try {
     const profile = await fetchMyProfile();
     const coursesRepository = locator_courses_CoursesRepository();

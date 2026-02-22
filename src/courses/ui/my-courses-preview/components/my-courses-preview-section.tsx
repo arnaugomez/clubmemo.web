@@ -1,3 +1,5 @@
+import { Bookmark } from "lucide-react";
+import Link from "next/link";
 import { ArrowLink } from "@/src/common/ui/components/button/arrow-link";
 import {
   Table,
@@ -9,12 +11,10 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/table";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { Bookmark } from "lucide-react";
-import Link from "next/link";
 import { CreateCourseButton } from "../../create/components/create-course-button";
 import { PracticeCell } from "../../my-courses/components/practice-cell";
-import { fetchMyCoursesPreview } from "../fetch/fetch-my-courses-preview";
 import { getCourseDetailPath } from "../../utils/get-course-detail-path";
+import { fetchMyCoursesPreview } from "../fetch/fetch-my-courses-preview";
 
 export function MyCoursesPreviewSection() {
   return (

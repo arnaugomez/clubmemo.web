@@ -1,9 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
-
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
@@ -12,11 +13,9 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import Link from "next/link";
 import { loginWithPasswordAction } from "../actions/login-with-password-action";
 import type { LoginWithPasswordActionModel } from "../schemas/login-with-password-action-schema";
 import { LoginWithPasswordActionSchema } from "../schemas/login-with-password-action-schema";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 /**
  * Shows a form to log in the user with an email and password. When the user

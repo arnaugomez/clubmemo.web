@@ -1,3 +1,4 @@
+import { parse } from "csv-parse/sync";
 import { z } from "@/i18n/zod";
 import {
   InvalidFileFormatError,
@@ -7,7 +8,6 @@ import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
-import { parse } from "csv-parse/sync";
 import type { NotesRepository } from "../interfaces/notes-repository";
 import { ImportNotesTypeModel } from "../models/import-note-type-model";
 import type { ImportNotesInputModel } from "../models/import-notes-input-model";
@@ -100,7 +100,7 @@ export class ImportNotesUseCase {
           back: record[1] ?? "",
         }))
         .filter((note) => note.front);
-    } catch (e) {
+    } catch (_e) {
       throw new InvalidFileFormatError();
     }
   }

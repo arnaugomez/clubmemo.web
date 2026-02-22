@@ -1,3 +1,10 @@
+import chunk from "lodash/chunk";
+import { FilterXIcon } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useDebouncedCallback } from "use-debounce";
+import { z } from "zod";
 import type {
   AdminFieldModel,
   AdminJoinModel,
@@ -9,13 +16,6 @@ import {
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import chunk from "lodash/chunk";
-import { FilterXIcon } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { useDebouncedCallback } from "use-debounce";
-import { z } from "zod";
 import { ResourceListFiltersField } from "./resource-list-filters-field";
 import { ResourceListJoinsField } from "./resource-list-joins-field";
 

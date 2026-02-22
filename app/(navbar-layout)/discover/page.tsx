@@ -1,3 +1,6 @@
+import { Compass } from "lucide-react";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 import { SearchEmptyState } from "@/src/common/ui/components/empty-state/search-empty-state";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
@@ -5,9 +8,6 @@ import { DiscoverFiltersSection } from "@/src/discover/ui/components/discover-fi
 import { DiscoverLoadingSkeletons } from "@/src/discover/ui/components/discover-loading-skeletons";
 import { DiscoverResultsSection } from "@/src/discover/ui/components/discover-results-section";
 import { fetchDiscoverCourses } from "@/src/discover/ui/fetch/fetch-discover-courses";
-import { Compass } from "lucide-react";
-import type { Metadata } from "next";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Explorar cursos",
@@ -17,14 +17,13 @@ export const metadata: Metadata = {
  * Page that contains a search bar and a list of search results. The search
  * results are a list of courses.
  */
-export default async function DiscoverPage({
-  searchParams,
-}: {
-  searchParams?: {
+export default async function DiscoverPage(props: {
+  searchParams: Promise<{
     query?: string;
     retries?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   return (
     <main>
       <div className="h-20" />
@@ -35,10 +34,12 @@ export default async function DiscoverPage({
             Explorar cursos
           </h1>
           <div className="h-8" />
-          <DiscoverFiltersSection />
+          <Suspense>
+            <DiscoverFiltersSection />
+          </Suspense>
           <div className="h-6"></div>
           <Suspense
-            key={searchParams?.query ?? "" + searchParams?.retries ?? ""}
+            key={searchParams?.query ?? `${searchParams?.retries}` ?? ""}
             fallback={<DiscoverLoadingSkeletons />}
           >
             <DiscoverPageContent query={searchParams?.query} />

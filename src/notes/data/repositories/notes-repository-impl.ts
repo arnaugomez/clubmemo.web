@@ -1,10 +1,10 @@
+import type { WithId } from "mongodb";
+import { ObjectId } from "mongodb";
 import type { PaginationFacet } from "@/src/common/data/facets/pagination-facet";
 import { PaginationFacetTransformer } from "@/src/common/data/facets/pagination-facet";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
-import type { WithId } from "mongodb";
-import { ObjectId } from "mongodb";
 import type { NotesRepository } from "../../domain/interfaces/notes-repository";
 import type { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";
 import type { CreateNoteInputModel } from "../../domain/models/create-note-input-model";

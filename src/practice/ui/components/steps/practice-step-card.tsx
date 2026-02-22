@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import type { NoteModel } from "@/src/notes/domain/models/note-model";
-import { useState } from "react";
 import { usePracticeContext } from "../../contexts/practice-context";
 import { PracticeActionsBar } from "../practice-actions-bar";
 
@@ -20,6 +20,7 @@ export function PracticeStepCard({ note, enrollment }: PracticeStepCardProps) {
         <div className="px-4 py-8">
           <div
             className={cn(textStyles.base, "mx-auto max-w-sm font-medium")}
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized HTML content
             dangerouslySetInnerHTML={{ __html: note.front }}
           ></div>
         </div>
@@ -28,6 +29,7 @@ export function PracticeStepCard({ note, enrollment }: PracticeStepCardProps) {
           <div className="border-t-[1px] border-t-slate-200 px-4 py-8">
             <div
               className={cn(textStyles.base, "mx-auto max-w-sm")}
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized HTML content
               dangerouslySetInnerHTML={{
                 __html: note.back,
               }}

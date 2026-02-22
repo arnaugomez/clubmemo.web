@@ -1,8 +1,8 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { locator_auth_ForgotPasswordTokensRepository } from "@/src/auth/locators/locator_forgot-password-tokens-repository";
 import { locator_auth_UsersRepository } from "@/src/auth/locators/locator_users-repository";
 import { ResetPasswordPageLoaded } from "@/src/auth/ui/forgot-password/pages/reset-password-page-loaded";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Nueva contraseña",
@@ -43,11 +43,10 @@ async function resetPasswordPageGuard(searchParams: SearchParams) {
 /**
  * Shows a form to set a new password, thereby regaining access to the account.
  */
-export default async function ResetPasswordPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
+export default async function ResetPasswordPage(props: {
+  searchParams: Promise<SearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   await resetPasswordPageGuard(searchParams);
 
   const { email, token } = searchParams;

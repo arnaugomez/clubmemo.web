@@ -51,7 +51,7 @@ export class SignupUseCase {
 
     await this.rateLimitsRepository.increment(rateLimitKey);
 
-    this.cookieService.set(sessionCookie);
+    await this.cookieService.set(sessionCookie);
   }
 }
 

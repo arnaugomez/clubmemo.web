@@ -1,5 +1,5 @@
-import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
 import type { Document } from "mongodb";
+import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
 
 export const getDueCardsLookupPipelineStage = (
   startOfTomorrow: Date,

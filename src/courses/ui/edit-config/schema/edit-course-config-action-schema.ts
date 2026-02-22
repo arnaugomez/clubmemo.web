@@ -1,6 +1,6 @@
+import { default_maximum_interval } from "ts-fsrs";
 import { z } from "@/i18n/zod";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
-import { default_maximum_interval } from "ts-fsrs";
 
 /**
  * Validates the parameters of `editCourseConfigAction`

@@ -1,5 +1,10 @@
 "use client";
 
+import range from "lodash/range";
+import { Layers } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { toast } from "sonner";
 import type { PaginationModelData } from "@/src/common/domain/models/pagination-model";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
@@ -11,11 +16,6 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { NoteModelData } from "@/src/notes/domain/models/note-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
-import range from "lodash/range";
-import { Layers } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useInView } from "react-intersection-observer";
-import { toast } from "sonner";
 import { paginateNotesAction } from "../actions/paginate-notes-action";
 import { useCourseNotesContext } from "../contexts/course-notes-context";
 import { CourseNoteCard } from "./course-note-card";
@@ -126,6 +126,7 @@ export function CourseNotesLoaded({
         {canLoadMore &&
           range(3).map((_, i) => (
             <Skeleton
+              // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholder
               key={i}
               ref={i ? undefined : ref}
               className="h-32 rounded-lg bg-slate-200"

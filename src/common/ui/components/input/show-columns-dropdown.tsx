@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import type { OptionModel } from "@/src/common/domain/models/option-model";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
@@ -6,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/src/common/ui/components/shadcn/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
 
 interface ShowColumnsDropdownProps {
   options: OptionModel[];
