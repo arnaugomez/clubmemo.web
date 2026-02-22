@@ -1,10 +1,10 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { InvalidTokenError } from "@/src/auth/domain/errors/auth-errors";
 import { locator_auth_VerifyEmailUseCase } from "@/src/auth/locators/locator_verify-email-use-case";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { redirect } from "next/navigation";
 import type { VerifyEmailActionModel } from "../schemas/verify-email-action-schema";
 import { VerifyEmailActionSchema } from "../schemas/verify-email-action-schema";
 

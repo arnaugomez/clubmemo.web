@@ -1,4 +1,3 @@
-import type { DailyRateLimitError } from "@/src/rate-limits/domain/errors/rate-limits-errors";
 import type {
   FieldError,
   FieldValues,
@@ -7,6 +6,7 @@ import type {
 } from "react-hook-form";
 import { toast } from "sonner";
 import type { ZodError } from "zod";
+import type { DailyRateLimitError } from "@/src/rate-limits/domain/errors/rate-limits-errors";
 
 export type FormActionResponse<T = null> = {
   errors: Record<string, FieldError>;
@@ -47,6 +47,7 @@ function createGlobalError(type: GlobalErrorType): Record<string, FieldError> {
   };
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: utility class pattern
 export class ActionResponse {
   static formGlobalError(error: GlobalErrorType): FormActionResponse {
     return {

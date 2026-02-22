@@ -1,6 +1,6 @@
-import { cn } from "@/src/common/ui/utils/shadcn";
 import { formatDate, isDate, isValid } from "date-fns";
 import { forwardRef, useEffect, useRef, useState } from "react";
+import { cn } from "@/src/common/ui/utils/shadcn";
 
 export interface InputProps {
   name: string;
@@ -24,7 +24,7 @@ const DateInput = forwardRef<HTMLInputElement, InputProps>(
   ({ className, name, placeholder, onChange, value, id }, ref) => {
     const [stringValue, setStringValue] = useState("");
 
-    const avoidUpdateTimeout = useRef<NodeJS.Timeout>();
+    const avoidUpdateTimeout = useRef<NodeJS.Timeout>(undefined);
     const avoidUpdate = useRef(false);
 
     useEffect(() => {

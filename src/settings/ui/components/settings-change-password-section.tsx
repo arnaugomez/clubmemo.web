@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
@@ -13,15 +19,9 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { z } from "zod";
 import { changePasswordAction } from "../actions/change-password-action";
 import { ChangePasswordActionSchema } from "../schemas/change-password-action-schema";
 import { SettingsSectionTitle } from "./settings-section-title";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 export function SettingsChangePasswordSection() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

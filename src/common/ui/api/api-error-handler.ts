@@ -1,8 +1,9 @@
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { NoPermissionError } from "../../domain/models/app-errors";
-import { ActionResponse } from "../models/server-form-errors";
 import { locator_common_ErrorTrackingService } from "../../locators/locator_error-tracking-service";
+import { ActionResponse } from "../models/server-form-errors";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: utility class pattern
 export class ApiErrorHandler {
   static handle(e: unknown) {
     if (e instanceof CourseDoesNotExistError) {

@@ -23,7 +23,11 @@ export function InputOtpFormField() {
               render={({ slots }) => (
                 <InputOTPGroup>
                   {slots.map((slot, index) => (
-                    <InputOTPSlot key={index} {...slot} />
+                    <InputOTPSlot
+                      // biome-ignore lint/suspicious/noArrayIndexKey: static list
+                      key={index}
+                      {...slot}
+                    />
                   ))}
                 </InputOTPGroup>
               )}

@@ -1,8 +1,8 @@
-import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
-import { Input } from "@/src/common/ui/components/shadcn/ui/input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
+import { Input } from "@/src/common/ui/components/shadcn/ui/input";
 import { translateAdminKey } from "../../i18n/admin-translations";
 
 interface ResourceListTableFiltersProps {

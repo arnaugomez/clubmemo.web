@@ -1,6 +1,6 @@
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { ObjectId } from "mongodb";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { FileUploadService } from "../../domain/interfaces/file-upload-service";
 import type {
   CreateFileUploadInputModel,

@@ -1,12 +1,12 @@
 "use client";
+import type { PropsWithChildren } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import {
   createContextHook,
   createNullContext,
 } from "@/src/common/ui/utils/context";
-import type { PropsWithChildren } from "react";
-import { useCallback, useEffect, useState } from "react";
 
 /**
  * The status of a task.
@@ -89,10 +89,7 @@ export function TaskQueueProvider({ children }: PropsWithChildren) {
    */
   const pendingTask = tasks.find((task) => task.status !== Status.done);
 
-  const setStatus = useCallback(function <T>(
-    taskFn: Task<T>["fn"],
-    status: Status,
-  ) {
+  const setStatus = useCallback(<T,>(taskFn: Task<T>["fn"], status: Status) => {
     setTasks((tasks) =>
       tasks.map((t) => (t.fn === taskFn ? { ...t, status } : t)),
     );

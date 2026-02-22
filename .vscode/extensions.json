@@ -1,8 +1,7 @@
 {
   "recommendations": [
-    "dbaeumer.vscode-eslint",
+    "biomejs.biome",
     "github.vscode-pull-request-github",
-    "esbenp.prettier-vscode",
     "bradlc.vscode-tailwindcss",
     "actboy168.tasks",
     "codezombiech.gitignore",

@@ -1,15 +1,15 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { PracticeCardModel } from "@/src/practice/domain/models/practice-card-model";
 import { ReviewLogModel } from "@/src/practice/domain/models/review-log-model";
-import { revalidatePath } from "next/cache";
-import {
-  PracticeActionSchema,
-  type PracticeActionModel,
-} from "../schemas/practice-action-schema";
 import { locator_practice_PracticeUseCase } from "../../locators/locator_practice-use-case";
+import {
+  type PracticeActionModel,
+  PracticeActionSchema,
+} from "../schemas/practice-action-schema";
 
 export async function practiceAction(input: PracticeActionModel) {
   try {

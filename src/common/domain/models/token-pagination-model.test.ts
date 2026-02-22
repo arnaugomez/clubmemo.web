@@ -22,7 +22,7 @@ describe("TokenPaginationModel", () => {
   it("fromData deserializes data", () => {
     const data = { results: ["1", "2", "3"], token: "testToken" };
     const model = TokenPaginationModel.fromData(data, (str: string) =>
-      parseInt(str),
+      parseInt(str, 10),
     );
     expect(model.results).toEqual([1, 2, 3]);
     expect(model.token).toEqual(data.token);

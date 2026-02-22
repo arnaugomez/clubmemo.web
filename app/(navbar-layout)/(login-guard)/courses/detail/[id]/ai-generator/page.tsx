@@ -1,3 +1,7 @@
+import { GraduationCap, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Script from "next/script";
 import { GenerateAiNotesWizard } from "@/src/ai-generator/ui/components/generate-ai-notes-wizard";
 import {
   Alert,
@@ -9,10 +13,6 @@ import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-para
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
-import { GraduationCap, Sparkles } from "lucide-react";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Script from "next/script";
 
 export const maxDuration = 50;
 
@@ -23,9 +23,8 @@ export const metadata: Metadata = {
 /**
  * Shows the AI generator section for a given course
  */
-export default async function CourseAiGeneratorPage({
-  params: { id },
-}: PropsWithIdParam) {
+export default async function CourseAiGeneratorPage(props: PropsWithIdParam) {
+  const { id } = await props.params;
   invalidIdGuard(id);
 
   const profile = await fetchMyProfile();

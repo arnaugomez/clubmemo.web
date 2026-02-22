@@ -1,4 +1,9 @@
 "use client";
+import { TriangleAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import {
   Alert,
@@ -16,12 +21,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { TriangleAlert } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
 import { copyCourseAction } from "../actions/copy-course-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface CopyCourseDialogProps {
   course: CourseModel;
@@ -38,7 +38,7 @@ export function CopyCourseDialog({ course, onClose }: CopyCourseDialogProps) {
       const handler = new ActionResponseHandler(response);
       if (!handler.hasErrors && handler.data) {
         toast.success("Curso copiado");
-        router.push("/courses/detail/" + handler.data.id);
+        router.push(`/courses/detail/${handler.data.id}`);
       }
       handler.toastErrors();
     } catch (error) {

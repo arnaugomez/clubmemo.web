@@ -1,8 +1,8 @@
+import { default_maximum_interval, default_request_retention } from "ts-fsrs";
 import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
 import { CoursePermissionTypeModel } from "@/src/courses/domain/models/course-permission-type-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "@/src/practice/domain/models/practice-card-state-model";
-import { default_maximum_interval, default_request_retention } from "ts-fsrs";
 import { InvalidAdminResourceTypeError } from "../models/admin-errors";
 import type { AdminResourceModel } from "../models/admin-resource-model";
 import {

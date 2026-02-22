@@ -26,6 +26,6 @@ export class LogoutUseCase {
     await this.authService.invalidateSession(session.id);
 
     const sessionCookie = this.authService.createBlankSessionCookie();
-    this.cookieService.set(sessionCookie);
+    await this.cookieService.set(sessionCookie);
   }
 }

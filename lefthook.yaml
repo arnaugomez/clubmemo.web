@@ -3,9 +3,7 @@ pre-push:
   commands:
     tsc:
       run: ./nvm-exec.sh pnpm check-types
-    lint:
-      run: ./nvm-exec.sh pnpm lint
-    format:
+    check:
       run: ./nvm-exec.sh pnpm check-format
     test:
       run: ./nvm-exec.sh pnpm exec vitest run

@@ -35,7 +35,7 @@ export class DeleteUserUseCase {
   }: DeleteUserUseCaseInputModel): Promise<void> {
     const { user } = await this.getSessionUseCase.execute();
     if (!user) throw new UserDoesNotExistError();
-    if (confirmation != user.email) throw new InvalidConfirmationError();
+    if (confirmation !== user.email) throw new InvalidConfirmationError();
 
     const userId = user.id;
 

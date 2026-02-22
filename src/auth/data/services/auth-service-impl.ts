@@ -1,5 +1,3 @@
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
-import type { EnvService } from "@/src/common/domain/interfaces/env-service";
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import type {
   Cookie,
@@ -10,6 +8,8 @@ import { Lucia } from "lucia";
 import type { Collection, WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import { Argon2id } from "oslo/password";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import type { EnvService } from "@/src/common/domain/interfaces/env-service";
 import {
   IncorrectPasswordError,
   UserAlreadyExistsError,

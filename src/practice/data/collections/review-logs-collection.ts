@@ -1,5 +1,5 @@
-import { collection } from "@/src/common/data/utils/mongodb";
 import type { ObjectId, WithId } from "mongodb";
+import { collection } from "@/src/common/data/utils/mongodb";
 import type { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
 import type { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 import { ReviewLogModel } from "../../domain/models/review-log-model";

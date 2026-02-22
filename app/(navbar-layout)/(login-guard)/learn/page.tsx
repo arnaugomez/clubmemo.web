@@ -1,3 +1,5 @@
+import { GraduationCap } from "lucide-react";
+import type { Metadata } from "next";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
@@ -5,8 +7,6 @@ import { FavoriteCoursesSection } from "@/src/courses/ui/favorite-courses/compon
 import { KeepLearningSection } from "@/src/courses/ui/keep-learning/components/keep-learning-section";
 import { MyCoursesPreviewSection } from "@/src/courses/ui/my-courses-preview/components/my-courses-preview-section";
 import { fetchMyCoursesPreview } from "@/src/courses/ui/my-courses-preview/fetch/fetch-my-courses-preview";
-import { GraduationCap } from "lucide-react";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Aprender",

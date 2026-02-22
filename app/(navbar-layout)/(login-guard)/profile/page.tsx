@@ -1,7 +1,7 @@
+import { notFound, RedirectType, redirect } from "next/navigation";
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { locator_profiles_ProfilesRepository } from "@/src/profile/locators/locator_profiles-repository";
 import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
-import { RedirectType, notFound, redirect } from "next/navigation";
 
 /**
  * Route that redirects to the page of the profile of the current user

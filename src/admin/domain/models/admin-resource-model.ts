@@ -81,7 +81,7 @@ export interface AdminFieldModel {
    * displayed. For example, use a password field for a string field.
    */
   display?: AdminFieldDisplayModel;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: generic admin resource type
   extraProps?: Record<string, any>;
   /**
    * Resource type of the ObjectId. Used when the field type is
@@ -91,7 +91,7 @@ export interface AdminFieldModel {
   /**
    * Default value of the field when the resource is created.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: generic admin resource type
   defaultValue?: any;
   /**
    * Do not show this field in the list or table view, but show it in the create

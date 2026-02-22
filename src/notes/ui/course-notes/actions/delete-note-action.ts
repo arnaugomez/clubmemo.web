@@ -1,11 +1,11 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { revalidatePath } from "next/cache";
+import { locator_notes_DeleteNoteUseCase } from "@/src/notes/locators/locator_delete-note-use-case";
 import type { DeleteNoteActionModel } from "../schemas/delete-note-action-schema";
 import { DeleteNoteActionSchema } from "../schemas/delete-note-action-schema";
-import { locator_notes_DeleteNoteUseCase } from "@/src/notes/locators/locator_delete-note-use-case";
 
 export async function deleteNoteAction(input: DeleteNoteActionModel) {
   try {

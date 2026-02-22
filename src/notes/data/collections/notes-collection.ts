@@ -1,7 +1,7 @@
-import { collection } from "@/src/common/data/utils/mongodb";
 import createDOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 import type { ObjectId, WithId } from "mongodb";
+import { collection } from "@/src/common/data/utils/mongodb";
 import { NoteModel } from "../../domain/models/note-model";
 
 export interface NoteDoc {

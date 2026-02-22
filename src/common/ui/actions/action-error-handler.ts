@@ -1,3 +1,4 @@
+import { ZodError } from "zod";
 import {
   InvalidAdminResourceTypeError,
   UserIsNotAdminError,
@@ -21,12 +22,12 @@ import {
 import { EnrollmentDoesNotExistError } from "@/src/courses/domain/models/enrollment-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { DailyRateLimitError } from "@/src/rate-limits/domain/errors/rate-limits-errors";
-import { ZodError } from "zod";
 import { NoPermissionError } from "../../domain/models/app-errors";
+import { locator_common_ErrorTrackingService } from "../../locators/locator_error-tracking-service";
 import type { FormActionResponse } from "../models/server-form-errors";
 import { ActionResponse } from "../models/server-form-errors";
-import { locator_common_ErrorTrackingService } from "../../locators/locator_error-tracking-service";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: utility class pattern
 export class ActionErrorHandler {
   static handle(e: unknown): FormActionResponse {
     if (e instanceof DailyRateLimitError) {

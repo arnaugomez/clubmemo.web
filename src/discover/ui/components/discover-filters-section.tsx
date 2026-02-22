@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/src/common/ui/components/shadcn/ui/button";
-import { Input } from "@/src/common/ui/components/shadcn/ui/input";
 import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { Button } from "@/src/common/ui/components/shadcn/ui/button";
+import { Input } from "@/src/common/ui/components/shadcn/ui/input";
 
 /**
  * Shows the search parameters of the Discover section. For example,
@@ -32,7 +32,7 @@ export function DiscoverFiltersSection() {
     }
 
     if (query === newQuery) {
-      const retries = parseInt(searchParams.get("retries") ?? "") || 0;
+      const retries = parseInt(searchParams.get("retries") ?? "", 10) || 0;
       params.set("retries", `${retries + 1}`);
     } else {
       params.delete("retries");

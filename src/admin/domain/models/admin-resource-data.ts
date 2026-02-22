@@ -3,5 +3,5 @@
  * of the resource, and their values. The keys and their values depend on the
  * fields configuration of that specific admin resource.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: generic admin resource type
 export type AdminResourceData = Record<string, any>;

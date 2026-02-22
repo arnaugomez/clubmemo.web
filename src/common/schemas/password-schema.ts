@@ -10,6 +10,6 @@ export const PasswordSchema = z
   .refine((value) => /[0-9]/.test(value), {
     params: { i18n: "atLeastOneNumber" },
   })
-  .refine((value) => /[`!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?~ ]/.test(value), {
+  .refine((value) => /[`!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?~ ]/.test(value), {
     params: { i18n: "atLeastOneSpecialCharacter" },
   });

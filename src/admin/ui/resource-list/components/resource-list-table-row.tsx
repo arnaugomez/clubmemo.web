@@ -1,3 +1,5 @@
+import { EditIcon, Trash2Icon } from "lucide-react";
+import Link from "next/link";
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
 import type {
   AdminFieldModel,
@@ -9,8 +11,6 @@ import {
   TableCell,
   TableRow,
 } from "@/src/common/ui/components/shadcn/ui/table";
-import { EditIcon, Trash2Icon } from "lucide-react";
-import Link from "next/link";
 import { DeleteResourceButton } from "../../components/delete-resource-button";
 import { IdTableCell } from "./id-table-cell";
 import { ResourceListTableCell } from "./resource-list-table-cell";

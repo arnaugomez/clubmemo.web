@@ -51,7 +51,7 @@ export class CopyCourseUseCase {
     if (!course) throw new CourseDoesNotExistError();
     if (!course.canView) throw new NoPermissionError();
     const newCourse = await this.coursesRepository.create({
-      name: course.name + " (Copia)",
+      name: `${course.name} (Copia)`,
       profileId,
     });
 

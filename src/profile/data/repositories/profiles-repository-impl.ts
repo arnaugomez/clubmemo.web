@@ -1,5 +1,5 @@
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { HandleAlreadyExistsError } from "../../domain/errors/profile-errors";
 import type { ProfilesRepository } from "../../domain/interfaces/profiles-repository";
 import type { ProfileModel } from "../../domain/models/profile-model";

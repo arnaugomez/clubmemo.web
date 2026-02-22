@@ -1,5 +1,5 @@
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { MongoBulkWriteError } from "mongodb";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { TagsRepository } from "../../domain/interfaces/tags-repository";
 import { tagsCollection } from "../collections/tags-collection";
 

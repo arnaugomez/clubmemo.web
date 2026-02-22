@@ -1,8 +1,8 @@
+import { FileUp, GraduationCap, Layers } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { FileUp, GraduationCap, Layers } from "lucide-react";
-import Link from "next/link";
 
 export function LandingHero() {
   return (
@@ -36,6 +36,7 @@ function HeroSteps() {
   return (
     <div className="mx-auto flex w-fit flex-col space-y-4 px-8">
       {steps.map((step, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: static list
         <HeroStep key={index} {...step} />
       ))}
     </div>

@@ -1,5 +1,5 @@
-import type { OptionModel } from "@/src/common/domain/models/option-model";
 import Select from "react-select";
+import type { OptionModel } from "@/src/common/domain/models/option-model";
 
 interface SelectMultipleInputProps {
   name: string;
@@ -28,7 +28,7 @@ export function SelectMultipleInput({
       placeholder={placeholder}
       value={options.filter((option) => value.includes(option.value))}
       isMulti
-      onChange={(selectedOptions) =>
+      onChange={(selectedOptions: readonly OptionModel[]) =>
         onChange(selectedOptions.map((option) => option.value))
       }
       className={className}

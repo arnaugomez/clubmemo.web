@@ -1,10 +1,10 @@
-import { DropdownMenuItem } from "@/src/common/ui/components/shadcn/ui/dropdown-menu";
-import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { Bookmark } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
-import { favoriteCourseAction } from "../actions/favorite-course-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { toast } from "sonner";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { DropdownMenuItem } from "@/src/common/ui/components/shadcn/ui/dropdown-menu";
+import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
+import { favoriteCourseAction } from "../actions/favorite-course-action";
 
 interface CourseFavoriteButtonProps {
   courseId: string;
@@ -43,14 +43,12 @@ export function CourseFavoriteButton(props: CourseFavoriteButtonProps) {
   }
 
   return (
-    <>
-      <DropdownMenuItem onSelect={onSelect}>
-        <Bookmark
-          fill={optimisticFavorite ? "currentColor" : "white"}
-          className="mr-2 h-4 w-4"
-        />
-        <span>{optimisticFavorite ? "Destacado" : "Destacar"}</span>
-      </DropdownMenuItem>
-    </>
+    <DropdownMenuItem onSelect={onSelect}>
+      <Bookmark
+        fill={optimisticFavorite ? "currentColor" : "white"}
+        className="mr-2 h-4 w-4"
+      />
+      <span>{optimisticFavorite ? "Destacado" : "Destacar"}</span>
+    </DropdownMenuItem>
   );
 }

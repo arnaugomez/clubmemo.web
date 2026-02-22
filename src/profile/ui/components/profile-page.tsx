@@ -1,3 +1,7 @@
+import { Settings, User } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
 import { WebsiteLink } from "@/src/common/ui/components/button/website-link";
 import {
   Avatar,
@@ -8,10 +12,6 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
-import { Settings, User } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { Suspense } from "react";
 import { fetchSession } from "../../../auth/ui/fetch/fetch-session";
 import ProfileCoursesSection from "../../../courses/ui/profile-courses/components/profile-courses-section";
 import { TagsSection } from "../../../tags/ui/components/tags-section";

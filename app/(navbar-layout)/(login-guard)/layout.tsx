@@ -1,6 +1,6 @@
-import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { redirect } from "next/navigation";
 import type { PropsWithChildren } from "react";
+import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 
 /**
  * Checks that the user is logged in and has verified the email. Otherwise, it

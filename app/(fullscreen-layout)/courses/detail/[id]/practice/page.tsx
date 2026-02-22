@@ -1,10 +1,10 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { invalidIdGuard } from "@/src/common/ui/guards/invalid-id-guard";
 import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
 import { fetchCourseDetail } from "@/src/courses/ui/detail/fetch/fetch-course-detail";
 import { PracticePageLoader } from "@/src/practice/ui/components/practice-page-loader";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Practicar curso",
@@ -16,9 +16,8 @@ export const metadata: Metadata = {
  *
  * Before showing the practice page, it loads the data of the cards.
  */
-export default async function PracticePage({
-  params: { id },
-}: PropsWithIdParam) {
+export default async function PracticePage(props: PropsWithIdParam) {
+  const { id } = await props.params;
   invalidIdGuard(id);
 
   const profile = await fetchMyProfile();

@@ -1,9 +1,9 @@
 import { Loader2 } from "lucide-react";
 import { forwardRef, useState } from "react";
+import { toast } from "sonner";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import type { ButtonProps } from "../shadcn/ui/button";
 import { Button } from "../shadcn/ui/button";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
-import { toast } from "sonner";
 
 interface AsyncButtonProps extends ButtonProps {
   onClick?: (

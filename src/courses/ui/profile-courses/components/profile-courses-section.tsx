@@ -1,9 +1,9 @@
+import { Suspense } from "react";
 import { SearchEmptyState } from "@/src/common/ui/components/empty-state/search-empty-state";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import { DiscoverLoadingSkeletons } from "@/src/discover/ui/components/discover-loading-skeletons";
 import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
-import { Suspense } from "react";
 import { fetchCoursesByAuthor } from "../fetch/fetch-courses-by-author";
 import { ProfileCoursesResultsSection } from "./profile-courses-results-section";
 

@@ -1,8 +1,8 @@
 "use client";
+import { useState } from "react";
 import type { ButtonProps } from "@/src/common/ui/components/shadcn/ui/button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import type { NoteModel } from "@/src/notes/domain/models/note-model";
-import { useState } from "react";
 import { useCourseNotesContext } from "../contexts/course-notes-context";
 import { CreateNoteDialog } from "./create-note-dialog";
 
@@ -25,7 +25,7 @@ export function CreateNoteButton({
         <CreateNoteDialog
           courseId={courseId}
           onClose={() => setShowDialog(false)}
-          onSuccess={function (note: NoteModel): void {
+          onSuccess={(note: NoteModel): void => {
             setNotes((notes) => [note, ...notes]);
             setShowDialog(false);
           }}

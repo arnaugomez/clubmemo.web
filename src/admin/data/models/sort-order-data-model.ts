@@ -9,6 +9,7 @@ export type SortOrderDataModel = 1 | -1;
  * Transforms the sort order from the domain model into a MongoDB-compatible
  * representation to be used in database queries
  */
+// biome-ignore lint/complexity/noStaticOnlyClass: utility class pattern
 export class SortOrderDataModelTransformer {
   /**
    * Transforms the sort order from the domain model into a MongoDB-compatible

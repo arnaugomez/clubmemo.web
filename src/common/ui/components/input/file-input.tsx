@@ -73,10 +73,9 @@ export function FileInput({
           isDragActive={isDragActive}
         />
       </div>
-      {rejectedFile &&
-        rejectedFile.errors.map((value) => (
-          <FileInputErrorMessage key={value.code} value={value} />
-        ))}
+      {rejectedFile?.errors.map((value) => (
+        <FileInputErrorMessage key={value.code} value={value} />
+      ))}
     </>
   );
 }
@@ -114,7 +113,7 @@ export function Result({
     if (file) {
       if (isImage) {
         return (
-          // eslint-disable-next-line @next/next/no-img-element
+          // biome-ignore lint/performance/noImgElement: preview of user-uploaded file, not a static asset
           <img
             className="h-20 min-w-0 max-w-full rounded-md object-contain"
             src={typeof file === "string" ? file : URL.createObjectURL(file)}

@@ -1,9 +1,9 @@
 "use client";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import { toast } from "sonner";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { getTagSuggestionsAction } from "../../../../tags/ui/actions/get-tag-suggestions-action";
 import { ActionResponseHandler } from "../../models/action-response-handler";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 interface TagsInputProps {
   name: string;
@@ -40,11 +40,13 @@ export default function TagsInput({
       name={name}
       id={id}
       value={value.map((tag) => ({ value: tag, label: tag }))}
-      onChange={(selectedOptions) => {
+      onChange={(
+        selectedOptions: readonly { value: string; label: string }[],
+      ) => {
         onChange(selectedOptions.map((option) => option.value));
       }}
       createOptionPosition="first"
-      isValidNewOption={(inputValue) =>
+      isValidNewOption={(inputValue: string) =>
         inputValue.length <= 50 && /^[a-zA-Z0-9-_ ]+$/.test(inputValue)
       }
       isMulti

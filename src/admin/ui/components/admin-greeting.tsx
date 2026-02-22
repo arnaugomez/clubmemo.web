@@ -1,5 +1,5 @@
-import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { SlidersHorizontalIcon } from "lucide-react";
+import { textStyles } from "@/src/common/ui/styles/text-styles";
 
 /**
  * Displays a greeting message to the admin user when they access the admin panel.

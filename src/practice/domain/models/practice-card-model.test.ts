@@ -1,7 +1,7 @@
-import type { NoteModelData } from "@/src/notes/domain/models/note-model";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
 import { State } from "ts-fsrs";
 import { describe, expect, it } from "vitest";
+import type { NoteModelData } from "@/src/notes/domain/models/note-model";
+import { NoteModel } from "@/src/notes/domain/models/note-model";
 import type { PracticeCardModelData } from "./practice-card-model";
 import { PracticeCardModel } from "./practice-card-model";
 import { PracticeCardStateModel } from "./practice-card-state-model";

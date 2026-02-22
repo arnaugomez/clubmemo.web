@@ -8,10 +8,12 @@ import type {
  * Implementation of `CookieService` using the Next `cookies` function.
  */
 export class CookieServiceNextImpl implements CookieService {
-  get(name: string) {
-    return cookies().get(name)?.value;
+  async get(name: string) {
+    const cookieStore = await cookies();
+    return cookieStore.get(name)?.value;
   }
-  set(input: SetCookieInputModel) {
-    cookies().set(input.name, input.value, input.attributes);
+  async set(input: SetCookieInputModel) {
+    const cookieStore = await cookies();
+    cookieStore.set(input.name, input.value, input.attributes);
   }
 }

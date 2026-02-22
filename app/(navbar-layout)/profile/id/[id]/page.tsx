@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { notFound, RedirectType, redirect } from "next/navigation";
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { verifyEmailGuard } from "@/src/auth/ui/guards/verify-email-guard";
 import { invalidIdGuard } from "@/src/common/ui/guards/invalid-id-guard";
@@ -6,12 +8,9 @@ import { handlePromiseError } from "@/src/common/utils/handle-promise-error";
 import { ProfilePage } from "@/src/profile/ui/components/profile-page";
 import { fetchProfileById } from "@/src/profile/ui/fetch/fetch-profile-by-id";
 import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
-import type { Metadata } from "next";
-import { RedirectType, notFound, redirect } from "next/navigation";
 
-export default async function ProfileByIdPage({
-  params: { id },
-}: PropsWithIdParam) {
+export default async function ProfileByIdPage(props: PropsWithIdParam) {
+  const { id } = await props.params;
   invalidIdGuard(id);
 
   const [profile] = await Promise.all([
@@ -25,9 +24,10 @@ export default async function ProfileByIdPage({
   return <ProfilePage profile={profile} />;
 }
 
-export async function generateMetadata({
-  params: { id },
-}: PropsWithIdParam): Promise<Metadata> {
+export async function generateMetadata(
+  props: PropsWithIdParam,
+): Promise<Metadata> {
+  const { id } = await props.params;
   const profile = await handlePromiseError(fetchProfileById(id));
   if (!profile) return {};
   const { user } = await fetchSession();

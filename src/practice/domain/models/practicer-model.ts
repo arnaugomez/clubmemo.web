@@ -1,6 +1,6 @@
-import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import type { RecordLog } from "ts-fsrs";
 import { Rating } from "ts-fsrs";
+import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import { PracticeCardModel } from "./practice-card-model";
 import type { DaysToNextReviewModel } from "./practice-card-rating-model";
 import {

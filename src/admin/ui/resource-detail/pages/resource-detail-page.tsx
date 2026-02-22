@@ -1,8 +1,8 @@
+import { ObjectId } from "mongodb";
+import { notFound } from "next/navigation";
 import { getAdminResourceByType } from "@/src/admin/domain/config/admin-resources-config";
 import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { ObjectId } from "mongodb";
-import { notFound } from "next/navigation";
 import { AdminResourceIcon } from "../../components/admin-resource-icon";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import { ResourceDetailTopButtons } from "../components/resource-detail-top-buttons";

@@ -1,3 +1,7 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import range from "lodash/range";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
@@ -15,10 +19,6 @@ import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
-import { zodResolver } from "@hookform/resolvers/zod";
-import range from "lodash/range";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
 
 interface GenerateAiNotesFormProps {

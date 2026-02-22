@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Tooltip,
@@ -7,10 +9,8 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/tooltip";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import type { CoursePracticeCountModel } from "@/src/practice/domain/models/course-practice-count-model";
-import Link from "next/link";
-import { Suspense } from "react";
-import { CourseDetailPracticeButtonLoading } from "./course-detail-practice-button-loading";
 import { locator_practice_GetCoursePracticeCountUseCase } from "@/src/practice/locators/locator_get-course-practice-count-use-case";
+import { CourseDetailPracticeButtonLoading } from "./course-detail-practice-button-loading";
 
 interface CourseDetailPracticeButtonProps {
   course: CourseModel;

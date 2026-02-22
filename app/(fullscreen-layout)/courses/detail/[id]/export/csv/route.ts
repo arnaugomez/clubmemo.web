@@ -1,3 +1,4 @@
+import { stringify } from "csv-stringify/sync";
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
 import { ApiErrorHandler } from "@/src/common/ui/api/api-error-handler";
 import type { PropsWithIdParam } from "@/src/common/ui/models/props-with-id-param";
@@ -5,12 +6,12 @@ import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-erro
 import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
 import { locator_notes_NotesRepository } from "@/src/notes/locators/locator_notes-repository";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
-import { stringify } from "csv-stringify/sync";
 
 /**
  * Returns a CSV file with the notes of a course in CSV format.
  */
-export async function GET(_: Request, { params: { id } }: PropsWithIdParam) {
+export async function GET(_: Request, props: PropsWithIdParam) {
+  const { id } = await props.params;
   try {
     const profile = await fetchMyProfile();
     const coursesRepository = locator_courses_CoursesRepository();

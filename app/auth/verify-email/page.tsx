@@ -1,10 +1,10 @@
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { locator_auth_EmailVerificationCodesRepository } from "@/src/auth/locators/locator_email-verification-codes-repository";
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { VerifyEmailPageLoaded } from "@/src/auth/ui/verify-email/pages/verify-email-page-loaded";
 import { NullError } from "@/src/common/domain/models/app-errors";
 import { locator_common_EmailService } from "@/src/common/locators/locator_email-service";
-import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 /**
  * Checks that the user is logged in and still has not verified the email. Otherwise,

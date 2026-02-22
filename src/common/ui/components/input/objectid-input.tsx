@@ -1,14 +1,14 @@
 "use client";
 
+import { CopyIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
+import { forwardRef } from "react";
 import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { translateAdminKey } from "@/src/admin/ui/i18n/admin-translations";
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import type { InputProps } from "@/src/common/ui/components/shadcn/ui/input";
 import { Input } from "@/src/common/ui/components/shadcn/ui/input";
-import { CopyIcon, ExternalLinkIcon } from "lucide-react";
-import Link from "next/link";
-import { forwardRef } from "react";
 import { useClipboard } from "../../hooks/use-clipboard";
 import { textStyles } from "../../styles/text-styles";
 import { cn } from "../../utils/shadcn";

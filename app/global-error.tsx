@@ -11,7 +11,7 @@ import ErrorPage from "./(fullscreen-layout)/error";
  */
 export default function GlobalErrorPage(props: ErrorPageProps) {
   return (
-    <html>
+    <html lang="es">
       <body className={cn(inter.className, "relative h-screen antialiased")}>
         <ErrorPage {...props} />
       </body>

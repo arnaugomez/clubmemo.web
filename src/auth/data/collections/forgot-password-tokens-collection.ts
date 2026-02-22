@@ -1,5 +1,5 @@
-import { collection } from "@/src/common/data/utils/mongodb";
 import type { ObjectId, WithId } from "mongodb";
+import { collection } from "@/src/common/data/utils/mongodb";
 import { ForgotPasswordTokenModel } from "../../domain/models/forgot-password-token-model";
 
 /**

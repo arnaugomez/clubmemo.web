@@ -1,3 +1,6 @@
+import { Check } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { ArrowLink } from "@/src/common/ui/components/button/arrow-link";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import {
@@ -9,10 +12,8 @@ import {
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
-import { Check } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { getCourseDetailPath } from "../../utils/get-course-detail-path";
+
 interface FavoriteCourseCardProps {
   course: EnrolledCourseListItemModel;
 }

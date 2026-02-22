@@ -1,11 +1,11 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { revalidatePath } from "next/cache";
+import { locator_notes_CreateNoteUseCase } from "@/src/notes/locators/locator_create-note-use-case";
 import type { CreateNoteActionModel } from "../schemas/create-note-action-schema";
 import { CreateNoteActionSchema } from "../schemas/create-note-action-schema";
-import { locator_notes_CreateNoteUseCase } from "@/src/notes/locators/locator_create-note-use-case";
 
 export async function createNoteAction(input: CreateNoteActionModel) {
   try {

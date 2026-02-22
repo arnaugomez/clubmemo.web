@@ -1,13 +1,13 @@
 "use client";
 
+import { CircleX } from "lucide-react";
+import Link from "next/link";
+import { useEffect } from "react";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import type { ErrorPageProps } from "@/src/common/ui/models/props-with-error";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { CircleX } from "lucide-react";
-import Link from "next/link";
-import { useEffect } from "react";
 
 /**
  * Shows an error message that is displayed in the pages with the Admin layout.

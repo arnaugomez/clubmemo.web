@@ -1,9 +1,9 @@
+import { Inbox } from "lucide-react";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/src/common/ui/components/shadcn/ui/alert";
-import { Inbox } from "lucide-react";
 
 /**
  * An alert that informs the user that the email verification code has expired.

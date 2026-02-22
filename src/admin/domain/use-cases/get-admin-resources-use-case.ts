@@ -1,20 +1,20 @@
+import { endOfDay, isDate, isValid, startOfDay } from "date-fns";
+import escapeRegExp from "lodash/escapeRegExp";
+import { type Document, ObjectId, type WithId } from "mongodb";
 import {
-  PaginationFacetTransformer,
   type PaginationFacet,
+  PaginationFacetTransformer,
 } from "@/src/common/data/facets/pagination-facet";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
-import { endOfDay, isDate, isValid, startOfDay } from "date-fns";
-import escapeRegExp from "lodash/escapeRegExp";
-import { ObjectId, type Document, type WithId } from "mongodb";
 import { SortOrderDataModelTransformer } from "../../data/models/sort-order-data-model";
 import { getAdminResourceByType } from "../config/admin-resources-config";
 import type { AdminResourceData } from "../models/admin-resource-data";
 import type { AdminResourceModel } from "../models/admin-resource-model";
 import {
   AdminFieldTypeModel,
-  transformDataAfterGet,
   type AdminResourceTypeModel,
+  transformDataAfterGet,
 } from "../models/admin-resource-model";
 import type { SortOrderModel } from "../models/sort-order-model";
 import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
@@ -241,7 +241,7 @@ export class GetAdminResourcesUseCase {
           }
           break;
         case AdminFieldTypeModel.number:
-          if (typeof value === "number" && !isNaN(value)) {
+          if (typeof value === "number" && !Number.isNaN(value)) {
             match.push({ [field.name]: { $eq: value } });
           }
           break;
@@ -256,7 +256,7 @@ export class GetAdminResourcesUseCase {
           }
           break;
         case AdminFieldTypeModel.objectId:
-          if (typeof value == "string" && ObjectId.isValid(value)) {
+          if (typeof value === "string" && ObjectId.isValid(value)) {
             match.push({ [field.name]: { $eq: new ObjectId(value) } });
           }
           break;

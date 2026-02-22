@@ -1,6 +1,6 @@
+import { ObjectId } from "mongodb";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
-import { ObjectId } from "mongodb";
 import type { ReviewLogsRepository } from "../../domain/interfaces/review-logs-repository";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 import { ReviewLogModel } from "../../domain/models/review-log-model";

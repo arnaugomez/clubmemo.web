@@ -1,8 +1,8 @@
+import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { TableCell } from "@/src/common/ui/components/shadcn/ui/table";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { ExternalLinkIcon } from "lucide-react";
-import Link from "next/link";
 
 interface FileTableCellProps {
   href: string;

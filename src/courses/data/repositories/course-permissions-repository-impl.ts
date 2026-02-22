@@ -1,5 +1,5 @@
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { ObjectId } from "mongodb";
+import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { CoursePermissionsRepository } from "../../domain/interfaces/course-permissions-repository";
 import { coursePermissionsCollection } from "../collections/course-permissions-collection";
 

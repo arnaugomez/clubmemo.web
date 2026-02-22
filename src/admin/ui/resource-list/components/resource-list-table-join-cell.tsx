@@ -1,11 +1,11 @@
+import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
 import type {
   AdminJoinModel,
   AdminResourceTypeModel,
 } from "@/src/admin/domain/models/admin-resource-model";
 import { TableCell } from "@/src/common/ui/components/shadcn/ui/table";
-import { ExternalLinkIcon } from "lucide-react";
-import Link from "next/link";
 import { translateAdminKey } from "../../i18n/admin-translations";
 
 interface ResourceListTableJoinCellProps {

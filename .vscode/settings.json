@@ -1,8 +1,9 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit"
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
   },
+  "editor.defaultFormatter": "biomejs.biome",
   "git.commandsToLog": ["push"],
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "conventionalCommits.gitmoji": false,
@@ -22,6 +23,6 @@
     "admin"
   ],
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "biomejs.biome"
   }
 }

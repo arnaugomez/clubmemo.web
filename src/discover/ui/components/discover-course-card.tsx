@@ -1,11 +1,11 @@
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { DiscoverCourseModel } from "@/src/courses/domain/models/discover-course-model";
 import { getCourseDetailPath } from "@/src/courses/ui/utils/get-course-detail-path";
-import Image from "next/image";
-import Link from "next/link";
 
 interface DiscoverCourseCardProps {
   course: DiscoverCourseModel;

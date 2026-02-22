@@ -1,8 +1,8 @@
+import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 import type { AdminResourceModel } from "@/src/admin/domain/models/admin-resource-model";
 import { ArrowLink } from "@/src/common/ui/components/button/arrow-link";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
 import { translateAdminKey } from "../../i18n/admin-translations";
 
 interface Props {
@@ -20,7 +20,7 @@ export function ResourceListTopButtons({ resource }: Props) {
       "lowercase",
     );
     if (translated.length > 10) {
-      return translated.slice(0, 20) + "...";
+      return `${translated.slice(0, 20)}...`;
     }
   }
   return (

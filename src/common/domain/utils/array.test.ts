@@ -1,6 +1,6 @@
+import range from "lodash/range";
 import { describe, expect, it } from "vitest";
 import { shuffle } from "./array";
-import range from "lodash/range";
 
 describe("shuffle", () => {
   it("should return an array of the same length", () => {

@@ -1,5 +1,5 @@
-import type { OptionModel } from "@/src/common/domain/models/option-model";
 import Select from "react-select";
+import type { OptionModel } from "@/src/common/domain/models/option-model";
 
 interface SelectInputProps {
   name: string;
@@ -27,7 +27,9 @@ export function SelectInput({
       inputId={id}
       placeholder={placeholder}
       value={options.find((option) => option.value === value) ?? null}
-      onChange={(selectedOption) => onChange(selectedOption?.value ?? null)}
+      onChange={(selectedOption: OptionModel | null) =>
+        onChange(selectedOption?.value ?? null)
+      }
       className={className}
       isDisabled={disabled}
       isClearable

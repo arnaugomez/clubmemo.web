@@ -56,6 +56,6 @@ export class VerifyEmailUseCase {
     }
 
     const sessionCookie = await this.authService.verifyEmail(user.id);
-    this.cookieService.set(sessionCookie);
+    await this.cookieService.set(sessionCookie);
   }
 }

@@ -1,7 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "@/i18n/zod";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { EmailSchema } from "@/src/common/schemas/email-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";
@@ -11,11 +15,7 @@ import { InputFormField } from "@/src/common/ui/components/form/input-form-field
 import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { FormProvider, useForm } from "react-hook-form";
 import { signupAction } from "../actions/signup-action";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 
 const SignupFormSchema = z.object({
   email: EmailSchema,
@@ -37,19 +37,19 @@ export function SignupForm() {
     },
   });
 
-  const onSubmit = form.handleSubmit(async function (
-    data: z.infer<typeof SignupFormSchema>,
-  ) {
-    try {
-      const response = await signupAction(data);
-      const handler = new FormResponseHandler(response, form);
-      if (!handler.hasErrors) await waitMilliseconds(1000);
-      handler.setErrors();
-    } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
-      FormResponseHandler.setGlobalError(form);
-    }
-  });
+  const onSubmit = form.handleSubmit(
+    async (data: z.infer<typeof SignupFormSchema>) => {
+      try {
+        const response = await signupAction(data);
+        const handler = new FormResponseHandler(response, form);
+        if (!handler.hasErrors) await waitMilliseconds(1000);
+        handler.setErrors();
+      } catch (error) {
+        locator_common_ErrorTrackingService().captureError(error);
+        FormResponseHandler.setGlobalError(form);
+      }
+    },
+  );
   const acceptTerms = form.watch("acceptTerms");
 
   return (
@@ -76,6 +76,7 @@ export function SignupForm() {
                 className="underline"
                 href="/compliance/license.txt"
                 target="_blank"
+                rel="noopener"
               >
                 licencia de uso
               </a>
@@ -84,6 +85,7 @@ export function SignupForm() {
                 className="underline"
                 href="/compliance/cookies.md"
                 target="_blank"
+                rel="noopener"
               >
                 política de cookies
               </a>{" "}
@@ -92,6 +94,7 @@ export function SignupForm() {
                 className="underline"
                 href="/compliance/privacy.md"
                 target="_blank"
+                rel="noopener"
               >
                 política de privacidad.
               </a>

@@ -1,8 +1,8 @@
-import { cn } from "@/src/common/ui/utils/shadcn";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import type { PropsWithChildren } from "react";
+import { cn } from "@/src/common/ui/utils/shadcn";
 import { inter } from "../src/common/ui/styles/fonts";
 import "./globals.css";
 

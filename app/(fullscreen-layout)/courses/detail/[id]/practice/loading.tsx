@@ -1,6 +1,6 @@
+import { GraduationCap } from "lucide-react";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { GraduationCap } from "lucide-react";
 
 /**
  * Shows a loading indicator while the practice page is being loaded.

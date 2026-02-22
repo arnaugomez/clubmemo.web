@@ -1,9 +1,9 @@
-import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
-import { NoteDocTransformer } from "@/src/notes/data/collections/notes-collection";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
 import type { WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import { describe, expect, it } from "vitest";
+import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
+import { NoteDocTransformer } from "@/src/notes/data/collections/notes-collection";
+import { NoteModel } from "@/src/notes/domain/models/note-model";
 
 describe("NoteDocTransformer", () => {
   it("transforms NoteDoc to NoteModel correctly and sanitizes", () => {

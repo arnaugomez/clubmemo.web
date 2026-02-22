@@ -1,3 +1,6 @@
+import { User } from "lucide-react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import type { UserModel } from "@/src/auth/domain/models/user-model";
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
@@ -5,9 +8,6 @@ import { cn } from "@/src/common/ui/utils/shadcn";
 import { SettingsChangePasswordSection } from "@/src/settings/ui/components/settings-change-password-section";
 import { SettingsDeleteUserSection } from "@/src/settings/ui/components/settings-delete-user-section";
 import { SettingsLogoutSection } from "@/src/settings/ui/components/settings-logout-section";
-import { User } from "lucide-react";
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Ajustes",

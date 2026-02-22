@@ -67,6 +67,6 @@ export class ChangePasswordUseCase {
     });
 
     const cookie = await this.authService.resetSessions(userId);
-    this.cookieService.set(cookie);
+    await this.cookieService.set(cookie);
   }
 }

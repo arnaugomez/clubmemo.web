@@ -13,7 +13,7 @@ import type {
 export class AiNotesGeneratorServiceFakeImpl
   implements AiNotesGeneratorService
 {
-  async generate({}: GenerateAiNotesInputModel): Promise<NoteRowModel[]> {
+  async generate(_input: GenerateAiNotesInputModel): Promise<NoteRowModel[]> {
     return [
       {
         front: "¿Cómo se define una ecuación de segundo grado?",

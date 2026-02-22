@@ -1,3 +1,5 @@
+import { User } from "lucide-react";
+import Link from "next/link";
 import {
   Avatar,
   AvatarFallback,
@@ -6,8 +8,6 @@ import {
 import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { fetchMyProfile } from "@/src/profile/ui/fetch/fetch-my-profile";
 import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
-import { User } from "lucide-react";
-import Link from "next/link";
 import { NavbarUserSectionLoggedOut } from "./navbar-user-session-logged-out";
 
 export async function NavbarUserSection() {

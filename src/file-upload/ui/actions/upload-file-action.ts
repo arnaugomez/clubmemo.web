@@ -6,8 +6,8 @@ import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import type { CreateFileUploadOutputModel } from "@/src/file-upload/domain/interfaces/file-uploads-repository";
 import { locator_fileUpload_UploadFileUseCase } from "../../locators/locator_upload-file-use-case";
 import {
-  UploadFileActionSchema,
   type UploadFileActionModel,
+  UploadFileActionSchema,
 } from "../schemas/upload-file-action-schema";
 
 export async function uploadFileAction(

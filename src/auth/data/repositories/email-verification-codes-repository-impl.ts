@@ -1,8 +1,8 @@
+import { ObjectId } from "mongodb";
+import { createDate, TimeSpan } from "oslo";
+import { alphabet, generateRandomString } from "oslo/crypto";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
-import { ObjectId } from "mongodb";
-import { TimeSpan, createDate } from "oslo";
-import { alphabet, generateRandomString } from "oslo/crypto";
 import type { EmailVerificationCodesRepository } from "../../domain/interfaces/email-verification-codes-repository";
 import type { EmailVerificationCodeModel } from "../../domain/models/email-verification-code-model";
 import {

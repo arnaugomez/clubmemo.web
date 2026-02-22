@@ -19,14 +19,12 @@ start:
 
 # Apply automatic fixes
 fix:
-    ./nvm-exec.sh pnpm format
     ./nvm-exec.sh pnpm fix
 
 # Perform static code analysis
 check:
     ./nvm-exec.sh pnpm check-format
     ./nvm-exec.sh pnpm check-types
-    ./nvm-exec.sh pnpm lint
 
 # Add a new shadcn-ui component
 add-component component:

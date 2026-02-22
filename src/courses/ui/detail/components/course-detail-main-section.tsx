@@ -1,9 +1,9 @@
+import Image from "next/image";
+import { Suspense } from "react";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import type { ProfileModel } from "@/src/profile/domain/models/profile-model";
-import Image from "next/image";
-import { Suspense } from "react";
 import { TagsSection } from "../../../../tags/ui/components/tags-section";
 import { CourseDetailActionsSection } from "./course-detail-actions-section";
 import { CourseDetailAuthorsSectionLoader } from "./course-detail-authors-section";

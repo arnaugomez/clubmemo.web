@@ -1,3 +1,5 @@
+import { Argon2id } from "oslo/password";
+import { ZodError, ZodIssueCode } from "zod";
 import { locator_auth_AuthService } from "@/src/auth/locators/locator_auth-service";
 import { locator_auth_UsersRepository } from "@/src/auth/locators/locator_users-repository";
 import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
@@ -5,8 +7,6 @@ import { locator_courses_CourseEnrollmentsRepository } from "@/src/courses/locat
 import { locator_courses_CoursePermissionsRepository } from "@/src/courses/locators/locator_course-permissions-repository";
 import { locator_notes_NotesRepository } from "@/src/notes/locators/locator_notes-repository";
 import { locator_profiles_ProfilesRepository } from "@/src/profile/locators/locator_profiles-repository";
-import { Argon2id } from "oslo/password";
-import { ZodError, ZodIssueCode } from "zod";
 import { checkIfEmailAlreadyExists } from "../hooks/check-if-email-already-exists";
 import { checkIfHandleAlreadyExists } from "../hooks/check-if-handle-already-exists";
 import { checkIfTagAlreadyExists } from "../hooks/check-if-tag-already-exists";

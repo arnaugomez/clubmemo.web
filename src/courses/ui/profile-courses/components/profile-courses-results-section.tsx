@@ -1,5 +1,9 @@
 "use client";
 
+import range from "lodash/range";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { toast } from "sonner";
 import type { TokenPaginationModelData } from "@/src/common/domain/models/token-pagination-model";
 import { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
@@ -9,10 +13,6 @@ import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { DiscoverCourseModelData } from "@/src/courses/domain/models/discover-course-model";
 import { DiscoverCourseModel } from "@/src/courses/domain/models/discover-course-model";
-import range from "lodash/range";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useInView } from "react-intersection-observer";
-import { toast } from "sonner";
 import { DiscoverCourseCard } from "../../../../discover/ui/components/discover-course-card";
 import { paginateCoursesByAuthorAction } from "../actions/paginate-courses-by-author-action";
 
@@ -87,6 +87,7 @@ export function ProfileCoursesResultsSection({
         {canLoadMore &&
           range(6).map((_, i) => (
             <Skeleton
+              // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholder
               key={i}
               ref={i ? undefined : ref}
               className="h-64 rounded-lg"

@@ -1,6 +1,6 @@
+import { FileSpreadsheet } from "lucide-react";
 import { DropdownMenuItem } from "@/src/common/ui/components/shadcn/ui/dropdown-menu";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { FileSpreadsheet } from "lucide-react";
 
 interface ExportCourseCsvButtonProps {
   course: CourseModel;

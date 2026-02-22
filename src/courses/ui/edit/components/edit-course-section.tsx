@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Edit2 } from "lucide-react";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "@/i18n/zod";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
 import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
@@ -25,11 +30,6 @@ import { CourseModel } from "@/src/courses/domain/models/course-model";
 import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
 import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-action";
 import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit2 } from "lucide-react";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { editCourseAction } from "../actions/edit-course-action";
 
 interface CourseDetailEditSectionProps {

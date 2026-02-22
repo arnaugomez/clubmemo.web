@@ -1,9 +1,9 @@
 "use client";
 
-import { textStyles } from "@/src/common/ui/styles/text-styles";
-import { cn } from "@/src/common/ui/utils/shadcn";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { textStyles } from "@/src/common/ui/styles/text-styles";
+import { cn } from "@/src/common/ui/utils/shadcn";
 
 interface NavbarLinkProps {
   href: string;

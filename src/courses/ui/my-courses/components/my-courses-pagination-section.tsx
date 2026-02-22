@@ -1,6 +1,6 @@
 "use client";
-import { PaginationSection } from "@/src/common/ui/components/pagination/pagination-section";
 import { usePathname, useSearchParams } from "next/navigation";
+import { PaginationSection } from "@/src/common/ui/components/pagination/pagination-section";
 
 export function MyCoursesPaginationSection({
   resultsCount,

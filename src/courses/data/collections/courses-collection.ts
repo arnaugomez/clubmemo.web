@@ -1,5 +1,5 @@
-import { collection } from "@/src/common/data/utils/mongodb";
 import type { WithId } from "mongodb";
+import { collection } from "@/src/common/data/utils/mongodb";
 import { CourseModel } from "../../domain/models/course-model";
 import type { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 import type { CourseEnrollmentDoc } from "./course-enrollments-collection";

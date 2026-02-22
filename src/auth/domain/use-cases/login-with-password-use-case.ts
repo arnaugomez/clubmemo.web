@@ -43,7 +43,7 @@ export class LoginWithPasswordUseCase {
         await this.profilesRepository.create(userId);
       }
 
-      this.cookieService.set(sessionCookie);
+      await this.cookieService.set(sessionCookie);
     } catch (e) {
       if (e instanceof IncorrectPasswordError) {
         await this.rateLimitsRepository.increment(rateLimitKey);

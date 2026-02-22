@@ -1,10 +1,10 @@
 "use server";
+import { revalidatePath } from "next/cache";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { revalidatePath } from "next/cache";
+import { locator_courses_CopyCourseUseCase } from "@/src/courses/locators/locator_copy-course-use-case";
 import type { CopyCourseActionModel } from "../schemas/copy-course-action-schema";
 import { CopyCourseActionSchema } from "../schemas/copy-course-action-schema";
-import { locator_courses_CopyCourseUseCase } from "@/src/courses/locators/locator_copy-course-use-case";
 
 export async function copyCourseAction(input: CopyCourseActionModel) {
   try {

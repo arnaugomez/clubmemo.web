@@ -1,10 +1,10 @@
+import type { PropsWithChildren } from "react";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseEnrollmentConfigModel } from "@/src/courses/domain/models/course-enrollment-config-model";
 import type { DaysToNextReviewModel } from "@/src/practice/domain/models/practice-card-rating-model";
 import { PracticeCardRatingModel } from "@/src/practice/domain/models/practice-card-rating-model";
-import type { PropsWithChildren } from "react";
 
 interface PracticeOption {
   label: string;

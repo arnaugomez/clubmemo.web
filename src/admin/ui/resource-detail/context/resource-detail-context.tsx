@@ -1,8 +1,4 @@
 "use client";
-import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
-import { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
-import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
 import {
   createContext,
   useCallback,
@@ -10,6 +6,10 @@ import {
   useEffect,
   useState,
 } from "react";
+import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
+import { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
+import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { ActionResponseHandler } from "@/src/common/ui/models/action-response-handler";
 import { getAdminResourceDetailAction } from "../../actions/get-admin-resource-detail-action";
 
 interface ResourceDetailContextValue {
@@ -72,7 +72,7 @@ export function ResourceDetailContextProvider({
 
   useEffect(() => {
     fetchData();
-  }, [resourceType, id, fetchData]);
+  }, [fetchData]);
 
   return (
     <ResourceDetailContext.Provider

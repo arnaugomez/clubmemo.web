@@ -1,21 +1,20 @@
 "use client";
 
-import { z } from "@/i18n/zod";
-import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
-import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
-import { Button } from "@/src/common/ui/components/shadcn/ui/button";
-
-import { waitMilliseconds } from "@/src/common/domain/utils/promise";
-import { PasswordSchema } from "@/src/common/schemas/password-schema";
-import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
-import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { resetPasswordAction } from "../actions/reset-password-action";
+import { z } from "@/i18n/zod";
+import { waitMilliseconds } from "@/src/common/domain/utils/promise";
 import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { PasswordSchema } from "@/src/common/schemas/password-schema";
+import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
+import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
+import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
+import { Button } from "@/src/common/ui/components/shadcn/ui/button";
+import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
+import { resetPasswordAction } from "../actions/reset-password-action";
 
 const ResetPasswordConfirmDialog = dynamic(() =>
   import("./reset-password-confirm-dialog").then(
@@ -60,27 +59,27 @@ export function ResetPasswordForm({ email, token }: Props) {
     },
   });
 
-  const onSubmit = form.handleSubmit(async function (
-    data: z.infer<typeof FormSchema>,
-  ) {
-    try {
-      const response = await resetPasswordAction({
-        email,
-        token,
-        password: data.password,
-      });
+  const onSubmit = form.handleSubmit(
+    async (data: z.infer<typeof FormSchema>) => {
+      try {
+        const response = await resetPasswordAction({
+          email,
+          token,
+          password: data.password,
+        });
 
-      const handler = new FormResponseHandler(response, form);
-      if (!handler.hasErrors) {
-        setIsDialogOpen(true);
-        await waitMilliseconds(1000);
+        const handler = new FormResponseHandler(response, form);
+        if (!handler.hasErrors) {
+          setIsDialogOpen(true);
+          await waitMilliseconds(1000);
+        }
+        handler.setErrors();
+      } catch (error) {
+        locator_common_ErrorTrackingService().captureError(error);
+        FormResponseHandler.setGlobalError(form);
       }
-      handler.setErrors();
-    } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
-      FormResponseHandler.setGlobalError(form);
-    }
-  });
+    },
+  );
 
   return (
     <>
