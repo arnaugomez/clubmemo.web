@@ -1,34 +1,35 @@
-import { ObjectId } from "mongodb";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { DatabaseServiceImpl } from "@/src/common/data/services/database-service-impl";
-import { singleton } from "@/src/common/di/locator-utils";
-import { locator_common_DatabaseService } from "@/src/common/locators/locator_database-service";
-import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
-import { locator_profiles_ProfilesRepository } from "../../locators/locator_profiles-repository";
-import { profilesCollection } from "../collections/profiles-collection";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import * as ManagedRuntime from "effect/ManagedRuntime";
+import { afterAll } from "vitest";
+import { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { testDatabaseLayer } from "@/test/utils/database";
+import {
+  ProfilesRepository,
+  ProfilesRepositoryLive,
+} from "../../layers/layer_profiles-repository";
 
-vi.mock("@/src/common/locators/locator_database-service", () => ({
-  locator_common_DatabaseService: singleton(
-    () =>
-      new DatabaseServiceImpl(
-        locator_common_EnvService(),
-        "ProfilesRepositoryImpl",
-      ),
-  ),
-}));
+const runtime = ManagedRuntime.make(
+  ProfilesRepositoryLive.pipe(Layer.provideMerge(testDatabaseLayer)),
+);
+afterAll(() => runtime.dispose());
+
+import { ObjectId } from "mongodb";
+import { beforeEach, describe, expect, it } from "vitest";
+import { profilesCollection } from "../collections/profiles-collection";
 
 describe("ProfilesRepositoryImpl", () => {
   beforeEach(async () => {
-    const databaseService = locator_common_DatabaseService();
+    const databaseService = await runtime.runPromise(DatabaseService);
     await databaseService.collection(profilesCollection).deleteMany();
   });
 
   it("create creates a new private profile", async () => {
     const userObjectId = new ObjectId();
     const userId = userObjectId.toString();
-    const repository = locator_profiles_ProfilesRepository();
-    await repository.create(userId);
-    const databaseService = locator_common_DatabaseService();
+    const repository = await runtime.runPromise(ProfilesRepository);
+    await Effect.runPromise(repository.create(userId));
+    const databaseService = await runtime.runPromise(DatabaseService);
     const [profilesCount, profile] = await Promise.all([
       databaseService.collection(profilesCollection).countDocuments(),
       databaseService

@@ -1,6 +1,6 @@
 "use client";
 import { toast } from "sonner";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
@@ -34,7 +34,7 @@ export function UnenrollCourseDialog({
       }
       handler.toastErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       toast.error("Error al desapuntarse del curso");
     }
   }

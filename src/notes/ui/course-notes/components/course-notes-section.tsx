@@ -1,8 +1,10 @@
+import * as Effect from "effect/Effect";
 import { Suspense } from "react";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { locator_notes_GetNotesUseCase } from "@/src/notes/locators/locator_get-notes-use-case";
+import { GetNotesUseCaseService } from "@/src/notes/layers/layer_get-notes-use-case";
 import { CourseNotesProvider } from "../contexts/course-notes-context";
 import { CourseNotesDropdown } from "./course-notes-dropdown";
 import { CourseNotesLoaded } from "./course-notes-loaded";
@@ -56,14 +58,18 @@ async function CourseNotesLoader({
   courseId,
   canEdit,
 }: CourseNotesContentProps) {
-  const useCase = locator_notes_GetNotesUseCase();
-  const pagination = await useCase.execute({ courseId });
+  return runServer(
+    Effect.gen(function* () {
+      const useCase = yield* GetNotesUseCaseService;
+      const pagination = yield* useCase.execute({ courseId });
 
-  return (
-    <CourseNotesLoaded
-      courseId={courseId}
-      canEdit={canEdit}
-      initialData={pagination.toData((e) => e.data)}
-    />
+      return (
+        <CourseNotesLoaded
+          courseId={courseId}
+          canEdit={canEdit}
+          initialData={pagination.toData((e) => e.data)}
+        />
+      );
+    }),
   );
 }

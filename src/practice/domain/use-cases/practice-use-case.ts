@@ -1,10 +1,12 @@
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
+import { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
-import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
-import type { PracticeCardsRepository } from "../interfaces/practice-cards-repository";
-import type { ReviewLogsRepository } from "../interfaces/review-logs-repository";
+import { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
+import { PracticeCardsRepository } from "../interfaces/practice-cards-repository";
+import { ReviewLogsRepository } from "../interfaces/review-logs-repository";
 import type { PracticeCardModel } from "../models/practice-card-model";
 import type { ReviewLogModel } from "../models/review-log-model";
 
@@ -28,48 +30,51 @@ import type { ReviewLogModel } from "../models/review-log-model";
  * when the card does not belong to the profile.
  * @returns The new card data and the new review log data.
  */
-export class PracticeUseCase {
-  constructor(
-    private readonly getMyProfileUseCase: GetMyProfileUseCase,
-    private readonly coursesRepository: CoursesRepository,
-    private readonly cardsRepository: PracticeCardsRepository,
-    private readonly reviewLogsRepository: ReviewLogsRepository,
-  ) {}
+export class PracticeUseCase extends Context.Service<PracticeUseCase>()(
+  "clubmemo/practice/domain/use-cases/practice-use-case",
+  {
+    make: Effect.gen(function* () {
+      const getMyProfileUseCase = yield* GetMyProfileUseCase;
+      const coursesRepository = yield* CoursesRepository;
+      const cardsRepository = yield* PracticeCardsRepository;
+      const reviewLogsRepository = yield* ReviewLogsRepository;
+      const execute = Effect.fn("PracticeUseCase.execute")(function* ({
+        card,
+        courseId,
+        reviewLog,
+      }: PracticeInputModel) {
+        const profile = yield* getMyProfileUseCase.execute();
+        if (!profile) return yield* Effect.fail(new ProfileDoesNotExistError());
 
-  async execute({
-    card,
-    courseId,
-    reviewLog,
-  }: PracticeInputModel): Promise<PracticeOutputModel> {
-    const profile = await this.getMyProfileUseCase.execute();
-    if (!profile) throw new ProfileDoesNotExistError();
+        const course = yield* coursesRepository.getDetail({
+          id: courseId,
+          profileId: profile.id,
+        });
 
-    const course = await this.coursesRepository.getDetail({
-      id: courseId,
-      profileId: profile.id,
-    });
+        if (!course) return yield* Effect.fail(new CourseDoesNotExistError());
+        if (
+          !course.canView ||
+          !course.isEnrolled ||
+          course.enrollment?.id !== card.courseEnrollmentId
+        ) {
+          return yield* Effect.fail(new NoPermissionError());
+        }
 
-    if (!course) throw new CourseDoesNotExistError();
-    if (
-      !course.canView ||
-      !course.isEnrolled ||
-      course.enrollment?.id !== card.courseEnrollmentId
-    ) {
-      throw new NoPermissionError();
-    }
+        // Create a new card or update it if it already exists
+        const newCard =
+          (yield* card.isNew
+            ? cardsRepository.create(card)
+            : cardsRepository.update(card)) ?? card;
 
-    // Create a new card or update it if it already exists
-    const newCard =
-      (await (card.isNew
-        ? this.cardsRepository.create(card)
-        : this.cardsRepository.update(card))) ?? card;
+        reviewLog.data.cardId = newCard.id;
+        const newReviewLog = yield* reviewLogsRepository.create(reviewLog);
 
-    reviewLog.data.cardId = newCard.id;
-    const newReviewLog = await this.reviewLogsRepository.create(reviewLog);
-
-    return { newCard, newReviewLog };
-  }
-}
+        return { newCard, newReviewLog };
+      });
+      return { execute };
+    }),
+  },
+) {}
 
 interface PracticeInputModel {
   courseId: string;
@@ -77,7 +82,4 @@ interface PracticeInputModel {
   reviewLog: ReviewLogModel;
 }
 
-interface PracticeOutputModel {
-  newCard: PracticeCardModel;
-  newReviewLog: ReviewLogModel;
-}
+export const PracticeUseCaseService = PracticeUseCase;

@@ -1,7 +1,11 @@
-export interface CoursePracticeCountModelData {
-  newCount: number;
-  dueCount: number;
-}
+import * as Schema from "effect/Schema";
+
+export const CoursePracticeCountModelDataSchema = Schema.Struct({
+  newCount: Schema.mutableKey(Schema.Number),
+  dueCount: Schema.mutableKey(Schema.Number),
+});
+export type CoursePracticeCountModelData =
+  typeof CoursePracticeCountModelDataSchema.Type;
 
 /**
  * The amount of new and due cards in a course
@@ -12,8 +16,12 @@ export interface CoursePracticeCountModelData {
  * Due cards are those that the learner has already practiced and that need to be
  * practiced again because their practice date has been reached.
  */
-export class CoursePracticeCountModel {
-  constructor(readonly data: CoursePracticeCountModelData) {}
+export class CoursePracticeCountModel extends Schema.Class<CoursePracticeCountModel>(
+  "CoursePracticeCountModel",
+)({ data: CoursePracticeCountModelDataSchema }) {
+  constructor(data: CoursePracticeCountModelData) {
+    super({ data });
+  }
 
   get newCount() {
     return this.data.newCount;

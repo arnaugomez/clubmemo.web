@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { PresignedUrlModel } from "../models/presigned-url-model";
 
 /**
@@ -15,7 +18,7 @@ export interface FileUploadService {
    */
   generatePresignedUrl(
     input: GeneratePresignedUrlInputModel,
-  ): Promise<PresignedUrlModel>;
+  ): Effect.Effect<PresignedUrlModel, ExternalServiceError>;
 
   /**
    * Deletes a file, removing it permanently from the external storage service.
@@ -24,10 +27,14 @@ export interface FileUploadService {
    *
    * @param key The key of the file to delete
    */
-  deleteFile(key: string): Promise<void>;
+  deleteFile(key: string): Effect.Effect<void, ExternalServiceError>;
 }
 
 export interface GeneratePresignedUrlInputModel {
   key: string;
   contentType: string;
 }
+
+export const FileUploadService = Context.Service<FileUploadService>(
+  "clubmemo/file-upload/domain/interfaces/file-upload-service/FileUploadService",
+);

@@ -1,12 +1,13 @@
-import { z } from "zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { AdminResourceTypeSchema } from "./admin-resource-type-schema";
 
 /**
  * Validates the parameters of the `updateAdminResourceAction` server action.
  */
-export const UpdateAdminResourceActionSchema = z.object({
+export const UpdateAdminResourceActionSchema = Schema.Struct({
   resourceType: AdminResourceTypeSchema,
   id: ObjectIdSchema,
-  data: z.record(z.any()),
+  data: Schema.Record(Schema.String, Schema.Any),
 });

@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CookieServiceNextImpl } from "@/src/common/data/services/cookie-service-next-impl";
 
@@ -28,7 +29,9 @@ describe("CookieServiceNextImpl", () => {
         value: cookieValue,
       });
 
-      await expect(cookieService.get(cookieName)).resolves.toBe(cookieValue);
+      await expect(
+        Effect.runPromise(cookieService.get(cookieName)),
+      ).resolves.toBe(cookieValue);
       expect(mockGet).toHaveBeenCalledWith(cookieName);
     });
 
@@ -37,7 +40,9 @@ describe("CookieServiceNextImpl", () => {
       const cookieName = "test-cookie-name-2";
       mockGet.mockReturnValue(undefined);
 
-      await expect(cookieService.get(cookieName)).resolves.toBeUndefined();
+      await expect(
+        Effect.runPromise(cookieService.get(cookieName)),
+      ).resolves.toBeUndefined();
       expect(mockGet).toHaveBeenCalledWith(cookieName);
     });
   });
@@ -49,11 +54,13 @@ describe("CookieServiceNextImpl", () => {
       const cookieValue = "Test Cookie Value 3";
       const attributes = { path: "/", maxAge: 3600 };
 
-      await cookieService.set({
-        name: cookieName,
-        value: cookieValue,
-        attributes,
-      });
+      await Effect.runPromise(
+        cookieService.set({
+          name: cookieName,
+          value: cookieValue,
+          attributes,
+        }),
+      );
 
       expect(mockSet).toHaveBeenCalledWith(cookieName, cookieValue, attributes);
     });

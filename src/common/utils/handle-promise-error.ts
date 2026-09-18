@@ -1,4 +1,4 @@
-import { locator_common_ErrorTrackingService } from "../locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
 
 export async function handlePromiseError<T>(
   promise: Promise<T>,
@@ -6,6 +6,6 @@ export async function handlePromiseError<T>(
   try {
     return await promise;
   } catch (e) {
-    locator_common_ErrorTrackingService().captureError(e);
+    captureError(e);
   }
 }

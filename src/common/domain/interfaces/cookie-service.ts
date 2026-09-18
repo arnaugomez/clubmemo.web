@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 /**
  * Service to manage cookies. Intended to work in the server runtime, and be
  * called within server components or server actions. Once called, the cookies
@@ -10,13 +13,13 @@ export interface CookieService {
    * @param name The name of the cookie to get
    * @returns The value of the cookie if it exists, `undefined` otherwise
    */
-  get(name: string): Promise<string | undefined>;
+  get(name: string): Effect.Effect<string | undefined, ExternalServiceError>;
   /**
    * Sets the value of a cookie.
    *
    * @param input The data to set a cookie: name, value and attributes such as the expiraton date.
    */
-  set(input: SetCookieInputModel): Promise<void>;
+  set(input: SetCookieInputModel): Effect.Effect<void, ExternalServiceError>;
 }
 
 export interface SetCookieInputModel {
@@ -38,3 +41,7 @@ interface CookieAttributesModel {
   maxAge?: number;
   expires?: Date;
 }
+
+export const CookieService = Context.Service<CookieService>(
+  "clubmemo/common/domain/interfaces/cookie-service/CookieService",
+);

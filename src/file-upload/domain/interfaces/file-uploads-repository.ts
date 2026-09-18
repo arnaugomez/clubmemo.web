@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type {
   FileUploadCollectionModel,
   FileUploadFieldModel,
@@ -25,13 +28,13 @@ export interface FileUploadsRepository {
    */
   create(
     input: CreateFileUploadInputModel,
-  ): Promise<CreateFileUploadOutputModel>;
+  ): Effect.Effect<CreateFileUploadOutputModel, ExternalServiceError>;
 
   /**
    * Deletes all the outdated versions of files that are still stored in the
    * external storage service
    */
-  deleteOutdated(): Promise<void>;
+  deleteOutdated(): Effect.Effect<void, ExternalServiceError>;
 }
 
 export interface CreateFileUploadInputModel {
@@ -45,3 +48,7 @@ export interface CreateFileUploadOutputModel {
   url: string;
   presignedUrl: PresignedUrlModel;
 }
+
+export const FileUploadsRepository = Context.Service<FileUploadsRepository>(
+  "clubmemo/file-upload/domain/interfaces/file-uploads-repository/FileUploadsRepository",
+);

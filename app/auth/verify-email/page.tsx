@@ -1,24 +1,33 @@
+import * as Effect from "effect/Effect";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { locator_auth_EmailVerificationCodesRepository } from "@/src/auth/locators/locator_email-verification-codes-repository";
+import { EmailVerificationCodesRepository } from "@/src/auth/layers/layer_email-verification-codes-repository";
 import { fetchSession } from "@/src/auth/ui/fetch/fetch-session";
 import { VerifyEmailPageLoaded } from "@/src/auth/ui/verify-email/pages/verify-email-page-loaded";
 import { NullError } from "@/src/common/domain/models/app-errors";
-import { locator_common_EmailService } from "@/src/common/locators/locator_email-service";
+import { runServer } from "@/src/common/effect/server-runtime";
+import { EmailService } from "@/src/common/layers/layer_email-service";
 
 /**
  * Checks that the user is logged in and still has not verified the email. Otherwise,
  * it redirects to the login page or to the home page.
  */
 async function verifyEmailGuard() {
-  const result = await fetchSession();
-  if (!result.session) {
-    redirect("/auth/login");
-  }
-  if (result.user.isEmailVerified) {
-    redirect("/home");
-  }
-  return result;
+  return runServer(
+    Effect.gen(function* () {
+      const result = yield* Effect.tryPromise({
+        try: () => fetchSession(),
+        catch: (error) => error,
+      });
+      if (!result.session) {
+        redirect("/auth/login");
+      }
+      if (result.user.isEmailVerified) {
+        redirect("/home");
+      }
+      return result;
+    }),
+  );
 }
 
 export const metadata: Metadata = {
@@ -29,21 +38,28 @@ export const metadata: Metadata = {
  * Checks if the email verification code has expired and sends a new one if it has.
  */
 async function handleVerificationCodeExpirationDate() {
-  const { user } = await fetchSession();
-  if (!user) throw new NullError("user");
+  return runServer(
+    Effect.gen(function* () {
+      const { user } = yield* Effect.tryPromise({
+        try: () => fetchSession(),
+        catch: (error) => error,
+      });
+      if (!user) return yield* Effect.fail(new NullError("user"));
 
-  const repository = locator_auth_EmailVerificationCodesRepository();
-  const verificationCode = await repository.getByUserId(user.id);
-  if (!verificationCode || verificationCode.hasExpired) {
-    const newVerificationCode = await repository.generate(user.id);
-    const emailService = locator_common_EmailService();
-    await emailService.sendVerificationCode(
-      user.email,
-      newVerificationCode.code,
-    );
-    return true;
-  }
-  return false;
+      const repository = yield* EmailVerificationCodesRepository;
+      const verificationCode = yield* repository.getByUserId(user.id);
+      if (!verificationCode || verificationCode.hasExpired) {
+        const newVerificationCode = yield* repository.generate(user.id);
+        const emailService = yield* EmailService;
+        yield* emailService.sendVerificationCode(
+          user.email,
+          newVerificationCode.code,
+        );
+        return true;
+      }
+      return false;
+    }),
+  );
 }
 
 /**
@@ -51,9 +67,19 @@ async function handleVerificationCodeExpirationDate() {
  * of the user and grants access to the rest of the application.
  */
 export default async function VerifyEmailPage() {
-  const { user } = await verifyEmailGuard();
+  return runServer(
+    Effect.gen(function* () {
+      const { user } = yield* Effect.tryPromise({
+        try: () => verifyEmailGuard(),
+        catch: (error) => error,
+      });
 
-  const hasExpired = await handleVerificationCodeExpirationDate();
+      const hasExpired = yield* Effect.tryPromise({
+        try: () => handleVerificationCodeExpirationDate(),
+        catch: (error) => error,
+      });
 
-  return <VerifyEmailPageLoaded user={user} hasExpired={hasExpired} />;
+      return <VerifyEmailPageLoaded user={user} hasExpired={hasExpired} />;
+    }),
+  );
 }

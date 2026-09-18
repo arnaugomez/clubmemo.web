@@ -1,17 +1,26 @@
+import * as Schema from "effect/Schema";
 import { FSRS } from "ts-fsrs";
-import type { CourseEnrollmentConfigModelData } from "./course-enrollment-config-model";
+import { CourseEnrollmentConfigModelDataSchema } from "@/src/courses/domain/models/course-enrollment-config-model";
 import { CourseEnrollmentConfigModel } from "./course-enrollment-config-model";
 
-export interface CourseEnrollmentModelData {
-  id: string;
-  courseId: string;
-  profileId: string;
-  isFavorite: boolean;
-  config?: CourseEnrollmentConfigModelData;
-}
+export const CourseEnrollmentModelDataSchema = Schema.Struct({
+  id: Schema.mutableKey(Schema.String),
+  courseId: Schema.mutableKey(Schema.String),
+  profileId: Schema.mutableKey(Schema.String),
+  isFavorite: Schema.mutableKey(Schema.Boolean),
+  config: Schema.mutableKey(
+    Schema.optional(CourseEnrollmentConfigModelDataSchema),
+  ),
+});
+export type CourseEnrollmentModelData =
+  typeof CourseEnrollmentModelDataSchema.Type;
 
-export class CourseEnrollmentModel {
-  constructor(readonly data: CourseEnrollmentModelData) {}
+export class CourseEnrollmentModel extends Schema.Class<CourseEnrollmentModel>(
+  "CourseEnrollmentModel",
+)({ data: CourseEnrollmentModelDataSchema }) {
+  constructor(data: CourseEnrollmentModelData) {
+    super({ data });
+  }
 
   get id() {
     return this.data.id;

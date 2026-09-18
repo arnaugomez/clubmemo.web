@@ -1,3 +1,4 @@
+import type * as Schema from "effect/Schema";
 import type {
   FieldError,
   FieldValues,
@@ -5,7 +6,7 @@ import type {
   UseFormReturn,
 } from "react-hook-form";
 import { toast } from "sonner";
-import type { ZodError } from "zod";
+import { schemaFieldErrors } from "@/src/common/effect/schema-resolver";
 import type { DailyRateLimitError } from "@/src/rate-limits/domain/errors/rate-limits-errors";
 
 export type FormActionResponse<T = null> = {
@@ -72,18 +73,8 @@ export class ActionResponse {
     };
   }
 
-  static formZodError(zodError: ZodError): FormActionResponse {
-    const errors: Record<string, FieldError> = {};
-    for (const issue of zodError.errors) {
-      errors[issue.path.join(".")] = {
-        type: issue.code,
-        message: issue.message,
-      };
-    }
-    return {
-      errors,
-      data: null,
-    };
+  static formSchemaError(error: Schema.SchemaError): FormActionResponse {
+    return { errors: schemaFieldErrors(error), data: null };
   }
 
   static formRateLimitError(error: DailyRateLimitError): FormActionResponse {

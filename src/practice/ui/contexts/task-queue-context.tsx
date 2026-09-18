@@ -1,69 +1,31 @@
 "use client";
+import * as Effect from "effect/Effect";
+import * as Fiber from "effect/Fiber";
+import * as Queue from "effect/Queue";
+import * as Schedule from "effect/Schedule";
 import type { PropsWithChildren } from "react";
-import { useCallback, useEffect, useState } from "react";
-import { waitMilliseconds } from "@/src/common/domain/utils/promise";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { captureError } from "@/src/common/effect/client-runtime";
 import {
   createContextHook,
   createNullContext,
 } from "@/src/common/ui/utils/context";
 
-/**
- * The status of a task.
- */
 enum Status {
-  /**
-   * The task waiting to be executed.
-   */
   ready,
-  /**
-   * The task is being executed.
-   */
   running,
-  /**
-   * The task has already finished.
-   */
   done,
 }
 
-/**
- * A Task is a function that runs in the background. Its execution
- * is delayed until the previous task in the list has finished running.
- */
 export interface Task<T> {
-  /**
-   * The argument of the task function
-   */
   payload: T;
-  /**
-   * The function to be executed
-   * @param payload The argument of the task function
-   * @param tasks The list of other tasks that are currently in the queue
-   */
-  fn(payload: T, tasks: Task<unknown>[]): Promise<void>;
-  /**
-   * Is run when an error is thrown inside the task function
-   */
+  fn(payload: T, tasks: Task<unknown>[]): Effect.Effect<void, unknown>;
   onError?: (error: unknown) => void;
-  /**
-   * The current status of the task. Whether it is waiting to be run, running,
-   * or already finished.
-   */
   status: Status;
 }
 
-/**
- * The status and actions of the task queue
- */
 interface TaskQueueContextValue {
-  /**
-   * Whether there are still tasks that are waiting to be run
-   */
   hasPendingTasks: boolean;
-  /**
-   * Adds a task to the queue. The task will be run when all the previous tasks
-   * have finished.
-   */
   addTask: <T>(
     payload: T,
     fn: Task<T>["fn"],
@@ -72,62 +34,62 @@ interface TaskQueueContextValue {
 }
 const TaskQueueContext = createNullContext<TaskQueueContextValue>();
 
-/**
- * Manages the state of a task queue. The task queue is a list of tasks that
- * are executed one after the other.
- *
- * The tasks are executed in the order they are added to the queue. When the function
- * of a task throws an error, an error callback is executed and, after that, the task
- * is retried after a delay of 1 second.
- */
+/** A single interruptible worker preserves FIFO writes and one-second retries. */
 export function TaskQueueProvider({ children }: PropsWithChildren) {
-  const [tasks, setTasks] = useState<Task<unknown>[]>([]);
-
-  /**
-   * The first task in the list that is not done yet.
-   * This task could be in status `ready` or `running`.
-   */
-  const pendingTask = tasks.find((task) => task.status !== Status.done);
-
-  const setStatus = useCallback(<T,>(taskFn: Task<T>["fn"], status: Status) => {
-    setTasks((tasks) =>
-      tasks.map((t) => (t.fn === taskFn ? { ...t, status } : t)),
-    );
-  }, []);
+  const [queue] = useState(() =>
+    Effect.runSync(Queue.unbounded<Task<unknown>>()),
+  );
+  const tasks = useRef<Task<unknown>[]>([]);
+  const [hasPendingTasks, setHasPendingTasks] = useState(false);
 
   useEffect(() => {
-    async function runTask<T>(task: Task<T>) {
-      try {
-        setStatus(task.fn, Status.running);
-        await task.fn(task.payload, tasks);
-        setStatus(task.fn, Status.done);
-        task.status = Status.done;
-      } catch (e) {
-        locator_common_ErrorTrackingService().captureError(e);
-        // Run the error manager callback
-        task.onError?.(e);
-        // Wait for 1 second before retrying the task
-        await waitMilliseconds(1000);
-        // Retry task
-        setStatus(task.fn, Status.ready);
-      }
-    }
-
-    if (pendingTask && pendingTask.status === Status.ready) {
-      runTask(pendingTask);
-    }
-  }, [pendingTask, setStatus, tasks]);
-
-  const addTask: TaskQueueContextValue["addTask"] = (payload, fn, onError) => {
-    setTasks((tasks) =>
-      tasks.concat({ payload, fn, onError, status: Status.ready }),
+    const worker = Effect.runFork(
+      Effect.gen(function* () {
+        while (true) {
+          const task = yield* Queue.take(queue);
+          task.status = Status.running;
+          yield* Effect.suspend(() =>
+            task.fn(task.payload, tasks.current),
+          ).pipe(
+            Effect.tapError((error) =>
+              Effect.sync(() => {
+                captureError(error);
+                task.onError?.(error);
+              }),
+            ),
+            Effect.retry(Schedule.spaced("1 second")),
+          );
+          task.status = Status.done;
+          setHasPendingTasks(
+            tasks.current.some((item) => item.status !== Status.done),
+          );
+        }
+      }),
     );
-  };
+    return () => {
+      Effect.runFork(Fiber.interrupt(worker));
+    };
+  }, [queue]);
+
+  const addTask = useCallback<TaskQueueContextValue["addTask"]>(
+    (payload, fn, onError) => {
+      const task: Task<unknown> = {
+        payload,
+        fn: (_payload, pending) => fn(payload, pending),
+        onError,
+        status: Status.ready,
+      };
+      tasks.current.push(task);
+      setHasPendingTasks(true);
+      Queue.offerUnsafe(queue, task);
+    },
+    [queue],
+  );
 
   return (
     <TaskQueueContext.Provider
       value={{
-        hasPendingTasks: Boolean(pendingTask),
+        hasPendingTasks,
         addTask,
       }}
     >

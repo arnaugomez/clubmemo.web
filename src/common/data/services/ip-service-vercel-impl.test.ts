@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { IpServiceVercelImpl } from "./ip-service-vercel-impl";
 
@@ -19,7 +20,9 @@ describe("IpServiceVercelImpl", () => {
   it("returns the first IP from x-forwarded-for, with trimmed spaces", async () => {
     const ipService = new IpServiceVercelImpl();
     mockGet.mockReturnValue(" 192.168.1.1, 192.168.1.2");
-    await expect(ipService.getIp()).resolves.toBe("192.168.1.1");
+    await expect(Effect.runPromise(ipService.getIp())).resolves.toBe(
+      "192.168.1.1",
+    );
     expect(mockGet).toHaveBeenCalledWith("x-forwarded-for");
   });
 
@@ -28,7 +31,9 @@ describe("IpServiceVercelImpl", () => {
     mockGet.mockImplementation((header) =>
       header === "x-real-ip" ? "  192.168.1.3     " : null,
     );
-    await expect(ipService.getIp()).resolves.toBe("192.168.1.3");
+    await expect(Effect.runPromise(ipService.getIp())).resolves.toBe(
+      "192.168.1.3",
+    );
     expect(mockGet).toHaveBeenCalledWith("x-forwarded-for");
     expect(mockGet).toHaveBeenCalledWith("x-real-ip");
   });
@@ -36,7 +41,7 @@ describe("IpServiceVercelImpl", () => {
   it("returns '0.0.0.0' x-forwarded-for and x-real-ip are both null", async () => {
     const ipService = new IpServiceVercelImpl();
     mockGet.mockReturnValue(null);
-    await expect(ipService.getIp()).resolves.toBe("0.0.0.0");
+    await expect(Effect.runPromise(ipService.getIp())).resolves.toBe("0.0.0.0");
     expect(mockGet).toHaveBeenCalledWith("x-forwarded-for");
     expect(mockGet).toHaveBeenCalledWith("x-real-ip");
   });

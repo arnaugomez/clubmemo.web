@@ -1,11 +1,13 @@
-import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
 import {
   InvalidConfirmationError,
   UserDoesNotExistError,
 } from "../errors/auth-errors";
-import type { AuthService } from "../interfaces/auth-service";
-import type { UsersRepository } from "../interfaces/users-repository";
-import type { GetSessionUseCase } from "./get-session-use-case";
+import { AuthService } from "../interfaces/auth-service";
+import { UsersRepository } from "../interfaces/users-repository";
+import { GetSessionUseCase } from "./get-session-use-case";
 
 /**
  * Deletes a user account. Before deleting the account, it checks if the
@@ -14,45 +16,47 @@ import type { GetSessionUseCase } from "./get-session-use-case";
  *
  * @param param0 The user's password and the confirmation email
  */
-export class DeleteUserUseCase {
-  constructor(
-    private readonly getSessionUseCase: GetSessionUseCase,
-    private readonly authService: AuthService,
-    private readonly usersRepository: UsersRepository,
-    private readonly profilesRepository: ProfilesRepository,
-  ) {}
+export class DeleteUserUseCase extends Context.Service<DeleteUserUseCase>()(
+  "clubmemo/auth/domain/use-cases/delete-user-use-case",
+  {
+    make: Effect.gen(function* () {
+      const getSessionUseCase = yield* GetSessionUseCase;
+      const authService = yield* AuthService;
+      const usersRepository = yield* UsersRepository;
+      const profilesRepository = yield* ProfilesRepository;
+      const execute = Effect.fn("DeleteUserUseCase.execute")(function* ({
+        password,
+        confirmation,
+      }: DeleteUserUseCaseInputModel) {
+        const { user } = yield* getSessionUseCase.execute();
+        if (!user) return yield* Effect.fail(new UserDoesNotExistError());
+        if (confirmation !== user.email)
+          return yield* Effect.fail(new InvalidConfirmationError());
 
-  /**
-   * Deletes a user account. Before deleting the account, it checks if the
-   * password is correct and if the confirmation text matches the user's email.
-   * It deletes the user's profile and the user itself.
-   *
-   * @param param0 The user's password and the confirmation email
-   */
-  async execute({
-    password,
-    confirmation,
-  }: DeleteUserUseCaseInputModel): Promise<void> {
-    const { user } = await this.getSessionUseCase.execute();
-    if (!user) throw new UserDoesNotExistError();
-    if (confirmation !== user.email) throw new InvalidConfirmationError();
+        const userId = user.id;
 
-    const userId = user.id;
+        yield* authService.checkPasswordIsCorrect({
+          userId,
+          password,
+        });
 
-    await this.authService.checkPasswordIsCorrect({
-      userId,
-      password,
-    });
-
-    await Promise.all([
-      this.profilesRepository.deleteByUserId(userId),
-      this.usersRepository.delete(userId),
-      this.authService.invalidateUserSessions(userId),
-    ]);
-  }
-}
+        yield* Effect.all(
+          [
+            profilesRepository.deleteByUserId(userId),
+            usersRepository.delete(userId),
+            authService.invalidateUserSessions(userId),
+          ],
+          { concurrency: "unbounded" },
+        );
+      });
+      return { execute };
+    }),
+  },
+) {}
 
 interface DeleteUserUseCaseInputModel {
   password: string;
   confirmation: string;
 }
+
+export const DeleteUserUseCaseService = DeleteUserUseCase;

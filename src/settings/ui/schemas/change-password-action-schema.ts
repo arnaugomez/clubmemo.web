@@ -1,27 +1,20 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
-export const ChangePasswordActionSchema = z
-  .object({
-    password: z.string(),
-    newPassword: PasswordSchema,
-    repeatNewPassword: z.string(),
-  })
-  .superRefine(({ newPassword, repeatNewPassword }, ctx) => {
-    if (newPassword !== repeatNewPassword) {
-      ctx.addIssue({
-        path: ["repeatNewPassword"],
-        code: "custom",
-        message: "The passwords do not match",
-        params: {
-          i18n: "passwordsDoNotMatch",
-        },
-      });
-    }
-  });
+export const ChangePasswordActionSchema = Schema.Struct({
+  password: Schema.String,
+  newPassword: PasswordSchema,
+  repeatNewPassword: Schema.String,
+}).check(
+  Schema.makeFilter(({ newPassword, repeatNewPassword }) =>
+    newPassword === repeatNewPassword
+      ? undefined
+      : { path: ["repeatNewPassword"], issue: "The passwords do not match" },
+  ),
+);
 
 /**
  * Parameters of `changePasswordAction`
  */
-export type ChangePasswordActionModel = z.infer<
-  typeof ChangePasswordActionSchema
->;
+export type ChangePasswordActionModel =
+  (typeof ChangePasswordActionSchema)["Type"];

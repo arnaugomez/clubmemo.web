@@ -1,5 +1,7 @@
+import * as Effect from "effect/Effect";
 import { ObjectId } from "mongodb";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import type {
   CourseEnrollmentsRepository,
   CreateCourseEnrollmentInputModel,
@@ -7,7 +9,6 @@ import type {
   SetCourseFavoriteInputModel,
   UpdateCourseEnrollmentConfigInputModel,
 } from "../../domain/interfaces/course-enrollments-repository";
-import type { CourseEnrollmentModel } from "../../domain/models/course-enrollment-model";
 import {
   CourseEnrollmentDocTransformer,
   courseEnrollmentsCollection,
@@ -22,62 +23,128 @@ export class CourseEnrollmentsRepositoryImpl
     this.collection = databaseService.collection(courseEnrollmentsCollection);
   }
 
-  async create(input: CreateCourseEnrollmentInputModel): Promise<void> {
-    await this.collection.insertOne({
-      courseId: new ObjectId(input.courseId),
-      profileId: new ObjectId(input.profileId),
-      isFavorite: false,
+  create = Effect.fn("CourseEnrollmentsRepositoryImpl.create")(function* (
+    this: CourseEnrollmentsRepositoryImpl,
+    input: CreateCourseEnrollmentInputModel,
+  ) {
+    yield* Effect.tryPromise({
+      try: () =>
+        this.collection.insertOne({
+          courseId: new ObjectId(input.courseId),
+          profileId: new ObjectId(input.profileId),
+          isFavorite: false,
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CourseEnrollmentsRepositoryImpl.create",
+          cause,
+        }),
     });
-  }
+  }).bind(this);
 
-  async get(id: string): Promise<CourseEnrollmentModel | null> {
-    const result = await this.collection.findOne({ _id: new ObjectId(id) });
+  get = Effect.fn("CourseEnrollmentsRepositoryImpl.get")(function* (
+    this: CourseEnrollmentsRepositoryImpl,
+    id: string,
+  ) {
+    const result = yield* Effect.tryPromise({
+      try: () => this.collection.findOne({ _id: new ObjectId(id) }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CourseEnrollmentsRepositoryImpl.get",
+          cause,
+        }),
+    });
     return result && new CourseEnrollmentDocTransformer(result).toDomain();
-  }
+  }).bind(this);
 
-  async setFavorite(input: SetCourseFavoriteInputModel): Promise<void> {
-    await this.collection.updateOne(
-      {
-        courseId: new ObjectId(input.courseId),
-        profileId: new ObjectId(input.profileId),
-      },
-      {
-        $set: { isFavorite: input.isFavorite },
-      },
-    );
-  }
+  setFavorite = Effect.fn("CourseEnrollmentsRepositoryImpl.setFavorite")(
+    function* (
+      this: CourseEnrollmentsRepositoryImpl,
+      input: SetCourseFavoriteInputModel,
+    ) {
+      yield* Effect.tryPromise({
+        try: () =>
+          this.collection.updateOne(
+            {
+              courseId: new ObjectId(input.courseId),
+              profileId: new ObjectId(input.profileId),
+            },
+            {
+              $set: { isFavorite: input.isFavorite },
+            },
+          ),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "CourseEnrollmentsRepositoryImpl.setFavorite",
+            cause,
+          }),
+      });
+    },
+  ).bind(this);
 
-  async delete(input: DeleteCourseEnrollmentInputModel): Promise<void> {
-    await this.collection.deleteOne({
-      courseId: new ObjectId(input.courseId),
-      profileId: new ObjectId(input.profileId),
+  delete = Effect.fn("CourseEnrollmentsRepositoryImpl.delete")(function* (
+    this: CourseEnrollmentsRepositoryImpl,
+    input: DeleteCourseEnrollmentInputModel,
+  ) {
+    yield* Effect.tryPromise({
+      try: () =>
+        this.collection.deleteOne({
+          courseId: new ObjectId(input.courseId),
+          profileId: new ObjectId(input.profileId),
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CourseEnrollmentsRepositoryImpl.delete",
+          cause,
+        }),
     });
-  }
+  }).bind(this);
 
-  async deleteByCourseId(courseId: string): Promise<void> {
-    await this.collection.deleteMany({
-      courseId: new ObjectId(courseId),
+  deleteByCourseId = Effect.fn(
+    "CourseEnrollmentsRepositoryImpl.deleteByCourseId",
+  )(function* (this: CourseEnrollmentsRepositoryImpl, courseId: string) {
+    yield* Effect.tryPromise({
+      try: () =>
+        this.collection.deleteMany({
+          courseId: new ObjectId(courseId),
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CourseEnrollmentsRepositoryImpl.deleteByCourseId",
+          cause,
+        }),
     });
-  }
+  }).bind(this);
 
-  async updateConfig(
-    input: UpdateCourseEnrollmentConfigInputModel,
-  ): Promise<void> {
-    await this.collection.updateOne(
-      {
-        _id: new ObjectId(input.enrollmentId),
-      },
-      {
-        $set: {
-          config: {
-            enableFuzz: input.enableFuzz,
-            maximumInterval: input.maximumInterval,
-            requestRetention: input.requestRetention,
-            dailyNewCardsCount: input.dailyNewCardsCount,
-            showAdvancedRatingOptions: input.showAdvancedRatingOptions,
-          },
-        },
-      },
-    );
-  }
+  updateConfig = Effect.fn("CourseEnrollmentsRepositoryImpl.updateConfig")(
+    function* (
+      this: CourseEnrollmentsRepositoryImpl,
+      input: UpdateCourseEnrollmentConfigInputModel,
+    ) {
+      yield* Effect.tryPromise({
+        try: () =>
+          this.collection.updateOne(
+            {
+              _id: new ObjectId(input.enrollmentId),
+            },
+            {
+              $set: {
+                config: {
+                  enableFuzz: input.enableFuzz,
+                  maximumInterval: input.maximumInterval,
+                  requestRetention: input.requestRetention,
+                  dailyNewCardsCount: input.dailyNewCardsCount,
+                  showAdvancedRatingOptions: input.showAdvancedRatingOptions,
+                },
+              },
+            },
+          ),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "CourseEnrollmentsRepositoryImpl.updateConfig",
+            cause,
+          }),
+      });
+    },
+  ).bind(this);
 }

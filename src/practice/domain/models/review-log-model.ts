@@ -1,21 +1,23 @@
-import type { PracticeCardRatingModel } from "./practice-card-rating-model";
-import type { PracticeCardStateModel } from "./practice-card-state-model";
+import * as Schema from "effect/Schema";
 
-export interface ReviewLogModelData {
-  id: string;
-  cardId: string;
-  courseEnrollmentId: string;
+import { PracticeCardRatingModel } from "./practice-card-rating-model";
+import { PracticeCardStateModel } from "./practice-card-state-model";
 
-  rating: PracticeCardRatingModel;
-  state: PracticeCardStateModel;
-  due: Date;
-  stability: number;
-  difficulty: number;
-  elapsedDays: number;
-  lastElapsedDays: number;
-  scheduledDays: number;
-  review: Date;
-}
+export const ReviewLogModelDataSchema = Schema.Struct({
+  id: Schema.mutableKey(Schema.String),
+  cardId: Schema.mutableKey(Schema.String),
+  courseEnrollmentId: Schema.mutableKey(Schema.String),
+  rating: Schema.mutableKey(Schema.Enum(PracticeCardRatingModel)),
+  state: Schema.mutableKey(Schema.Enum(PracticeCardStateModel)),
+  due: Schema.mutableKey(Schema.Date),
+  stability: Schema.mutableKey(Schema.Number),
+  difficulty: Schema.mutableKey(Schema.Number),
+  elapsedDays: Schema.mutableKey(Schema.Number),
+  lastElapsedDays: Schema.mutableKey(Schema.Number),
+  scheduledDays: Schema.mutableKey(Schema.Number),
+  review: Schema.mutableKey(Schema.Date),
+});
+export type ReviewLogModelData = typeof ReviewLogModelDataSchema.Type;
 
 /**
  * A log of a review of a practice card.
@@ -33,6 +35,10 @@ export interface ReviewLogModelData {
  * Furthermore, they can be combined with machine learning techniques to find
  * the optimal parameters of the learning algorithm.
  */
-export class ReviewLogModel {
-  constructor(readonly data: ReviewLogModelData) {}
+export class ReviewLogModel extends Schema.Class<ReviewLogModel>(
+  "ReviewLogModel",
+)({ data: ReviewLogModelDataSchema }) {
+  constructor(data: ReviewLogModelData) {
+    super({ data });
+  }
 }

@@ -1,3 +1,7 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
+import type { HandleAlreadyExistsError } from "../errors/profile-errors";
 import type { ProfileModel } from "../models/profile-model";
 import type { UpdateProfileInputModel } from "../models/update-profile-input-model";
 
@@ -21,7 +25,7 @@ export interface ProfilesRepository {
    *
    * @param userId The user the new profile belongs to
    */
-  create(userId: string): Promise<void>;
+  create(userId: string): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Gets the current profile of the user.
@@ -31,14 +35,16 @@ export interface ProfilesRepository {
    * @param userId The id of the user
    * @returns The current profile of the user if it exists, `null` otherwise
    */
-  getByUserId(userId: string): Promise<ProfileModel | null>;
+  getByUserId(
+    userId: string,
+  ): Effect.Effect<ProfileModel | null, ExternalServiceError>;
 
   /**
    * Deletes all the profiles of a user.
    *
    * @param userId The user id of the profiles
    */
-  deleteByUserId(userId: string): Promise<void>;
+  deleteByUserId(userId: string): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Gets a profile by its id.
@@ -46,7 +52,7 @@ export interface ProfilesRepository {
    * @param id The id of the profile
    * @returns The profile if it exists, `null` otherwise
    */
-  get(id: string): Promise<ProfileModel | null>;
+  get(id: string): Effect.Effect<ProfileModel | null, ExternalServiceError>;
 
   /**
    * Gets a profile by its handle. The handle is a unique identifier of the
@@ -55,12 +61,20 @@ export interface ProfilesRepository {
    * @param handle The unique identifier of the profile, like on Twitter
    * @returns The profile if it exists, `null` otherwise
    */
-  getByHandle(handle: string): Promise<ProfileModel | null>;
+  getByHandle(
+    handle: string,
+  ): Effect.Effect<ProfileModel | null, ExternalServiceError>;
 
   /**
    * Modifies the data of the profile
    *
    * @param input The new data of the profile that needs to be changes
    */
-  update(input: UpdateProfileInputModel): Promise<void>;
+  update(
+    input: UpdateProfileInputModel,
+  ): Effect.Effect<void, ExternalServiceError | HandleAlreadyExistsError>;
 }
+
+export const ProfilesRepository = Context.Service<ProfilesRepository>(
+  "clubmemo/profile/domain/interfaces/profiles-repository/ProfilesRepository",
+);

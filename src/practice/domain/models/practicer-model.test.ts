@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect";
 import { describe, expect, it } from "vitest";
 import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
@@ -37,7 +38,7 @@ describe("PracticerModel", () => {
     });
     it("returns 0 when the card is new and the rating is again", () => {
       const practicer = createMockPracticer();
-      practicer.practice();
+      Effect.runSync(practicer.practice());
       const daysCount =
         practicer.getDaysToNextReview()[PracticeCardRatingModel.again];
       expect(daysCount).toBe(0);
@@ -47,7 +48,7 @@ describe("PracticerModel", () => {
   describe("rate", () => {
     it("throws error if rating is manual", () => {
       const practicer = createMockPracticer();
-      practicer.practice();
+      Effect.runSync(practicer.practice());
       expect(() =>
         practicer.rate(PracticeCardRatingModel.manual),
       ).toThrowError();
@@ -60,7 +61,7 @@ describe("PracticerModel", () => {
     });
     it("returns a new instance of practice card and review log", () => {
       const practicer = createMockPracticer();
-      practicer.practice();
+      Effect.runSync(practicer.practice());
       const result = practicer.rate(PracticeCardRatingModel.again);
       expect(result.card).toBeInstanceOf(PracticeCardModel);
       expect(result.card).not.toBe(mockCard);

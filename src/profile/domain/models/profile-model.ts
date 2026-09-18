@@ -1,15 +1,22 @@
-export interface ProfileModelData {
-  id: string;
-  userId: string;
-  displayName?: string;
-  handle?: string;
-  bio?: string;
-  picture?: string;
-  backgroundPicture?: string;
-  website?: string;
-  isPublic: boolean;
-  tags?: string[];
-}
+import * as Schema from "effect/Schema";
+
+export const ProfileModelDataSchema = Schema.Struct({
+  id: Schema.mutableKey(Schema.String),
+  userId: Schema.mutableKey(Schema.String),
+  displayName: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  handle: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  bio: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  picture: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  backgroundPicture: Schema.mutableKey(
+    Schema.optional(Schema.NullOr(Schema.String)),
+  ),
+  website: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  isPublic: Schema.mutableKey(Schema.Boolean),
+  tags: Schema.mutableKey(
+    Schema.optional(Schema.NullOr(Schema.mutable(Schema.Array(Schema.String)))),
+  ),
+});
+export type ProfileModelData = typeof ProfileModelDataSchema.Type;
 
 /**
  * A profile of a user
@@ -27,8 +34,12 @@ export interface ProfileModelData {
  * its capabilities, so that in future versions the user might be able to have
  * multiple profiles.
  */
-export class ProfileModel {
-  constructor(readonly data: ProfileModelData) {}
+export class ProfileModel extends Schema.Class<ProfileModel>("ProfileModel")({
+  data: ProfileModelDataSchema,
+}) {
+  constructor(data: ProfileModelData) {
+    super({ data });
+  }
 
   get id() {
     return this.data.id;
@@ -41,7 +52,7 @@ export class ProfileModel {
    * the profile is public too).
    */
   get displayName() {
-    return this.data.displayName;
+    return this.data.displayName ?? undefined;
   }
   /**
    * Unique identifier of the profile that is publicly visible. It is
@@ -49,22 +60,22 @@ export class ProfileModel {
    * numbers and the underscore character (`_`).
    */
   get handle() {
-    return this.data.handle;
+    return this.data.handle ?? undefined;
   }
   /**
    * Short description of the profile that appears after the `displayName`
    */
   get bio() {
-    return this.data.bio;
+    return this.data.bio ?? undefined;
   }
   get picture() {
-    return this.data.picture;
+    return this.data.picture ?? undefined;
   }
   get backgroundPicture() {
-    return this.data.backgroundPicture;
+    return this.data.backgroundPicture ?? undefined;
   }
   get website() {
-    return this.data.website;
+    return this.data.website ?? undefined;
   }
   /**
    * Whether the profile can be seen by other users or not.

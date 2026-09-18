@@ -1,5 +1,7 @@
+import * as Effect from "effect/Effect";
 import { User } from "lucide-react";
 import Link from "next/link";
+import { runServer } from "@/src/common/effect/server-runtime";
 import {
   Avatar,
   AvatarFallback,
@@ -9,7 +11,7 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
 import type { CourseAuthorModel } from "@/src/courses/domain/models/course-author-model";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
-import { locator_courses_CourseAuthorsRepository } from "@/src/courses/locators/locator_course-authors-repository";
+import { CourseAuthorsRepository } from "@/src/courses/layers/layer_course-authors-repository";
 import { getProfilePagePath } from "@/src/profile/ui/utils/get-profile-page-path";
 
 interface CourseDetailAuthorSectionProps {
@@ -19,9 +21,13 @@ interface CourseDetailAuthorSectionProps {
 export async function CourseDetailAuthorsSectionLoader({
   course,
 }: CourseDetailAuthorSectionProps) {
-  const authorsRepository = locator_courses_CourseAuthorsRepository();
-  const authors = await authorsRepository.get(course.id);
-  return <CourseDetailAuthorsSectionLoaded authors={authors} />;
+  return runServer(
+    Effect.gen(function* () {
+      const authorsRepository = yield* CourseAuthorsRepository;
+      const authors = yield* authorsRepository.get(course.id);
+      return <CourseDetailAuthorsSectionLoaded authors={authors} />;
+    }),
+  );
 }
 
 interface CourseDetailAuthorsSectionLoadedProps {

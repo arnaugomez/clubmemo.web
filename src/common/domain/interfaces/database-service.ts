@@ -1,3 +1,4 @@
+import * as Context from "effect/Context";
 import type { Collection, Document, MongoClient } from "mongodb";
 import type { CollectionType } from "../../data/utils/mongodb";
 
@@ -22,3 +23,7 @@ export interface DatabaseService {
     collectionType: CollectionType<TSchema>,
   ): Collection<TSchema>;
 }
+
+export const DatabaseService = Context.Service<DatabaseService>(
+  "clubmemo/common/domain/interfaces/database-service/DatabaseService",
+);

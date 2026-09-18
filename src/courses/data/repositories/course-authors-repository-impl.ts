@@ -1,7 +1,8 @@
+import * as Effect from "effect/Effect";
 import { ObjectId } from "mongodb";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import type { CourseAuthorsRepository } from "../../domain/interfaces/course-authors-repository";
-import type { CourseAuthorModel } from "../../domain/models/course-author-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 import type { CourseAuthorDoc } from "../aggregations/course-authors-aggregation";
 import { CourseAuthorDocTransformer } from "../aggregations/course-authors-aggregation";
@@ -17,7 +18,10 @@ export class CourseAuthorsRepositoryImpl implements CourseAuthorsRepository {
     this.collection = databaseService.collection(coursePermissionsCollection);
   }
 
-  async get(courseId: string): Promise<CourseAuthorModel[]> {
+  get = Effect.fn("CourseAuthorsRepositoryImpl.get")(function* (
+    this: CourseAuthorsRepositoryImpl,
+    courseId: string,
+  ) {
     const aggregation = this.collection.aggregate<CourseAuthorDoc>([
       {
         $match: {
@@ -56,7 +60,14 @@ export class CourseAuthorsRepositoryImpl implements CourseAuthorsRepository {
       },
     ]);
 
-    const result = await aggregation.toArray();
+    const result = yield* Effect.tryPromise({
+      try: () => aggregation.toArray(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CourseAuthorsRepositoryImpl.get",
+          cause,
+        }),
+    });
     return result.map((e) => new CourseAuthorDocTransformer(e).toDomain());
-  }
+  }).bind(this);
 }

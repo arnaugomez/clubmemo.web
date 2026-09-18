@@ -9,9 +9,8 @@ import { ResourceListTopButtons } from "../components/resource-list-top-buttons"
 /**
  * Admin panel page that contains a table with the list of resources of a specific type.
  */
-export function ResourceListPage({
-  params: { resourceType },
-}: PropsWithResourceTypeParam) {
+export async function ResourceListPage({ params }: PropsWithResourceTypeParam) {
+  const { resourceType } = await params;
   const resource = getAdminResourceByType(resourceType);
   return (
     <main>

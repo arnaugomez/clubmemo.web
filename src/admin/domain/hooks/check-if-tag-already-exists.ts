@@ -1,5 +1,9 @@
+import * as Effect from "effect/Effect";
 import type { Db, ObjectId } from "mongodb";
-import { ZodError, ZodIssueCode } from "zod";
+import {
+  ExternalServiceError,
+  FieldValidationError,
+} from "@/src/common/effect/errors";
 import type { AdminResourceData } from "../models/admin-resource-data";
 
 /**
@@ -8,23 +12,26 @@ import type { AdminResourceData } from "../models/admin-resource-data";
  * @param data Tag data to be checked.
  * @param db Database connection.
  * @returns `void` if no other tag with the same name exists.
- * @throws {ZodError} if another tag with the same name already exists.
+ * @throws {FieldValidationError} if another tag with the same name already exists.
  */
-export async function checkIfTagAlreadyExists(
-  id: ObjectId | null,
-  data: AdminResourceData,
-  db: Db,
-): Promise<void> {
-  const document = await db.collection("tags").findOne({ name: data.name });
-  if (document) {
-    if (document._id.equals(id)) return;
-    throw new ZodError([
-      {
-        path: ["name"],
-        code: ZodIssueCode.custom,
-        params: { i18n: "tagAlreadyExists" },
-        message: "Ya existe una etiqueta con ese nombre",
-      },
-    ]);
-  }
-}
+export const checkIfTagAlreadyExists = Effect.fn("checkIfTagAlreadyExists")(
+  function* (id: ObjectId | null, data: AdminResourceData, db: Db) {
+    const document = yield* Effect.tryPromise({
+      try: () => db.collection("tags").findOne({ name: data.name }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "checkIfTagAlreadyExists",
+          cause,
+        }),
+    });
+    if (document) {
+      if (document._id.equals(id)) return;
+      return yield* Effect.fail(
+        new FieldValidationError({
+          path: "name",
+          message: "Ya existe una etiqueta con ese nombre",
+        }),
+      );
+    }
+  },
+);

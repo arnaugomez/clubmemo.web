@@ -1,29 +1,32 @@
-import { beforeEach } from "node:test";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import * as ManagedRuntime from "effect/ManagedRuntime";
+import { afterAll } from "vitest";
+import { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { DateTimeServiceLive } from "@/src/common/layers/layer_datetime-service";
+import { testDatabaseLayer } from "@/test/utils/database";
+import {
+  ReviewLogsRepository,
+  ReviewLogsRepositoryLive,
+} from "../../layers/layer_review-logs-repository";
+
+const runtime = ManagedRuntime.make(
+  ReviewLogsRepositoryLive.pipe(
+    Layer.provideMerge(Layer.mergeAll(testDatabaseLayer, DateTimeServiceLive)),
+  ),
+);
+afterAll(() => runtime.dispose());
+
 import { ObjectId } from "mongodb";
-import { describe, expect, it, vi } from "vitest";
-import { DatabaseServiceImpl } from "@/src/common/data/services/database-service-impl";
-import { singleton } from "@/src/common/di/locator-utils";
-import { locator_common_DatabaseService } from "@/src/common/locators/locator_database-service";
-import { locator_common_EnvService } from "@/src/common/locators/locator_env-service";
+import { beforeEach, describe, expect, it } from "vitest";
 import { PracticeCardRatingModel } from "../../domain/models/practice-card-rating-model";
 import { PracticeCardStateModel } from "../../domain/models/practice-card-state-model";
 import { ReviewLogModel } from "../../domain/models/review-log-model";
-import { locator_practice_ReviewLogsRepository } from "../../locators/locator_review-logs-repository";
 import { reviewLogsCollection } from "../collections/review-logs-collection";
-
-vi.mock("@/src/common/locators/locator_database-service", () => ({
-  locator_common_DatabaseService: singleton(
-    () =>
-      new DatabaseServiceImpl(
-        locator_common_EnvService(),
-        "ReviewLogsRepositoryImpl",
-      ),
-  ),
-}));
 
 describe("ReviewLogsRepositoryImpl", () => {
   beforeEach(async () => {
-    const databaseService = locator_common_DatabaseService();
+    const databaseService = await runtime.runPromise(DatabaseService);
     await databaseService.collection(reviewLogsCollection).deleteMany();
   });
   it("create writes a new review log to the database and creates a new review log object with the id of the inserted object", async () => {
@@ -42,13 +45,15 @@ describe("ReviewLogsRepositoryImpl", () => {
       review: new Date(),
     });
 
-    const reviewLogsRepository = locator_practice_ReviewLogsRepository();
-    const newReviewLog = await reviewLogsRepository.create(reviewLog);
+    const reviewLogsRepository = await runtime.runPromise(ReviewLogsRepository);
+    const newReviewLog = await Effect.runPromise(
+      reviewLogsRepository.create(reviewLog),
+    );
 
     expect(reviewLog.data.id).toBe("");
     expect(newReviewLog.data.id).not.toBe("");
 
-    const databaseService = locator_common_DatabaseService();
+    const databaseService = await runtime.runPromise(DatabaseService);
     const insertedDocument = await databaseService
       .collection(reviewLogsCollection)
       .findOne({ _id: new ObjectId(newReviewLog.data.id) });

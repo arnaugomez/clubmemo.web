@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect";
 import type { EmailService } from "../../domain/interfaces/email-service";
 import type { EnvService } from "../../domain/interfaces/env-service";
 
@@ -8,20 +9,30 @@ import type { EnvService } from "../../domain/interfaces/env-service";
  */
 export class EmailServiceFakeImpl implements EmailService {
   constructor(private readonly envService: EnvService) {}
-  async sendVerificationCode(
-    _email: string,
-    _verificationCode: string,
-  ): Promise<void> {}
+  sendVerificationCode = Effect.fn("EmailServiceFakeImpl.sendVerificationCode")(
+    function (
+      this: EmailServiceFakeImpl,
+      _email: string,
+      _verificationCode: string,
+    ): Effect.Effect<void> {
+      return Effect.sync(() => {});
+    },
+  ).bind(this);
 
-  async sendForgotPasswordLink(
+  sendForgotPasswordLink = Effect.fn(
+    "EmailServiceFakeImpl.sendForgotPasswordLink",
+  )(function (
+    this: EmailServiceFakeImpl,
     email: string,
     forgotPasswordCode: string,
-  ): Promise<void> {
-    const url = new URL(this.envService.projectUrl);
-    url.pathname = "/auth/reset-password";
-    url.search = new URLSearchParams({
-      email,
-      token: forgotPasswordCode,
-    }).toString();
-  }
+  ): Effect.Effect<void> {
+    return Effect.sync(() => {
+      const url = new URL(this.envService.projectUrl);
+      url.pathname = "/auth/reset-password";
+      url.search = new URLSearchParams({
+        email,
+        token: forgotPasswordCode,
+      }).toString();
+    });
+  }).bind(this);
 }

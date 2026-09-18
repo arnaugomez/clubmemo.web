@@ -1,5 +1,7 @@
+import * as Effect from "effect/Effect";
 import { usersCollection } from "@/src/auth/data/collections/users-collection";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import { courseEnrollmentsCollection } from "@/src/courses/data/collections/course-enrollments-collection";
 import { coursePermissionsCollection } from "@/src/courses/data/collections/course-permissions-collection";
 import { fileUploadsCollection } from "@/src/file-upload/data/collections/file-uploads-collection";
@@ -47,27 +49,146 @@ export class DatabaseIndexesServiceImpl implements DatabaseIndexesService {
    * Create all indexes in the database. Should be called once, when the
    * application builds.
    */
-  async createIndexes() {
-    await Promise.all([
-      this.usersCollection.createIndex({ email: 1 }, { unique: true }),
-      this.profilesCollection.createIndex({ userId: 1 }),
-      this.profilesCollection.createIndex({ handle: 1 }),
-      this.coursePermissions.createIndex({ courseId: 1, profileId: 1 }),
-      this.courseEnrollments.createIndex({ courseId: 1, profileId: 1 }),
-      this.courseEnrollments.createIndex({ profileId: 1 }),
-      this.courseEnrollments.createIndex({ profileId: 1, isFavorite: 1 }),
-      this.practiceCards.createIndex({ courseEnrollmentId: 1, due: 1 }),
-      this.notes.createIndex({ courseId: 1 }),
-      this.reviewLogs.createIndex({
-        courseEnrollmentId: 1,
-        review: 1,
-        state: 1,
-      }),
-      this.rateLimits.createIndex({ name: 1 }),
-      this.rateLimits.createIndex({ name: 1, updatedAt: 1 }),
-      this.tags.createIndex({ name: 1 }, { unique: true }),
-      this.fileUploads.createIndex({ keyPrefix: 1 }),
-      this.fileUploads.createIndex({ key: 1 }),
-    ]);
-  }
+  createIndexes = Effect.fn("DatabaseIndexesServiceImpl.createIndexes")(
+    function* (this: DatabaseIndexesServiceImpl) {
+      yield* Effect.all(
+        [
+          Effect.tryPromise({
+            try: () =>
+              this.usersCollection.createIndex({ email: 1 }, { unique: true }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.profilesCollection.createIndex({ userId: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.profilesCollection.createIndex({ handle: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () =>
+              this.coursePermissions.createIndex({ courseId: 1, profileId: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () =>
+              this.courseEnrollments.createIndex({ courseId: 1, profileId: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.courseEnrollments.createIndex({ profileId: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () =>
+              this.courseEnrollments.createIndex({
+                profileId: 1,
+                isFavorite: 1,
+              }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () =>
+              this.practiceCards.createIndex({ courseEnrollmentId: 1, due: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.notes.createIndex({ courseId: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () =>
+              this.reviewLogs.createIndex({
+                courseEnrollmentId: 1,
+                review: 1,
+                state: 1,
+              }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.rateLimits.createIndex({ name: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.rateLimits.createIndex({ name: 1, updatedAt: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.tags.createIndex({ name: 1 }, { unique: true }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.fileUploads.createIndex({ keyPrefix: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+          Effect.tryPromise({
+            try: () => this.fileUploads.createIndex({ key: 1 }),
+            catch: (cause) =>
+              new ExternalServiceError({
+                operation: "DatabaseIndexesServiceImpl.createIndexes",
+                cause,
+              }),
+          }),
+        ],
+        { concurrency: "unbounded" },
+      );
+    },
+  ).bind(this);
 }

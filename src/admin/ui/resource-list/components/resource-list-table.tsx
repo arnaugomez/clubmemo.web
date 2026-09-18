@@ -1,15 +1,17 @@
 "use client";
+import * as Schema from "effect/Schema";
+
 import range from "lodash/range";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { z } from "zod";
+
 import { getAdminResourceByType } from "@/src/admin/domain/config/admin-resources-config";
 import type { AdminResourceData } from "@/src/admin/domain/models/admin-resource-data";
 import type { AdminResourceTypeModel } from "@/src/admin/domain/models/admin-resource-model";
 import { SortOrderModel } from "@/src/admin/domain/models/sort-order-model";
 import type { GetAdminResourcesUseCaseInputModel } from "@/src/admin/domain/use-cases/get-admin-resources-use-case";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
 import { PaginationSection } from "@/src/common/ui/components/pagination/pagination-section";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import {
@@ -60,7 +62,9 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
   const filters = useMemo(() => {
     try {
       const object = JSON.parse(filtersString);
-      return z.record(z.unknown()).parse(object);
+      return Schema.decodeUnknownSync(
+        Schema.Record(Schema.String, Schema.Unknown),
+      )(object);
     } catch {
       return undefined;
     }
@@ -118,7 +122,7 @@ export function ResourceListTable({ resourceType }: ResourceListTableProps) {
           operation.status = "success";
         }
       } catch (error) {
-        locator_common_ErrorTrackingService().captureError(error);
+        captureError(error);
         operation.status = "error";
       }
       setQueue((prev) => [...prev]);

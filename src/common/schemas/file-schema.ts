@@ -1,7 +1,18 @@
-import { z } from "../i18n/zod";
+import * as Schema from "effect/Schema";
+import * as SchemaGetter from "effect/SchemaGetter";
 
-export const FileSchema = z.instanceof(File, { params: { i18n: "file" } });
-export const FileFieldSchema = z.string().or(FileSchema);
-export const OptionalFileFieldSchema = FileFieldSchema.nullish().transform(
-  (x) => x ?? undefined,
+export const FileSchema = Schema.instanceOf(File, {
+  message: "No es un archivo válido",
+});
+export const FileFieldSchema = Schema.Union([Schema.String, FileSchema]);
+export const OptionalFileFieldSchema = Schema.optional(
+  Schema.NullOr(FileFieldSchema),
+).pipe(
+  Schema.decodeTo(
+    Schema.optional(Schema.Union([Schema.String, Schema.instanceOf(File)])),
+    {
+      decode: SchemaGetter.transform((x) => x ?? undefined),
+      encode: SchemaGetter.passthrough(),
+    },
+  ),
 );

@@ -1,12 +1,11 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
 import { useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "@/i18n/zod";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -15,8 +14,12 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { logoutAction } from "../../actions/logout-action";
 import { verifyEmailAction } from "../actions/verify-email-action";
 
-const FormSchema = z.object({
-  code: z.string().length(6),
+const FormSchema = Schema.Struct({
+  code: Schema.String.check(
+    Schema.isLengthBetween(6, 6, {
+      message: `El texto debe contener exactamente ${6} carácter(es)`,
+    }),
+  ),
 });
 
 /**
@@ -25,7 +28,7 @@ const FormSchema = z.object({
  */
 export function VerifyEmailForm() {
   const form = useForm({
-    resolver: zodResolver(FormSchema),
+    resolver: schemaResolver(FormSchema),
     defaultValues: {
       code: "",
     },
@@ -33,14 +36,14 @@ export function VerifyEmailForm() {
   const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = form.handleSubmit(
-    async (data: z.infer<typeof FormSchema>) => {
+    async (data: (typeof FormSchema)["Type"]) => {
       try {
         const response = await verifyEmailAction(data);
         const handler = new FormResponseHandler(response, form);
         if (!handler.hasErrors) waitMilliseconds(1000);
         handler.setErrors();
       } catch (error) {
-        locator_common_ErrorTrackingService().captureError(error);
+        captureError(error);
         FormResponseHandler.setGlobalError(form);
       }
     },
@@ -57,7 +60,7 @@ export function VerifyEmailForm() {
     try {
       await logoutAction();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       toast.error("Error al cerrar sesión");
     }
   }

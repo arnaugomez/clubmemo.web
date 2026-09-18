@@ -1,14 +1,15 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 /**
  * Validates the parameters of `enrollCourseAction`
  */
-export const EnrollCourseActionSchema = z.object({
+export const EnrollCourseActionSchema = Schema.Struct({
   courseId: ObjectIdSchema,
 });
 
 /**
  * Parameters of `enrollCourseAction`
  */
-export type EnrollCourseActionModel = z.infer<typeof EnrollCourseActionSchema>;
+export type EnrollCourseActionModel = (typeof EnrollCourseActionSchema)["Type"];

@@ -1,9 +1,13 @@
 "use server";
+import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
+import * as Schema from "effect/Schema";
 import { revalidatePath } from "next/cache";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { HandleAlreadyExistsError } from "@/src/profile/domain/errors/profile-errors";
-import { locator_profile_UpdateProfileUseCase } from "@/src/profile/locators/locator_update-profile-use-case";
+import { UpdateProfileUseCaseService } from "@/src/profile/layers/layer_update-profile-use-case";
 import type { EditProfileActionModel } from "../schemas/edit-profile-action-schema";
 import { EditProfileActionSchema } from "../schemas/edit-profile-action-schema";
 
@@ -12,20 +16,32 @@ import { EditProfileActionSchema } from "../schemas/edit-profile-action-schema";
  * @param input The data of the profile that will be updated
  */
 export async function editProfileAction(input: EditProfileActionModel) {
-  try {
-    const parsed = EditProfileActionSchema.parse(input);
+  return runServer(
+    Effect.gen(function* () {
+      {
+        const outcome = yield* Effect.result(
+          Effect.gen(function* () {
+            const parsed = yield* Schema.decodeUnknownEffect(
+              EditProfileActionSchema,
+            )(input);
 
-    const updateProfileUseCase = locator_profile_UpdateProfileUseCase();
-    await updateProfileUseCase.execute(parsed);
+            const updateProfileUseCase = yield* UpdateProfileUseCaseService;
+            yield* updateProfileUseCase.execute(parsed);
 
-    revalidatePath("/");
-  } catch (e) {
-    if (e instanceof HandleAlreadyExistsError) {
-      return ActionResponse.formError("handle", {
-        message: "El identificador ya está en uso",
-        type: "handleAlreadyExists",
-      });
-    }
-    ActionErrorHandler.handle(e);
-  }
+            revalidatePath("/");
+          }),
+        );
+        if (Result.isFailure(outcome)) {
+          const e = outcome.failure;
+          if (e instanceof HandleAlreadyExistsError) {
+            return ActionResponse.formError("handle", {
+              message: "El identificador ya está en uso",
+              type: "handleAlreadyExists",
+            });
+          }
+          ActionErrorHandler.handle(e);
+        }
+      }
+    }),
+  );
 }

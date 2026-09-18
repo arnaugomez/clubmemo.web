@@ -1,7 +1,9 @@
+import * as Effect from "effect/Effect";
 import { cache } from "react";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
+import { runServer } from "@/src/common/effect/server-runtime";
 import type { EnrolledCourseListItemModel } from "@/src/courses/domain/models/enrolled-course-list-item-model";
-import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
+import { CoursesRepository } from "@/src/courses/layers/layer_courses-repository";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 
 export interface FetchMyCoursesPaginationModel {
@@ -14,12 +16,19 @@ export const fetchMyCoursesPagination = cache(
   }: FetchMyCoursesPaginationModel): Promise<
     PaginationModel<EnrolledCourseListItemModel>
   > => {
-    const profile = await fetchMyProfile();
-    if (!profile) return PaginationModel.empty();
-    const coursesRepository = locator_courses_CoursesRepository();
-    return await coursesRepository.getMyCoursesPagination({
-      profileId: profile.id,
-      page,
-    });
+    return runServer(
+      Effect.gen(function* () {
+        const profile = yield* Effect.tryPromise({
+          try: () => fetchMyProfile(),
+          catch: (error) => error,
+        });
+        if (!profile) return PaginationModel.empty();
+        const coursesRepository = yield* CoursesRepository;
+        return yield* coursesRepository.getMyCoursesPagination({
+          profileId: profile.id,
+          page,
+        });
+      }),
+    );
   },
 );

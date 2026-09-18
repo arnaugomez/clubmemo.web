@@ -1,6 +1,7 @@
+import * as Schema from "effect/Schema";
+import * as SchemaGetter from "effect/SchemaGetter";
 import { default_maximum_interval } from "ts-fsrs";
-import type { ZodSchema } from "zod";
-import { z } from "zod";
+
 import { AuthTypeModel } from "@/src/auth/domain/models/auth-type-model";
 import { AcceptTermsSchema } from "@/src/common/schemas/accept-terms-schema";
 import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
@@ -19,128 +20,304 @@ import { AdminResourceTypeModel } from "../models/admin-resource-model";
 /**
  * Validation schemas for the create and update forms of the admin panel. Each
  * admin resource has different fields and therefore has different validation
- * schema. The validation schemas are built with the Zod validation library.
+ * schema. The validation schemas are built with the Effect Schema validation library.
  */
-const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
-  [AdminResourceTypeModel.courseEnrollments]: z.object({
+const adminResourceSchemas: Record<
+  AdminResourceTypeModel,
+  Schema.ConstraintDecoder<Record<string, unknown>>
+> = {
+  [AdminResourceTypeModel.courseEnrollments]: Schema.Struct({
     courseId: ObjectIdSchema,
     profileId: ObjectIdSchema,
-    isFavorite: z.boolean(),
-    config: z
-      .object({
-        enableFuzz: z.boolean().optional(),
-        maximumInterval: z
-          .number()
-          .int()
-          .min(1)
-          .max(default_maximum_interval)
-          .optional(),
-        requestRetention: z.number().min(0).max(1).optional(),
-        dailyNewCardsCount: z.number().int().min(1).max(100).optional(),
-        showAdvancedRatingOptions: z.boolean().optional(),
-      })
-      .optional(),
+    isFavorite: Schema.Boolean,
+    config: Schema.optional(
+      Schema.Struct({
+        enableFuzz: Schema.optional(Schema.Boolean),
+        maximumInterval: Schema.optional(
+          Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n)))
+            .check(
+              Schema.isInt({
+                message: "Se esperaba entero, se recibió decimal",
+              }),
+            )
+            .check(
+              Schema.isGreaterThanOrEqualTo(1, {
+                message: `El número debe ser mayor o igual a ${1}`,
+              }),
+            )
+            .check(
+              Schema.isLessThanOrEqualTo(default_maximum_interval, {
+                message: `El número debe ser menor o igual a ${default_maximum_interval}`,
+              }),
+            ),
+        ),
+        requestRetention: Schema.optional(
+          Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n)))
+            .check(
+              Schema.isGreaterThanOrEqualTo(0, {
+                message: `El número debe ser mayor o igual a ${0}`,
+              }),
+            )
+            .check(
+              Schema.isLessThanOrEqualTo(1, {
+                message: `El número debe ser menor o igual a ${1}`,
+              }),
+            ),
+        ),
+        dailyNewCardsCount: Schema.optional(
+          Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n)))
+            .check(
+              Schema.isInt({
+                message: "Se esperaba entero, se recibió decimal",
+              }),
+            )
+            .check(
+              Schema.isGreaterThanOrEqualTo(1, {
+                message: `El número debe ser mayor o igual a ${1}`,
+              }),
+            )
+            .check(
+              Schema.isLessThanOrEqualTo(100, {
+                message: `El número debe ser menor o igual a ${100}`,
+              }),
+            ),
+        ),
+        showAdvancedRatingOptions: Schema.optional(Schema.Boolean),
+      }),
+    ),
   }),
-  [AdminResourceTypeModel.coursePermissions]: z.object({
+  [AdminResourceTypeModel.coursePermissions]: Schema.Struct({
     courseId: ObjectIdSchema,
     profileId: ObjectIdSchema,
-    permissionType: z.enum([
+    permissionType: Schema.Literals([
       CoursePermissionTypeModel.edit,
       CoursePermissionTypeModel.view,
       CoursePermissionTypeModel.own,
     ]),
   }),
-  [AdminResourceTypeModel.courses]: z.object({
-    name: z.string().trim().min(1).max(50),
-    description: z.string().trim().min(0).max(255),
+  [AdminResourceTypeModel.courses]: Schema.Struct({
+    name: Schema.String.pipe(
+      Schema.decode({
+        decode: SchemaGetter.transform((value) => value.trim()),
+        encode: SchemaGetter.passthrough(),
+      }),
+    )
+      .check(
+        Schema.isMinLength(1, {
+          message: `El texto debe contener al menos ${1} carácter(es)`,
+        }),
+      )
+      .check(
+        Schema.isMaxLength(50, {
+          message: `El texto debe contener como máximo ${50} carácter(es)`,
+        }),
+      ),
+    description: Schema.String.pipe(
+      Schema.decode({
+        decode: SchemaGetter.transform((value) => value.trim()),
+        encode: SchemaGetter.passthrough(),
+      }),
+    )
+      .check(
+        Schema.isMinLength(0, {
+          message: `El texto debe contener al menos ${0} carácter(es)`,
+        }),
+      )
+      .check(
+        Schema.isMaxLength(255, {
+          message: `El texto debe contener como máximo ${255} carácter(es)`,
+        }),
+      ),
     picture: OptionalFileFieldSchema,
-    isPublic: z.boolean(),
+    isPublic: Schema.Boolean,
     tags: TagsSchema,
   }),
-  [AdminResourceTypeModel.emailVerificationCodes]: z.object({
+  [AdminResourceTypeModel.emailVerificationCodes]: Schema.Struct({
     userId: ObjectIdSchema,
-    code: z.string().length(6),
-    expiresAt: z.date(),
+    code: Schema.String.check(
+      Schema.isLengthBetween(6, 6, {
+        message: `El texto debe contener exactamente ${6} carácter(es)`,
+      }),
+    ),
+    expiresAt: Schema.Date,
   }),
-  [AdminResourceTypeModel.fileUploads]: z.object({
-    collection: z.enum(["profiles", "courses"]),
-    field: z.string().min(1),
-    url: z.string().url(),
-    key: z.string().min(1),
-    contentType: z.string(),
+  [AdminResourceTypeModel.fileUploads]: Schema.Struct({
+    collection: Schema.Literals(["profiles", "courses"]),
+    field: Schema.String.check(
+      Schema.isMinLength(1, {
+        message: `El texto debe contener al menos ${1} carácter(es)`,
+      }),
+    ),
+    url: Schema.String.check(
+      Schema.makeFilter(
+        (value) => {
+          try {
+            new URL(value);
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        { message: "Enlace inválido" },
+      ),
+    ),
+    key: Schema.String.check(
+      Schema.isMinLength(1, {
+        message: `El texto debe contener al menos ${1} carácter(es)`,
+      }),
+    ),
+    contentType: Schema.String,
     createdByUserId: ObjectIdSchema,
-    createdAt: z.date(),
+    createdAt: Schema.Date,
   }),
-  [AdminResourceTypeModel.forgotPasswordTokens]: z.object({
+  [AdminResourceTypeModel.forgotPasswordTokens]: Schema.Struct({
     userId: ObjectIdSchema,
-    expiresAt: z.date(),
+    expiresAt: Schema.Date,
   }),
-  [AdminResourceTypeModel.notes]: z.object({
+  [AdminResourceTypeModel.notes]: Schema.Struct({
     courseId: ObjectIdSchema,
-    front: z.string(),
-    back: z.string(),
-    createdAt: z.date(),
+    front: Schema.String,
+    back: Schema.String,
+    createdAt: Schema.Date,
   }),
-  [AdminResourceTypeModel.practiceCards]: z.object({
+  [AdminResourceTypeModel.practiceCards]: Schema.Struct({
     courseEnrollmentId: ObjectIdSchema,
     noteId: ObjectIdSchema,
-    due: z.date(),
-    stability: z.number(),
-    difficulty: z.number(),
-    elapsedDays: z.number().int(),
-    scheduledDays: z.number().int(),
-    reps: z.number().int(),
-    lapses: z.number().int(),
-    state: PracticeCardStateModelSchema,
-    lastReview: z
-      .date()
-      .optional()
-      .nullish()
-      .transform((x) => x ?? undefined),
-  }),
-  [AdminResourceTypeModel.profiles]: z.object({
-    userId: ObjectIdSchema,
-    displayName: z.string().optional(),
-    handle: HandleSchema.optional().or(
-      z.literal("").transform((value) => value || undefined),
+    due: Schema.Date,
+    stability: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))),
+    difficulty: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))),
+    elapsedDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
     ),
-    bio: z.string().optional(),
-    website: z.string().url().max(2083).optional().or(z.string().max(0)),
-    isPublic: z.boolean(),
+    scheduledDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    reps: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    lapses: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    state: PracticeCardStateModelSchema,
+    lastReview: Schema.optional(
+      Schema.NullOr(Schema.optional(Schema.Date)),
+    ).pipe(
+      Schema.decodeTo(Schema.optional(Schema.Date), {
+        decode: SchemaGetter.transform((x) => x ?? undefined),
+        encode: SchemaGetter.passthrough(),
+      }),
+    ),
+  }),
+  [AdminResourceTypeModel.profiles]: Schema.Struct({
+    userId: ObjectIdSchema,
+    displayName: Schema.optional(Schema.String),
+    handle: Schema.Union([
+      Schema.optional(HandleSchema),
+      Schema.Literal("").pipe(
+        Schema.decodeTo(Schema.Undefined, {
+          decode: SchemaGetter.transform(() => undefined),
+          encode: SchemaGetter.transform(() => "" as const),
+        }),
+      ),
+    ]),
+    bio: Schema.optional(Schema.String),
+    website: Schema.Union([
+      Schema.optional(
+        Schema.String.check(
+          Schema.makeFilter(
+            (value) => {
+              try {
+                new URL(value);
+                return true;
+              } catch {
+                return false;
+              }
+            },
+            { message: "Enlace inválido" },
+          ),
+        ).check(
+          Schema.isMaxLength(2083, {
+            message: `El texto debe contener como máximo ${2083} carácter(es)`,
+          }),
+        ),
+      ),
+      Schema.String.check(
+        Schema.isMaxLength(0, {
+          message: `El texto debe contener como máximo ${0} carácter(es)`,
+        }),
+      ),
+    ]),
+    isPublic: Schema.Boolean,
     tags: TagsSchema,
     picture: OptionalFileFieldSchema,
     backgroundPicture: OptionalFileFieldSchema,
   }),
-  [AdminResourceTypeModel.rateLimits]: z.object({
-    name: z.string(),
-    count: z.number().int(),
-    updatedAt: z.date(),
+  [AdminResourceTypeModel.rateLimits]: Schema.Struct({
+    name: Schema.String,
+    count: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    updatedAt: Schema.Date,
   }),
-  [AdminResourceTypeModel.reviewLogs]: z.object({
+  [AdminResourceTypeModel.reviewLogs]: Schema.Struct({
     cardId: ObjectIdSchema,
     courseEnrollmentId: ObjectIdSchema,
     rating: PracticeCardRatingModelSchema,
     state: PracticeCardStateModelSchema,
-    due: z.date(),
-    stability: z.number(),
-    difficulty: z.number(),
-    elapsedDays: z.number().int(),
-    lastElapsedDays: z.number().int(),
-    scheduledDays: z.number().int(),
-    review: z.date(),
+    due: Schema.Date,
+    stability: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))),
+    difficulty: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))),
+    elapsedDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    lastElapsedDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    scheduledDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    review: Schema.Date,
   }),
-  [AdminResourceTypeModel.sessions]: z.object({
-    expires_at: z.date(),
+  [AdminResourceTypeModel.sessions]: Schema.Struct({
+    expires_at: Schema.Date,
     user_id: ObjectIdSchema,
   }),
-  [AdminResourceTypeModel.tags]: z.object({ name: TagNameSchema }),
-  [AdminResourceTypeModel.users]: z.object({
-    email: z.string().email(),
-    authTypes: z.array(z.enum([AuthTypeModel.email])).min(1),
+  [AdminResourceTypeModel.tags]: Schema.Struct({ name: TagNameSchema }),
+  [AdminResourceTypeModel.users]: Schema.Struct({
+    email: Schema.String.check(
+      Schema.isPattern(
+        /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i,
+        { message: "Correo inválido" },
+      ),
+    ),
+    authTypes: Schema.mutable(
+      Schema.Array(Schema.Literals([AuthTypeModel.email])),
+    ).check(
+      Schema.isMinLength(1, {
+        message: `La lista debe contener al menos ${1} elemento(s)`,
+      }),
+    ),
     acceptTerms: AcceptTermsSchema,
-    isEmailVerified: z.boolean().optional(),
-    isAdmin: z.boolean().optional(),
-    newPassword: PasswordSchema.or(z.literal("").optional()),
+    isEmailVerified: Schema.optional(Schema.Boolean),
+    isAdmin: Schema.optional(Schema.Boolean),
+    newPassword: Schema.Union([
+      PasswordSchema,
+      Schema.optional(Schema.Literal("")),
+    ]),
   }),
 };
 
@@ -149,14 +326,28 @@ const adminResourceSchemas: Record<AdminResourceTypeModel, ZodSchema> = {
  * available, the schema from `adminResourceSchemas` shall be used.
  */
 const adminResourceCreateSchemas: Partial<
-  Record<AdminResourceTypeModel, ZodSchema>
+  Record<
+    AdminResourceTypeModel,
+    Schema.ConstraintDecoder<Record<string, unknown>>
+  >
 > = {
-  [AdminResourceTypeModel.users]: z.object({
-    email: z.string().email(),
-    authTypes: z.array(z.enum([AuthTypeModel.email])).min(1),
+  [AdminResourceTypeModel.users]: Schema.Struct({
+    email: Schema.String.check(
+      Schema.isPattern(
+        /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i,
+        { message: "Correo inválido" },
+      ),
+    ),
+    authTypes: Schema.mutable(
+      Schema.Array(Schema.Literals([AuthTypeModel.email])),
+    ).check(
+      Schema.isMinLength(1, {
+        message: `La lista debe contener al menos ${1} elemento(s)`,
+      }),
+    ),
     acceptTerms: AcceptTermsSchema,
-    isEmailVerified: z.boolean().optional(),
-    isAdmin: z.boolean().optional(),
+    isEmailVerified: Schema.optional(Schema.Boolean),
+    isAdmin: Schema.optional(Schema.Boolean),
     newPassword: PasswordSchema,
   }),
 };
@@ -173,7 +364,7 @@ interface GetAdminResourceSchemaInput {
   isCreate: boolean;
 }
 /**
- * Gets a Zod validation schema for a form of a certain admin resource
+ * Gets a Effect Schema validation schema for a form of a certain admin resource
  *
  * @returns The validation schema or `undefined` if it does not exist.
  */

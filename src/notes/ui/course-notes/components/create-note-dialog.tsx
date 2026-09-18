@@ -1,8 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "@/i18n/zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
@@ -25,12 +25,28 @@ interface CreateNoteDialogProps {
   onClose: () => void;
   onSuccess: (note: NoteModel) => void;
 }
-const CreateNoteSchema = z.object({
-  front: z.string().min(1).max(1000),
-  back: z.string().min(0).max(10000),
+const CreateNoteSchema = Schema.Struct({
+  front: Schema.String.check(
+    Schema.isMinLength(1, {
+      message: `El texto debe contener al menos ${1} carácter(es)`,
+    }),
+  ).check(
+    Schema.isMaxLength(1000, {
+      message: `El texto debe contener como máximo ${1000} carácter(es)`,
+    }),
+  ),
+  back: Schema.String.check(
+    Schema.isMinLength(0, {
+      message: `El texto debe contener al menos ${0} carácter(es)`,
+    }),
+  ).check(
+    Schema.isMaxLength(10000, {
+      message: `El texto debe contener como máximo ${10000} carácter(es)`,
+    }),
+  ),
 });
 
-type FormValues = z.infer<typeof CreateNoteSchema>;
+type FormValues = (typeof CreateNoteSchema)["Type"];
 
 export function CreateNoteDialog({
   courseId,
@@ -38,7 +54,7 @@ export function CreateNoteDialog({
   onSuccess,
 }: CreateNoteDialogProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(CreateNoteSchema),
+    resolver: schemaResolver(CreateNoteSchema),
     defaultValues: {
       front: "",
       back: "",
@@ -55,7 +71,7 @@ export function CreateNoteDialog({
       }
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

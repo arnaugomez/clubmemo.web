@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { ReviewLogModel } from "../models/review-log-model";
 
 /**
@@ -23,7 +26,9 @@ export interface ReviewLogsRepository {
    * @param input The data of the created review log
    * @returns The created review log
    */
-  create(input: ReviewLogModel): Promise<ReviewLogModel>;
+  create(
+    input: ReviewLogModel,
+  ): Effect.Effect<ReviewLogModel, ExternalServiceError>;
 
   /**
    * Get the amount of new cards that a learner has reviewed **today**.
@@ -31,5 +36,11 @@ export interface ReviewLogsRepository {
    * @param courseEnrollmentId The id of the course enrollment of the learner
    * @returns The amount of new cards reviewed today
    */
-  getReviewsOfNewCardsCount(courseEnrollmentId: string): Promise<number>;
+  getReviewsOfNewCardsCount(
+    courseEnrollmentId: string,
+  ): Effect.Effect<number, ExternalServiceError>;
 }
+
+export const ReviewLogsRepository = Context.Service<ReviewLogsRepository>(
+  "clubmemo/practice/domain/interfaces/review-logs-repository/ReviewLogsRepository",
+);

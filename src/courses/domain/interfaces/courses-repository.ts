@@ -1,5 +1,8 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
 import type { PaginationModel } from "@/src/common/domain/models/pagination-model";
 import type { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { CourseModel } from "../models/course-model";
 import type { CreateCourseInputModel } from "../models/create-course-input-model";
 import type { DiscoverCourseModel } from "../models/discover-course-model";
@@ -21,7 +24,9 @@ export interface CoursesRepository {
    * @param input The input data to create a course
    * @returns The created course
    */
-  create(input: CreateCourseInputModel): Promise<CourseModel>;
+  create(
+    input: CreateCourseInputModel,
+  ): Effect.Effect<CourseModel, ExternalServiceError>;
   /**
    * Gets the detailed data of a course, including the enrollment of a profile
    * to that course.
@@ -29,13 +34,17 @@ export interface CoursesRepository {
    * @param input The data to identify the course and its profile
    * @returns The detailed data of the course if the course exists, `null` otherwise
    */
-  getDetail(input: GetCourseDetailInputModel): Promise<CourseModel | null>;
+  getDetail(
+    input: GetCourseDetailInputModel,
+  ): Effect.Effect<CourseModel | null, ExternalServiceError>;
   /**
    * Updates the data of a course, changing its name, description, etc.
    *
    * @param input The new data of the course
    */
-  update(input: UpdateCourseInputModel): Promise<void>;
+  update(
+    input: UpdateCourseInputModel,
+  ): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Deletes a course permanently. Also deletes:
@@ -44,7 +53,7 @@ export interface CoursesRepository {
    *
    * @param id The id of the course to delete
    */
-  delete(id: string): Promise<void>;
+  delete(id: string): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Gets a list of courses matching a certain profile and params
@@ -55,7 +64,7 @@ export interface CoursesRepository {
    */
   getMyCourses(
     input: GetMyCoursesInputModel,
-  ): Promise<EnrolledCourseListItemModel[]>;
+  ): Effect.Effect<EnrolledCourseListItemModel[], ExternalServiceError>;
 
   /**
    * Gets a paginated list of courses matching a certain profile and params
@@ -66,7 +75,10 @@ export interface CoursesRepository {
    */
   getMyCoursesPagination(
     input: GetMyCoursesPaginationInputModel,
-  ): Promise<PaginationModel<EnrolledCourseListItemModel>>;
+  ): Effect.Effect<
+    PaginationModel<EnrolledCourseListItemModel>,
+    ExternalServiceError
+  >;
 
   /**
    * Gets whether a profile has courses or not
@@ -74,7 +86,9 @@ export interface CoursesRepository {
    * @param profileId The id of the profile to check
    * @returns `true` if the profile has courses, `false` otherwise
    */
-  getHasCourses(profileId: string): Promise<boolean>;
+  getHasCourses(
+    profileId: string,
+  ): Effect.Effect<boolean, ExternalServiceError>;
 
   /**
    * Gets a paginated list of courses that match a search query
@@ -84,7 +98,10 @@ export interface CoursesRepository {
    */
   getDiscoverCourses(
     input: GetDiscoverCoursesInputModel,
-  ): Promise<TokenPaginationModel<DiscoverCourseModel>>;
+  ): Effect.Effect<
+    TokenPaginationModel<DiscoverCourseModel>,
+    ExternalServiceError
+  >;
 
   /**
    * Returns a paginated list of courses that have a certain author
@@ -97,7 +114,10 @@ export interface CoursesRepository {
    */
   getCoursesByAuthor(
     input: GetCoursesByAuthorInputModel,
-  ): Promise<TokenPaginationModel<DiscoverCourseModel>>;
+  ): Effect.Effect<
+    TokenPaginationModel<DiscoverCourseModel>,
+    ExternalServiceError
+  >;
 
   /**
    * Gets a personalized recommendation of the course that a profile should keep
@@ -111,7 +131,9 @@ export interface CoursesRepository {
    * @returns The recommended course to keep practicing, or `null` if there is
    * no course with cards to practice
    */
-  getKeepLearning(profileId: string): Promise<KeepLearningModel | null>;
+  getKeepLearning(
+    profileId: string,
+  ): Effect.Effect<KeepLearningModel | null, ExternalServiceError>;
 
   /**
    * Gets a personalized list of courses that are interesting to a profile
@@ -127,7 +149,7 @@ export interface CoursesRepository {
    */
   getInterestingCourses(
     input: GetInterestingCoursesInputModel,
-  ): Promise<DiscoverCourseModel[]>;
+  ): Effect.Effect<DiscoverCourseModel[], ExternalServiceError>;
 }
 
 export interface GetMyCoursesInputModel {
@@ -159,3 +181,7 @@ export interface GetInterestingCoursesInputModel {
   profileId: string;
   tags: string[];
 }
+
+export const CoursesRepository = Context.Service<CoursesRepository>(
+  "clubmemo/courses/domain/interfaces/courses-repository/CoursesRepository",
+);

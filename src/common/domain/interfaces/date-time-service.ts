@@ -1,3 +1,5 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
 /**
  * Represents a service that provides complex date and time related operations.
  *
@@ -11,10 +13,14 @@ export interface DateTimeService {
    *
    * @returns The date at 00:00:00 of today
    */
-  getStartOfToday(): Date;
+  getStartOfToday(): Effect.Effect<Date>;
   /**
    * Gets the date at 00:00:00 of tomorrow.
    * @returns The date at 00:00:00 of tomorrow
    */
-  getStartOfTomorrow(): Date;
+  getStartOfTomorrow(): Effect.Effect<Date>;
 }
+
+export const DateTimeService = Context.Service<DateTimeService>(
+  "clubmemo/common/domain/interfaces/date-time-service/DateTimeService",
+);

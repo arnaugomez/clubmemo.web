@@ -1,16 +1,24 @@
-import { tz } from "@date-fns/tz";
-import { addDays, startOfDay } from "date-fns";
+import * as DateTime from "effect/DateTime";
+import * as Effect from "effect/Effect";
 import type { DateTimeService } from "../../domain/interfaces/date-time-service";
 
-/**
- * Implementation of `DateTimeService` using the `date-fns` library.
- */
+/** Calendar boundaries use the application timezone and Effect's testable Clock. */
 export class DateTimeServiceImpl implements DateTimeService {
-  getStartOfToday(): Date {
-    return startOfDay(new Date(), { in: tz("Europe/Madrid") });
-  }
+  getStartOfToday = Effect.fn("DateTime.startOfToday")(function* () {
+    const now = DateTime.setZoneNamedUnsafe(
+      yield* DateTime.now,
+      "Europe/Madrid",
+    );
+    return DateTime.toDateUtc(DateTime.startOf(now, "day"));
+  });
 
-  getStartOfTomorrow(): Date {
-    return addDays(this.getStartOfToday(), 1);
-  }
+  getStartOfTomorrow = Effect.fn("DateTime.startOfTomorrow")(function* () {
+    const now = DateTime.setZoneNamedUnsafe(
+      yield* DateTime.now,
+      "Europe/Madrid",
+    );
+    return DateTime.toDateUtc(
+      DateTime.add(DateTime.startOf(now, "day"), { days: 1 }),
+    );
+  });
 }

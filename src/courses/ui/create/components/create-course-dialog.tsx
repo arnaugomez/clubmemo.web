@@ -1,9 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { z } from "zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
@@ -24,12 +23,12 @@ import { CreateCourseActionSchema } from "../schemas/create-course-action-schema
 interface CreateCourseDialogProps {
   onClose: () => void;
 }
-type FormValues = z.infer<typeof CreateCourseActionSchema>;
+type FormValues = (typeof CreateCourseActionSchema)["Type"];
 export function CreateCourseDialog({ onClose }: CreateCourseDialogProps) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(CreateCourseActionSchema),
+    resolver: schemaResolver(CreateCourseActionSchema),
     defaultValues: {
       name: "",
     },
@@ -44,7 +43,7 @@ export function CreateCourseDialog({ onClose }: CreateCourseDialogProps) {
       }
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

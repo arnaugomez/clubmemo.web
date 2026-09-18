@@ -1,0 +1,5 @@
+allowBuilds:
+  '@sentry/cli': true
+  '@vercel/speed-insights': false
+  esbuild: true
+  sharp: true

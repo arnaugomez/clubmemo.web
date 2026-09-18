@@ -1,23 +1,31 @@
+import * as Schema from "effect/Schema";
+
 import {
   default_maximum_interval,
   default_request_retention,
   generatorParameters,
 } from "ts-fsrs";
 
-export interface CourseEnrollmentConfigModelData {
-  enableFuzz?: boolean;
-  maximumInterval?: number;
-  requestRetention?: number;
-  dailyNewCardsCount?: number;
-  showAdvancedRatingOptions?: boolean;
-}
+export const CourseEnrollmentConfigModelDataSchema = Schema.Struct({
+  enableFuzz: Schema.mutableKey(Schema.optional(Schema.Boolean)),
+  maximumInterval: Schema.mutableKey(Schema.optional(Schema.Number)),
+  requestRetention: Schema.mutableKey(Schema.optional(Schema.Number)),
+  dailyNewCardsCount: Schema.mutableKey(Schema.optional(Schema.Number)),
+  showAdvancedRatingOptions: Schema.mutableKey(Schema.optional(Schema.Boolean)),
+});
+export type CourseEnrollmentConfigModelData =
+  typeof CourseEnrollmentConfigModelDataSchema.Type;
 
 /**
  * The configuration of the practice of a course. Its parameters describe the
  * way the user practices a course.
  */
-export class CourseEnrollmentConfigModel {
-  constructor(readonly data: CourseEnrollmentConfigModelData) {}
+export class CourseEnrollmentConfigModel extends Schema.Class<CourseEnrollmentConfigModel>(
+  "CourseEnrollmentConfigModel",
+)({ data: CourseEnrollmentConfigModelDataSchema }) {
+  constructor(data: CourseEnrollmentConfigModelData) {
+    super({ data });
+  }
 
   /**
    * Creates an empty configuration with default parameters

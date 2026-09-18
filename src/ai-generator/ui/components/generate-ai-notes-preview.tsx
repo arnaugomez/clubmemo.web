@@ -2,7 +2,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
 import { AsyncButton } from "@/src/common/ui/components/button/async-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
@@ -64,7 +64,7 @@ export function GenerateAiNotesPreview({
       }
       handler.toastErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       toast.error("Error al añadir las tarjetas");
     }
     setIsSubmitting(false);

@@ -1,4 +1,5 @@
 "use server";
+import * as Schema from "effect/Schema";
 
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
@@ -14,7 +15,9 @@ export async function paginateDiscoverAction(
   input: PaginateDiscoverActionModel,
 ) {
   try {
-    const parsed = PaginateDiscoverActionSchema.parse(input);
+    const parsed = Schema.decodeUnknownSync(PaginateDiscoverActionSchema)(
+      input,
+    );
     const response = await fetchDiscoverCourses(parsed);
     return ActionResponse.formSuccess(response);
   } catch (e) {

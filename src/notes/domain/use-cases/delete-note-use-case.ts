@@ -1,9 +1,11 @@
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
 import { NoPermissionError } from "@/src/common/domain/models/app-errors";
-import type { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
+import { CoursesRepository } from "@/src/courses/domain/interfaces/courses-repository";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
-import type { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
-import type { NotesRepository } from "../interfaces/notes-repository";
+import { GetMyProfileUseCase } from "@/src/profile/domain/use-cases/get-my-profile-use-case";
+import { NotesRepository } from "../interfaces/notes-repository";
 import { NoteDoesNotExistError } from "../models/notes-errors";
 
 /**
@@ -12,31 +14,39 @@ import { NoteDoesNotExistError } from "../models/notes-errors";
  *
  * @input The input data to delete a note, including the note id
  */
-export class DeleteNoteUseCase {
-  constructor(
-    private readonly getMyProfileUseCase: GetMyProfileUseCase,
-    private readonly coursesRepository: CoursesRepository,
-    private readonly notesRepository: NotesRepository,
-  ) {}
+export class DeleteNoteUseCase extends Context.Service<DeleteNoteUseCase>()(
+  "clubmemo/notes/domain/use-cases/delete-note-use-case",
+  {
+    make: Effect.gen(function* () {
+      const getMyProfileUseCase = yield* GetMyProfileUseCase;
+      const coursesRepository = yield* CoursesRepository;
+      const notesRepository = yield* NotesRepository;
+      const execute = Effect.fn("DeleteNoteUseCase.execute")(function* ({
+        noteId,
+      }: DeleteNoteUseCaseInputModel) {
+        const profile = yield* getMyProfileUseCase.execute();
+        if (!profile) return yield* Effect.fail(new ProfileDoesNotExistError());
 
-  async execute({ noteId }: DeleteNoteUseCaseInputModel): Promise<void> {
-    const profile = await this.getMyProfileUseCase.execute();
-    if (!profile) throw new ProfileDoesNotExistError();
+        const note = yield* notesRepository.getDetail(noteId);
+        if (!note) return yield* Effect.fail(new NoteDoesNotExistError());
 
-    const note = await this.notesRepository.getDetail(noteId);
-    if (!note) throw new NoteDoesNotExistError();
+        const course = yield* coursesRepository.getDetail({
+          id: note.courseId,
+          profileId: profile.id,
+        });
+        if (!course) return yield* Effect.fail(new CourseDoesNotExistError());
+        if (!course.canDelete)
+          return yield* Effect.fail(new NoPermissionError());
 
-    const course = await this.coursesRepository.getDetail({
-      id: note.courseId,
-      profileId: profile.id,
-    });
-    if (!course) throw new CourseDoesNotExistError();
-    if (!course.canDelete) throw new NoPermissionError();
-
-    await this.notesRepository.delete(noteId);
-  }
-}
+        yield* notesRepository.delete(noteId);
+      });
+      return { execute };
+    }),
+  },
+) {}
 
 interface DeleteNoteUseCaseInputModel {
   noteId: string;
 }
+
+export const DeleteNoteUseCaseService = DeleteNoteUseCase;

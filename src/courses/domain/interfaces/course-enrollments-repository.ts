@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { CourseEnrollmentModel } from "../models/course-enrollment-model";
 
 /**
@@ -15,14 +18,18 @@ export interface CourseEnrollmentsRepository {
    * @param id The id of the course enrollment
    * @returns The course enrollment or `null` if it does not exist
    */
-  get(id: string): Promise<CourseEnrollmentModel | null>;
+  get(
+    id: string,
+  ): Effect.Effect<CourseEnrollmentModel | null, ExternalServiceError>;
   /**
    * Create a new course enrollment. Enroll a profile in a course.
    *
    * @param input The input data to create a course enrollment, including the
    * course id and the profile id
    */
-  create(input: CreateCourseEnrollmentInputModel): Promise<void>;
+  create(
+    input: CreateCourseEnrollmentInputModel,
+  ): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Sets a course as favorite or not for a profile. The data is stored in the
@@ -30,21 +37,25 @@ export interface CourseEnrollmentsRepository {
    *
    * @param input The input data to set a course as favorite or not
    */
-  setFavorite(input: SetCourseFavoriteInputModel): Promise<void>;
+  setFavorite(
+    input: SetCourseFavoriteInputModel,
+  ): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Unenrolls a profile from a course. Deletes the course enrollment.
    *
    * @param input The ids of the profile and the course
    */
-  delete(input: CreateCourseEnrollmentInputModel): Promise<void>;
+  delete(
+    input: CreateCourseEnrollmentInputModel,
+  ): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Deletes all the enrollments of a course
    *
    * @param courseId The id of a course
    */
-  deleteByCourseId(courseId: string): Promise<void>;
+  deleteByCourseId(courseId: string): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Updates the configuration of a course enrollment. The configuration includes
@@ -52,7 +63,9 @@ export interface CourseEnrollmentsRepository {
    *
    * @param input The new configuration
    */
-  updateConfig(input: UpdateCourseEnrollmentConfigInputModel): Promise<void>;
+  updateConfig(
+    input: UpdateCourseEnrollmentConfigInputModel,
+  ): Effect.Effect<void, ExternalServiceError>;
 }
 
 export interface CreateCourseEnrollmentInputModel {
@@ -79,3 +92,8 @@ export interface UpdateCourseEnrollmentConfigInputModel {
   dailyNewCardsCount: number;
   showAdvancedRatingOptions: boolean;
 }
+
+export const CourseEnrollmentsRepository =
+  Context.Service<CourseEnrollmentsRepository>(
+    "clubmemo/courses/domain/interfaces/course-enrollments-repository/CourseEnrollmentsRepository",
+  );

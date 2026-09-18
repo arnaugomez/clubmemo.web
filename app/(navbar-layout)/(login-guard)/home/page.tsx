@@ -1,5 +1,7 @@
+import * as Effect from "effect/Effect";
 import type { Metadata } from "next";
-import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
+import { runServer } from "@/src/common/effect/server-runtime";
+import { CoursesRepository } from "@/src/courses/layers/layer_courses-repository";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
 import { InterestingCoursesSection } from "@/src/courses/ui/interesting-courses-section";
 import { KeepLearningSection } from "@/src/courses/ui/keep-learning/components/keep-learning-section";
@@ -14,20 +16,27 @@ export const metadata: Metadata = {
  * Shows the home page.
  */
 export default async function HomePage() {
-  const profile = await fetchMyProfile();
-  if (!profile) {
-    return null;
-  }
-  const coursesRepository = locator_courses_CoursesRepository();
-  const hasCourses = await coursesRepository.getHasCourses(profile.id);
-  return (
-    <main>
-      <div className="h-24" />
-      <HomeGreeting />
+  return runServer(
+    Effect.gen(function* () {
+      const profile = yield* Effect.tryPromise({
+        try: () => fetchMyProfile(),
+        catch: (error) => error,
+      });
+      if (!profile) {
+        return null;
+      }
+      const coursesRepository = yield* CoursesRepository;
+      const hasCourses = yield* coursesRepository.getHasCourses(profile.id);
+      return (
+        <main>
+          <div className="h-24" />
+          <HomeGreeting />
 
-      <div className="h-6" />
-      {hasCourses ? <HomePageSections /> : <CreateCourseCtaLarge />}
-    </main>
+          <div className="h-6" />
+          {hasCourses ? <HomePageSections /> : <CreateCourseCtaLarge />}
+        </main>
+      );
+    }),
   );
 }
 

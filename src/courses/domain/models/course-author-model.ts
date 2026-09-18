@@ -1,21 +1,27 @@
-import type { CoursePermissionTypeModel } from "./course-permission-type-model";
+import * as Schema from "effect/Schema";
 
-export interface CourseAuthorModelData {
-  courseId: string;
-  permissionType: CoursePermissionTypeModel;
+import { CoursePermissionTypeModel } from "./course-permission-type-model";
 
-  profileId: string;
-  displayName?: string;
-  picture?: string;
-  handle: string;
-}
+export const CourseAuthorModelDataSchema = Schema.Struct({
+  courseId: Schema.mutableKey(Schema.String),
+  permissionType: Schema.mutableKey(Schema.Enum(CoursePermissionTypeModel)),
+  profileId: Schema.mutableKey(Schema.String),
+  displayName: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  picture: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  handle: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+});
+export type CourseAuthorModelData = typeof CourseAuthorModelDataSchema.Type;
 
 /**
  * An author of a course. The author is a profile that has permission to edit the
  * course or has created the course.
  */
-export class CourseAuthorModel {
-  constructor(private readonly data: CourseAuthorModelData) {}
+export class CourseAuthorModel extends Schema.Class<CourseAuthorModel>(
+  "CourseAuthorModel",
+)({ data: CourseAuthorModelDataSchema }) {
+  constructor(data: CourseAuthorModelData) {
+    super({ data });
+  }
   get courseId() {
     return this.data.courseId;
   }
@@ -27,12 +33,12 @@ export class CourseAuthorModel {
     return this.data.profileId;
   }
   get displayName() {
-    return this.data.displayName;
+    return this.data.displayName ?? undefined;
   }
   get picture() {
-    return this.data.picture;
+    return this.data.picture ?? undefined;
   }
   get handle() {
-    return this.data.handle;
+    return this.data.handle ?? undefined;
   }
 }

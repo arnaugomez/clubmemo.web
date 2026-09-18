@@ -1,4 +1,6 @@
 "use client";
+import * as Result from "effect/Result";
+import * as Schema from "effect/Schema";
 
 import { CopyIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +24,9 @@ const ObjectIdInput = forwardRef<HTMLInputElement, ObjectIdInputProps>(
     const { copyToClipboard } = useClipboard();
 
     const { value } = props;
-    const { success: isValidObjectId } = ObjectIdSchema.safeParse(value);
+    const isValidObjectId = Result.isSuccess(
+      Schema.decodeUnknownResult(ObjectIdSchema)(value),
+    );
 
     function renderLink() {
       if (!resourceType) return null;

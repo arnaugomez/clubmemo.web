@@ -1,16 +1,24 @@
+import * as Schema from "effect/Schema";
+
 import { isWithinExpirationDate } from "oslo";
 
-interface ForgotPasswordTokenModelData {
-  userId: string;
-  expiresAt: Date;
-}
+export const ForgotPasswordTokenModelDataSchema = Schema.Struct({
+  userId: Schema.mutableKey(Schema.String),
+  expiresAt: Schema.mutableKey(Schema.Date),
+});
+export type ForgotPasswordTokenModelData =
+  typeof ForgotPasswordTokenModelDataSchema.Type;
 
 /**
  * A token that is sent to the user's email to reset their password, when the
  * password is forgotten
  */
-export class ForgotPasswordTokenModel {
-  constructor(private data: ForgotPasswordTokenModelData) {}
+export class ForgotPasswordTokenModel extends Schema.Class<ForgotPasswordTokenModel>(
+  "ForgotPasswordTokenModel",
+)({ data: ForgotPasswordTokenModelDataSchema }) {
+  constructor(data: ForgotPasswordTokenModelData) {
+    super({ data });
+  }
 
   get userId() {
     return this.data.userId;

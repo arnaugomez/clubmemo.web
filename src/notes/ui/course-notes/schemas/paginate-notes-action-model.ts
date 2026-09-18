@@ -1,18 +1,26 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 /**
  * Validates the parameters of `paginateNotesAction`
  */
-export const PaginateNotesActionSchema = z.object({
+export const PaginateNotesActionSchema = Schema.Struct({
   courseId: ObjectIdSchema,
-  page: z.number().int().optional(),
-  pageSize: z.number().int().optional(),
+  page: Schema.optional(
+    Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+  ),
+  pageSize: Schema.optional(
+    Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+  ),
 });
 
 /**
  * Parameters of `paginateNotesAction`
  */
-export type PaginateNotesActionModel = z.infer<
-  typeof PaginateNotesActionSchema
->;
+export type PaginateNotesActionModel =
+  (typeof PaginateNotesActionSchema)["Type"];

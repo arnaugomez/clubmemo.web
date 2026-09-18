@@ -14,18 +14,17 @@ import { ResourceDetailContextProvider } from "../context/resource-detail-contex
  * the path params for the resource type and resource id.
  */
 export interface ResourceDetailPageProps {
-  params: {
+  params: Promise<{
     resourceType: AdminResourceTypeModel;
     id: string;
-  };
+  }>;
 }
 
 /**
  * Displays the form to update a resource of a specific type.
  */
-export function ResourceDetailPage({
-  params: { resourceType, id },
-}: ResourceDetailPageProps) {
+export async function ResourceDetailPage({ params }: ResourceDetailPageProps) {
+  const { resourceType, id } = await params;
   const resource = getAdminResourceByType(resourceType);
   if (!resource || !ObjectId.isValid(id)) {
     notFound();

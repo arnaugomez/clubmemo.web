@@ -2,10 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { handlePromiseError } from "./handle-promise-error";
 
 const captureError = vi.fn();
-vi.mock("../locators/locator_error-tracking-service.ts", () => ({
-  locator_common_ErrorTrackingService: () => ({
-    captureError,
-  }),
+vi.mock("@/src/common/effect/client-runtime", () => ({
+  captureError: (error: unknown) => captureError(error),
 }));
 
 describe("handlePromiseError", () => {

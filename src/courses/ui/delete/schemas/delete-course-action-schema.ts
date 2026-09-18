@@ -1,14 +1,15 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 /**
  * Validates the parameters of `deleteCourseAction`
  */
-export const DeleteCourseActionSchema = z.object({
+export const DeleteCourseActionSchema = Schema.Struct({
   id: ObjectIdSchema,
 });
 
 /**
  * Parameters of `deleteCourseAction`
  */
-export type DeleteCourseActionModel = z.infer<typeof DeleteCourseActionSchema>;
+export type DeleteCourseActionModel = (typeof DeleteCourseActionSchema)["Type"];

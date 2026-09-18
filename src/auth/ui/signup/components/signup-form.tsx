@@ -1,11 +1,10 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "@/i18n/zod";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { EmailSchema } from "@/src/common/schemas/email-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import { CheckboxFormField } from "@/src/common/ui/components/form/checkbox-form-field";
@@ -17,10 +16,10 @@ import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { signupAction } from "../actions/signup-action";
 
-const SignupFormSchema = z.object({
+const SignupFormSchema = Schema.Struct({
   email: EmailSchema,
   password: PasswordSchema,
-  acceptTerms: z.boolean(),
+  acceptTerms: Schema.Boolean,
 });
 
 /**
@@ -29,7 +28,7 @@ const SignupFormSchema = z.object({
  */
 export function SignupForm() {
   const form = useForm({
-    resolver: zodResolver(SignupFormSchema),
+    resolver: schemaResolver(SignupFormSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -38,14 +37,14 @@ export function SignupForm() {
   });
 
   const onSubmit = form.handleSubmit(
-    async (data: z.infer<typeof SignupFormSchema>) => {
+    async (data: (typeof SignupFormSchema)["Type"]) => {
       try {
         const response = await signupAction(data);
         const handler = new FormResponseHandler(response, form);
         if (!handler.hasErrors) await waitMilliseconds(1000);
         handler.setErrors();
       } catch (error) {
-        locator_common_ErrorTrackingService().captureError(error);
+        captureError(error);
         FormResponseHandler.setGlobalError(form);
       }
     },

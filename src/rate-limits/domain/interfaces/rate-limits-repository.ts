@@ -1,3 +1,7 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
+import type { DailyRateLimitError } from "../errors/rate-limits-errors";
 /**
  * Repository for rate limits
  *
@@ -29,7 +33,10 @@ export interface RateLimitsRepository {
    * @param limit The maximum number of actions that can be performed today.
    * Defaults to 100.
    */
-  check(name: string, limit?: number): Promise<void>;
+  check(
+    name: string,
+    limit?: number,
+  ): Effect.Effect<void, ExternalServiceError | DailyRateLimitError>;
 
   /**
    * Increments the counter of the action that has been performed, to keep track
@@ -37,5 +44,9 @@ export interface RateLimitsRepository {
    *
    * @param name Unique identifier of the action that has been performed
    */
-  increment(name: string): Promise<void>;
+  increment(name: string): Effect.Effect<void, ExternalServiceError>;
 }
+
+export const RateLimitsRepository = Context.Service<RateLimitsRepository>(
+  "clubmemo/rate-limits/domain/interfaces/rate-limits-repository/RateLimitsRepository",
+);

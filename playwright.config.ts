@@ -1,21 +1,14 @@
-import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
-import dotenv from "dotenv";
+import { loadTestEnvironment } from "./scripts/test-environment.mjs";
 
-let parsed: Record<string, string> | undefined;
-/**
- * Load environment variables
- */
-if (!process.env.CI) {
-  parsed = dotenv.config({
-    path: path.resolve(__dirname, ".env.test.local"),
-  }).parsed;
-}
+const testEnvironment = loadTestEnvironment();
+Object.assign(process.env, testEnvironment);
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
   testDir: "./e2e",
+  expect: { timeout: 60_000 },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -28,7 +21,10 @@ export default defineConfig({
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: "http://127.0.0.1:3000",
+    actionTimeout: 30_000,
+    navigationTimeout: 90_000,
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "https://127.0.0.1:3443",
+    ignoreHTTPSErrors: true,
     /* Base URL to use in actions like `await page.goto('/')`. */
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
@@ -74,14 +70,19 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "pnpm run dev",
-    url: "http://localhost:3000",
-    timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
-    // stdout: "pipe",
-    env: {
-      ...parsed,
-    },
-  },
+  webServer: process.env.PLAYWRIGHT_EXTERNAL_SERVER
+    ? undefined
+    : {
+        command: "node scripts/e2e-server.mjs",
+        url: "https://127.0.0.1:3443",
+        ignoreHTTPSErrors: true,
+        timeout: 300 * 1000,
+        reuseExistingServer: false,
+        // stdout: "pipe",
+        env: {
+          ...testEnvironment,
+          FAKE_OPENAI_API: "true",
+          SEND_EMAIL: "false",
+        },
+      },
 });

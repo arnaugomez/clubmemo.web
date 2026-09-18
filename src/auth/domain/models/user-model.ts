@@ -1,12 +1,17 @@
-import type { AuthTypeModel } from "./auth-type-model";
+import * as Schema from "effect/Schema";
 
-export interface UserModelData {
-  id: string;
-  email: string;
-  authTypes: AuthTypeModel[];
-  isEmailVerified?: boolean;
-  isAdmin?: boolean;
-}
+import { AuthTypeModel } from "./auth-type-model";
+
+export const UserModelDataSchema = Schema.Struct({
+  id: Schema.mutableKey(Schema.String),
+  email: Schema.mutableKey(Schema.String),
+  authTypes: Schema.mutableKey(
+    Schema.mutable(Schema.Array(Schema.Enum(AuthTypeModel))),
+  ),
+  isEmailVerified: Schema.mutableKey(Schema.optional(Schema.Boolean)),
+  isAdmin: Schema.mutableKey(Schema.optional(Schema.Boolean)),
+});
+export type UserModelData = typeof UserModelDataSchema.Type;
 
 /**
  * A user of the application. The user represents a person that is using the
@@ -14,8 +19,12 @@ export interface UserModelData {
  *
  * Each user has an email. The email is unique: no two users can have the same.
  */
-export class UserModel {
-  constructor(private data: UserModelData) {}
+export class UserModel extends Schema.Class<UserModel>("UserModel")({
+  data: UserModelDataSchema,
+}) {
+  constructor(data: UserModelData) {
+    super({ data });
+  }
 
   get id() {
     return this.data.id;

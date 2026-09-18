@@ -1,10 +1,12 @@
+import * as Context from "effect/Context";
+import type * as Redacted from "effect/Redacted";
 export interface EnvService {
   /** The MongoDB URL, used to connect to the database */
-  readonly mongodbUrl: string;
+  readonly mongodbUrl: Redacted.Redacted<string>;
   /** Whether to send real emails or log them to the console */
   readonly sendEmail: boolean;
   /** The Resend api key, used to send emails */
-  readonly resendApiKey: string;
+  readonly resendApiKey: Redacted.Redacted<string>;
   /** The base url of the website, for example, https://example.com */
   readonly projectUrl: string;
   /**
@@ -12,9 +14,9 @@ export interface EnvService {
    * Adds an extra layer of protection to the password hash.
    * It prevents the hash from being cracked even if it is leaked.
    */
-  readonly passwordPepper: string;
+  readonly passwordPepper: Redacted.Redacted<string>;
   /** OpenAI API key */
-  readonly openaiApiKey: string;
+  readonly openaiApiKey: Redacted.Redacted<string>;
 
   /** Whether to use a fake of the OpenAI API to save money */
   readonly fakeOpenAiApi: boolean;
@@ -30,9 +32,8 @@ export interface EnvService {
    * it is automatically set to admin
    */
   readonly adminEmail: string;
-
-  /**
-   * Whether to cache the MongoDB client in the global scope.
-   */
-  readonly cacheMongodbClient: boolean;
 }
+
+export const EnvService = Context.Service<EnvService>(
+  "clubmemo/common/domain/interfaces/env-service/EnvService",
+);

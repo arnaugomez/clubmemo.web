@@ -1,19 +1,19 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { EmailSchema } from "@/src/common/schemas/email-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
 
 /**
  * Validates the parameters of `resetPasswordAction`
  */
-export const ResetPasswordActionSchema = z.object({
+export const ResetPasswordActionSchema = Schema.Struct({
   email: EmailSchema,
-  token: z.string(),
+  token: Schema.String,
   password: PasswordSchema,
 });
 
 /**
  * Parameters of `resetPasswordAction`
  */
-export type ResetPasswordActionModel = z.infer<
-  typeof ResetPasswordActionSchema
->;
+export type ResetPasswordActionModel =
+  (typeof ResetPasswordActionSchema)["Type"];

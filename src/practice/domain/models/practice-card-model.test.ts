@@ -1,6 +1,5 @@
 import { State } from "ts-fsrs";
 import { describe, expect, it } from "vitest";
-import type { NoteModelData } from "@/src/notes/domain/models/note-model";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
 import type { PracticeCardModelData } from "./practice-card-model";
 import { PracticeCardModel } from "./practice-card-model";
@@ -10,7 +9,13 @@ describe("PracticeCardModel", () => {
   const data: PracticeCardModelData = {
     id: "id",
     courseEnrollmentId: "courseEnrollmentId",
-    note: {} as NoteModelData,
+    note: {
+      id: "note-id",
+      courseId: "course-id",
+      front: "Question",
+      back: "Answer",
+      createdAt: new Date(),
+    },
     provisionalId: 123,
     due: new Date(),
     stability: 234,

@@ -1,1 +1,5 @@
-export class FileUploadNotSuccessfulError extends Error {}
+import * as Schema from "effect/Schema";
+export class FileUploadNotSuccessfulError extends Schema.TaggedError<FileUploadNotSuccessfulError>()(
+  "FileUploadNotSuccessfulError",
+  {},
+) {}

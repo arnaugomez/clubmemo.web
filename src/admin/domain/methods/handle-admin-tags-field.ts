@@ -1,4 +1,5 @@
-import { locator_tags_TagsRepository } from "@/src/tags/locators/locator_tags-repository";
+import * as Effect from "effect/Effect";
+import type { TagsRepository } from "@/src/tags/domain/interfaces/tags-repository";
 import type { AdminResourceData } from "../models/admin-resource-data";
 import type { AdminResourceModel } from "../models/admin-resource-model";
 import { AdminFieldTypeModel } from "../models/admin-resource-model";
@@ -18,13 +19,15 @@ interface SaveNewAdminResourceTagsParams {
  * Creates new tags in the database when a new resource is created or edited,
  * and it contains a field with a list of tags.
  */
-export async function saveNewAdminResourceTags({
-  data,
-  resource,
-}: SaveNewAdminResourceTagsParams) {
-  for (const field of resource.fields) {
-    if (field.fieldType === AdminFieldTypeModel.tags) {
-      await locator_tags_TagsRepository().create(data[field.name] ?? []);
+export const saveNewAdminResourceTags = Effect.fn("saveNewAdminResourceTags")(
+  function* (
+    tags: TagsRepository,
+    { data, resource }: SaveNewAdminResourceTagsParams,
+  ) {
+    for (const field of resource.fields) {
+      if (field.fieldType === AdminFieldTypeModel.tags) {
+        yield* tags.create(data[field.name] ?? []);
+      }
     }
-  }
-}
+  },
+);

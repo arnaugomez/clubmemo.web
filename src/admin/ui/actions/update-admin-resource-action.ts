@@ -1,8 +1,12 @@
 "use server";
+import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
+import * as Schema from "effect/Schema";
+import { UpdateAdminResourceUseCaseService } from "@/src/admin/layers/layer_update-admin-resource-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import type { UpdateAdminResourceUseCaseInputModel } from "../../domain/use-cases/update-admin-resource-use-case";
-import { locator_admin_UpdateAdminResourceUseCase } from "../../locators/locator_update-admin-resource-use-case";
 import { UpdateAdminResourceActionSchema } from "../schemas/update-admin-resource-action-schema";
 
 /**
@@ -15,12 +19,26 @@ import { UpdateAdminResourceActionSchema } from "../schemas/update-admin-resourc
 export async function updateAdminResourceAction(
   input: UpdateAdminResourceUseCaseInputModel,
 ) {
-  try {
-    const parsed = UpdateAdminResourceActionSchema.parse(input);
-    const useCase = locator_admin_UpdateAdminResourceUseCase();
-    await useCase.execute(parsed);
-    return ActionResponse.formSuccess(null);
-  } catch (e) {
-    return ActionErrorHandler.handle(e);
-  }
+  return runServer(
+    Effect.gen(function* () {
+      {
+        const outcome = yield* Effect.result(
+          Effect.gen(function* () {
+            const parsed = yield* Schema.decodeUnknownEffect(
+              UpdateAdminResourceActionSchema,
+            )(input);
+            const useCase = yield* UpdateAdminResourceUseCaseService;
+            yield* useCase.execute(parsed);
+            return ActionResponse.formSuccess(null);
+          }),
+        );
+        if (Result.isFailure(outcome)) {
+          const e = outcome.failure;
+          return ActionErrorHandler.handle(e);
+        } else {
+          return outcome.success;
+        }
+      }
+    }),
+  );
 }

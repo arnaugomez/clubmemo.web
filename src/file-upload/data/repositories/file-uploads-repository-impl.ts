@@ -1,10 +1,13 @@
 import { randomUUID } from "node:crypto";
+import * as DateTime from "effect/DateTime";
+import * as Effect from "effect/Effect";
+import * as Stream from "effect/Stream";
 import { ObjectId } from "mongodb";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import type { FileUploadService } from "../../domain/interfaces/file-upload-service";
 import type {
   CreateFileUploadInputModel,
-  CreateFileUploadOutputModel,
   FileUploadsRepository,
 } from "../../domain/interfaces/file-uploads-repository";
 import { fileUploadsCollection } from "../collections/file-uploads-collection";
@@ -19,48 +22,83 @@ export class FileUploadsRepositoryImpl implements FileUploadsRepository {
     this.fileUploads = databaseService.collection(fileUploadsCollection);
   }
 
-  async create({
-    collection,
-    contentType,
-    field,
-    userId,
-  }: CreateFileUploadInputModel): Promise<CreateFileUploadOutputModel> {
+  create = Effect.fn("FileUploadsRepositoryImpl.create")(function* (
+    this: FileUploadsRepositoryImpl,
+    { collection, contentType, field, userId }: CreateFileUploadInputModel,
+  ) {
     const key = `${collection}/${field}/${randomUUID()}`;
-    const presignedUrl = await this.fileUploadService.generatePresignedUrl({
+    const presignedUrl = yield* this.fileUploadService.generatePresignedUrl({
       key,
       contentType,
     });
 
     const url = presignedUrl.url + presignedUrl.fields.key;
-    await this.fileUploads.insertOne({
-      collection,
-      field,
-      url,
-      key,
-      contentType,
-      createdByUserId: new ObjectId(userId),
-      createdAt: new Date(),
+    const createdAt = yield* DateTime.nowAsDate;
+    yield* Effect.tryPromise({
+      try: () =>
+        this.fileUploads.insertOne({
+          collection,
+          field,
+          url,
+          key,
+          contentType,
+          createdByUserId: new ObjectId(userId),
+          createdAt,
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "FileUploadsRepositoryImpl.create",
+          cause,
+        }),
     });
 
     return { presignedUrl, url };
-  }
+  }).bind(this);
 
-  async deleteOutdated(): Promise<void> {
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const cursor = this.fileUploads.find({
-      date: { $lt: oneDayAgo },
-    });
-    const db = this.databaseService.client.db();
-
-    for await (const item of cursor) {
-      const { collection, field, url, key, _id } = item;
-      if (collection && field) {
-        const count = await db.collection(collection).findOne({ [field]: url });
-        if (!count) {
-          await this.fileUploadService.deleteFile(key);
-          await this.fileUploads.deleteOne({ _id });
-        }
-      }
-    }
-  }
+  deleteOutdated = Effect.fn("FileUploadsRepositoryImpl.deleteOutdated")(
+    function* (this: FileUploadsRepositoryImpl) {
+      const now = yield* DateTime.nowAsDate;
+      const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const cursor = yield* Effect.acquireRelease(
+        Effect.sync(() => this.fileUploads.find({ date: { $lt: oneDayAgo } })),
+        (cursor) => Effect.promise(() => cursor.close()),
+      );
+      const db = this.databaseService.client.db();
+      const service = this;
+      yield* Stream.fromAsyncIterable(
+        cursor,
+        (cause) =>
+          new ExternalServiceError({
+            operation: "FileUploads.readOutdated",
+            cause,
+          }),
+      ).pipe(
+        Stream.runForEach((item) =>
+          Effect.gen(function* () {
+            const { collection, field, url, key, _id } = item;
+            if (!collection || !field) return;
+            const reference = yield* Effect.tryPromise({
+              try: () => db.collection(collection).findOne({ [field]: url }),
+              catch: (cause) =>
+                new ExternalServiceError({
+                  operation: "FileUploads.findReference",
+                  cause,
+                }),
+            });
+            if (reference) return;
+            yield* service.fileUploadService.deleteFile(key);
+            yield* Effect.tryPromise({
+              try: () => service.fileUploads.deleteOne({ _id }),
+              catch: (cause) =>
+                new ExternalServiceError({
+                  operation: "FileUploads.deleteRecord",
+                  cause,
+                }),
+            });
+          }),
+        ),
+      );
+    },
+    Effect.scoped,
+  ).bind(this);
 }
