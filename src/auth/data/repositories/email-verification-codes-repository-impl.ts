@@ -1,10 +1,10 @@
+import * as DateTime from "effect/DateTime";
+import * as Effect from "effect/Effect";
 import { ObjectId } from "mongodb";
-import { createDate, TimeSpan } from "oslo";
 import { alphabet, generateRandomString } from "oslo/crypto";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
-import { waitMilliseconds } from "@/src/common/domain/utils/promise";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import type { EmailVerificationCodesRepository } from "../../domain/interfaces/email-verification-codes-repository";
-import type { EmailVerificationCodeModel } from "../../domain/models/email-verification-code-model";
 import {
   EmailVerificationCodeDocTransformer,
   emailVerificationCodesCollection,
@@ -23,41 +23,75 @@ export class EmailVerificationCodesRepositoryImpl
     );
   }
 
-  async generate(userId: string): Promise<EmailVerificationCodeModel> {
-    await this.deleteByUserId(userId);
+  generate = Effect.fn("EmailVerificationCodesRepositoryImpl.generate")(
+    function* (this: EmailVerificationCodesRepositoryImpl, userId: string) {
+      yield* this.deleteByUserId(userId);
 
-    const doc = {
-      userId: new ObjectId(userId),
-      code: generateRandomString(6, alphabet("a-z", "0-9")),
-      expiresAt: createDate(new TimeSpan(15, "m")),
-    };
-    await this.collection.insertOne(doc);
+      const doc = {
+        userId: new ObjectId(userId),
+        code: generateRandomString(6, alphabet("a-z", "0-9")),
+        expiresAt: DateTime.toDateUtc(
+          DateTime.add(yield* DateTime.now, { minutes: 15 }),
+        ),
+      };
+      yield* Effect.tryPromise({
+        try: () => this.collection.insertOne(doc),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "EmailVerificationCodesRepositoryImpl.generate",
+            cause,
+          }),
+      });
 
-    return new EmailVerificationCodeDocTransformer(doc).toDomain();
-  }
+      return new EmailVerificationCodeDocTransformer(doc).toDomain();
+    },
+  ).bind(this);
 
-  async getByUserId(
+  getByUserId = Effect.fn("EmailVerificationCodesRepositoryImpl.getByUserId")(
+    function* (this: EmailVerificationCodesRepositoryImpl, userId: string) {
+      const doc = yield* Effect.tryPromise({
+        try: () => this.collection.findOne({ userId: new ObjectId(userId) }),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "EmailVerificationCodesRepositoryImpl.getByUserId",
+            cause,
+          }),
+      });
+      return doc && new EmailVerificationCodeDocTransformer(doc).toDomain();
+    },
+  ).bind(this);
+
+  verify = Effect.fn("EmailVerificationCodesRepositoryImpl.verify")(function* (
+    this: EmailVerificationCodesRepositoryImpl,
     userId: string,
-  ): Promise<EmailVerificationCodeModel | null> {
-    const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
-    return doc && new EmailVerificationCodeDocTransformer(doc).toDomain();
-  }
-
-  async verify(userId: string, code: string): Promise<boolean> {
-    const verificationCode = await this.getByUserId(userId);
+    code: string,
+  ) {
+    const verificationCode = yield* this.getByUserId(userId);
     if (!verificationCode || verificationCode.code !== code) {
-      await waitMilliseconds(2000); // Prevent brute-force attacks
+      yield* Effect.sleep(2000); // Prevent brute-force attacks
       return false;
     }
-    await this.deleteByUserId(userId);
+    yield* this.deleteByUserId(userId);
 
-    if (verificationCode.hasExpired) {
+    if (
+      verificationCode.data.expiresAt.getTime() <=
+      DateTime.toEpochMillis(yield* DateTime.now)
+    ) {
       return false;
     }
     return true;
-  }
+  }).bind(this);
 
-  private async deleteByUserId(userId: string): Promise<void> {
-    await this.collection.deleteMany({ userId: new ObjectId(userId) });
-  }
+  private deleteByUserId = Effect.fn(
+    "EmailVerificationCodesRepositoryImpl.deleteByUserId",
+  )(function* (this: EmailVerificationCodesRepositoryImpl, userId: string) {
+    yield* Effect.tryPromise({
+      try: () => this.collection.deleteMany({ userId: new ObjectId(userId) }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "EmailVerificationCodesRepositoryImpl.deleteByUserId",
+          cause,
+        }),
+    });
+  }).bind(this);
 }

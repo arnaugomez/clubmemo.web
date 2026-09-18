@@ -1,9 +1,9 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
 import { CircleHelp, FileText } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "@/i18n/zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
@@ -26,11 +26,11 @@ interface ImportNotesAnkiFormProps {
   onClose: () => void;
   onSuccess: (notes: NoteModel[]) => void;
 }
-const Schema = z.object({
+const FormSchema = Schema.Struct({
   file: FileSchema,
 });
 
-type FormValues = z.infer<typeof Schema>;
+type FormValues = (typeof FormSchema)["Type"];
 
 export function ImportNotesAnkiForm({
   courseId,
@@ -39,7 +39,7 @@ export function ImportNotesAnkiForm({
   onSuccess,
 }: ImportNotesAnkiFormProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(Schema),
+    resolver: schemaResolver(FormSchema),
     defaultValues: {},
   });
 
@@ -59,7 +59,7 @@ export function ImportNotesAnkiForm({
       }
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
     setIsLoading(false);

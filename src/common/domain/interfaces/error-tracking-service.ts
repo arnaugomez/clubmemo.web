@@ -1,3 +1,5 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
 /**
  * Keeps track of errors that occur in the application and sends them to an
  * external service for further analysis.
@@ -9,5 +11,9 @@ export interface ErrorTrackingService {
    *
    * @param error The error to capture. It can be a value of any type.
    */
-  captureError(error: unknown): void;
+  captureError(error: unknown): Effect.Effect<void>;
 }
+
+export const ErrorTrackingService = Context.Service<ErrorTrackingService>(
+  "clubmemo/common/domain/interfaces/error-tracking-service/ErrorTrackingService",
+);

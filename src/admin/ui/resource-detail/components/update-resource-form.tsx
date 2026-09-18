@@ -1,5 +1,4 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import range from "lodash/range";
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
@@ -11,14 +10,14 @@ import {
   AdminFieldTypeModel,
   getDefaultValuesOfAdminResource,
 } from "@/src/admin/domain/models/admin-resource-model";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError, runClient } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Skeleton } from "@/src/common/ui/components/shadcn/ui/skeleton";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
-import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-action";
+import { uploadFileWorkflow } from "@/src/file-upload/ui/workflows/upload-file";
 import { updateAdminResourceAction } from "../../actions/update-admin-resource-action";
 import { translateAdminKey } from "../../i18n/admin-translations";
 import { AdminFields } from "../../resource-form/admin-fields";
@@ -33,7 +32,7 @@ export function UpdateResourceForm() {
     isCreate: false,
   });
   const form = useForm({
-    resolver: zodResolver(schema),
+    resolver: schemaResolver(schema),
     values: data ?? undefined,
     defaultValues: getDefaultValuesOfAdminResource(resource.fields),
   });
@@ -45,28 +44,24 @@ export function UpdateResourceForm() {
       )) {
         const fieldValue = data[field.name];
         if (fieldValue instanceof File) {
-          const response = await uploadFileAction({
-            collection: resource.resourceType as "profiles",
-            field: field.name as "picture",
-            contentType: fieldValue.type,
-          });
+          const response = await runClient(
+            uploadFileWorkflow({
+              collection: resource.resourceType as "profiles",
+              field: field.name as "picture",
+              file: fieldValue,
+            }),
+          );
           const handler = new FormResponseHandler(response, form);
           if (handler.hasErrors) {
             handler.setErrors();
             return;
           } else if (handler.data) {
-            const fileUploadService =
-              locator_fileUpload_ClientFileUploadService();
-            await fileUploadService.uploadPresignedUrl({
-              file: fieldValue,
-              presignedUrl: handler.data.presignedUrl,
-            });
             data[field.name] = handler.data.url;
           }
         }
       }
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       toast.error("Error al subir los ficheros");
       return;
     }
@@ -84,7 +79,7 @@ export function UpdateResourceForm() {
         toast.success("Recurso modificado correctamente");
       }
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   }

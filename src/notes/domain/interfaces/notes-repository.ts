@@ -1,4 +1,7 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
 import type { PaginationModel } from "@/src/common/domain/models/pagination-model";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { CopyNotesInputModel } from "../models/copy-notes-input-model";
 import type { CreateNoteInputModel } from "../models/create-note-input-model";
 import type { GetNotesInputModel } from "../models/get-notes-input-model";
@@ -29,7 +32,9 @@ export interface NotesRepository {
    * @param input The data to create a note
    * @returns The created note
    */
-  create(input: CreateNoteInputModel): Promise<NoteModel>;
+  create(
+    input: CreateNoteInputModel,
+  ): Effect.Effect<NoteModel, ExternalServiceError>;
 
   /**
    * Gets the detailed data of a note
@@ -37,28 +42,32 @@ export interface NotesRepository {
    * @param noteId The id of the note
    * @returns The detailed data of the note if the note exists, `null` otherwise
    */
-  getDetail(noteId: string): Promise<NoteModel | null>;
+  getDetail(
+    noteId: string,
+  ): Effect.Effect<NoteModel | null, ExternalServiceError>;
 
   /**
    * Updates the data of a note. For example, its front text, back text, etc.
    *
    * @param input The data that needs to be updated
    */
-  update(input: UpdateNoteInputModel): Promise<void>;
+  update(
+    input: UpdateNoteInputModel,
+  ): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Deletes a note permanently. Also deletes all its associated practice cards.
    *
    * @param noteId The id of the note to delete
    */
-  delete(noteId: string): Promise<void>;
+  delete(noteId: string): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Deletes all the notes of a course
    *
    * @param courseId The id of a course
    */
-  deleteByCourseId(courseId: string): Promise<void>;
+  deleteByCourseId(courseId: string): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Obtains the notes of a course
@@ -67,7 +76,9 @@ export interface NotesRepository {
    * pagination cursor
    * @returns A paginated list of notes
    */
-  get(input: GetNotesInputModel): Promise<PaginationModel<NoteModel>>;
+  get(
+    input: GetNotesInputModel,
+  ): Effect.Effect<PaginationModel<NoteModel>, ExternalServiceError>;
 
   /**
    * Copies notes from one course to another.
@@ -78,7 +89,7 @@ export interface NotesRepository {
    *
    * @param input The data to copy notes from one course to another
    */
-  copy(input: CopyNotesInputModel): Promise<void>;
+  copy(input: CopyNotesInputModel): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Gets all the notes from a course in a simple format, consisting in the
@@ -89,7 +100,9 @@ export interface NotesRepository {
    * @returns A list of notes in a simple format
    * @see NoteRowModel
    */
-  getAllRows(courseId: string): Promise<NoteRowModel[]>;
+  getAllRows(
+    courseId: string,
+  ): Effect.Effect<NoteRowModel[], ExternalServiceError>;
 
   /**
    * Adds a list of notes to a course
@@ -98,5 +111,12 @@ export interface NotesRepository {
    * @param notes A list of notes in a simple format, consisting in the front and back of the note.
    * @see NoteRowModel
    */
-  createMany(courseId: string, notes: NoteRowModel[]): Promise<NoteModel[]>;
+  createMany(
+    courseId: string,
+    notes: NoteRowModel[],
+  ): Effect.Effect<NoteModel[], ExternalServiceError>;
 }
+
+export const NotesRepository = Context.Service<NotesRepository>(
+  "clubmemo/notes/domain/interfaces/notes-repository/NotesRepository",
+);

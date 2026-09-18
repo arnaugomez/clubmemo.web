@@ -1,6 +1,8 @@
+import * as Effect from "effect/Effect";
 import { adminResourcesConfig } from "@/src/admin/domain/config/admin-resources-config";
 import { ResourceListPage } from "@/src/admin/ui/resource-list/pages/resource-list-page";
-import { locator_common_DatabaseIndexesService } from "@/src/common/locators/locator_database-indexes-service";
+import { runServer } from "@/src/common/effect/server-runtime";
+import { DatabaseIndexesService } from "@/src/common/layers/layer_database-indexes-service";
 
 /**
  * If the browser visits a URL that does not match the defined
@@ -19,12 +21,16 @@ export const dynamicParams = false;
  * @see https://nextjs.org/docs/app/api-reference/functions/generate-static-params
  */
 export async function generateStaticParams() {
-  const databaseIndexesService = locator_common_DatabaseIndexesService();
-  await databaseIndexesService.createIndexes();
+  return runServer(
+    Effect.gen(function* () {
+      const databaseIndexesService = yield* DatabaseIndexesService;
+      yield* databaseIndexesService.createIndexes();
 
-  return adminResourcesConfig.map((resource) => ({
-    resourceType: resource.resourceType,
-  }));
+      return adminResourcesConfig.map((resource) => ({
+        resourceType: resource.resourceType,
+      }));
+    }),
+  );
 }
 
 export default ResourceListPage;

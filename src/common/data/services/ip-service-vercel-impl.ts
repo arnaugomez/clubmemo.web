@@ -1,4 +1,6 @@
+import * as Effect from "effect/Effect";
 import { headers } from "next/headers";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import type { IpService } from "../../domain/interfaces/ip-service";
 
 /**
@@ -8,8 +10,17 @@ import type { IpService } from "../../domain/interfaces/ip-service";
  * situations
  */
 export class IpServiceVercelImpl implements IpService {
-  async getIp(): Promise<string> {
-    const headerStore = await headers();
+  getIp = Effect.fn("IpServiceVercelImpl.getIp")(function* (
+    this: IpServiceVercelImpl,
+  ) {
+    const headerStore = yield* Effect.tryPromise({
+      try: () => headers(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "IpServiceVercelImpl.getIp",
+          cause,
+        }),
+    });
     const forwardedFor = headerStore.get("x-forwarded-for");
 
     if (forwardedFor) {
@@ -21,5 +32,5 @@ export class IpServiceVercelImpl implements IpService {
       return realIp.trim();
     }
     return "0.0.0.0";
-  }
+  }).bind(this);
 }

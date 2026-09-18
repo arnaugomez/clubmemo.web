@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { PracticeCardModel } from "../models/practice-card-model";
 
 /**
@@ -15,7 +18,9 @@ export interface PracticeCardsRepository {
    * @param input Data of the new card
    * @returns The created card
    */
-  create(input: PracticeCardModel): Promise<PracticeCardModel>;
+  create(
+    input: PracticeCardModel,
+  ): Effect.Effect<PracticeCardModel, ExternalServiceError>;
 
   /**
    * Updates the data of a practice card once it has been practiced and its
@@ -23,7 +28,7 @@ export interface PracticeCardsRepository {
    *
    * @param input Updated data of the card
    */
-  update(input: PracticeCardModel): Promise<void>;
+  update(input: PracticeCardModel): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Gets a list of new cards. New cards are those that the learner has not
@@ -33,7 +38,9 @@ export interface PracticeCardsRepository {
    * id and the course enrollment id
    * @returns A list of new cards
    */
-  getNew(input: GetNewInput): Promise<PracticeCardModel[]>;
+  getNew(
+    input: GetNewInput,
+  ): Effect.Effect<PracticeCardModel[], ExternalServiceError>;
 
   /**
    * Gets a list of due cards. Due cards are those that the learner has already
@@ -44,7 +51,9 @@ export interface PracticeCardsRepository {
    * the course enrollment id
    * @returns A list of due cards
    */
-  getDue(input: GetDueInput): Promise<PracticeCardModel[]>;
+  getDue(
+    input: GetDueInput,
+  ): Effect.Effect<PracticeCardModel[], ExternalServiceError>;
 
   /**
    * Gets the total count of new cards. New cards are those that the learner has
@@ -54,7 +63,9 @@ export interface PracticeCardsRepository {
    * the course enrollment id
    * @returns The total count of new cards
    */
-  getNewCount(input: GetNewCountInput): Promise<number>;
+  getNewCount(
+    input: GetNewCountInput,
+  ): Effect.Effect<number, ExternalServiceError>;
 
   /**
    * Gets the total count of due cards. Due cards are those that the learner has
@@ -65,7 +76,9 @@ export interface PracticeCardsRepository {
    * the course enrollment id
    * @returns The total count of due cards
    */
-  getDueCount(courseEnrollmentId: string): Promise<number>;
+  getDueCount(
+    courseEnrollmentId: string,
+  ): Effect.Effect<number, ExternalServiceError>;
 }
 
 export interface GetNewInput {
@@ -82,3 +95,7 @@ export interface GetDueInput {
   courseEnrollmentId: string;
   limit: number;
 }
+
+export const PracticeCardsRepository = Context.Service<PracticeCardsRepository>(
+  "clubmemo/practice/domain/interfaces/practice-cards-repository/PracticeCardsRepository",
+);

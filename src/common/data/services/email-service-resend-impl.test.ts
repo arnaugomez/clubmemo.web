@@ -1,11 +1,13 @@
-import { afterEach } from "node:test";
+import * as Effect from "effect/Effect";
 import { Resend } from "resend";
-import { describe, expect, it, vi } from "vitest";
-import { locator_common_EnvService } from "../../locators/locator_env-service";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { EmailServiceResendImpl } from "./email-service-resend-impl";
+import { applicationConfig } from "./env-service-impl";
 
 vi.mock("resend", () => {
-  const sendMock = vi.fn();
+  const sendMock = vi
+    .fn()
+    .mockResolvedValue({ data: { id: "test" }, error: null });
   class ResendMock {
     emails = {
       send: sendMock,
@@ -23,10 +25,12 @@ describe("EmailServiceResendImpl", () => {
     const email = "test@example.com";
     const verificationCode = "123456";
 
-    const envService = locator_common_EnvService();
+    const envService = Effect.runSync(applicationConfig);
 
     const emailService = new EmailServiceResendImpl(envService);
-    await emailService.sendVerificationCode(email, verificationCode);
+    await Effect.runPromise(
+      emailService.sendVerificationCode(email, verificationCode),
+    );
 
     expect(new Resend().emails.send).toHaveBeenCalledWith({
       from: "El equipo de clubmemo <noreply@app.clubmemo.com>",
@@ -40,9 +44,9 @@ describe("EmailServiceResendImpl", () => {
     const email = "test@example.com";
     const token = "reset-token";
 
-    const envService = locator_common_EnvService();
+    const envService = Effect.runSync(applicationConfig);
     const emailService = new EmailServiceResendImpl(envService);
-    await emailService.sendForgotPasswordLink(email, token);
+    await Effect.runPromise(emailService.sendForgotPasswordLink(email, token));
 
     const expectedUrl =
       "https://www.clubmemo.com/auth/reset-password?email=test%40example.com&token=reset-token";

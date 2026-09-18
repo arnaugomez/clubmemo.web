@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect";
 import type { WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import type { PaginationFacet } from "@/src/common/data/facets/pagination-facet";
@@ -5,7 +6,7 @@ import { PaginationFacetTransformer } from "@/src/common/data/facets/pagination-
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
-import type { TokenPaginationModel } from "@/src/common/domain/models/token-pagination-model";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import type {
   CoursesRepository,
   GetCoursesByAuthorInputModel,
@@ -14,13 +15,10 @@ import type {
   GetMyCoursesInputModel,
   GetMyCoursesPaginationInputModel,
 } from "../../domain/interfaces/courses-repository";
-import type { CourseModel } from "../../domain/models/course-model";
 import { CoursePermissionTypeModel } from "../../domain/models/course-permission-type-model";
 import type { CreateCourseInputModel } from "../../domain/models/create-course-input-model";
-import type { DiscoverCourseModel } from "../../domain/models/discover-course-model";
 import type { EnrolledCourseListItemModel } from "../../domain/models/enrolled-course-list-item-model";
 import type { GetCourseDetailInputModel } from "../../domain/models/get-course-detail-input-model";
-import type { KeepLearningModel } from "../../domain/models/keep-learning-model";
 import type { UpdateCourseInputModel } from "../../domain/models/update-course-input-model";
 import type { DiscoverCourseDoc } from "../aggregations/discover-course-aggregation";
 import { DiscoverCourseTransformer } from "../aggregations/discover-course-aggregation";
@@ -65,81 +63,171 @@ export class CoursesRepositoryImpl implements CoursesRepository {
     );
   }
 
-  async create(input: CreateCourseInputModel): Promise<CourseModel> {
+  create = Effect.fn("CoursesRepositoryImpl.create")(function* (
+    this: CoursesRepositoryImpl,
+    input: CreateCourseInputModel,
+  ) {
     const insertedCourse = {
       name: input.name,
       isPublic: false,
     } as WithId<CourseDoc>;
-    await this.courses.insertOne(insertedCourse);
-    await this.coursePermissions.insertOne({
-      courseId: insertedCourse._id,
-      profileId: new ObjectId(input.profileId),
-      permissionType: CoursePermissionTypeModel.own,
+    yield* Effect.tryPromise({
+      try: () => this.courses.insertOne(insertedCourse),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CoursesRepositoryImpl.create",
+          cause,
+        }),
+    });
+    yield* Effect.tryPromise({
+      try: () =>
+        this.coursePermissions.insertOne({
+          courseId: insertedCourse._id,
+          profileId: new ObjectId(input.profileId),
+          permissionType: CoursePermissionTypeModel.own,
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CoursesRepositoryImpl.create",
+          cause,
+        }),
     });
     const insertedEnrollment = {
       courseId: insertedCourse._id,
       profileId: new ObjectId(input.profileId),
       isFavorite: false,
     } as WithId<CourseEnrollmentDoc>;
-    await this.courseEnrollments.insertOne(insertedEnrollment);
+    yield* Effect.tryPromise({
+      try: () => this.courseEnrollments.insertOne(insertedEnrollment),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CoursesRepositoryImpl.create",
+          cause,
+        }),
+    });
     return new CourseDocTransformer(insertedCourse).toDomain(
       CoursePermissionTypeModel.own,
       insertedEnrollment,
     );
-  }
+  }).bind(this);
 
-  async getDetail({
-    id,
-    profileId,
-  }: GetCourseDetailInputModel): Promise<CourseModel | null> {
+  getDetail = Effect.fn("CoursesRepositoryImpl.getDetail")(function* (
+    this: CoursesRepositoryImpl,
+    { id, profileId }: GetCourseDetailInputModel,
+  ) {
     const courseId = new ObjectId(id);
-    const [course, permission, enrollment] = await Promise.all([
-      this.courses.findOne({ _id: courseId }),
-      this.coursePermissions.findOne({
-        courseId,
-        profileId: new ObjectId(profileId),
-      }),
-      this.courseEnrollments.findOne({
-        courseId,
-        profileId: new ObjectId(profileId),
-      }),
-    ]);
+    const [course, permission, enrollment] = yield* Effect.all(
+      [
+        Effect.tryPromise({
+          try: () => this.courses.findOne({ _id: courseId }),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "CoursesRepositoryImpl.getDetail",
+              cause,
+            }),
+        }),
+        Effect.tryPromise({
+          try: () =>
+            this.coursePermissions.findOne({
+              courseId,
+              profileId: new ObjectId(profileId),
+            }),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "CoursesRepositoryImpl.getDetail",
+              cause,
+            }),
+        }),
+        Effect.tryPromise({
+          try: () =>
+            this.courseEnrollments.findOne({
+              courseId,
+              profileId: new ObjectId(profileId),
+            }),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "CoursesRepositoryImpl.getDetail",
+              cause,
+            }),
+        }),
+      ],
+      { concurrency: "unbounded" },
+    );
     if (!course) return null;
     return new CourseDocTransformer(course).toDomain(
       permission?.permissionType ?? null,
       enrollment,
     );
-  }
+  }).bind(this);
 
-  async update({ id, ...input }: UpdateCourseInputModel): Promise<void> {
-    await this.courses.updateOne(
-      { _id: new ObjectId(id) },
-      {
-        $set: {
-          description: input.description,
-          isPublic: input.isPublic,
-          name: input.name,
-          picture: input.picture,
-          tags: input.tags,
-        },
-      },
-    );
-  }
+  update = Effect.fn("CoursesRepositoryImpl.update")(function* (
+    this: CoursesRepositoryImpl,
+    { id, ...input }: UpdateCourseInputModel,
+  ) {
+    yield* Effect.tryPromise({
+      try: () =>
+        this.courses.updateOne(
+          { _id: new ObjectId(id) },
+          {
+            $set: {
+              description: input.description,
+              isPublic: input.isPublic,
+              name: input.name,
+              picture: input.picture,
+              tags: input.tags,
+            },
+          },
+        ),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CoursesRepositoryImpl.update",
+          cause,
+        }),
+    });
+  }).bind(this);
 
-  async delete(id: string): Promise<void> {
+  delete = Effect.fn("CoursesRepositoryImpl.delete")(function* (
+    this: CoursesRepositoryImpl,
+    id: string,
+  ) {
     const _id = new ObjectId(id);
-    await Promise.all([
-      this.courses.deleteOne({ _id }),
-      this.coursePermissions.deleteMany({ courseId: _id }),
-      this.courseEnrollments.deleteMany({ courseId: _id }),
-    ]);
-  }
+    yield* Effect.all(
+      [
+        Effect.tryPromise({
+          try: () => this.courses.deleteOne({ _id }),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "CoursesRepositoryImpl.delete",
+              cause,
+            }),
+        }),
+        Effect.tryPromise({
+          try: () => this.coursePermissions.deleteMany({ courseId: _id }),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "CoursesRepositoryImpl.delete",
+              cause,
+            }),
+        }),
+        Effect.tryPromise({
+          try: () => this.courseEnrollments.deleteMany({ courseId: _id }),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "CoursesRepositoryImpl.delete",
+              cause,
+            }),
+        }),
+      ],
+      { concurrency: "unbounded" },
+    );
+  }).bind(this);
 
-  async getMyCourses({
-    profileId,
-    isFavorite,
-    limit,
-  }: GetMyCoursesInputModel): Promise<EnrolledCourseListItemModel[]> {
+  getMyCourses = Effect.fn("CoursesRepositoryImpl.getMyCourses")(function* (
+    this: CoursesRepositoryImpl,
+    { profileId, isFavorite, limit }: GetMyCoursesInputModel,
+  ) {
+    const getStartOfToday = yield* this.dateTimeService.getStartOfToday();
+    const getStartOfTomorrow = yield* this.dateTimeService.getStartOfTomorrow();
     const aggregation =
       this.courseEnrollments.aggregate<EnrolledCourseListItemDoc>([
         {
@@ -152,12 +240,8 @@ export class CoursesRepositoryImpl implements CoursesRepository {
           $limit: limit ?? 10,
         },
         ...coursesByEnrollmentLookupPipelineStages,
-        getDueCardsLookupPipelineStage(
-          this.dateTimeService.getStartOfTomorrow(),
-        ),
-        getReviewsOfNewCardsLookupPipelineStage(
-          this.dateTimeService.getStartOfToday(),
-        ),
+        getDueCardsLookupPipelineStage(getStartOfTomorrow),
+        getReviewsOfNewCardsLookupPipelineStage(getStartOfToday),
         newCardsLookupPipelineStage,
         {
           $project: {
@@ -172,19 +256,31 @@ export class CoursesRepositoryImpl implements CoursesRepository {
         },
       ]);
 
-    const result = await aggregation.toArray();
+    const result = yield* Effect.tryPromise({
+      try: () => aggregation.toArray(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CoursesRepositoryImpl.getMyCourses",
+          cause,
+        }),
+    });
     return result.map((e) =>
       new EnrolledCourseListItemTransformer(e).toDomain(),
     );
-  }
-  async getMyCoursesPagination({
-    profileId,
-    isFavorite,
-    page = 1,
-    pageSize = 10,
-  }: GetMyCoursesPaginationInputModel): Promise<
-    PaginationModel<EnrolledCourseListItemModel>
-  > {
+  }).bind(this);
+  getMyCoursesPagination = Effect.fn(
+    "CoursesRepositoryImpl.getMyCoursesPagination",
+  )(function* (
+    this: CoursesRepositoryImpl,
+    {
+      profileId,
+      isFavorite,
+      page = 1,
+      pageSize = 10,
+    }: GetMyCoursesPaginationInputModel,
+  ) {
+    const getStartOfToday = yield* this.dateTimeService.getStartOfToday();
+    const getStartOfTomorrow = yield* this.dateTimeService.getStartOfTomorrow();
     const skip = (page - 1) * pageSize;
     const limit = pageSize;
 
@@ -204,13 +300,9 @@ export class CoursesRepositoryImpl implements CoursesRepository {
             { $skip: skip },
             { $limit: limit },
             ...coursesByEnrollmentLookupPipelineStages,
-            getDueCardsLookupPipelineStage(
-              this.dateTimeService.getStartOfTomorrow(),
-            ),
+            getDueCardsLookupPipelineStage(getStartOfTomorrow),
 
-            getReviewsOfNewCardsLookupPipelineStage(
-              this.dateTimeService.getStartOfToday(),
-            ),
+            getReviewsOfNewCardsLookupPipelineStage(getStartOfToday),
             newCardsLookupPipelineStage,
             {
               $project: {
@@ -231,231 +323,272 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       },
     ]);
 
-    const result = await aggregation.tryNext();
+    const result = yield* Effect.tryPromise({
+      try: () => aggregation.tryNext(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CoursesRepositoryImpl.getMyCoursesPagination",
+          cause,
+        }),
+    });
     if (!result) {
-      return PaginationModel.empty();
+      return PaginationModel.empty<EnrolledCourseListItemModel>();
     }
     return new PaginationFacetTransformer(result).toDomain((data) =>
       new EnrolledCourseListItemTransformer(data).toDomain(),
     );
-  }
+  }).bind(this);
 
-  async getHasCourses(profileId: string) {
-    const result = await this.courseEnrollments.findOne(
-      { profileId: new ObjectId(profileId) },
-      { projection: { _id: 1 } },
-    );
+  getHasCourses = Effect.fn("CoursesRepositoryImpl.getHasCourses")(function* (
+    this: CoursesRepositoryImpl,
+    profileId: string,
+  ) {
+    const result = yield* Effect.tryPromise({
+      try: () =>
+        this.courseEnrollments.findOne(
+          { profileId: new ObjectId(profileId) },
+          { projection: { _id: 1 } },
+        ),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CoursesRepositoryImpl.getHasCourses",
+          cause,
+        }),
+    });
     return Boolean(result);
-  }
+  }).bind(this);
 
-  async getDiscoverCourses({
-    limit = 12,
-    paginationToken,
-    query,
-  }: GetDiscoverCoursesInputModel): Promise<
-    TokenPaginationModel<DiscoverCourseModel>
-  > {
-    const aggregation = this.courses.aggregate<
-      WithPaginationToken<WithId<DiscoverCourseDoc>>
-    >([
-      ...(query
-        ? [
-            {
-              $search: {
-                index: "courses",
-                compound: {
-                  should: [
-                    {
-                      autocomplete: {
-                        query,
-                        path: "name",
-                        fuzzy: {
-                          maxEdits: 2,
-                          prefixLength: 0,
-                          maxExpansions: 50,
-                        },
-                        score: { boost: { value: 3 } },
-                      },
-                    },
-                    {
-                      autocomplete: {
-                        query,
-                        path: "description",
-                        fuzzy: {
-                          maxEdits: 2,
-                          prefixLength: 0,
-                          maxExpansions: 50,
+  getDiscoverCourses = Effect.fn("CoursesRepositoryImpl.getDiscoverCourses")(
+    function* (
+      this: CoursesRepositoryImpl,
+      { limit = 12, paginationToken, query }: GetDiscoverCoursesInputModel,
+    ) {
+      const aggregation = this.courses.aggregate<
+        WithPaginationToken<WithId<DiscoverCourseDoc>>
+      >([
+        ...(query
+          ? [
+              {
+                $search: {
+                  index: "courses",
+                  compound: {
+                    should: [
+                      {
+                        autocomplete: {
+                          query,
+                          path: "name",
+                          fuzzy: {
+                            maxEdits: 2,
+                            prefixLength: 0,
+                            maxExpansions: 50,
+                          },
+                          score: { boost: { value: 3 } },
                         },
                       },
-                    },
-                    {
-                      text: {
-                        query,
-                        path: "tags",
-                        fuzzy: {
-                          maxEdits: 2,
-                          prefixLength: 0,
-                          maxExpansions: 50,
+                      {
+                        autocomplete: {
+                          query,
+                          path: "description",
+                          fuzzy: {
+                            maxEdits: 2,
+                            prefixLength: 0,
+                            maxExpansions: 50,
+                          },
                         },
                       },
-                    },
-                  ],
-                  minimumShouldMatch: 1,
+                      {
+                        text: {
+                          query,
+                          path: "tags",
+                          fuzzy: {
+                            maxEdits: 2,
+                            prefixLength: 0,
+                            maxExpansions: 50,
+                          },
+                        },
+                      },
+                    ],
+                    minimumShouldMatch: 1,
+                  },
+                  searchAfter: paginationToken,
                 },
-                searchAfter: paginationToken,
               },
-            },
-          ]
-        : [
-            {
-              $search: {
-                index: "courses",
-                exists: {
-                  path: "name",
+            ]
+          : [
+              {
+                $search: {
+                  index: "courses",
+                  exists: {
+                    path: "name",
+                  },
+                  searchAfter: paginationToken,
                 },
-                searchAfter: paginationToken,
               },
-            },
-          ]),
-      {
-        $match: {
-          isPublic: true,
-        },
-      },
-      { $limit: limit },
-      {
-        $project: {
-          _id: true,
-          name: true,
-          description: true,
-          picture: true,
-          tags: true,
-          paginationToken: { $meta: "searchSequenceToken" },
-        },
-      },
-    ]);
-
-    const result = await aggregation.toArray();
-    return new TokenPaginationTransformer(result).toDomain((data) =>
-      new DiscoverCourseTransformer(data).toDomain(),
-    );
-  }
-
-  async getCoursesByAuthor({
-    profileId,
-    limit = 12,
-    paginationToken,
-  }: GetCoursesByAuthorInputModel): Promise<
-    TokenPaginationModel<DiscoverCourseModel>
-  > {
-    const aggregation = this.courses.aggregate<
-      WithPaginationToken<WithId<DiscoverCourseDoc>>
-    >([
-      {
-        $search: {
-          index: "courses",
-          equals: {
-            path: "isPublic",
-            value: true,
-          },
-          searchAfter: paginationToken,
-        },
-      },
-      {
-        $lookup: {
-          from: "coursePermissions",
-          localField: "_id",
-          foreignField: "courseId",
-          as: "permission",
-        },
-      },
-      {
-        $unwind: "$permission",
-      },
-      {
-        $match: {
-          "permission.profileId": new ObjectId(profileId),
-          "permission.permissionType": {
-            $in: [
-              CoursePermissionTypeModel.own,
-              CoursePermissionTypeModel.edit,
-            ],
-          },
-        },
-      },
-      { $limit: limit },
-      {
-        $project: {
-          _id: true,
-          name: true,
-          description: true,
-          picture: true,
-          tags: true,
-          paginationToken: { $meta: "searchSequenceToken" },
-        },
-      },
-    ]);
-
-    const result = await aggregation.toArray();
-    return new TokenPaginationTransformer(result).toDomain((data) =>
-      new DiscoverCourseTransformer(data).toDomain(),
-    );
-  }
-
-  async getKeepLearning(profileId: string): Promise<KeepLearningModel | null> {
-    const aggregation =
-      this.courseEnrollments.aggregate<KeepLearningAggregationDoc>([
+            ]),
         {
           $match: {
-            profileId: new ObjectId(profileId),
+            isPublic: true,
           },
         },
-        ...coursesByEnrollmentLookupPipelineStages,
-        getDueCardsLookupPipelineStage(
-          this.dateTimeService.getStartOfTomorrow(),
-        ),
-        getReviewsOfNewCardsLookupPipelineStage(
-          this.dateTimeService.getStartOfToday(),
-        ),
-        newCardsLookupPipelineStage,
+        { $limit: limit },
         {
           $project: {
-            courseId: true,
-            isFavorite: true,
-            name: "$course.name",
-            picture: "$course.picture",
-            tags: "$course.tags",
-            description: "$course.description",
-            dueCount: { $size: "$dueCards" },
-            newCount: newCountProjectionQuery,
+            _id: true,
+            name: true,
+            description: true,
+            picture: true,
+            tags: true,
+            paginationToken: { $meta: "searchSequenceToken" },
           },
-        },
-        {
-          $match: {
-            $or: [{ dueCount: { $gt: 0 } }, { newCount: { $gt: 0 } }],
-          },
-        },
-        {
-          $sort: {
-            isFavorite: -1,
-            dueCount: -1,
-            newCount: -1,
-          },
-        },
-        {
-          $limit: 1,
         },
       ]);
 
-    const result = await aggregation.next();
-    return (
-      result && new KeepLearningAggregationDocTransformer(result).toDomain()
-    );
-  }
+      const result = yield* Effect.tryPromise({
+        try: () => aggregation.toArray(),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "CoursesRepositoryImpl.getDiscoverCourses",
+            cause,
+          }),
+      });
+      return new TokenPaginationTransformer(result).toDomain((data) =>
+        new DiscoverCourseTransformer(data).toDomain(),
+      );
+    },
+  ).bind(this);
 
-  async getInterestingCourses(
+  getCoursesByAuthor = Effect.fn("CoursesRepositoryImpl.getCoursesByAuthor")(
+    function* (
+      this: CoursesRepositoryImpl,
+      { profileId, limit = 12, paginationToken }: GetCoursesByAuthorInputModel,
+    ) {
+      const aggregation = this.courses.aggregate<
+        WithPaginationToken<WithId<DiscoverCourseDoc>>
+      >([
+        {
+          $search: {
+            index: "courses",
+            equals: {
+              path: "isPublic",
+              value: true,
+            },
+            searchAfter: paginationToken,
+          },
+        },
+        {
+          $lookup: {
+            from: "coursePermissions",
+            localField: "_id",
+            foreignField: "courseId",
+            as: "permission",
+          },
+        },
+        {
+          $unwind: "$permission",
+        },
+        {
+          $match: {
+            "permission.profileId": new ObjectId(profileId),
+            "permission.permissionType": {
+              $in: [
+                CoursePermissionTypeModel.own,
+                CoursePermissionTypeModel.edit,
+              ],
+            },
+          },
+        },
+        { $limit: limit },
+        {
+          $project: {
+            _id: true,
+            name: true,
+            description: true,
+            picture: true,
+            tags: true,
+            paginationToken: { $meta: "searchSequenceToken" },
+          },
+        },
+      ]);
+
+      const result = yield* Effect.tryPromise({
+        try: () => aggregation.toArray(),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "CoursesRepositoryImpl.getCoursesByAuthor",
+            cause,
+          }),
+      });
+      return new TokenPaginationTransformer(result).toDomain((data) =>
+        new DiscoverCourseTransformer(data).toDomain(),
+      );
+    },
+  ).bind(this);
+
+  getKeepLearning = Effect.fn("CoursesRepositoryImpl.getKeepLearning")(
+    function* (this: CoursesRepositoryImpl, profileId: string) {
+      const getStartOfToday = yield* this.dateTimeService.getStartOfToday();
+      const getStartOfTomorrow =
+        yield* this.dateTimeService.getStartOfTomorrow();
+      const aggregation =
+        this.courseEnrollments.aggregate<KeepLearningAggregationDoc>([
+          {
+            $match: {
+              profileId: new ObjectId(profileId),
+            },
+          },
+          ...coursesByEnrollmentLookupPipelineStages,
+          getDueCardsLookupPipelineStage(getStartOfTomorrow),
+          getReviewsOfNewCardsLookupPipelineStage(getStartOfToday),
+          newCardsLookupPipelineStage,
+          {
+            $project: {
+              courseId: true,
+              isFavorite: true,
+              name: "$course.name",
+              picture: "$course.picture",
+              tags: "$course.tags",
+              description: "$course.description",
+              dueCount: { $size: "$dueCards" },
+              newCount: newCountProjectionQuery,
+            },
+          },
+          {
+            $match: {
+              $or: [{ dueCount: { $gt: 0 } }, { newCount: { $gt: 0 } }],
+            },
+          },
+          {
+            $sort: {
+              isFavorite: -1,
+              dueCount: -1,
+              newCount: -1,
+            },
+          },
+          {
+            $limit: 1,
+          },
+        ]);
+
+      const result = yield* Effect.tryPromise({
+        try: () => aggregation.next(),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "CoursesRepositoryImpl.getKeepLearning",
+            cause,
+          }),
+      });
+      return (
+        result && new KeepLearningAggregationDocTransformer(result).toDomain()
+      );
+    },
+  ).bind(this);
+
+  getInterestingCourses = Effect.fn(
+    "CoursesRepositoryImpl.getInterestingCourses",
+  )(function* (
+    this: CoursesRepositoryImpl,
     input: GetInterestingCoursesInputModel,
-  ): Promise<DiscoverCourseModel[]> {
+  ) {
     const cursor = this.courses.aggregate<WithId<DiscoverCourseDoc>>([
       {
         $match: {
@@ -500,7 +633,14 @@ export class CoursesRepositoryImpl implements CoursesRepository {
       },
     ]);
 
-    const result = await cursor.toArray();
+    const result = yield* Effect.tryPromise({
+      try: () => cursor.toArray(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "CoursesRepositoryImpl.getInterestingCourses",
+          cause,
+        }),
+    });
     return result.map((data) => new DiscoverCourseTransformer(data).toDomain());
-  }
+  }).bind(this);
 }

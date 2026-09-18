@@ -4,7 +4,7 @@ import type { AdminResourceTypeModel } from "../../domain/models/admin-resource-
  * Props of a Next.js page component with the resourceType path param
  */
 export interface PropsWithResourceTypeParam {
-  params: {
+  params: Promise<{
     resourceType: AdminResourceTypeModel;
-  };
+  }>;
 }

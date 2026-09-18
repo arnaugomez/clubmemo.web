@@ -1,5 +1,9 @@
+import * as Effect from "effect/Effect";
 import type { Db, ObjectId } from "mongodb";
-import { ZodError, ZodIssueCode } from "zod";
+import {
+  ExternalServiceError,
+  FieldValidationError,
+} from "@/src/common/effect/errors";
 import type { AdminResourceData } from "../models/admin-resource-data";
 
 /**
@@ -9,25 +13,26 @@ import type { AdminResourceData } from "../models/admin-resource-data";
  * @param data Profile data to be checked.
  * @param db Database connection.
  * @returns `void` if no other profile with the same handle exists.
- * @throws {ZodError} if another profile with the same handle already exists.
+ * @throws {FieldValidationError} if another profile with the same handle already exists.
  */
-export async function checkIfHandleAlreadyExists(
-  id: ObjectId | null,
-  data: AdminResourceData,
-  db: Db,
-): Promise<void> {
-  const document = await db
-    .collection("profiles")
-    .findOne({ handle: data.handle });
+export const checkIfHandleAlreadyExists = Effect.fn(
+  "checkIfHandleAlreadyExists",
+)(function* (id: ObjectId | null, data: AdminResourceData, db: Db) {
+  const document = yield* Effect.tryPromise({
+    try: () => db.collection("profiles").findOne({ handle: data.handle }),
+    catch: (cause) =>
+      new ExternalServiceError({
+        operation: "checkIfHandleAlreadyExists",
+        cause,
+      }),
+  });
   if (document) {
     if (document._id.equals(id)) return;
-    throw new ZodError([
-      {
-        path: ["handle"],
-        code: ZodIssueCode.custom,
-        params: { i18n: "handleAlreadyExists" },
+    return yield* Effect.fail(
+      new FieldValidationError({
+        path: "handle",
         message: "Ya existe un identificador de usuario con ese nombre",
-      },
-    ]);
+      }),
+    );
   }
-}
+});

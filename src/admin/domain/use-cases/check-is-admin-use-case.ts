@@ -1,4 +1,6 @@
-import type { GetSessionUseCase } from "@/src/auth/domain/use-cases/get-session-use-case";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import { GetSessionUseCase } from "@/src/auth/domain/use-cases/get-session-use-case";
 import { UserIsNotAdminError } from "../models/admin-errors";
 
 /**
@@ -7,11 +9,19 @@ import { UserIsNotAdminError } from "../models/admin-errors";
  * @throws {UserIsNotAdminError} If the user is not an admin.
  * @returns {Promise<void>} If the user is an admin.
  */
-export class CheckIsAdminUseCase {
-  constructor(private readonly getSessionUseCase: GetSessionUseCase) {}
+export class CheckIsAdminUseCase extends Context.Service<CheckIsAdminUseCase>()(
+  "clubmemo/admin/domain/use-cases/check-is-admin-use-case",
+  {
+    make: Effect.gen(function* () {
+      const getSessionUseCase = yield* GetSessionUseCase;
+      const execute = Effect.fn("CheckIsAdminUseCase.execute")(function* () {
+        const { user } = yield* getSessionUseCase.execute();
+        if (!user?.isAdmin)
+          return yield* Effect.fail(new UserIsNotAdminError());
+      });
+      return { execute };
+    }),
+  },
+) {}
 
-  async execute(): Promise<void> {
-    const { user } = await this.getSessionUseCase.execute();
-    if (!user?.isAdmin) throw new UserIsNotAdminError();
-  }
-}
+export const CheckIsAdminUseCaseService = CheckIsAdminUseCase;

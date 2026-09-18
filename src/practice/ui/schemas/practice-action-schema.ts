@@ -1,4 +1,5 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { PracticeCardRatingModelSchema } from "../../domain/schemas/practice-card-rating-model-schema";
 import { PracticeCardStateModelSchema } from "../../domain/schemas/practice-card-state-model-schema";
@@ -6,46 +7,76 @@ import { PracticeCardStateModelSchema } from "../../domain/schemas/practice-card
 /**
  * Validates the parameters of `practiceAction`
  */
-export const PracticeActionSchema = z.object({
+export const PracticeActionSchema = Schema.Struct({
   courseId: ObjectIdSchema,
-  card: z.object({
-    id: z.string(),
-    courseEnrollmentId: z.string(),
-    note: z.object({
-      id: z.string(),
-      courseId: z.string(),
-      front: z.string(),
-      back: z.string(),
-      createdAt: z.date(),
+  card: Schema.Struct({
+    id: Schema.String,
+    courseEnrollmentId: Schema.String,
+    note: Schema.Struct({
+      id: Schema.String,
+      courseId: Schema.String,
+      front: Schema.String,
+      back: Schema.String,
+      createdAt: Schema.Date,
     }),
-    provisionalId: z.number().int().optional(),
-    due: z.date(),
-    stability: z.number(),
-    difficulty: z.number(),
-    elapsedDays: z.number().int(),
-    scheduledDays: z.number().int(),
-    reps: z.number().int(),
-    lapses: z.number().int(),
+    provisionalId: Schema.optional(
+      Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))).check(
+        Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+      ),
+    ),
+    due: Schema.Date,
+    stability: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))),
+    difficulty: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))),
+    elapsedDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    scheduledDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    reps: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    lapses: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
     state: PracticeCardStateModelSchema,
-    lastReview: z.date().optional(),
+    lastReview: Schema.optional(Schema.Date),
   }),
-  reviewLog: z.object({
-    id: z.string(),
-    cardId: z.string(),
-    courseEnrollmentId: z.string(),
+  reviewLog: Schema.Struct({
+    id: Schema.String,
+    cardId: Schema.String,
+    courseEnrollmentId: Schema.String,
     rating: PracticeCardRatingModelSchema,
     state: PracticeCardStateModelSchema,
-    due: z.date(),
-    stability: z.number(),
-    difficulty: z.number(),
-    elapsedDays: z.number().int(),
-    lastElapsedDays: z.number().int(),
-    scheduledDays: z.number().int(),
-    review: z.date(),
+    due: Schema.Date,
+    stability: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))),
+    difficulty: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n))),
+    elapsedDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    lastElapsedDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    scheduledDays: Schema.Number.check(
+      Schema.makeFilter((n) => !Number.isNaN(n)),
+    ).check(
+      Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
+    ),
+    review: Schema.Date,
   }),
 });
 
 /**
  * Parameters of `practiceAction`
  */
-export type PracticeActionModel = z.infer<typeof PracticeActionSchema>;
+export type PracticeActionModel = (typeof PracticeActionSchema)["Type"];

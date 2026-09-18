@@ -1,9 +1,12 @@
 "use server";
-
+import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
+import * as Schema from "effect/Schema";
 import { revalidatePath } from "next/cache";
+import { GenerateAiNotesConfirmUseCaseService } from "@/src/ai-generator/layers/layer_generate-ai-notes-confirm-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { locator_aiGenerator_GenerateAiNotesConfirmUseCase } from "../../locators/locator_generate-ai-notes-confirm-use-case";
 import type { GenerateAiNotesConfirmActionModel } from "../schemas/generate-ai-notes-confirm-action-schema";
 import { GenerateAiNotesConfirmActionSchema } from "../schemas/generate-ai-notes-confirm-action-schema";
 
@@ -18,16 +21,30 @@ import { GenerateAiNotesConfirmActionSchema } from "../schemas/generate-ai-notes
 export async function generateAiNotesConfirmAction(
   input: GenerateAiNotesConfirmActionModel,
 ) {
-  try {
-    const parsed = GenerateAiNotesConfirmActionSchema.parse(input);
+  return runServer(
+    Effect.gen(function* () {
+      {
+        const outcome = yield* Effect.result(
+          Effect.gen(function* () {
+            const parsed = yield* Schema.decodeUnknownEffect(
+              GenerateAiNotesConfirmActionSchema,
+            )(input);
 
-    const useCase = locator_aiGenerator_GenerateAiNotesConfirmUseCase();
-    await useCase.execute(parsed);
+            const useCase = yield* GenerateAiNotesConfirmUseCaseService;
+            yield* useCase.execute(parsed);
 
-    revalidatePath("/courses/detail");
+            revalidatePath("/courses/detail");
 
-    return ActionResponse.formSuccess(null);
-  } catch (e) {
-    return ActionErrorHandler.handle(e);
-  }
+            return ActionResponse.formSuccess(null);
+          }),
+        );
+        if (Result.isFailure(outcome)) {
+          const e = outcome.failure;
+          return ActionErrorHandler.handle(e);
+        } else {
+          return outcome.success;
+        }
+      }
+    }),
+  );
 }

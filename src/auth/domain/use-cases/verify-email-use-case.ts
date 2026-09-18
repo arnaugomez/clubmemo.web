@@ -1,9 +1,11 @@
-import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
-import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import { CookieService } from "@/src/common/domain/interfaces/cookie-service";
+import { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
 import { InvalidTokenError, SessionExpiredError } from "../errors/auth-errors";
-import type { AuthService } from "../interfaces/auth-service";
-import type { EmailVerificationCodesRepository } from "../interfaces/email-verification-codes-repository";
-import type { GetSessionUseCase } from "./get-session-use-case";
+import { AuthService } from "../interfaces/auth-service";
+import { EmailVerificationCodesRepository } from "../interfaces/email-verification-codes-repository";
+import { GetSessionUseCase } from "./get-session-use-case";
 
 /**
  * Sets the user's email as verified.
@@ -17,45 +19,40 @@ import type { GetSessionUseCase } from "./get-session-use-case";
  *
  * Rate limited to 100 requests/user-day.
  */
-export class VerifyEmailUseCase {
-  constructor(
-    private readonly getSessionUseCase: GetSessionUseCase,
-    private readonly emailVerificationCodesRepository: EmailVerificationCodesRepository,
-    private readonly authService: AuthService,
-    private readonly rateLimitsRepository: RateLimitsRepository,
-    private readonly cookieService: CookieService,
-  ) {}
+export class VerifyEmailUseCase extends Context.Service<VerifyEmailUseCase>()(
+  "clubmemo/auth/domain/use-cases/verify-email-use-case",
+  {
+    make: Effect.gen(function* () {
+      const getSessionUseCase = yield* GetSessionUseCase;
+      const emailVerificationCodesRepository =
+        yield* EmailVerificationCodesRepository;
+      const authService = yield* AuthService;
+      const rateLimitsRepository = yield* RateLimitsRepository;
+      const cookieService = yield* CookieService;
+      const execute = Effect.fn("VerifyEmailUseCase.execute")(function* (
+        code: string,
+      ) {
+        const { user } = yield* getSessionUseCase.execute();
+        if (!user) return yield* Effect.fail(new SessionExpiredError());
+        const rateLimitKey = `VerifyEmailUseCase/${user.id}`;
 
-  /**
-   * Sets the user's email as verified.
-   *
-   * Once the user's email is verified, the user can perform actions that
-   * require email verification, such as access to most of the pages of the
-   * website.
-   *
-   * First, it checks if the email verification code is valid. If it is not, it
-   * throws `InvalidTokenError`. Then, it sets the user's email as verified and
-   * sets a new session cookie.
-   *
-   * Rate limited to 100 requests/user-day.
-   */
-  async execute(code: string) {
-    const { user } = await this.getSessionUseCase.execute();
-    if (!user) throw new SessionExpiredError();
-    const rateLimitKey = `VerifyEmailUseCase/${user.id}`;
+        yield* rateLimitsRepository.check(rateLimitKey);
 
-    await this.rateLimitsRepository.check(rateLimitKey);
+        const isValid = yield* emailVerificationCodesRepository.verify(
+          user.id,
+          code,
+        );
+        if (!isValid) {
+          yield* rateLimitsRepository.increment(rateLimitKey);
+          return yield* Effect.fail(new InvalidTokenError());
+        }
 
-    const isValid = await this.emailVerificationCodesRepository.verify(
-      user.id,
-      code,
-    );
-    if (!isValid) {
-      await this.rateLimitsRepository.increment(rateLimitKey);
-      throw new InvalidTokenError();
-    }
+        const sessionCookie = yield* authService.verifyEmail(user.id);
+        yield* cookieService.set(sessionCookie);
+      });
+      return { execute };
+    }),
+  },
+) {}
 
-    const sessionCookie = await this.authService.verifyEmail(user.id);
-    await this.cookieService.set(sessionCookie);
-  }
-}
+export const VerifyEmailUseCaseService = VerifyEmailUseCase;

@@ -1,12 +1,12 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
+import * as SchemaGetter from "effect/SchemaGetter";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "@/i18n/zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError, runClient } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
@@ -27,8 +27,7 @@ import {
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import type { CourseModelData } from "@/src/courses/domain/models/course-model";
 import { CourseModel } from "@/src/courses/domain/models/course-model";
-import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
-import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-action";
+import { uploadFileWorkflow } from "@/src/file-upload/ui/workflows/upload-file";
 import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
 import { editCourseAction } from "../actions/edit-course-action";
 
@@ -57,19 +56,49 @@ interface EditCourseDialogProps {
   onClose: () => void;
 }
 
-const EditCourseSchema = z.object({
-  name: z.string().trim().min(1).max(50),
-  description: z.string().trim().min(0).max(255),
-  isPublic: z.boolean(),
+const EditCourseSchema = Schema.Struct({
+  name: Schema.String.pipe(
+    Schema.decode({
+      decode: SchemaGetter.transform((value) => value.trim()),
+      encode: SchemaGetter.passthrough(),
+    }),
+  )
+    .check(
+      Schema.isMinLength(1, {
+        message: `El texto debe contener al menos ${1} carácter(es)`,
+      }),
+    )
+    .check(
+      Schema.isMaxLength(50, {
+        message: `El texto debe contener como máximo ${50} carácter(es)`,
+      }),
+    ),
+  description: Schema.String.pipe(
+    Schema.decode({
+      decode: SchemaGetter.transform((value) => value.trim()),
+      encode: SchemaGetter.passthrough(),
+    }),
+  )
+    .check(
+      Schema.isMinLength(0, {
+        message: `El texto debe contener al menos ${0} carácter(es)`,
+      }),
+    )
+    .check(
+      Schema.isMaxLength(255, {
+        message: `El texto debe contener como máximo ${255} carácter(es)`,
+      }),
+    ),
+  isPublic: Schema.Boolean,
   tags: TagsSchema,
-  picture: OptionalFileFieldSchema,
+  picture: Schema.mutableKey(OptionalFileFieldSchema),
 });
 
-type FormValues = z.infer<typeof EditCourseSchema>;
+type FormValues = (typeof EditCourseSchema)["Type"];
 
 function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(EditCourseSchema),
+    resolver: schemaResolver(EditCourseSchema),
     defaultValues: {
       name: course.name ?? "",
       description: course.description ?? "",
@@ -82,27 +111,23 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
   const onSubmit = form.handleSubmit(async (data) => {
     try {
       if (data.picture instanceof File) {
-        const response = await uploadFileAction({
-          collection: "profiles",
-          field: "picture",
-          contentType: data.picture.type,
-        });
+        const response = await runClient(
+          uploadFileWorkflow({
+            collection: "profiles",
+            field: "picture",
+            file: data.picture,
+          }),
+        );
         const handler = new FormResponseHandler(response, form);
         if (handler.hasErrors) {
           handler.setErrors();
           return;
         } else if (handler.data) {
-          const fileUploadService =
-            locator_fileUpload_ClientFileUploadService();
-          await fileUploadService.uploadPresignedUrl({
-            file: data.picture,
-            presignedUrl: handler.data.presignedUrl,
-          });
           data.picture = handler.data.url;
         }
       }
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       toast.error("Error al subir la imagen");
       return;
     }
@@ -124,7 +149,7 @@ function EditCourseDialog({ course, onClose }: EditCourseDialogProps) {
       }
       handler.setErrors();
     } catch (e) {
-      locator_common_ErrorTrackingService().captureError(e);
+      captureError(e);
       FormResponseHandler.setGlobalError(form);
     }
   });

@@ -1,12 +1,18 @@
+import * as Effect from "effect/Effect";
 import { cache } from "react";
-import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
+import { runServer } from "@/src/common/effect/server-runtime";
+import { CoursesRepository } from "@/src/courses/layers/layer_courses-repository";
 
 export const fetchCourseDetail = cache(
   async (id: string, profileId?: string) => {
-    const coursesRepository = locator_courses_CoursesRepository();
-    return await coursesRepository.getDetail({
-      id,
-      profileId,
-    });
+    return runServer(
+      Effect.gen(function* () {
+        const coursesRepository = yield* CoursesRepository;
+        return yield* coursesRepository.getDetail({
+          id,
+          profileId,
+        });
+      }),
+    );
   },
 );

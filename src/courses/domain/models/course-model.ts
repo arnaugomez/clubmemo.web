@@ -1,24 +1,36 @@
-import type { CourseEnrollmentModelData } from "./course-enrollment-model";
+import * as Schema from "effect/Schema";
+import { CourseEnrollmentModelDataSchema } from "@/src/courses/domain/models/course-enrollment-model";
 import { CourseEnrollmentModel } from "./course-enrollment-model";
 import { CoursePermissionTypeModel } from "./course-permission-type-model";
 
-export interface CourseModelData {
-  id: string;
-  name: string;
-  description?: string;
-  picture?: string;
-  isPublic: boolean;
-  permissionType: CoursePermissionTypeModel | null;
-  enrollment: CourseEnrollmentModelData | null;
-  tags?: string[];
-}
+export const CourseModelDataSchema = Schema.Struct({
+  id: Schema.mutableKey(Schema.String),
+  name: Schema.mutableKey(Schema.String),
+  description: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  picture: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  isPublic: Schema.mutableKey(Schema.Boolean),
+  permissionType: Schema.mutableKey(
+    Schema.Union([Schema.Enum(CoursePermissionTypeModel), Schema.Null]),
+  ),
+  enrollment: Schema.mutableKey(
+    Schema.Union([CourseEnrollmentModelDataSchema, Schema.Null]),
+  ),
+  tags: Schema.mutableKey(
+    Schema.optional(Schema.NullOr(Schema.mutable(Schema.Array(Schema.String)))),
+  ),
+});
+export type CourseModelData = typeof CourseModelDataSchema.Type;
 
 /**
  * A course is a collection of notes. Users can enroll to a course to view its
  * notes and practice them via practice sessions.
  */
-export class CourseModel {
-  constructor(readonly data: CourseModelData) {}
+export class CourseModel extends Schema.Class<CourseModel>("CourseModel")({
+  data: CourseModelDataSchema,
+}) {
+  constructor(data: CourseModelData) {
+    super({ data });
+  }
 
   get id() {
     return this.data.id;
@@ -29,11 +41,11 @@ export class CourseModel {
   }
 
   get description() {
-    return this.data.description;
+    return this.data.description ?? undefined;
   }
 
   get picture() {
-    return this.data.picture;
+    return this.data.picture ?? undefined;
   }
 
   get isPublic() {

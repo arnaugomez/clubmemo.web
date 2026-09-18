@@ -1,11 +1,10 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { z } from "zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { PasswordInputFormField } from "@/src/common/ui/components/form/password-input-form-field";
@@ -42,11 +41,11 @@ interface ChangePasswordDialogProps {
   onClose: () => void;
 }
 
-type FormValues = z.infer<typeof ChangePasswordActionSchema>;
+type FormValues = (typeof ChangePasswordActionSchema)["Type"];
 
 function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(ChangePasswordActionSchema),
+    resolver: schemaResolver(ChangePasswordActionSchema),
     defaultValues: {
       password: "",
       newPassword: "",
@@ -64,7 +63,7 @@ function ChangePasswordDialog({ onClose }: ChangePasswordDialogProps) {
       }
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

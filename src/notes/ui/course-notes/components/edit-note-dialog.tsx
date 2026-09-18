@@ -1,8 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "@/i18n/zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { WysiwygFormField } from "@/src/common/ui/components/form/wysiwyg-form-field";
@@ -20,12 +20,28 @@ import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { NoteModel } from "@/src/notes/domain/models/note-model";
 import { editNoteAction } from "../actions/edit-note-action";
 
-const EditNoteSchema = z.object({
-  front: z.string().min(1).max(1000),
-  back: z.string().min(0).max(10000),
+const EditNoteSchema = Schema.Struct({
+  front: Schema.String.check(
+    Schema.isMinLength(1, {
+      message: `El texto debe contener al menos ${1} carácter(es)`,
+    }),
+  ).check(
+    Schema.isMaxLength(1000, {
+      message: `El texto debe contener como máximo ${1000} carácter(es)`,
+    }),
+  ),
+  back: Schema.String.check(
+    Schema.isMinLength(0, {
+      message: `El texto debe contener al menos ${0} carácter(es)`,
+    }),
+  ).check(
+    Schema.isMaxLength(10000, {
+      message: `El texto debe contener como máximo ${10000} carácter(es)`,
+    }),
+  ),
 });
 
-type FormValues = z.infer<typeof EditNoteSchema>;
+type FormValues = (typeof EditNoteSchema)["Type"];
 
 interface EditNoteDialogProps {
   note: NoteModel;
@@ -38,7 +54,7 @@ export function EditNoteDialog({
   onSuccess,
 }: EditNoteDialogProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(EditNoteSchema),
+    resolver: schemaResolver(EditNoteSchema),
     defaultValues: {
       front: note.front,
       back: note.back,
@@ -55,7 +71,7 @@ export function EditNoteDialog({
       }
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

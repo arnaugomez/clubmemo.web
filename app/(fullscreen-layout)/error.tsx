@@ -3,7 +3,7 @@
 import { CircleX } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import type { ErrorPageProps } from "@/src/common/ui/models/props-with-error";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
@@ -14,7 +14,7 @@ import { cn } from "@/src/common/ui/utils/shadcn";
  */
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   useEffect(() => {
-    locator_common_ErrorTrackingService().captureError(error);
+    captureError(error);
   }, [error]);
   return (
     <main className="absolute inset-0 flex flex-col items-center justify-center px-4">

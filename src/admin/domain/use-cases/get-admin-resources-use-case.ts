@@ -1,12 +1,15 @@
 import { endOfDay, isDate, isValid, startOfDay } from "date-fns";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
 import escapeRegExp from "lodash/escapeRegExp";
 import { type Document, ObjectId, type WithId } from "mongodb";
 import {
   type PaginationFacet,
   PaginationFacetTransformer,
 } from "@/src/common/data/facets/pagination-facet";
-import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import { SortOrderDataModelTransformer } from "../../data/models/sort-order-data-model";
 import { getAdminResourceByType } from "../config/admin-resources-config";
 import type { AdminResourceData } from "../models/admin-resource-data";
@@ -17,7 +20,7 @@ import {
   transformDataAfterGet,
 } from "../models/admin-resource-model";
 import type { SortOrderModel } from "../models/sort-order-model";
-import type { CheckIsAdminUseCase } from "./check-is-admin-use-case";
+import { CheckIsAdminUseCase } from "./check-is-admin-use-case";
 
 export interface GetAdminResourcesUseCaseInputModel {
   resourceType: AdminResourceTypeModel;
@@ -58,233 +61,240 @@ export interface GetAdminResourcesUseCaseInputModel {
  * Gets a list of resources from the database. For example, gets a list of users.
  * This use case is only accessible to admin users from the admin panel.
  */
-export class GetAdminResourcesUseCase {
-  constructor(
-    private readonly databaseService: DatabaseService,
-    private readonly checkIsAdminUseCase: CheckIsAdminUseCase,
-  ) {}
-
-  /**
-   * Gets a list of resources from the database. For example, gets a list of users.
-   * This use case is only accessible to admin users from the admin panel.
-   * @returns {Promise<PaginationModel<AdminResourceData>>} A paginated list of resources.
-   * If there are no resources, an empty paginated list is returned.
-   */
-  async execute({
-    resourceType,
-    page = 1,
-    pageSize = 10,
-    sortBy,
-    sortOrder,
-    query,
-    filters,
-  }: GetAdminResourcesUseCaseInputModel): Promise<
-    PaginationModel<AdminResourceData>
-  > {
-    await this.checkIsAdminUseCase.execute();
-    const resource = getAdminResourceByType(resourceType);
-    const skip = (page - 1) * pageSize;
-    const limit = pageSize;
-
-    const aggregation = this.databaseService.client
-      .db()
-      .collection(resourceType)
-      .aggregate<PaginationFacet<WithId<Document>>>([
-        ...this.getPipelineFromJoins(resource),
-        ...this.getPipelineFromFilters(resource, filters),
-        ...this.getPipelineFromQuery(resource, query),
-        ...(sortBy && sortOrder
-          ? [
-              {
-                $sort: {
-                  [this.getSortByKey(resource, sortBy)]:
-                    SortOrderDataModelTransformer.fromDomainModel(sortOrder),
-                },
-              },
-            ]
-          : []),
-        {
-          $facet: {
-            metadata: [{ $count: "totalCount" }],
-            results: [{ $skip: skip }, { $limit: limit }],
-          },
-        },
-        {
-          $unwind: "$metadata",
-        },
-      ]);
-
-    const result = await aggregation.tryNext();
-    if (!result) {
-      return PaginationModel.empty();
-    }
-    return new PaginationFacetTransformer(result).toDomain((data) =>
-      transformDataAfterGet(resource.fields, data, resource.joins ?? []),
-    );
-  }
-
-  private getSortByKey(resource: AdminResourceModel, sortBy: string) {
-    const join = resource.joins?.find((join) => join.name === sortBy);
-    if (join) {
-      return `${join.name}.display`;
-    }
-    return sortBy;
-  }
-
-  private getPipelineFromJoins(resource: AdminResourceModel) {
-    return (
-      resource.joins?.flatMap((join) => [
-        {
-          $lookup: {
-            from: join.resourceType,
-            let: { localField: `$${join.localField}` },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: [`$${join.foreignField}`, "$$localField"],
+export class GetAdminResourcesUseCase extends Context.Service<GetAdminResourcesUseCase>()(
+  "clubmemo/admin/domain/use-cases/get-admin-resources-use-case",
+  {
+    make: Effect.gen(function* () {
+      function getSortByKey(resource: AdminResourceModel, sortBy: string) {
+        const join = resource.joins?.find((join) => join.name === sortBy);
+        if (join) {
+          return `${join.name}.display`;
+        }
+        return sortBy;
+      }
+      function getPipelineFromJoins(resource: AdminResourceModel) {
+        return (
+          resource.joins?.flatMap((join) => [
+            {
+              $lookup: {
+                from: join.resourceType,
+                let: { localField: `${join.localField}` },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $eq: [`${join.foreignField}`, "$localField"],
+                      },
+                    },
                   },
-                },
+                  {
+                    $project: {
+                      display: `${join.displayField}`,
+                    },
+                  },
+                  {
+                    $limit: 1,
+                  },
+                ],
+                as: join.name,
               },
-              {
-                $project: {
-                  display: `$${join.displayField}`,
-                },
+            },
+            {
+              $unwind: {
+                path: `${join.name}`,
+                preserveNullAndEmptyArrays: true,
               },
-              {
-                $limit: 1,
-              },
-            ],
-            as: join.name,
-          },
-        },
-        {
-          $unwind: { path: `$${join.name}`, preserveNullAndEmptyArrays: true },
-        },
-      ]) ?? []
-    );
-  }
-
-  private getPipelineFromQuery(
-    resource: AdminResourceModel,
-    query?: string,
-  ): Document[] {
-    const trimmed = query?.trim();
-    if (!trimmed) {
-      return [];
-    }
-    const escaped = escapeRegExp(trimmed);
-    const match = [];
-    for (const field of resource.fields) {
-      if (
-        field.fieldType === AdminFieldTypeModel.string ||
-        field.fieldType === AdminFieldTypeModel.richText
-      ) {
-        match.push({ [field.name]: { $regex: escaped, $options: "i" } });
+            },
+          ]) ?? []
+        );
       }
-    }
+      function getPipelineFromQuery(
+        resource: AdminResourceModel,
+        query?: string,
+      ): Document[] {
+        const trimmed = query?.trim();
+        if (!trimmed) {
+          return [];
+        }
+        const escaped = escapeRegExp(trimmed);
+        const match = [];
+        for (const field of resource.fields) {
+          if (
+            field.fieldType === AdminFieldTypeModel.string ||
+            field.fieldType === AdminFieldTypeModel.richText
+          ) {
+            match.push({ [field.name]: { $regex: escaped, $options: "i" } });
+          }
+        }
 
-    for (const join of resource.joins ?? []) {
-      match.push({
-        [`${join.name}.display`]: { $regex: escaped, $options: "i" },
-      });
-    }
-
-    if (!match.length) {
-      return [];
-    }
-
-    return [
-      {
-        $match: { $or: match },
-      },
-    ];
-  }
-
-  private getPipelineFromFilters(
-    resource: AdminResourceModel,
-    filters?: Record<string, unknown>,
-  ): Document[] {
-    if (!filters) {
-      return [];
-    }
-
-    const match = [];
-    for (const field of resource.fields) {
-      const value = filters[field.name];
-      if (value === undefined) continue;
-      switch (field.fieldType) {
-        case AdminFieldTypeModel.string || AdminFieldTypeModel.richText:
-          if (typeof value === "string") {
-            const trimmed = value.trim();
-            if (trimmed) {
-              const escaped = escapeRegExp(trimmed);
-              match.push({ [field.name]: { $regex: escaped, $options: "i" } });
-            }
-          }
-          break;
-        case AdminFieldTypeModel.boolean:
-          if (typeof value === "boolean") {
-            match.push({ [field.name]: { $eq: value } });
-          }
-          break;
-        case AdminFieldTypeModel.date:
-          if (typeof value === "string" || isDate(value)) {
-            if (isValid(value)) {
-              match.push({
-                [field.name]: {
-                  $gte: startOfDay(value),
-                  $lte: endOfDay(value),
-                },
-              });
-            }
-          }
-          break;
-        case AdminFieldTypeModel.number:
-          if (typeof value === "number" && !Number.isNaN(value)) {
-            match.push({ [field.name]: { $eq: value } });
-          }
-          break;
-        case AdminFieldTypeModel.select:
-          if (typeof value === "string") {
-            match.push({ [field.name]: { $eq: value } });
-          }
-          break;
-        case AdminFieldTypeModel.tags || AdminFieldTypeModel.selectMultiple:
-          if (Array.isArray(value) && value.length) {
-            match.push({ [field.name]: { $all: value } });
-          }
-          break;
-        case AdminFieldTypeModel.objectId:
-          if (typeof value === "string" && ObjectId.isValid(value)) {
-            match.push({ [field.name]: { $eq: new ObjectId(value) } });
-          }
-          break;
-      }
-    }
-
-    for (const join of resource.joins ?? []) {
-      const value = filters[join.name];
-      if (value === undefined) continue;
-      if (typeof value === "string") {
-        const trimmed = value.trim();
-        if (trimmed) {
-          const escaped = escapeRegExp(trimmed);
+        for (const join of resource.joins ?? []) {
           match.push({
             [`${join.name}.display`]: { $regex: escaped, $options: "i" },
           });
         }
+
+        if (!match.length) {
+          return [];
+        }
+
+        return [
+          {
+            $match: { $or: match },
+          },
+        ];
       }
-    }
+      function getPipelineFromFilters(
+        resource: AdminResourceModel,
+        filters?: Record<string, unknown>,
+      ): Document[] {
+        if (!filters) {
+          return [];
+        }
 
-    if (!match.length) {
-      return [];
-    }
+        const match = [];
+        for (const field of resource.fields) {
+          const value = filters[field.name];
+          if (value === undefined) continue;
+          switch (field.fieldType) {
+            case AdminFieldTypeModel.string || AdminFieldTypeModel.richText:
+              if (typeof value === "string") {
+                const trimmed = value.trim();
+                if (trimmed) {
+                  const escaped = escapeRegExp(trimmed);
+                  match.push({
+                    [field.name]: { $regex: escaped, $options: "i" },
+                  });
+                }
+              }
+              break;
+            case AdminFieldTypeModel.boolean:
+              if (typeof value === "boolean") {
+                match.push({ [field.name]: { $eq: value } });
+              }
+              break;
+            case AdminFieldTypeModel.date:
+              if (typeof value === "string" || isDate(value)) {
+                if (isValid(value)) {
+                  match.push({
+                    [field.name]: {
+                      $gte: startOfDay(value),
+                      $lte: endOfDay(value),
+                    },
+                  });
+                }
+              }
+              break;
+            case AdminFieldTypeModel.number:
+              if (typeof value === "number" && !Number.isNaN(value)) {
+                match.push({ [field.name]: { $eq: value } });
+              }
+              break;
+            case AdminFieldTypeModel.select:
+              if (typeof value === "string") {
+                match.push({ [field.name]: { $eq: value } });
+              }
+              break;
+            case AdminFieldTypeModel.tags || AdminFieldTypeModel.selectMultiple:
+              if (Array.isArray(value) && value.length) {
+                match.push({ [field.name]: { $all: value } });
+              }
+              break;
+            case AdminFieldTypeModel.objectId:
+              if (typeof value === "string" && ObjectId.isValid(value)) {
+                match.push({ [field.name]: { $eq: new ObjectId(value) } });
+              }
+              break;
+          }
+        }
 
-    return [
-      {
-        $match: { $and: match },
-      },
-    ];
-  }
-}
+        for (const join of resource.joins ?? []) {
+          const value = filters[join.name];
+          if (value === undefined) continue;
+          if (typeof value === "string") {
+            const trimmed = value.trim();
+            if (trimmed) {
+              const escaped = escapeRegExp(trimmed);
+              match.push({
+                [`${join.name}.display`]: { $regex: escaped, $options: "i" },
+              });
+            }
+          }
+        }
+
+        if (!match.length) {
+          return [];
+        }
+
+        return [
+          {
+            $match: { $and: match },
+          },
+        ];
+      }
+      const databaseService = yield* DatabaseService;
+      const checkIsAdminUseCase = yield* CheckIsAdminUseCase;
+      const execute = Effect.fn("GetAdminResourcesUseCase.execute")(function* ({
+        resourceType,
+        page = 1,
+        pageSize = 10,
+        sortBy,
+        sortOrder,
+        query,
+        filters,
+      }: GetAdminResourcesUseCaseInputModel) {
+        yield* checkIsAdminUseCase.execute();
+        const resource = getAdminResourceByType(resourceType);
+        const skip = (page - 1) * pageSize;
+        const limit = pageSize;
+
+        const aggregation = databaseService.client
+          .db()
+          .collection(resourceType)
+          .aggregate<PaginationFacet<WithId<Document>>>([
+            ...getPipelineFromJoins(resource),
+            ...getPipelineFromFilters(resource, filters),
+            ...getPipelineFromQuery(resource, query),
+            ...(sortBy && sortOrder
+              ? [
+                  {
+                    $sort: {
+                      [getSortByKey(resource, sortBy)]:
+                        SortOrderDataModelTransformer.fromDomainModel(
+                          sortOrder,
+                        ),
+                    },
+                  },
+                ]
+              : []),
+            {
+              $facet: {
+                metadata: [{ $count: "totalCount" }],
+                results: [{ $skip: skip }, { $limit: limit }],
+              },
+            },
+            {
+              $unwind: "$metadata",
+            },
+          ]);
+
+        const result = yield* Effect.tryPromise({
+          try: () => aggregation.tryNext(),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "GetAdminResourcesUseCase.execute",
+              cause,
+            }),
+        });
+        if (!result) {
+          return PaginationModel.empty<AdminResourceData>();
+        }
+        return new PaginationFacetTransformer(result).toDomain((data) =>
+          transformDataAfterGet(resource.fields, data, resource.joins ?? []),
+        );
+      });
+      return { execute };
+    }),
+  },
+) {}
+
+export const GetAdminResourcesUseCaseService = GetAdminResourcesUseCase;

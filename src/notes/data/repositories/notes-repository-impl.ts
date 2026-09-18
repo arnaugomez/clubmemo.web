@@ -1,9 +1,12 @@
+import * as DateTime from "effect/DateTime";
+import * as Effect from "effect/Effect";
 import type { WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import type { PaginationFacet } from "@/src/common/data/facets/pagination-facet";
 import { PaginationFacetTransformer } from "@/src/common/data/facets/pagination-facet";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import { PaginationModel } from "@/src/common/domain/models/pagination-model";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import { practiceCardsCollection } from "@/src/practice/data/collections/practice-cards-collection";
 import type { NotesRepository } from "../../domain/interfaces/notes-repository";
 import type { CopyNotesInputModel } from "../../domain/models/copy-notes-input-model";
@@ -29,50 +32,110 @@ export class NotesRepositoryImpl implements NotesRepository {
     this.notes = databaseService.collection(notesCollection);
     this.practiceCards = databaseService.collection(practiceCardsCollection);
   }
-  async create(note: CreateNoteInputModel): Promise<NoteModel> {
+  create = Effect.fn("NotesRepositoryImpl.create")(function* (
+    this: NotesRepositoryImpl,
+    note: CreateNoteInputModel,
+  ) {
     const newNote = {
       front: note.front,
       back: note.back,
       courseId: new ObjectId(note.courseId),
-      createdAt: new Date(),
+      createdAt: yield* DateTime.nowAsDate,
     } as WithId<NoteDoc>;
-    await this.notes.insertOne(newNote);
+    yield* Effect.tryPromise({
+      try: () => this.notes.insertOne(newNote),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "NotesRepositoryImpl.create",
+          cause,
+        }),
+    });
     return new NoteDocTransformer(newNote).toDomain();
-  }
+  }).bind(this);
 
-  async getDetail(noteId: string): Promise<NoteModel | null> {
-    const note = await this.notes.findOne({ _id: new ObjectId(noteId) });
+  getDetail = Effect.fn("NotesRepositoryImpl.getDetail")(function* (
+    this: NotesRepositoryImpl,
+    noteId: string,
+  ) {
+    const note = yield* Effect.tryPromise({
+      try: () => this.notes.findOne({ _id: new ObjectId(noteId) }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "NotesRepositoryImpl.getDetail",
+          cause,
+        }),
+    });
     return note && new NoteDocTransformer(note).toDomain();
-  }
+  }).bind(this);
 
-  async update(note: UpdateNoteInputModel): Promise<void> {
-    await this.notes.updateOne(
-      { _id: new ObjectId(note.id) },
-      {
-        $set: {
-          front: note.front,
-          back: note.back,
-        },
-      },
+  update = Effect.fn("NotesRepositoryImpl.update")(function* (
+    this: NotesRepositoryImpl,
+    note: UpdateNoteInputModel,
+  ) {
+    yield* Effect.tryPromise({
+      try: () =>
+        this.notes.updateOne(
+          { _id: new ObjectId(note.id) },
+          {
+            $set: {
+              front: note.front,
+              back: note.back,
+            },
+          },
+        ),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "NotesRepositoryImpl.update",
+          cause,
+        }),
+    });
+  }).bind(this);
+
+  delete = Effect.fn("NotesRepositoryImpl.delete")(function* (
+    this: NotesRepositoryImpl,
+    noteId: string,
+  ) {
+    yield* Effect.all(
+      [
+        Effect.tryPromise({
+          try: () => this.notes.deleteOne({ _id: new ObjectId(noteId) }),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "NotesRepositoryImpl.delete",
+              cause,
+            }),
+        }),
+        Effect.tryPromise({
+          try: () =>
+            this.practiceCards.deleteMany({ noteId: new ObjectId(noteId) }),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "NotesRepositoryImpl.delete",
+              cause,
+            }),
+        }),
+      ],
+      { concurrency: "unbounded" },
     );
-  }
+  }).bind(this);
 
-  async delete(noteId: string): Promise<void> {
-    await Promise.all([
-      this.notes.deleteOne({ _id: new ObjectId(noteId) }),
-      this.practiceCards.deleteMany({ noteId: new ObjectId(noteId) }),
-    ]);
-  }
+  deleteByCourseId = Effect.fn("NotesRepositoryImpl.deleteByCourseId")(
+    function* (this: NotesRepositoryImpl, courseId: string) {
+      yield* Effect.tryPromise({
+        try: () => this.notes.deleteMany({ courseId: new ObjectId(courseId) }),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "NotesRepositoryImpl.deleteByCourseId",
+            cause,
+          }),
+      });
+    },
+  ).bind(this);
 
-  async deleteByCourseId(courseId: string): Promise<void> {
-    await this.notes.deleteMany({ courseId: new ObjectId(courseId) });
-  }
-
-  async get({
-    courseId,
-    page = 1,
-    pageSize = 10,
-  }: GetNotesInputModel): Promise<PaginationModel<NoteModel>> {
+  get = Effect.fn("NotesRepositoryImpl.get")(function* (
+    this: NotesRepositoryImpl,
+    { courseId, page = 1, pageSize = 10 }: GetNotesInputModel,
+  ) {
     const skip = (page - 1) * pageSize;
     const limit = pageSize;
 
@@ -96,22 +159,35 @@ export class NotesRepositoryImpl implements NotesRepository {
       },
     ]);
 
-    const result = await aggregation.tryNext();
+    const result = yield* Effect.tryPromise({
+      try: () => aggregation.tryNext(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "NotesRepositoryImpl.get",
+          cause,
+        }),
+    });
     if (!result) {
-      return PaginationModel.empty();
+      return PaginationModel.empty<NoteModel>();
     }
     return new PaginationFacetTransformer(result).toDomain((data) =>
       new NoteDocTransformer(data).toDomain(),
     );
-  }
+  }).bind(this);
 
-  async copy({
-    sourceCourseId,
-    targetCourseId,
-  }: CopyNotesInputModel): Promise<void> {
-    const sourceCourseNotes = await this.notes
-      .find({ courseId: new ObjectId(sourceCourseId) })
-      .toArray();
+  copy = Effect.fn("NotesRepositoryImpl.copy")(function* (
+    this: NotesRepositoryImpl,
+    { sourceCourseId, targetCourseId }: CopyNotesInputModel,
+  ) {
+    const sourceCourseNotes = yield* Effect.tryPromise({
+      try: () =>
+        this.notes.find({ courseId: new ObjectId(sourceCourseId) }).toArray(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "NotesRepositoryImpl.copy",
+          cause,
+        }),
+    });
     if (!sourceCourseNotes.length) return;
     const newNotes = sourceCourseNotes.map((note) => {
       return {
@@ -120,28 +196,47 @@ export class NotesRepositoryImpl implements NotesRepository {
         courseId: new ObjectId(targetCourseId),
       };
     });
-    await this.notes.insertMany(newNotes);
-  }
-  async getAllRows(courseId: string): Promise<NoteRowModel[]> {
-    return await this.notes
-      .find(
-        { courseId: new ObjectId(courseId) },
-        {
-          sort: { createdAt: -1 },
-          limit: 1000,
-          projection: { _id: false, front: true, back: true },
-        },
-      )
-      .toArray();
-  }
+    yield* Effect.tryPromise({
+      try: () => this.notes.insertMany(newNotes),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "NotesRepositoryImpl.copy",
+          cause,
+        }),
+    });
+  }).bind(this);
+  getAllRows = Effect.fn("NotesRepositoryImpl.getAllRows")(function* (
+    this: NotesRepositoryImpl,
+    courseId: string,
+  ) {
+    return yield* Effect.tryPromise({
+      try: () =>
+        this.notes
+          .find(
+            { courseId: new ObjectId(courseId) },
+            {
+              sort: { createdAt: -1 },
+              limit: 1000,
+              projection: { _id: false, front: true, back: true },
+            },
+          )
+          .toArray(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "NotesRepositoryImpl.getAllRows",
+          cause,
+        }),
+    });
+  }).bind(this);
 
-  async createMany(
+  createMany = Effect.fn("NotesRepositoryImpl.createMany")(function* (
+    this: NotesRepositoryImpl,
     courseIdString: string,
     notes: NoteRowModel[],
-  ): Promise<NoteModel[]> {
+  ) {
     if (!notes.length) return [];
     const courseId = new ObjectId(courseIdString);
-    const now = new Date();
+    const now = yield* DateTime.nowAsDate;
 
     const newNotes = notes.map((note) => {
       now.setSeconds(now.getSeconds() + 1);
@@ -153,7 +248,14 @@ export class NotesRepositoryImpl implements NotesRepository {
       };
       return newNote as WithId<NoteDoc>;
     });
-    await this.notes.insertMany(newNotes);
+    yield* Effect.tryPromise({
+      try: () => this.notes.insertMany(newNotes),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "NotesRepositoryImpl.createMany",
+          cause,
+        }),
+    });
     return newNotes.map((note) => new NoteDocTransformer(note).toDomain());
-  }
+  }).bind(this);
 }

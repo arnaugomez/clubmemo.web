@@ -1,13 +1,12 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "@/i18n/zod";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
@@ -26,22 +25,16 @@ const ResetPasswordConfirmDialog = dynamic(() =>
  * Form that the user fills in to change its password after receiving a reset
  * password email.
  */
-const FormSchema = z
-  .object({
-    password: PasswordSchema,
-    repeatPassword: PasswordSchema,
-  })
-  .superRefine(({ password, repeatPassword }, ctx) => {
-    if (password !== repeatPassword) {
-      ctx.addIssue({
-        path: ["repeatPassword"],
-        code: "custom",
-        params: {
-          i18n: "passwordsDoNotMatch",
-        },
-      });
-    }
-  });
+const FormSchema = Schema.Struct({
+  password: PasswordSchema,
+  repeatPassword: PasswordSchema,
+}).check(
+  Schema.makeFilter(({ password, repeatPassword }) =>
+    password === repeatPassword
+      ? undefined
+      : { path: ["repeatPassword"], issue: "Las contraseñas no coinciden" },
+  ),
+);
 
 interface Props {
   email: string;
@@ -52,7 +45,7 @@ export function ResetPasswordForm({ email, token }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(FormSchema),
+    resolver: schemaResolver(FormSchema),
     defaultValues: {
       password: "",
       repeatPassword: "",
@@ -60,7 +53,7 @@ export function ResetPasswordForm({ email, token }: Props) {
   });
 
   const onSubmit = form.handleSubmit(
-    async (data: z.infer<typeof FormSchema>) => {
+    async (data: (typeof FormSchema)["Type"]) => {
       try {
         const response = await resetPasswordAction({
           email,
@@ -75,7 +68,7 @@ export function ResetPasswordForm({ email, token }: Props) {
         }
         handler.setErrors();
       } catch (error) {
-        locator_common_ErrorTrackingService().captureError(error);
+        captureError(error);
         FormResponseHandler.setGlobalError(form);
       }
     },

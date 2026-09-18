@@ -1,5 +1,7 @@
+import * as Effect from "effect/Effect";
+import { runServer } from "@/src/common/effect/server-runtime";
 import type { GetDiscoverCoursesInputModel } from "@/src/courses/domain/interfaces/courses-repository";
-import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
+import { CoursesRepository } from "@/src/courses/layers/layer_courses-repository";
 
 /**
  * Loads a paginated list of courses that match the search query in the Discover
@@ -8,7 +10,11 @@ import { locator_courses_CoursesRepository } from "@/src/courses/locators/locato
 export const fetchDiscoverCourses = async (
   input: GetDiscoverCoursesInputModel,
 ) => {
-  const coursesRepository = locator_courses_CoursesRepository();
-  const pagination = await coursesRepository.getDiscoverCourses(input);
-  return pagination.toData((e) => e.data);
+  return runServer(
+    Effect.gen(function* () {
+      const coursesRepository = yield* CoursesRepository;
+      const pagination = yield* coursesRepository.getDiscoverCourses(input);
+      return pagination.toData((e) => e.data);
+    }),
+  );
 };

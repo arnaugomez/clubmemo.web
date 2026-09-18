@@ -1,14 +1,14 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
 
 /**
  * Validates the parameters of `deleteUserAction`
  */
-export const DeleteUserActionSchema = z.object({
-  password: z.string(),
-  confirmation: z.string(),
+export const DeleteUserActionSchema = Schema.Struct({
+  password: Schema.String,
+  confirmation: Schema.String,
 });
 
 /**
  * Parameters of `deleteUserAction`
  */
-export type DeleteUserActionModel = z.infer<typeof DeleteUserActionSchema>;
+export type DeleteUserActionModel = (typeof DeleteUserActionSchema)["Type"];

@@ -1,7 +1,7 @@
 import { Bookmark } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
 import { DropdownMenuItem } from "@/src/common/ui/components/shadcn/ui/dropdown-menu";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { favoriteCourseAction } from "../actions/favorite-course-action";
@@ -36,7 +36,7 @@ export function CourseFavoriteButton(props: CourseFavoriteButtonProps) {
         }
         handler.toastErrors();
       } catch (error) {
-        locator_common_ErrorTrackingService().captureError(error);
+        captureError(error);
         toast.error("Ha ocurrido un error");
       }
     });

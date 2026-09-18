@@ -1,14 +1,14 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 /**
  * Validates the parameters of `favoriteCourseAction`
  */
-export const FavoriteCourseActionSchema = z.object({
+export const FavoriteCourseActionSchema = Schema.Struct({
   courseId: ObjectIdSchema,
-  isFavorite: z.boolean(),
+  isFavorite: Schema.Boolean,
 });
 
-export type FavoriteCourseActionModel = z.infer<
-  typeof FavoriteCourseActionSchema
->;
+export type FavoriteCourseActionModel =
+  (typeof FavoriteCourseActionSchema)["Type"];

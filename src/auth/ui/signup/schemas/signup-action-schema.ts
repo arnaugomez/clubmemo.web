@@ -1,4 +1,5 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { AcceptTermsSchema } from "@/src/common/schemas/accept-terms-schema";
 import { EmailSchema } from "@/src/common/schemas/email-schema";
 import { PasswordSchema } from "@/src/common/schemas/password-schema";
@@ -6,7 +7,7 @@ import { PasswordSchema } from "@/src/common/schemas/password-schema";
 /**
  * Validates the parameters of `signupAction`
  */
-export const SignupActionSchema = z.object({
+export const SignupActionSchema = Schema.Struct({
   email: EmailSchema,
   password: PasswordSchema,
   acceptTerms: AcceptTermsSchema,
@@ -15,4 +16,4 @@ export const SignupActionSchema = z.object({
 /**
  * Parameters of `signupAction`
  */
-export type SignupActionModel = z.infer<typeof SignupActionSchema>;
+export type SignupActionModel = (typeof SignupActionSchema)["Type"];

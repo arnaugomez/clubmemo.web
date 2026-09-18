@@ -1,8 +1,9 @@
+import * as Effect from "effect/Effect";
 import { ObjectId } from "mongodb";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import { HandleAlreadyExistsError } from "../../domain/errors/profile-errors";
 import type { ProfilesRepository } from "../../domain/interfaces/profiles-repository";
-import type { ProfileModel } from "../../domain/models/profile-model";
 import type { UpdateProfileInputModel } from "../../domain/models/update-profile-input-model";
 import {
   ProfileDocTransformer,
@@ -19,40 +20,109 @@ export class ProfilesRepositoryImpl implements ProfilesRepository {
     this.collection = databaseService.collection(profilesCollection);
   }
 
-  async create(userId: string): Promise<void> {
-    await this.collection.insertOne({
-      userId: new ObjectId(userId),
-      isPublic: false,
+  create = Effect.fn("ProfilesRepositoryImpl.create")(function* (
+    this: ProfilesRepositoryImpl,
+    userId: string,
+  ) {
+    yield* Effect.tryPromise({
+      try: () =>
+        this.collection.insertOne({
+          userId: new ObjectId(userId),
+          isPublic: false,
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "ProfilesRepositoryImpl.create",
+          cause,
+        }),
     });
-  }
+  }).bind(this);
 
-  async deleteByUserId(userId: string): Promise<void> {
-    await this.collection.deleteMany({ userId: new ObjectId(userId) });
-  }
+  deleteByUserId = Effect.fn("ProfilesRepositoryImpl.deleteByUserId")(
+    function* (this: ProfilesRepositoryImpl, userId: string) {
+      yield* Effect.tryPromise({
+        try: () => this.collection.deleteMany({ userId: new ObjectId(userId) }),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "ProfilesRepositoryImpl.deleteByUserId",
+            cause,
+          }),
+      });
+    },
+  ).bind(this);
 
-  async getByUserId(userId: string): Promise<ProfileModel | null> {
-    const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
+  getByUserId = Effect.fn("ProfilesRepositoryImpl.getByUserId")(function* (
+    this: ProfilesRepositoryImpl,
+    userId: string,
+  ) {
+    const doc = yield* Effect.tryPromise({
+      try: () => this.collection.findOne({ userId: new ObjectId(userId) }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "ProfilesRepositoryImpl.getByUserId",
+          cause,
+        }),
+    });
     return doc && new ProfileDocTransformer(doc).toDomain();
-  }
+  }).bind(this);
 
-  async get(id: string): Promise<ProfileModel | null> {
-    const doc = await this.collection.findOne({ _id: new ObjectId(id) });
+  get = Effect.fn("ProfilesRepositoryImpl.get")(function* (
+    this: ProfilesRepositoryImpl,
+    id: string,
+  ) {
+    const doc = yield* Effect.tryPromise({
+      try: () => this.collection.findOne({ _id: new ObjectId(id) }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "ProfilesRepositoryImpl.get",
+          cause,
+        }),
+    });
     return doc && new ProfileDocTransformer(doc).toDomain();
-  }
+  }).bind(this);
 
-  async getByHandle(handle: string): Promise<ProfileModel | null> {
-    const doc = await this.collection.findOne({ handle });
+  getByHandle = Effect.fn("ProfilesRepositoryImpl.getByHandle")(function* (
+    this: ProfilesRepositoryImpl,
+    handle: string,
+  ) {
+    const doc = yield* Effect.tryPromise({
+      try: () => this.collection.findOne({ handle }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "ProfilesRepositoryImpl.getByHandle",
+          cause,
+        }),
+    });
     return doc && new ProfileDocTransformer(doc).toDomain();
-  }
+  }).bind(this);
 
-  async update({ id, ...input }: UpdateProfileInputModel): Promise<void> {
+  update = Effect.fn("ProfilesRepositoryImpl.update")(function* (
+    this: ProfilesRepositoryImpl,
+    { id, ...input }: UpdateProfileInputModel,
+  ) {
     const _id = new ObjectId(id);
-    const profileWithHandle = await this.collection.findOne({
-      $and: [{ handle: input.handle }, { _id: { $ne: _id } }],
+    const profileWithHandle = yield* Effect.tryPromise({
+      try: () =>
+        this.collection.findOne({
+          $and: [{ handle: input.handle }, { _id: { $ne: _id } }],
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "ProfilesRepositoryImpl.update",
+          cause,
+        }),
     });
 
-    if (profileWithHandle) throw new HandleAlreadyExistsError();
+    if (profileWithHandle)
+      return yield* Effect.fail(new HandleAlreadyExistsError());
 
-    await this.collection.updateOne({ _id }, { $set: input });
-  }
+    yield* Effect.tryPromise({
+      try: () => this.collection.updateOne({ _id }, { $set: input }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "ProfilesRepositoryImpl.update",
+          cause,
+        }),
+    });
+  }).bind(this);
 }

@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { UserModel } from "../models/user-model";
 
 /**
@@ -25,7 +28,9 @@ export interface UsersRepository {
    * @param email The email of the user
    * @returns The user with the email if it exists, `null` otherwise
    */
-  getByEmail(email: string): Promise<UserModel | null>;
+  getByEmail(
+    email: string,
+  ): Effect.Effect<UserModel | null, ExternalServiceError>;
 
   /**
    * Deletes a user permanently. Does not delete the user's profile(s) and other
@@ -33,5 +38,9 @@ export interface UsersRepository {
    *
    * @param id The id of the user
    */
-  delete(id: string): Promise<void>;
+  delete(id: string): Effect.Effect<void, ExternalServiceError>;
 }
+
+export const UsersRepository = Context.Service<UsersRepository>(
+  "clubmemo/auth/domain/interfaces/users-repository/UsersRepository",
+);

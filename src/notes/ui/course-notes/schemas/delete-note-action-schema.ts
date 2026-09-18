@@ -1,4 +1,5 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 /**
@@ -6,11 +7,11 @@ import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
  * @see `deleteNoteAction`
  * @see `DeleteNoteActionModel`
  */
-export const DeleteNoteActionSchema = z.object({
+export const DeleteNoteActionSchema = Schema.Struct({
   noteId: ObjectIdSchema,
 });
 
 /**
  * Parameters of `deleteNoteAction`
  */
-export type DeleteNoteActionModel = z.infer<typeof DeleteNoteActionSchema>;
+export type DeleteNoteActionModel = (typeof DeleteNoteActionSchema)["Type"];

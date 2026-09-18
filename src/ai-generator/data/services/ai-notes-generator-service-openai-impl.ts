@@ -1,9 +1,10 @@
+import * as Effect from "effect/Effect";
+import * as Redacted from "effect/Redacted";
+import * as Schema from "effect/Schema";
 import { OpenAI, OpenAIError, RateLimitError } from "openai";
-import { zodResponseFormat } from "openai/helpers/zod";
-import { ZodError, z } from "zod";
 import type { EnvService } from "@/src/common/domain/interfaces/env-service";
 import type { ErrorTrackingService } from "@/src/common/domain/interfaces/error-tracking-service";
-import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import {
   AiGeneratorEmptyMessageError,
   AiGeneratorError,
@@ -16,12 +17,14 @@ import type {
 import { AiGeneratorNoteType } from "../../domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "../../domain/models/ai-notes-generator-source-type";
 
-const ValidationSchema = z.object({
-  flashcards: z.array(
-    z.object({
-      front: z.string(),
-      back: z.string(),
-    }),
+const ValidationSchema = Schema.Struct({
+  flashcards: Schema.mutable(
+    Schema.Array(
+      Schema.Struct({
+        front: Schema.String,
+        back: Schema.String,
+      }),
+    ),
   ),
 });
 
@@ -36,23 +39,23 @@ export class AiNotesGeneratorServiceOpenaiImpl
   /**
    * OpenAI client instance used to communicate with the AI
    */
-  private readonly client: OpenAI;
-
-  constructor(
-    envService: EnvService,
-    private readonly errorTrackingService: ErrorTrackingService,
-  ) {
-    this.client = new OpenAI({
-      apiKey: envService.openaiApiKey,
+  private cachedClient: OpenAI | undefined;
+  private get client(): OpenAI {
+    this.cachedClient ??= new OpenAI({
+      apiKey: Redacted.value(this.envService.openaiApiKey),
     });
+    return this.cachedClient;
   }
 
-  async generate({
-    text,
-    noteTypes,
-    notesCount,
-    sourceType,
-  }: GenerateAiNotesInputModel): Promise<NoteRowModel[]> {
+  constructor(
+    private readonly envService: EnvService,
+    private readonly errorTrackingService: ErrorTrackingService,
+  ) {}
+
+  generate = Effect.fn("AiNotesGeneratorServiceOpenaiImpl.generate")(function* (
+    this: AiNotesGeneratorServiceOpenaiImpl,
+    { text, noteTypes, notesCount, sourceType }: GenerateAiNotesInputModel,
+  ) {
     const typesMap = {
       [AiGeneratorNoteType.qa]: "a question and the answer",
       [AiGeneratorNoteType.definition]:
@@ -62,51 +65,81 @@ export class AiNotesGeneratorServiceOpenaiImpl
     const textOrTopic =
       sourceType === AiNotesGeneratorSourceType.topic ? "topic" : "text";
 
-    try {
-      // This promise might take more than 10 seconds to resolve. Therefore, make sure the server is configured to handle long requests and not throw a timeout error.
-      const completion = await this.client.chat.completions.create({
-        messages: [
-          {
-            role: "system",
-            content: `You are a flashard generator.
+    return yield* Effect.gen(
+      function* (this: AiNotesGeneratorServiceOpenaiImpl) {
+        // This promise might take more than 10 seconds to resolve. Therefore, make sure the server is configured to handle long requests and not throw a timeout error.
+        const completion = yield* Effect.tryPromise({
+          try: (signal) =>
+            this.client.chat.completions.create(
+              {
+                messages: [
+                  {
+                    role: "system",
+                    content: `You are a flashard generator.
 Output a list of flashcards. Each flashcard has a front side (the question) and a back side (the answer).
 The flashcards can contain: ${noteTypes.map((type) => typesMap[type]).join(", ")}.
 You must generate ${notesCount} flashcards based on the ${textOrTopic} provided by the user.
 The language of the flashcards should be the language of the ${textOrTopic} provided by the user.
 `,
-          },
-          {
-            role: "user",
-            content: `Generate ${notesCount} flashcards to help me study this ${textOrTopic}: ${text}`,
-          },
-        ],
-        model: "gpt-4o-mini",
-        response_format: zodResponseFormat(ValidationSchema, "flashcards"),
-        n: 1,
-      });
+                  },
+                  {
+                    role: "user",
+                    content: `Generate ${notesCount} flashcards to help me study this ${textOrTopic}: ${text}`,
+                  },
+                ],
+                model: "gpt-4o-mini",
+                response_format: {
+                  type: "json_schema",
+                  json_schema: {
+                    name: "flashcards",
+                    strict: true,
+                    schema: Schema.toJsonSchemaDocument(ValidationSchema, {
+                      onExcessProperty: "error",
+                    }).schema,
+                  },
+                },
+                n: 1,
+              },
+              { signal },
+            ),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "AiNotesGeneratorServiceOpenaiImpl.generate",
+              cause,
+            }),
+        });
 
-      const message = completion.choices[0].message;
-      const responseText = message.content;
-      if (message.refusal || !responseText) {
-        this.errorTrackingService.captureError(message);
-        throw new AiGeneratorEmptyMessageError();
-      }
+        const message = completion.choices[0].message;
+        const responseText = message.content;
+        if (message.refusal || !responseText) {
+          yield* this.errorTrackingService.captureError(message);
+          return yield* Effect.fail(new AiGeneratorEmptyMessageError());
+        }
 
-      const response = JSON.parse(responseText);
-      const parsed = ValidationSchema.parse(response);
-      return parsed.flashcards;
-    } catch (e) {
-      if (e instanceof RateLimitError) {
-        this.errorTrackingService.captureError(e);
-        throw new AiGeneratorRateLimitError();
-      } else if (e instanceof OpenAIError) {
-        this.errorTrackingService.captureError(e);
-        throw new AiGeneratorError();
-      } else if (e instanceof ZodError) {
-        this.errorTrackingService.captureError(e);
-        throw new AiGeneratorError();
-      }
-      throw e;
-    }
-  }
+        const parsed = yield* Schema.decodeUnknownEffect(
+          Schema.fromJsonString(ValidationSchema),
+        )(responseText);
+        return parsed.flashcards;
+      }.bind(this),
+    ).pipe(
+      Effect.catch((e) =>
+        Effect.gen(
+          function* (this: AiNotesGeneratorServiceOpenaiImpl) {
+            const cause = e instanceof ExternalServiceError ? e.cause : e;
+            if (cause instanceof RateLimitError) {
+              yield* this.errorTrackingService.captureError(e);
+              return yield* Effect.fail(new AiGeneratorRateLimitError());
+            } else if (cause instanceof OpenAIError) {
+              yield* this.errorTrackingService.captureError(e);
+              return yield* Effect.fail(new AiGeneratorError());
+            } else if (Schema.isSchemaError(e)) {
+              yield* this.errorTrackingService.captureError(e);
+              return yield* Effect.fail(new AiGeneratorError());
+            }
+            return yield* Effect.fail(e);
+          }.bind(this),
+        ),
+      ),
+    );
+  }).bind(this);
 }

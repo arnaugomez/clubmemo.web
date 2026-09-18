@@ -1,5 +1,7 @@
+import * as Effect from "effect/Effect";
 import Link from "next/link";
 import { Suspense } from "react";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import {
   Tooltip,
@@ -9,7 +11,7 @@ import {
 } from "@/src/common/ui/components/shadcn/ui/tooltip";
 import type { CourseModel } from "@/src/courses/domain/models/course-model";
 import type { CoursePracticeCountModel } from "@/src/practice/domain/models/course-practice-count-model";
-import { locator_practice_GetCoursePracticeCountUseCase } from "@/src/practice/locators/locator_get-course-practice-count-use-case";
+import { GetCoursePracticeCountUseCaseService } from "@/src/practice/layers/layer_get-course-practice-count-use-case";
 import { CourseDetailPracticeButtonLoading } from "./course-detail-practice-button-loading";
 
 interface CourseDetailPracticeButtonProps {
@@ -29,15 +31,19 @@ export function CourseDetailPracticeButton({
 async function CourseDetailPracticeButtonLoader({
   course,
 }: CourseDetailPracticeButtonProps) {
-  if (!course.enrollment) return null;
-  const useCase = locator_practice_GetCoursePracticeCountUseCase();
-  const coursePracticeCount = await useCase.execute(course.enrollment);
+  return runServer(
+    Effect.gen(function* () {
+      if (!course.enrollment) return null;
+      const useCase = yield* GetCoursePracticeCountUseCaseService;
+      const coursePracticeCount = yield* useCase.execute(course.enrollment);
 
-  return (
-    <CourseDetailPracticeButtonLoaded
-      course={course}
-      coursePracticeCount={coursePracticeCount}
-    />
+      return (
+        <CourseDetailPracticeButtonLoaded
+          course={course}
+          coursePracticeCount={coursePracticeCount}
+        />
+      );
+    }),
   );
 }
 

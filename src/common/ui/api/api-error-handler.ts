@@ -1,6 +1,6 @@
+import { captureError } from "@/src/common/effect/client-runtime";
 import { CourseDoesNotExistError } from "@/src/courses/domain/models/course-errors";
 import { NoPermissionError } from "../../domain/models/app-errors";
-import { locator_common_ErrorTrackingService } from "../../locators/locator_error-tracking-service";
 import { ActionResponse } from "../models/server-form-errors";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: utility class pattern
@@ -16,7 +16,7 @@ export class ApiErrorHandler {
         status: 403,
       });
     }
-    locator_common_ErrorTrackingService().captureError(e);
+    captureError(e);
     return new Response(e?.toString?.(), { status: 500 });
   }
 }

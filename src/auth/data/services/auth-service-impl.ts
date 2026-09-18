@@ -1,6 +1,7 @@
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
+import * as Effect from "effect/Effect";
+import * as Redacted from "effect/Redacted";
 import type {
-  Cookie,
   PasswordHashingAlgorithm,
   RegisteredDatabaseUserAttributes,
 } from "lucia";
@@ -10,6 +11,7 @@ import { ObjectId } from "mongodb";
 import { Argon2id } from "oslo/password";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { EnvService } from "@/src/common/domain/interfaces/env-service";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import {
   IncorrectPasswordError,
   UserAlreadyExistsError,
@@ -19,13 +21,10 @@ import type {
   AuthService,
   CheckPasswordInputModel,
   LoginWithPasswordInputModel,
-  LoginWithPasswordResultModel,
   SignupWithPasswordInputModel,
-  SignupWithPasswordResultModel,
   UpdatePasswordInputModel,
 } from "../../domain/interfaces/auth-service";
 import { AuthTypeModel } from "../../domain/models/auth-type-model";
-import type { CheckSessionModel } from "../../domain/models/check-session-model";
 import type { SessionDoc } from "../collections/sessions-collection";
 import {
   SessionTransformer,
@@ -93,14 +92,24 @@ export class AuthServiceImpl implements AuthService {
     });
   }
 
-  async validateSession(sessionId: string): Promise<CheckSessionModel> {
-    const result = await this.lucia.validateSession(sessionId);
+  validateSession = Effect.fn("AuthServiceImpl.validateSession")(function* (
+    this: AuthServiceImpl,
+    sessionId: string,
+  ) {
+    const result = yield* Effect.tryPromise({
+      try: () => this.lucia.validateSession(sessionId),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.validateSession",
+          cause,
+        }),
+    });
     if (!result.session) return result;
     return {
       user: new LuciaUserTransformer(result.user).toDomain(),
       session: new SessionTransformer(result.session).toDomain(),
     };
-  }
+  }).bind(this);
 
   getSessionCookieName(): string {
     return this.lucia.sessionCookieName;
@@ -114,118 +123,251 @@ export class AuthServiceImpl implements AuthService {
     return this.lucia.createBlankSessionCookie();
   }
 
-  async invalidateSession(sessionId: string): Promise<void> {
-    await this.lucia.invalidateSession(sessionId);
-  }
+  invalidateSession = Effect.fn("AuthServiceImpl.invalidateSession")(function* (
+    this: AuthServiceImpl,
+    sessionId: string,
+  ) {
+    yield* Effect.tryPromise({
+      try: () => this.lucia.invalidateSession(sessionId),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.invalidateSession",
+          cause,
+        }),
+    });
+  }).bind(this);
 
-  async invalidateUserSessions(userId: string): Promise<void> {
-    await this.lucia.invalidateUserSessions(new ObjectId(userId));
-  }
+  invalidateUserSessions = Effect.fn("AuthServiceImpl.invalidateUserSessions")(
+    function* (this: AuthServiceImpl, userId: string) {
+      yield* Effect.tryPromise({
+        try: () => this.lucia.invalidateUserSessions(new ObjectId(userId)),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "AuthServiceImpl.invalidateUserSessions",
+            cause,
+          }),
+      });
+    },
+  ).bind(this);
 
-  async loginWithPassword({
-    email,
-    password,
-  }: LoginWithPasswordInputModel): Promise<LoginWithPasswordResultModel> {
-    const user = await this.users.findOne({
-      email,
+  loginWithPassword = Effect.fn("AuthServiceImpl.loginWithPassword")(function* (
+    this: AuthServiceImpl,
+    { email, password }: LoginWithPasswordInputModel,
+  ) {
+    const user = yield* Effect.tryPromise({
+      try: () =>
+        this.users.findOne({
+          email,
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.loginWithPassword",
+          cause,
+        }),
     });
 
     if (!user) {
-      throw new UserDoesNotExistError();
+      return yield* Effect.fail(new UserDoesNotExistError());
     }
 
-    const passwordIsCorrect = await this.passwordHashingAlgorithm.verify(
-      user.hashed_password,
-      password,
-    );
+    const passwordIsCorrect = yield* Effect.tryPromise({
+      try: () =>
+        this.passwordHashingAlgorithm.verify(user.hashed_password, password),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.loginWithPassword",
+          cause,
+        }),
+    });
     if (!passwordIsCorrect) {
-      throw new IncorrectPasswordError();
+      return yield* Effect.fail(new IncorrectPasswordError());
     }
 
-    const session = await this.lucia.createSession(user._id, {});
+    const session = yield* Effect.tryPromise({
+      try: () => this.lucia.createSession(user._id, {}),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.loginWithPassword",
+          cause,
+        }),
+    });
     return {
       userId: user._id.toString(),
       sessionCookie: this.lucia.createSessionCookie(session.id),
     };
-  }
+  }).bind(this);
 
-  async signupWithPassword({
-    email,
-    password,
-    acceptTerms,
-  }: SignupWithPasswordInputModel): Promise<SignupWithPasswordResultModel> {
-    const existingUser = await this.users.findOne({
-      email,
-    });
-    if (existingUser) {
-      throw new UserAlreadyExistsError();
-    }
+  signupWithPassword = Effect.fn("AuthServiceImpl.signupWithPassword")(
+    function* (
+      this: AuthServiceImpl,
+      { email, password, acceptTerms }: SignupWithPasswordInputModel,
+    ) {
+      const existingUser = yield* Effect.tryPromise({
+        try: () =>
+          this.users.findOne({
+            email,
+          }),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "AuthServiceImpl.signupWithPassword",
+            cause,
+          }),
+      });
+      if (existingUser) {
+        return yield* Effect.fail(new UserAlreadyExistsError());
+      }
 
-    const hashed_password = await this.passwordHashingAlgorithm.hash(password);
-    const result = await this.users.insertOne({
-      email,
-      hashed_password,
-      acceptTerms,
-      authTypes: [AuthTypeModel.email],
-      isAdmin: email === this.envService.adminEmail,
-    });
-    const userId = result.insertedId;
+      const hashed_password = yield* Effect.tryPromise({
+        try: () => this.passwordHashingAlgorithm.hash(password),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "AuthServiceImpl.signupWithPassword",
+            cause,
+          }),
+      });
+      const result = yield* Effect.tryPromise({
+        try: () =>
+          this.users.insertOne({
+            email,
+            hashed_password,
+            acceptTerms,
+            authTypes: [AuthTypeModel.email],
+            isAdmin: email === this.envService.adminEmail,
+          }),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "AuthServiceImpl.signupWithPassword",
+            cause,
+          }),
+      });
+      const userId = result.insertedId;
 
-    const session = await this.lucia.createSession(userId, {});
-    const sessionCookie = this.lucia.createSessionCookie(session.id);
-    return {
-      userId: userId.toString(),
-      sessionCookie,
-    };
-  }
+      const session = yield* Effect.tryPromise({
+        try: () => this.lucia.createSession(userId, {}),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "AuthServiceImpl.signupWithPassword",
+            cause,
+          }),
+      });
+      const sessionCookie = this.lucia.createSessionCookie(session.id);
+      return {
+        userId: userId.toString(),
+        sessionCookie,
+      };
+    },
+  ).bind(this);
 
-  async verifyEmail(userId: string): Promise<Cookie> {
+  verifyEmail = Effect.fn("AuthServiceImpl.verifyEmail")(function* (
+    this: AuthServiceImpl,
+    userId: string,
+  ) {
     const _id = new ObjectId(userId);
-    await this.users.findOneAndUpdate(
-      { _id },
-      { $set: { isEmailVerified: true } },
-    );
-
-    return this.resetSessions(userId);
-  }
-
-  async updatePassword({
-    userId,
-    password,
-  }: UpdatePasswordInputModel): Promise<void> {
-    const hashed_password = await this.passwordHashingAlgorithm.hash(password);
-    await this.users.updateOne(
-      { _id: new ObjectId(userId) },
-      { $set: { hashed_password } },
-    );
-  }
-
-  async checkPasswordIsCorrect(input: CheckPasswordInputModel): Promise<void> {
-    const existingUser = await this.users.findOne({
-      _id: new ObjectId(input.userId),
+    yield* Effect.tryPromise({
+      try: () =>
+        this.users.findOneAndUpdate(
+          { _id },
+          { $set: { isEmailVerified: true } },
+        ),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.verifyEmail",
+          cause,
+        }),
     });
-    if (!existingUser) {
-      throw new UserDoesNotExistError();
-    }
 
-    const passwordIsCorrect = await this.passwordHashingAlgorithm.verify(
-      existingUser.hashed_password,
-      input.password,
-    );
-    if (!passwordIsCorrect) {
-      throw new IncorrectPasswordError();
-    }
-  }
+    return yield* this.resetSessions(userId);
+  }).bind(this);
 
-  async resetSessions(userId: string): Promise<Cookie> {
+  updatePassword = Effect.fn("AuthServiceImpl.updatePassword")(function* (
+    this: AuthServiceImpl,
+    { userId, password }: UpdatePasswordInputModel,
+  ) {
+    const hashed_password = yield* Effect.tryPromise({
+      try: () => this.passwordHashingAlgorithm.hash(password),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.updatePassword",
+          cause,
+        }),
+    });
+    yield* Effect.tryPromise({
+      try: () =>
+        this.users.updateOne(
+          { _id: new ObjectId(userId) },
+          { $set: { hashed_password } },
+        ),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.updatePassword",
+          cause,
+        }),
+    });
+  }).bind(this);
+
+  checkPasswordIsCorrect = Effect.fn("AuthServiceImpl.checkPasswordIsCorrect")(
+    function* (this: AuthServiceImpl, input: CheckPasswordInputModel) {
+      const existingUser = yield* Effect.tryPromise({
+        try: () =>
+          this.users.findOne({
+            _id: new ObjectId(input.userId),
+          }),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "AuthServiceImpl.checkPasswordIsCorrect",
+            cause,
+          }),
+      });
+      if (!existingUser) {
+        return yield* Effect.fail(new UserDoesNotExistError());
+      }
+
+      const passwordIsCorrect = yield* Effect.tryPromise({
+        try: () =>
+          this.passwordHashingAlgorithm.verify(
+            existingUser.hashed_password,
+            input.password,
+          ),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "AuthServiceImpl.checkPasswordIsCorrect",
+            cause,
+          }),
+      });
+      if (!passwordIsCorrect) {
+        return yield* Effect.fail(new IncorrectPasswordError());
+      }
+    },
+  ).bind(this);
+
+  resetSessions = Effect.fn("AuthServiceImpl.resetSessions")(function* (
+    this: AuthServiceImpl,
+    userId: string,
+  ) {
     const _id = new ObjectId(userId);
-    await this.lucia.invalidateUserSessions(_id);
-    const session = await this.lucia.createSession(_id, {});
+    yield* Effect.tryPromise({
+      try: () => this.lucia.invalidateUserSessions(_id),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.resetSessions",
+          cause,
+        }),
+    });
+    const session = yield* Effect.tryPromise({
+      try: () => this.lucia.createSession(_id, {}),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "AuthServiceImpl.resetSessions",
+          cause,
+        }),
+    });
     return this.lucia.createSessionCookie(session.id);
-  }
+  }).bind(this);
 
   private get passwordHashingAlgorithm(): PasswordHashingAlgorithm {
-    const secret = new TextEncoder().encode(this.envService.passwordPepper);
+    const secret = new TextEncoder().encode(
+      Redacted.value(this.envService.passwordPepper),
+    );
     return new Argon2id({ secret });
   }
 }

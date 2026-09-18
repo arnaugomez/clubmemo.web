@@ -1,4 +1,12 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
 import type { Cookie } from "lucia";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
+import type {
+  IncorrectPasswordError,
+  UserAlreadyExistsError,
+  UserDoesNotExistError,
+} from "../errors/auth-errors";
 import type { CheckSessionModel } from "../models/check-session-model";
 
 /**
@@ -14,7 +22,9 @@ export interface AuthService {
    * The name of the cookie that contains the session id can be obtained with
    * the `getSessionCookieName` method.
    */
-  validateSession(sessionId: string): Promise<CheckSessionModel>;
+  validateSession(
+    sessionId: string,
+  ): Effect.Effect<CheckSessionModel, ExternalServiceError>;
 
   /**
    * Makes the session invalid so that it can no longer be used to authenticate
@@ -22,7 +32,9 @@ export interface AuthService {
    *
    * @param sessionId The ID of the session to invalidate.
    */
-  invalidateSession(sessionId: string): Promise<void>;
+  invalidateSession(
+    sessionId: string,
+  ): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Invalidates all the current sessions of a user so that they can no longer
@@ -31,7 +43,9 @@ export interface AuthService {
    *
    * @param userId the id of the user
    */
-  invalidateUserSessions(userId: string): Promise<void>;
+  invalidateUserSessions(
+    userId: string,
+  ): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Obtain the name of the cookie that contains the session id.
@@ -65,7 +79,10 @@ export interface AuthService {
    */
   loginWithPassword(
     input: LoginWithPasswordInputModel,
-  ): Promise<LoginWithPasswordResultModel>;
+  ): Effect.Effect<
+    LoginWithPasswordResultModel,
+    ExternalServiceError | UserDoesNotExistError | IncorrectPasswordError
+  >;
 
   /**
    * Creates a new user with an email and password. If the email is not already
@@ -77,7 +94,10 @@ export interface AuthService {
    */
   signupWithPassword(
     input: SignupWithPasswordInputModel,
-  ): Promise<SignupWithPasswordResultModel>;
+  ): Effect.Effect<
+    SignupWithPasswordResultModel,
+    ExternalServiceError | UserAlreadyExistsError
+  >;
 
   /**
    * Sets the email of a user as verified.
@@ -94,14 +114,16 @@ export interface AuthService {
    * @returns The cookie of the new session that is created after the email is
    * verified
    */
-  verifyEmail(userId: string): Promise<Cookie>;
+  verifyEmail(userId: string): Effect.Effect<Cookie, ExternalServiceError>;
 
   /**
    * Changes the password of a user
    *
    * @param input the id of the user and the new password
    */
-  updatePassword(input: UpdatePasswordInputModel): Promise<void>;
+  updatePassword(
+    input: UpdatePasswordInputModel,
+  ): Effect.Effect<void, ExternalServiceError>;
 
   /**
    * Checks that the password of a user is correct. If not, it throws
@@ -109,7 +131,12 @@ export interface AuthService {
    *
    * @param input the user id and the password to check
    */
-  checkPasswordIsCorrect(input: CheckPasswordInputModel): Promise<void>;
+  checkPasswordIsCorrect(
+    input: CheckPasswordInputModel,
+  ): Effect.Effect<
+    void,
+    ExternalServiceError | UserDoesNotExistError | IncorrectPasswordError
+  >;
 
   /**
    * Invalidates all the current sessions of a user so that they can no longer
@@ -123,7 +150,7 @@ export interface AuthService {
    * @returns The cookie of the new session that is created after invalidating
    * all the current sessions of the user
    */
-  resetSessions(userId: string): Promise<Cookie>;
+  resetSessions(userId: string): Effect.Effect<Cookie, ExternalServiceError>;
 }
 
 export interface LoginWithPasswordInputModel {
@@ -153,3 +180,7 @@ export interface CheckPasswordInputModel {
   userId: string;
   password: string;
 }
+
+export const AuthService = Context.Service<AuthService>(
+  "clubmemo/auth/domain/interfaces/auth-service/AuthService",
+);

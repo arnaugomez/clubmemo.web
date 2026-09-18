@@ -1,11 +1,12 @@
-import { z } from "zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 import { AdminResourceTypeSchema } from "./admin-resource-type-schema";
 
 /**
  * Validates the parameters of `deleteAdminResourceAction`
  */
-export const DeleteAdminResourceActionSchema = z.object({
+export const DeleteAdminResourceActionSchema = Schema.Struct({
   resourceType: AdminResourceTypeSchema,
   id: ObjectIdSchema,
 });
@@ -14,7 +15,7 @@ export const DeleteAdminResourceActionSchema = z.object({
  * Validates the parameters of `deleteAdminResourceAction` when the resource type
  * is `AdminResourceTypeModel.sessions`
  */
-export const DeleteAdminResourceActionSchemaForSessions = z.object({
+export const DeleteAdminResourceActionSchemaForSessions = Schema.Struct({
   resourceType: AdminResourceTypeSchema,
-  id: z.string(),
+  id: Schema.String,
 });

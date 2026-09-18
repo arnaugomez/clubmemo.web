@@ -1,5 +1,7 @@
+import * as Effect from "effect/Effect";
 import { cache } from "react";
-import { locator_profile_GetMyProfileUseCase } from "../../locators/locator_get-my-profile-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
+import { GetMyProfileUseCaseService } from "@/src/profile/layers/layer_get-my-profile-use-case";
 
 /**
  * Obtains the data of the profile of the currently logged in user.
@@ -7,6 +9,10 @@ import { locator_profile_GetMyProfileUseCase } from "../../locators/locator_get-
  * finish rendering
  */
 export const fetchMyProfile = cache(async () => {
-  const useCase = locator_profile_GetMyProfileUseCase();
-  return await useCase.execute();
+  return runServer(
+    Effect.gen(function* () {
+      const useCase = yield* GetMyProfileUseCaseService;
+      return yield* useCase.execute();
+    }),
+  );
 });

@@ -1,14 +1,19 @@
 "use server";
-
+import * as Effect from "effect/Effect";
 import { redirect } from "next/navigation";
-import { locator_auth_LogoutUseCase } from "../../locators/locator_logout-use-case";
+import { LogoutUseCaseService } from "@/src/auth/layers/layer_logout-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
 
 /**
  * Logs out the user and redirects to the landing page
  */
 export async function logoutAction() {
-  const useCase = locator_auth_LogoutUseCase();
-  await useCase.execute();
+  return runServer(
+    Effect.gen(function* () {
+      const useCase = yield* LogoutUseCaseService;
+      yield* useCase.execute();
 
-  redirect("/");
+      redirect("/");
+    }),
+  );
 }

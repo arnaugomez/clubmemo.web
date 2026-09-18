@@ -1,7 +1,7 @@
 "use client";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import { toast } from "sonner";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
 import { getTagSuggestionsAction } from "../../../../tags/ui/actions/get-tag-suggestions-action";
 import { ActionResponseHandler } from "../../models/action-response-handler";
 
@@ -29,7 +29,7 @@ export default function TagsInput({
 
       return handler.data?.map((tag) => ({ value: tag, label: tag })) ?? [];
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       toast.error("Error al cargar etiquetas");
     }
     return [];

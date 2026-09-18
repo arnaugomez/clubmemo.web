@@ -1,12 +1,15 @@
-export interface NoteModelData {
-  id: string;
-  courseId: string;
-  front: string;
-  back: string;
-  frontText?: string;
-  backText?: string;
-  createdAt: Date;
-}
+import * as Schema from "effect/Schema";
+
+export const NoteModelDataSchema = Schema.Struct({
+  id: Schema.mutableKey(Schema.String),
+  courseId: Schema.mutableKey(Schema.String),
+  front: Schema.mutableKey(Schema.String),
+  back: Schema.mutableKey(Schema.String),
+  frontText: Schema.mutableKey(Schema.optional(Schema.String)),
+  backText: Schema.mutableKey(Schema.optional(Schema.String)),
+  createdAt: Schema.mutableKey(Schema.Date),
+});
+export type NoteModelData = typeof NoteModelDataSchema.Type;
 
 /**
  * A note of a course.
@@ -22,8 +25,12 @@ export interface NoteModelData {
  * There can be multiple cards for a single note. If 3 users are learning the
  * same note, there will be 3 cards, one for each user.
  */
-export class NoteModel {
-  constructor(readonly data: NoteModelData) {}
+export class NoteModel extends Schema.Class<NoteModel>("NoteModel")({
+  data: NoteModelDataSchema,
+}) {
+  constructor(data: NoteModelData) {
+    super({ data });
+  }
 
   get id() {
     return this.data.id;

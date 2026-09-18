@@ -1,15 +1,15 @@
-import { z } from "zod";
+import * as Schema from "effect/Schema";
 
 /**
  * Validates the parameters of `uploadFileAction`
  */
-export const UploadFileActionSchema = z.object({
-  collection: z.enum(["profiles", "courses"]),
-  field: z.enum(["picture", "backgroundPicture"]),
-  contentType: z.string(),
+export const UploadFileActionSchema = Schema.Struct({
+  collection: Schema.Literals(["profiles", "courses"]),
+  field: Schema.Literals(["picture", "backgroundPicture"]),
+  contentType: Schema.String,
 });
 
 /**
  * Parameters of `uploadFileAction`
  */
-export type UploadFileActionModel = z.infer<typeof UploadFileActionSchema>;
+export type UploadFileActionModel = (typeof UploadFileActionSchema)["Type"];

@@ -1,11 +1,14 @@
 "use server";
+import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
+import * as Schema from "effect/Schema";
 import { redirect } from "next/navigation";
 import {
   IncorrectPasswordError,
   UserDoesNotExistError,
 } from "@/src/auth/domain/errors/auth-errors";
-import { locator_auth_LoginWithPasswordUseCase } from "@/src/auth/locators/locator_login-with-password-use-case";
-import { waitMilliseconds } from "@/src/common/domain/utils/promise";
+import { LoginWithPasswordUseCaseService } from "@/src/auth/layers/layer_login-with-password-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import {
@@ -22,23 +25,35 @@ import {
 export async function loginWithPasswordAction(
   input: LoginWithPasswordActionModel,
 ) {
-  try {
-    const parsed = LoginWithPasswordActionSchema.parse(input);
+  return runServer(
+    Effect.gen(function* () {
+      {
+        const outcome = yield* Effect.result(
+          Effect.gen(function* () {
+            const parsed = yield* Schema.decodeUnknownEffect(
+              LoginWithPasswordActionSchema,
+            )(input);
 
-    const useCase = locator_auth_LoginWithPasswordUseCase();
-    await useCase.execute(parsed);
-  } catch (e) {
-    if (
-      e instanceof UserDoesNotExistError ||
-      e instanceof IncorrectPasswordError
-    ) {
-      await waitMilliseconds(800); // Prevent brute-force attacks
-      return ActionResponse.formError("password", {
-        message: "Credenciales inválidas",
-        type: "invalidCredentials",
-      });
-    }
-    return ActionErrorHandler.handle(e);
-  }
-  redirect(`/home`);
+            const useCase = yield* LoginWithPasswordUseCaseService;
+            yield* useCase.execute(parsed);
+          }),
+        );
+        if (Result.isFailure(outcome)) {
+          const e = outcome.failure;
+          if (
+            e instanceof UserDoesNotExistError ||
+            e instanceof IncorrectPasswordError
+          ) {
+            yield* Effect.sleep(800); // Prevent brute-force attacks
+            return ActionResponse.formError("password", {
+              message: "Credenciales inválidas",
+              type: "invalidCredentials",
+            });
+          }
+          return ActionErrorHandler.handle(e);
+        }
+      }
+      redirect(`/home`);
+    }),
+  );
 }

@@ -1,11 +1,12 @@
-import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
-import type { IpService } from "@/src/common/domain/interfaces/ip-service";
-import type { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
-import type { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
-import { IncorrectPasswordError } from "../errors/auth-errors";
-import type {
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import { CookieService } from "@/src/common/domain/interfaces/cookie-service";
+import { IpService } from "@/src/common/domain/interfaces/ip-service";
+import { ProfilesRepository } from "@/src/profile/domain/interfaces/profiles-repository";
+import { RateLimitsRepository } from "@/src/rate-limits/domain/interfaces/rate-limits-repository";
+import {
   AuthService,
-  LoginWithPasswordInputModel,
+  type LoginWithPasswordInputModel,
 } from "../interfaces/auth-service";
 
 /**
@@ -14,41 +15,44 @@ import type {
  *
  * Rate limited to 100 requests/IP-day.
  */
-export class LoginWithPasswordUseCase {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly ipService: IpService,
-    private readonly rateLimitsRepository: RateLimitsRepository,
-    private readonly cookieService: CookieService,
-    private readonly profilesRepository: ProfilesRepository,
-  ) {}
+export class LoginWithPasswordUseCase extends Context.Service<LoginWithPasswordUseCase>()(
+  "clubmemo/auth/domain/use-cases/login-with-password-use-case",
+  {
+    make: Effect.gen(function* () {
+      const authService = yield* AuthService;
+      const ipService = yield* IpService;
+      const rateLimitsRepository = yield* RateLimitsRepository;
+      const cookieService = yield* CookieService;
+      const profilesRepository = yield* ProfilesRepository;
+      const execute = Effect.fn("LoginWithPasswordUseCase.execute")(function* (
+        input: LoginWithPasswordInputModel,
+      ) {
+        const ip = yield* ipService.getIp();
+        const rateLimitKey = `LoginWithPasswordUseCase/${ip}`;
+        yield* rateLimitsRepository.check(rateLimitKey);
+        yield* Effect.gen(function* () {
+          const { sessionCookie, userId } =
+            yield* authService.loginWithPassword(input);
 
-  /**
-   * Logs in the user with their email and password. If the login is successful,
-   * it sets a session cookie and sets it in the response.
-   *
-   * Rate limited to 100 requests/IP-day.
-   */
-  async execute(input: LoginWithPasswordInputModel): Promise<void> {
-    const ip = await this.ipService.getIp();
-    const rateLimitKey = `LoginWithPasswordUseCase/${ip}`;
-    await this.rateLimitsRepository.check(rateLimitKey);
-    try {
-      const { sessionCookie, userId } =
-        await this.authService.loginWithPassword(input);
+          // If the user was accidentally created without a profile (it can happen in the Admin Panel), create one.
+          const profile = yield* profilesRepository.getByUserId(userId);
+          if (!profile) {
+            yield* profilesRepository.create(userId);
+          }
 
-      // If the user was accidentally created without a profile (it can happen in the Admin Panel), create one.
-      const profile = await this.profilesRepository.getByUserId(userId);
-      if (!profile) {
-        await this.profilesRepository.create(userId);
-      }
+          yield* cookieService.set(sessionCookie);
+        }).pipe(
+          Effect.catchTag("IncorrectPasswordError", (e) =>
+            Effect.gen(function* () {
+              yield* rateLimitsRepository.increment(rateLimitKey);
+              return yield* Effect.fail(e);
+            }),
+          ),
+        );
+      });
+      return { execute };
+    }),
+  },
+) {}
 
-      await this.cookieService.set(sessionCookie);
-    } catch (e) {
-      if (e instanceof IncorrectPasswordError) {
-        await this.rateLimitsRepository.increment(rateLimitKey);
-      }
-      throw e;
-    }
-  }
-}
+export const LoginWithPasswordUseCaseService = LoginWithPasswordUseCase;

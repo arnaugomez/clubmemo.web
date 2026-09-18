@@ -1,4 +1,9 @@
+import type * as Effect from "effect/Effect";
 import type { Db, ObjectId } from "mongodb";
+import type {
+  ExternalServiceError,
+  FieldValidationError,
+} from "@/src/common/effect/errors";
 import type { AdminResourceData } from "./admin-resource-data";
 import type { AdminResourceTypeModel } from "./admin-resource-model";
 
@@ -22,7 +27,10 @@ export interface AdminResourceHookModel {
   beforeCreate?: (
     data: AdminResourceData,
     db: Db,
-  ) => Promise<AdminResourceData>;
+  ) => Effect.Effect<
+    AdminResourceData,
+    ExternalServiceError | FieldValidationError
+  >;
   /**
    * Function that runs before an admin resource is updated. Can be used to
    * transform the resource data
@@ -35,7 +43,10 @@ export interface AdminResourceHookModel {
     id: ObjectId,
     data: AdminResourceData,
     db: Db,
-  ) => Promise<AdminResourceData>;
+  ) => Effect.Effect<
+    AdminResourceData,
+    ExternalServiceError | FieldValidationError
+  >;
   /**
    * Function that runs after an admin resource is deleted. Can be used to clean
    * up associated resources.
@@ -47,5 +58,5 @@ export interface AdminResourceHookModel {
     id: ObjectId,
     data: AdminResourceData,
     db: Db,
-  ) => Promise<void>;
+  ) => Effect.Effect<void, ExternalServiceError | FieldValidationError>;
 }

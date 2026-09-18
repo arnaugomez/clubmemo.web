@@ -1,10 +1,10 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
 import { waitMilliseconds } from "@/src/common/domain/utils/promise";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
@@ -24,7 +24,7 @@ import { LoginWithPasswordActionSchema } from "../schemas/login-with-password-ac
  */
 export function LoginForm() {
   const form = useForm({
-    resolver: zodResolver(LoginWithPasswordActionSchema),
+    resolver: schemaResolver(LoginWithPasswordActionSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -40,7 +40,7 @@ export function LoginForm() {
       if (!handler.hasErrors) await waitMilliseconds(1000);
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

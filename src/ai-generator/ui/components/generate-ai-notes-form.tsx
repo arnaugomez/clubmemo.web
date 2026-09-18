@@ -1,11 +1,12 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import range from "lodash/range";
+import * as Effect from "effect/Effect";
+import * as Schema from "effect/Schema";
+import * as SchemaGetter from "effect/SchemaGetter";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "@/i18n/zod";
 import { AiGeneratorNoteType } from "@/src/ai-generator/domain/models/ai-generator-note-type";
 import { AiNotesGeneratorSourceType } from "@/src/ai-generator/domain/models/ai-notes-generator-source-type";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError, runClient } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FileSchema } from "@/src/common/schemas/file-schema";
 import { CheckboxesFormField } from "@/src/common/ui/components/form/checkboxes-form-field";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
@@ -19,6 +20,7 @@ import { DialogFooter } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
+import { DocumentTextService } from "../../domain/interfaces/document-text-service";
 import { generateAiNotesAction } from "../actions/generate-ai-notes-action";
 
 interface GenerateAiNotesFormProps {
@@ -47,30 +49,55 @@ export function GenerateAiNotesForm({
   onSuccess,
   onGoBack,
 }: GenerateAiNotesFormProps) {
-  const CreateNoteSchema = z.object({
+  const CreateNoteSchema = Schema.Struct({
     text:
       sourceType === AiNotesGeneratorSourceType.file
-        ? z.string().optional()
-        : z.string().trim().min(1).max(60_000),
+        ? Schema.optional(Schema.String)
+        : Schema.String.pipe(
+            Schema.decode({
+              decode: SchemaGetter.transform((value) => value.trim()),
+              encode: SchemaGetter.passthrough(),
+            }),
+          )
+            .check(
+              Schema.isMinLength(1, {
+                message: `El texto debe contener al menos ${1} carácter(es)`,
+              }),
+            )
+            .check(
+              Schema.isMaxLength(60_000, {
+                message: `El texto debe contener como máximo ${60_000} carácter(es)`,
+              }),
+            ),
     file:
       sourceType === AiNotesGeneratorSourceType.file
         ? FileSchema
-        : z.undefined(),
-    noteTypes: z
-      .array(
-        z.union([
-          z.literal(AiGeneratorNoteType.definition),
-          z.literal(AiGeneratorNoteType.list),
-          z.literal(AiGeneratorNoteType.qa),
+        : Schema.optional(Schema.Undefined),
+    noteTypes: Schema.mutable(
+      Schema.Array(
+        Schema.Union([
+          Schema.Literal(AiGeneratorNoteType.definition),
+          Schema.Literal(AiGeneratorNoteType.list),
+          Schema.Literal(AiGeneratorNoteType.qa),
         ]),
+      ),
+    ).check(
+      Schema.isMinLength(1, {
+        message: `La lista debe contener al menos ${1} elemento(s)`,
+      }),
+    ),
+    notesCount: Schema.Number.check(Schema.makeFilter((n) => !Number.isNaN(n)))
+      .check(
+        Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }),
       )
-      .min(1),
-    notesCount: z.number().int().positive(),
+      .check(
+        Schema.isGreaterThan(0, { message: "El número debe ser mayor que 0" }),
+      ),
   });
-  type FormValues = z.infer<typeof CreateNoteSchema>;
+  type FormValues = (typeof CreateNoteSchema)["Type"];
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(CreateNoteSchema),
+    resolver: schemaResolver(CreateNoteSchema),
     defaultValues: {
       text: "",
       notesCount: 10,
@@ -87,46 +114,13 @@ export function GenerateAiNotesForm({
           return;
         }
 
-        if (data.file.type === "application/pdf") {
-          const fileReader = new FileReader();
-          fileReader.readAsArrayBuffer(data.file);
-          text = await new Promise((resolve, reject) => {
-            fileReader.onload = async (event) => {
-              if (
-                !event.target ||
-                !event.target.result ||
-                typeof event.target.result === "string"
-              ) {
-                reject(new Error("No se pudo leer el archivo"));
-                return;
-              }
-              const typedarray = new Uint8Array(event.target.result);
-              // @ts-expect-error pdfjsLib is loaded through a script
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const pdfjs = window.pdfjsLib;
-              pdfjs.GlobalWorkerOptions.workerSrc =
-                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.mjs";
-              const pdf = await pdfjs.getDocument(typedarray).promise;
-
-              const numPages = pdf.numPages;
-
-              const texts = await Promise.all(
-                range(numPages).map(async (_, i) => {
-                  const page = await pdf.getPage(i + 1);
-                  const content = await page.getTextContent();
-                  return content.items
-                    .map((item: { str: string }) =>
-                      "str" in item ? item.str : "",
-                    )
-                    .join(" ");
-                }),
-              );
-              resolve(texts.join("\n"));
-            };
-          });
-        } else {
-          text = await data.file.text();
-        }
+        const file = data.file;
+        text = await runClient(
+          Effect.gen(function* () {
+            const reader = yield* DocumentTextService;
+            return yield* reader.read(file);
+          }),
+        );
       }
       text = text.trim().slice(0, 60_000);
       if (!text) {
@@ -157,7 +151,7 @@ export function GenerateAiNotesForm({
       }
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

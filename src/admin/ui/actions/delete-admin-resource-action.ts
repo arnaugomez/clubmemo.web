@@ -1,9 +1,13 @@
 "use server";
+import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
+import * as Schema from "effect/Schema";
+import { DeleteAdminResourceUseCaseService } from "@/src/admin/layers/layer_delete-admin-resource-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
 import { AdminResourceTypeModel } from "../../domain/models/admin-resource-model";
 import type { DeleteAdminResourceUseCaseInputModel } from "../../domain/use-cases/delete-admin-resource-use-case";
-import { locator_admin_DeleteAdminResourceUseCase } from "../../locators/locator_delete-admin-resource-use-case";
 import {
   DeleteAdminResourceActionSchema,
   DeleteAdminResourceActionSchemaForSessions,
@@ -19,16 +23,28 @@ import {
 export async function deleteAdminResourceAction(
   input: DeleteAdminResourceUseCaseInputModel,
 ) {
-  try {
-    const parsed = (
-      input.resourceType === AdminResourceTypeModel.sessions
-        ? DeleteAdminResourceActionSchemaForSessions
-        : DeleteAdminResourceActionSchema
-    ).parse(input);
-    const useCase = locator_admin_DeleteAdminResourceUseCase();
-    await useCase.execute(parsed);
-    return ActionResponse.formSuccess(null);
-  } catch (e) {
-    return ActionErrorHandler.handle(e);
-  }
+  return runServer(
+    Effect.gen(function* () {
+      {
+        const outcome = yield* Effect.result(
+          Effect.gen(function* () {
+            const parsed = yield* Schema.decodeUnknownEffect(
+              input.resourceType === AdminResourceTypeModel.sessions
+                ? DeleteAdminResourceActionSchemaForSessions
+                : DeleteAdminResourceActionSchema,
+            )(input);
+            const useCase = yield* DeleteAdminResourceUseCaseService;
+            yield* useCase.execute(parsed);
+            return ActionResponse.formSuccess(null);
+          }),
+        );
+        if (Result.isFailure(outcome)) {
+          const e = outcome.failure;
+          return ActionErrorHandler.handle(e);
+        } else {
+          return outcome.success;
+        }
+      }
+    }),
+  );
 }

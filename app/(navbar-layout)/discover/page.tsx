@@ -39,7 +39,7 @@ export default async function DiscoverPage(props: {
           </Suspense>
           <div className="h-6"></div>
           <Suspense
-            key={searchParams?.query ?? `${searchParams?.retries}` ?? ""}
+            key={searchParams?.query ?? `${searchParams?.retries}`}
             fallback={<DiscoverLoadingSkeletons />}
           >
             <DiscoverPageContent query={searchParams?.query} />

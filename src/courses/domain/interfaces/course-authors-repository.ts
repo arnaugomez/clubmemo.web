@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { CourseAuthorModel } from "../models/course-author-model";
 
 /**
@@ -10,5 +13,11 @@ export interface CourseAuthorsRepository {
    * or have edit permission.
    * @returns The authors of the course
    */
-  get(courseId: string): Promise<CourseAuthorModel[]>;
+  get(
+    courseId: string,
+  ): Effect.Effect<CourseAuthorModel[], ExternalServiceError>;
 }
+
+export const CourseAuthorsRepository = Context.Service<CourseAuthorsRepository>(
+  "clubmemo/courses/domain/interfaces/course-authors-repository/CourseAuthorsRepository",
+);

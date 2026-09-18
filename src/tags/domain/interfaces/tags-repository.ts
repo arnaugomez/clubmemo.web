@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 /**
  * Repository for tags.
  *
@@ -13,7 +16,7 @@ export interface TagsRepository {
    *
    * @param tags A list of tags to create.
    */
-  create(tags: string[]): Promise<void>;
+  create(tags: string[]): Effect.Effect<void, ExternalServiceError>;
   /**
    * Gets a list of tags that resemble the query. For example, if que query is
    * "app", it could return "apple", "application", etc.
@@ -21,5 +24,9 @@ export interface TagsRepository {
    * @param query The query to search for tags.
    * @returns A list of tags that resemble the query.
    */
-  getSuggestions(query?: string): Promise<string[]>;
+  getSuggestions(query?: string): Effect.Effect<string[], ExternalServiceError>;
 }
+
+export const TagsRepository = Context.Service<TagsRepository>(
+  "clubmemo/tags/domain/interfaces/tags-repository/TagsRepository",
+);

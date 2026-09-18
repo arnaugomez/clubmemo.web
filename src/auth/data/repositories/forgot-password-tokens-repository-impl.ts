@@ -1,11 +1,12 @@
+import * as DateTime from "effect/DateTime";
+import * as Effect from "effect/Effect";
 import type { Collection } from "mongodb";
 import { ObjectId } from "mongodb";
-import { createDate, TimeSpan } from "oslo";
 import { alphabet, generateRandomString, sha256 } from "oslo/crypto";
 import { encodeHex } from "oslo/encoding";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import type { ForgotPasswordTokensRepository } from "../../domain/interfaces/forgot-password-tokens-repository";
-import type { ForgotPasswordTokenModel } from "../../domain/models/forgot-password-token-model";
 import type { ForgotPasswordTokenDoc } from "../collections/forgot-password-tokens-collection";
 import {
   ForgotPasswordTokenDocTransformer,
@@ -25,35 +26,90 @@ export class ForgotPasswordTokensRepositoryImpl
     );
   }
 
-  async generate(userId: string): Promise<string> {
-    await this.delete(userId);
-    const token = generateRandomString(24, alphabet("a-z", "0-9"));
-    const doc = {
-      userId: new ObjectId(userId),
-      tokenHash: await this.hashToken(token),
-      expiresAt: createDate(new TimeSpan(1, "h")),
-    };
-    await this.collection.insertOne(doc);
-    return token;
-  }
+  generate = Effect.fn("ForgotPasswordTokensRepositoryImpl.generate")(
+    function* (this: ForgotPasswordTokensRepositoryImpl, userId: string) {
+      yield* this.delete(userId);
+      const token = generateRandomString(24, alphabet("a-z", "0-9"));
+      const doc = {
+        userId: new ObjectId(userId),
+        tokenHash: yield* this.hashToken(token),
+        expiresAt: DateTime.toDateUtc(
+          DateTime.add(yield* DateTime.now, { hours: 1 }),
+        ),
+      };
+      yield* Effect.tryPromise({
+        try: () => this.collection.insertOne(doc),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "ForgotPasswordTokensRepositoryImpl.generate",
+            cause,
+          }),
+      });
+      return token;
+    },
+  ).bind(this);
 
-  async validate(userId: string, token: string): Promise<boolean> {
-    const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
-    if (!doc) return false;
-    const tokenHash = await this.hashToken(token);
-    return tokenHash === doc.tokenHash;
-  }
+  validate = Effect.fn("ForgotPasswordTokensRepositoryImpl.validate")(
+    function* (
+      this: ForgotPasswordTokensRepositoryImpl,
+      userId: string,
+      token: string,
+    ) {
+      const doc = yield* Effect.tryPromise({
+        try: () => this.collection.findOne({ userId: new ObjectId(userId) }),
+        catch: (cause) =>
+          new ExternalServiceError({
+            operation: "ForgotPasswordTokensRepositoryImpl.validate",
+            cause,
+          }),
+      });
+      if (!doc) return false;
+      const tokenHash = yield* this.hashToken(token);
+      return tokenHash === doc.tokenHash;
+    },
+  ).bind(this);
 
-  async get(userId: string): Promise<ForgotPasswordTokenModel | null> {
-    const doc = await this.collection.findOne({ userId: new ObjectId(userId) });
+  get = Effect.fn("ForgotPasswordTokensRepositoryImpl.get")(function* (
+    this: ForgotPasswordTokensRepositoryImpl,
+    userId: string,
+  ) {
+    const doc = yield* Effect.tryPromise({
+      try: () => this.collection.findOne({ userId: new ObjectId(userId) }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "ForgotPasswordTokensRepositoryImpl.get",
+          cause,
+        }),
+    });
     return doc && new ForgotPasswordTokenDocTransformer(doc).toDomain();
-  }
+  }).bind(this);
 
-  async delete(userId: string): Promise<void> {
-    await this.collection.deleteMany({ userId: new ObjectId(userId) });
-  }
+  delete = Effect.fn("ForgotPasswordTokensRepositoryImpl.delete")(function* (
+    this: ForgotPasswordTokensRepositoryImpl,
+    userId: string,
+  ) {
+    yield* Effect.tryPromise({
+      try: () => this.collection.deleteMany({ userId: new ObjectId(userId) }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "ForgotPasswordTokensRepositoryImpl.delete",
+          cause,
+        }),
+    });
+  }).bind(this);
 
-  private async hashToken(token: string) {
-    return encodeHex(await sha256(new TextEncoder().encode(token)));
-  }
+  private hashToken = Effect.fn("ForgotPasswordTokensRepositoryImpl.hashToken")(
+    function* (this: ForgotPasswordTokensRepositoryImpl, token: string) {
+      return encodeHex(
+        yield* Effect.tryPromise({
+          try: () => sha256(new TextEncoder().encode(token)),
+          catch: (cause) =>
+            new ExternalServiceError({
+              operation: "ForgotPasswordTokensRepositoryImpl.hashToken",
+              cause,
+            }),
+        }),
+      );
+    },
+  ).bind(this);
 }

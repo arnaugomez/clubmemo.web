@@ -1,4 +1,5 @@
-import { ZodError } from "zod";
+import * as Schema from "effect/Schema";
+import { unstable_rethrow } from "next/navigation";
 import {
   InvalidAdminResourceTypeError,
   UserIsNotAdminError,
@@ -14,6 +15,8 @@ import {
   UserDoesNotAcceptTermsError,
   UserDoesNotExistError,
 } from "@/src/auth/domain/errors/auth-errors";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { FieldValidationError } from "@/src/common/effect/errors";
 import {
   CannotDeleteCourseError,
   CannotEditCourseError,
@@ -23,14 +26,19 @@ import { EnrollmentDoesNotExistError } from "@/src/courses/domain/models/enrollm
 import { ProfileDoesNotExistError } from "@/src/profile/domain/errors/profile-errors";
 import { DailyRateLimitError } from "@/src/rate-limits/domain/errors/rate-limits-errors";
 import { NoPermissionError } from "../../domain/models/app-errors";
-import { locator_common_ErrorTrackingService } from "../../locators/locator_error-tracking-service";
 import type { FormActionResponse } from "../models/server-form-errors";
 import { ActionResponse } from "../models/server-form-errors";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: utility class pattern
 export class ActionErrorHandler {
   static handle(e: unknown): FormActionResponse {
-    if (e instanceof DailyRateLimitError) {
+    unstable_rethrow(e);
+    if (e instanceof FieldValidationError) {
+      return ActionResponse.formError(e.path, {
+        type: "custom",
+        message: e.message,
+      });
+    } else if (e instanceof DailyRateLimitError) {
       return ActionResponse.formRateLimitError(e);
     } else if (e instanceof SessionExpiredError) {
       return ActionResponse.formGlobalError("sessionExpired");
@@ -62,10 +70,10 @@ export class ActionErrorHandler {
       return ActionResponse.formGlobalError("invalidAdminResourceType");
     } else if (e instanceof UserIsNotAdminError) {
       return ActionResponse.formGlobalError("userIsNotAdmin");
-    } else if (e instanceof ZodError) {
-      return ActionResponse.formZodError(e);
+    } else if (Schema.isSchemaError(e)) {
+      return ActionResponse.formSchemaError(e);
     } else {
-      locator_common_ErrorTrackingService().captureError(e);
+      captureError(e);
       return ActionResponse.formGlobalError("general");
     }
   }

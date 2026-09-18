@@ -1,22 +1,24 @@
-import { z } from "@/i18n/zod";
+import * as Schema from "effect/Schema";
+
 import { ObjectIdSchema } from "@/src/common/schemas/object-id-schema";
 
 /**
  * Validates the parameters of `generateAiNotesConfirmAction`
  */
-export const GenerateAiNotesConfirmActionSchema = z.object({
+export const GenerateAiNotesConfirmActionSchema = Schema.Struct({
   courseId: ObjectIdSchema,
-  notes: z.array(
-    z.object({
-      front: z.string(),
-      back: z.string(),
-    }),
+  notes: Schema.mutable(
+    Schema.Array(
+      Schema.Struct({
+        front: Schema.String,
+        back: Schema.String,
+      }),
+    ),
   ),
 });
 
 /**
  * Parameters of `generateAiNotesConfirmAction`
  */
-export type GenerateAiNotesConfirmActionModel = z.infer<
-  typeof GenerateAiNotesConfirmActionSchema
->;
+export type GenerateAiNotesConfirmActionModel =
+  (typeof GenerateAiNotesConfirmActionSchema)["Type"];

@@ -1,18 +1,24 @@
-import type { EnvService } from "../../domain/interfaces/env-service";
+import * as Config from "effect/Config";
+import * as Redacted from "effect/Redacted";
 
-/**
- * Implementation of `EnvService` using process.env to read the environment variables
- */
-export class EnvServiceImpl implements EnvService {
-  readonly mongodbUrl = process.env.MONGODB_URL;
-  readonly resendApiKey = process.env.RESEND_API_KEY;
-  readonly sendEmail = process.env.SEND_EMAIL === "true";
-  readonly projectUrl = process.env.PROJECT_URL;
-  readonly passwordPepper = process.env.PASSWORD_PEPPER;
-  readonly openaiApiKey = process.env.OPENAI_API_KEY;
-  readonly fakeOpenAiApi = process.env.FAKE_OPENAI_API === "true";
-  readonly awsRegion = process.env.AWS_REGION;
-  readonly awsBucketName = process.env.AWS_BUCKET_NAME;
-  readonly adminEmail = process.env.ADMIN_EMAIL ?? "";
-  readonly cacheMongodbClient = process.env.CACHE_MONGODB_CLIENT === "true";
-}
+const optionalSecret = (name: string) =>
+  Config.Redacted(name).pipe(Config.withDefault(Redacted.make("")));
+const flag = (name: string) =>
+  Config.String(name).pipe(
+    Config.withDefault("false"),
+    Config.map((value) => value === "true"),
+  );
+
+/** Validated process configuration; optional integrations are acquired when used. */
+export const applicationConfig = Config.all({
+  mongodbUrl: Config.Redacted("MONGODB_URL"),
+  projectUrl: Config.NonEmptyString("PROJECT_URL"),
+  passwordPepper: Config.Redacted("PASSWORD_PEPPER"),
+  resendApiKey: optionalSecret("RESEND_API_KEY"),
+  openaiApiKey: optionalSecret("OPENAI_API_KEY"),
+  sendEmail: flag("SEND_EMAIL"),
+  fakeOpenAiApi: flag("FAKE_OPENAI_API"),
+  awsRegion: Config.String("AWS_REGION").pipe(Config.withDefault("")),
+  awsBucketName: Config.String("AWS_BUCKET_NAME").pipe(Config.withDefault("")),
+  adminEmail: Config.String("ADMIN_EMAIL").pipe(Config.withDefault("")),
+});

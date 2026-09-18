@@ -1,4 +1,12 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 import type { NoteRowModel } from "@/src/notes/domain/models/note-row-model";
+import type {
+  AiGeneratorEmptyMessageError,
+  AiGeneratorError,
+  AiGeneratorRateLimitError,
+} from "../errors/ai-generator-errors";
 import type { AiGeneratorNoteType } from "../models/ai-generator-note-type";
 import type { AiNotesGeneratorSourceType } from "../models/ai-notes-generator-source-type";
 
@@ -15,7 +23,15 @@ export interface AiNotesGeneratorService {
    * consisting of two strings: the question (front side of the note) and the
    * answer (back side of the note)
    */
-  generate(input: GenerateAiNotesInputModel): Promise<NoteRowModel[]>;
+  generate(
+    input: GenerateAiNotesInputModel,
+  ): Effect.Effect<
+    NoteRowModel[],
+    | ExternalServiceError
+    | AiGeneratorEmptyMessageError
+    | AiGeneratorRateLimitError
+    | AiGeneratorError
+  >;
 }
 
 /**
@@ -41,3 +57,7 @@ export interface GenerateAiNotesInputModel {
    */
   sourceType: AiNotesGeneratorSourceType;
 }
+
+export const AiNotesGeneratorService = Context.Service<AiNotesGeneratorService>(
+  "clubmemo/ai-generator/domain/interfaces/ai-notes-generator-service/AiNotesGeneratorService",
+);

@@ -1,55 +1,66 @@
+import * as Effect from "effect/Effect";
 import { PartyPopper, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { Button } from "@/src/common/ui/components/shadcn/ui/button";
 import { Card } from "@/src/common/ui/components/shadcn/ui/card";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
+import { CoursesRepository } from "@/src/courses/layers/layer_courses-repository";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 import { getCourseDetailPath } from "../../utils/get-course-detail-path";
 
 export async function KeepLearningContent() {
-  const profile = await fetchMyProfile();
-  if (!profile) return null;
-  const coursesRepository = locator_courses_CoursesRepository();
-  const course = await coursesRepository.getKeepLearning(profile.id);
-  if (!course) return <KeepLearningEmptyState />;
-  return (
-    <Card className="flex h-64 flex-col overflow-clip sm:h-40 sm:flex-row">
-      <div className="relative h-28 flex-none bg-slate-300 sm:h-full sm:w-56">
-        {course.picture && (
-          <Image
-            src={course.picture}
-            fill
-            alt=""
-            className="object-cover"
-            priority
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
-        )}
-      </div>
-      <div className="min-w-0 flex-1 p-3">
-        <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
-          <Link href={getCourseDetailPath(course.courseId)}>{course.name}</Link>
-        </h3>
-        <div className="h-1"></div>
-        <p className={cn(textStyles.muted, "truncate")}>
-          {course.description || "Curso sin descripción"}
-        </p>
-        <div className="h-1 sm:h-2"></div>
-        <p className={cn(textStyles.small, "truncate")}>
-          Aprender: {course.newCount} | Repasar: {course.dueCount}
-        </p>
-        <div className="h-3 sm:h-6"></div>
-        <Button className="w-full" size="sm" asChild>
-          <Link href={`/courses/detail/${course.courseId}/practice`}>
-            <Play className="mr-2 size-4" />
-            Practicar
-          </Link>
-        </Button>
-      </div>
-    </Card>
+  return runServer(
+    Effect.gen(function* () {
+      const profile = yield* Effect.tryPromise({
+        try: () => fetchMyProfile(),
+        catch: (error) => error,
+      });
+      if (!profile) return null;
+      const coursesRepository = yield* CoursesRepository;
+      const course = yield* coursesRepository.getKeepLearning(profile.id);
+      if (!course) return <KeepLearningEmptyState />;
+      return (
+        <Card className="flex h-64 flex-col overflow-clip sm:h-40 sm:flex-row">
+          <div className="relative h-28 flex-none bg-slate-300 sm:h-full sm:w-56">
+            {course.picture && (
+              <Image
+                src={course.picture}
+                fill
+                alt=""
+                className="object-cover"
+                priority
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+            )}
+          </div>
+          <div className="min-w-0 flex-1 p-3">
+            <h3 className={cn(textStyles.h4, "truncate hover:underline")}>
+              <Link href={getCourseDetailPath(course.courseId)}>
+                {course.name}
+              </Link>
+            </h3>
+            <div className="h-1"></div>
+            <p className={cn(textStyles.muted, "truncate")}>
+              {course.description || "Curso sin descripción"}
+            </p>
+            <div className="h-1 sm:h-2"></div>
+            <p className={cn(textStyles.small, "truncate")}>
+              Aprender: {course.newCount} | Repasar: {course.dueCount}
+            </p>
+            <div className="h-3 sm:h-6"></div>
+            <Button className="w-full" size="sm" asChild>
+              <Link href={`/courses/detail/${course.courseId}/practice`}>
+                <Play className="mr-2 size-4" />
+                Practicar
+              </Link>
+            </Button>
+          </div>
+        </Card>
+      );
+    }),
   );
 }
 

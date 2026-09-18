@@ -1,6 +1,10 @@
+import * as DateTime from "effect/DateTime";
+import * as Effect from "effect/Effect";
+import * as Schema from "effect/Schema";
+
 import type { RecordLog } from "ts-fsrs";
 import { Rating } from "ts-fsrs";
-import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
+import { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import { PracticeCardModel } from "./practice-card-model";
 import type { DaysToNextReviewModel } from "./practice-card-rating-model";
 import {
@@ -10,10 +14,11 @@ import {
 import { PracticeCardStateTransformer } from "./practice-card-state-model";
 import { ReviewLogModel } from "./review-log-model";
 
-interface PracticerData {
-  enrollment: CourseEnrollmentModel;
-  card: PracticeCardModel;
-}
+export const PracticerDataSchema = Schema.Struct({
+  enrollment: Schema.mutableKey(CourseEnrollmentModel),
+  card: Schema.mutableKey(PracticeCardModel),
+});
+export type PracticerData = typeof PracticerDataSchema.Type;
 
 /**
  * Calculates the result of practicing a card.
@@ -29,18 +34,24 @@ interface PracticerData {
  * The PracticerModel provides an abstraction over the FSRS algorithm, and uses
  * its API under the hood to calculate the result of practicing a card.
  */
-export class PracticerModel {
+export class PracticerModel extends Schema.Class<PracticerModel>(
+  "PracticerModel",
+)({ data: PracticerDataSchema }) {
   private recordLog?: RecordLog;
-  constructor(private readonly data: PracticerData) {}
+  constructor(data: PracticerData) {
+    super({ data });
+  }
 
   /**
    * Calculates the result of practicing a card for each possible rating of the user
    */
-  practice() {
+  practice = Effect.fn("PracticerModel.practice")(function* (
+    this: PracticerModel,
+  ) {
     const fsrs = this.data.enrollment.fsrs;
     const fsrsCard = this.data.card.fsrsCard;
-    this.recordLog = fsrs.repeat(fsrsCard, new Date());
-  }
+    this.recordLog = fsrs.repeat(fsrsCard, yield* DateTime.nowAsDate);
+  }).bind(this);
 
   /**
    * Rates the card based on the user's performance in the review. The rating is

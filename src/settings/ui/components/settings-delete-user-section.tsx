@@ -1,11 +1,10 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "@/i18n/zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { InputFormField } from "@/src/common/ui/components/form/input-form-field";
@@ -67,17 +66,17 @@ interface DeleteUserDialogProps {
   onClose: () => void;
 }
 
-const FormSchema = z.object({
-  password: z.string(),
-  confirmation: z.string(),
+const FormSchema = Schema.Struct({
+  password: Schema.String,
+  confirmation: Schema.String,
 });
 
-type FormValues = z.infer<typeof FormSchema>;
+type FormValues = (typeof FormSchema)["Type"];
 
 function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
   const router = useRouter();
   const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+    resolver: schemaResolver(FormSchema),
     defaultValues: {
       password: "",
       confirmation: "",
@@ -90,7 +89,7 @@ function DeleteUserDialog({ email, onClose }: DeleteUserDialogProps) {
       if (!handler.hasErrors) router.push("/auth/signup");
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

@@ -1,4 +1,5 @@
 "use server";
+import * as Schema from "effect/Schema";
 
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
@@ -10,7 +11,9 @@ export async function paginateCoursesByAuthorAction(
   input: PaginateCoursesByAuthorActionModel,
 ) {
   try {
-    const parsed = PaginateCoursesByAuthorActionSchema.parse(input);
+    const parsed = Schema.decodeUnknownSync(
+      PaginateCoursesByAuthorActionSchema,
+    )(input);
     const response = await fetchCoursesByAuthor(parsed);
     return ActionResponse.formSuccess(response);
   } catch (e) {

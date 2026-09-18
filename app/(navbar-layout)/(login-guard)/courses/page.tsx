@@ -1,9 +1,11 @@
+import * as Effect from "effect/Effect";
 import { BookText, GraduationCap } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { textStyles } from "@/src/common/ui/styles/text-styles";
 import { cn } from "@/src/common/ui/utils/shadcn";
-import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
+import { CoursesRepository } from "@/src/courses/layers/layer_courses-repository";
 import { CreateCourseButton } from "@/src/courses/ui/create/components/create-course-button";
 import { CreateCourseCtaLarge } from "@/src/courses/ui/create/components/create-course-cta-large";
 import { MyCoursesPaginationSection } from "@/src/courses/ui/my-courses/components/my-courses-pagination-section";
@@ -24,21 +26,28 @@ export default async function CoursesPage(props: {
     page?: string;
   }>;
 }) {
-  const searchParams = await props.searchParams;
-  return (
-    <main>
-      <div className="h-20" />
-      <div className="px-4">
-        <div className="mx-auto max-w-3xl">
-          <h1 className={cn(textStyles.h2)}>
-            <BookText className="mr-2 inline size-7 -translate-y-1" />
-            Mis cursos
-          </h1>
-        </div>
-      </div>
-      <div className="h-10" />
-      <CoursesPageLoader page={Number(searchParams?.page) || 1} />
-    </main>
+  return runServer(
+    Effect.gen(function* () {
+      const searchParams = yield* Effect.tryPromise({
+        try: () => props.searchParams,
+        catch: (error) => error,
+      });
+      return (
+        <main>
+          <div className="h-20" />
+          <div className="px-4">
+            <div className="mx-auto max-w-3xl">
+              <h1 className={cn(textStyles.h2)}>
+                <BookText className="mr-2 inline size-7 -translate-y-1" />
+                Mis cursos
+              </h1>
+            </div>
+          </div>
+          <div className="h-10" />
+          <CoursesPageLoader page={Number(searchParams?.page) || 1} />
+        </main>
+      );
+    }),
   );
 }
 
@@ -50,38 +59,45 @@ interface CoursesPageContentProps {
  * Gets the data of the list of courses that the profile has created or enrolled in.
  */
 async function CoursesPageLoader({ page }: CoursesPageContentProps) {
-  const profile = await fetchMyProfile();
-  if (!profile) {
-    return null;
-  }
-  const coursesRepository = locator_courses_CoursesRepository();
-  const hasCourses = await coursesRepository.getHasCourses(profile.id);
+  return runServer(
+    Effect.gen(function* () {
+      const profile = yield* Effect.tryPromise({
+        try: () => fetchMyProfile(),
+        catch: (error) => error,
+      });
+      if (!profile) {
+        return null;
+      }
+      const coursesRepository = yield* CoursesRepository;
+      const hasCourses = yield* coursesRepository.getHasCourses(profile.id);
 
-  if (!hasCourses) {
-    return <CreateCourseCtaLarge />;
-  }
+      if (!hasCourses) {
+        return <CreateCourseCtaLarge />;
+      }
 
-  const arg: FetchMyCoursesPaginationModel = { page };
+      const arg: FetchMyCoursesPaginationModel = { page };
 
-  return (
-    <>
-      <div className="px-4">
-        <div className="mx-auto max-w-3xl">
-          <div className="flex">
-            <div className="flex-1"></div>
-            <CreateCourseButton size="sm" />
+      return (
+        <>
+          <div className="px-4">
+            <div className="mx-auto max-w-3xl">
+              <div className="flex">
+                <div className="flex-1"></div>
+                <CreateCourseButton size="sm" />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="h-4"></div>
-      <Suspense key={arg.page} fallback={<MyCoursesLoading />}>
-        <MyCoursesTable arg={arg} />
-      </Suspense>
-      <div className="h-8"></div>
-      <Suspense>
-        <CoursesPagePagination arg={arg} />
-      </Suspense>
-    </>
+          <div className="h-4"></div>
+          <Suspense key={arg.page} fallback={<MyCoursesLoading />}>
+            <MyCoursesTable arg={arg} />
+          </Suspense>
+          <div className="h-8"></div>
+          <Suspense>
+            <CoursesPagePagination arg={arg} />
+          </Suspense>
+        </>
+      );
+    }),
   );
 }
 
@@ -90,9 +106,16 @@ interface CoursesPagePaginationProps {
 }
 
 async function CoursesPagePagination({ arg }: CoursesPagePaginationProps) {
-  const { totalCount: count } = await fetchMyCoursesPagination(arg);
+  return runServer(
+    Effect.gen(function* () {
+      const { totalCount: count } = yield* Effect.tryPromise({
+        try: () => fetchMyCoursesPagination(arg),
+        catch: (error) => error,
+      });
 
-  return <MyCoursesPaginationSection resultsCount={count} />;
+      return <MyCoursesPaginationSection resultsCount={count} />;
+    }),
+  );
 }
 
 function MyCoursesLoading() {

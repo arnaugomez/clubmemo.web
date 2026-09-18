@@ -1,14 +1,23 @@
+import * as Effect from "effect/Effect";
 import { cache } from "react";
-import { locator_courses_CoursesRepository } from "@/src/courses/locators/locator_courses-repository";
+import { runServer } from "@/src/common/effect/server-runtime";
+import { CoursesRepository } from "@/src/courses/layers/layer_courses-repository";
 import { fetchMyProfile } from "../../../../profile/ui/fetch/fetch-my-profile";
 
 export const fetchFavoriteCourses = cache(async () => {
-  const profile = await fetchMyProfile();
-  if (!profile) return [];
-  const coursesRepository = locator_courses_CoursesRepository();
-  return await coursesRepository.getMyCourses({
-    profileId: profile.id,
-    isFavorite: true,
-    limit: 6,
-  });
+  return runServer(
+    Effect.gen(function* () {
+      const profile = yield* Effect.tryPromise({
+        try: () => fetchMyProfile(),
+        catch: (error) => error,
+      });
+      if (!profile) return [];
+      const coursesRepository = yield* CoursesRepository;
+      return yield* coursesRepository.getMyCourses({
+        profileId: profile.id,
+        isFavorite: true,
+        limit: 6,
+      });
+    }),
+  );
 });

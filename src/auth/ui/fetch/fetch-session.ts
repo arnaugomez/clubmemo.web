@@ -1,5 +1,7 @@
+import * as Effect from "effect/Effect";
 import { cache } from "react";
-import { locator_auth_GetSessionUseCase } from "../../locators/locator_get-session-use-case";
+import { GetSessionUseCaseService } from "@/src/auth/layers/layer_get-session-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
 
 /**
  * Obtains the current session of the user.
@@ -8,6 +10,10 @@ import { locator_auth_GetSessionUseCase } from "../../locators/locator_get-sessi
  * React Server Components request.
  */
 export const fetchSession = cache(async () => {
-  const useCase = locator_auth_GetSessionUseCase();
-  return await useCase.execute();
+  return runServer(
+    Effect.gen(function* () {
+      const useCase = yield* GetSessionUseCaseService;
+      return yield* useCase.execute();
+    }),
+  );
 });

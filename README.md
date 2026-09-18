@@ -45,3 +45,9 @@ just dev # Run the development server
 - [Folder Structure](./docs/folder-structure.md)
 - [Naming Conventions](./docs/naming-conventions.md)
 - [How to run tests](./docs/quality-assurance-tooling.md)
+
+## Effect architecture and testing
+
+The application uses Effect v4 services, Layers, typed workflows and Schema. See
+[the migration research, architecture and verification report](docs/migrations/effect-v4.md)
+for composition boundaries, compatibility decisions and local integration/Playwright setup.

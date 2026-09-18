@@ -1,6 +1,9 @@
 "use server";
-
-import { locator_auth_ResetPasswordUseCase } from "@/src/auth/locators/locator_reset-password-use-case";
+import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
+import * as Schema from "effect/Schema";
+import { ResetPasswordUseCaseService } from "@/src/auth/layers/layer_reset-password-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import {
   type ResetPasswordActionModel,
@@ -14,12 +17,24 @@ import {
  * @param input The data of the user and the new password
  */
 export async function resetPasswordAction(input: ResetPasswordActionModel) {
-  try {
-    const parsed = ResetPasswordActionSchema.parse(input);
+  return runServer(
+    Effect.gen(function* () {
+      {
+        const outcome = yield* Effect.result(
+          Effect.gen(function* () {
+            const parsed = yield* Schema.decodeUnknownEffect(
+              ResetPasswordActionSchema,
+            )(input);
 
-    const useCase = locator_auth_ResetPasswordUseCase();
-    await useCase.execute(parsed);
-  } catch (e) {
-    return ActionErrorHandler.handle(e);
-  }
+            const useCase = yield* ResetPasswordUseCaseService;
+            yield* useCase.execute(parsed);
+          }),
+        );
+        if (Result.isFailure(outcome)) {
+          const e = outcome.failure;
+          return ActionErrorHandler.handle(e);
+        }
+      }
+    }),
+  );
 }

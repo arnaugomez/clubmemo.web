@@ -1,4 +1,5 @@
 "use client";
+import * as Effect from "effect/Effect";
 import type { PropsWithChildren } from "react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -104,12 +105,15 @@ export function PracticeProvider({
       card: currentCard,
       enrollment,
     });
-    practicer.practice();
+    Effect.runSync(practicer.practice());
     return practicer;
   }, [enrollment, currentCard]);
 
-  async function getNextPracticeCards() {
-    const response = await getNextPracticeCardsAction({ courseId: course.id });
+  const getNextPracticeCards = Effect.fn("Practice.loadNext")(function* () {
+    const response = yield* Effect.tryPromise({
+      try: () => getNextPracticeCardsAction({ courseId: course.id }),
+      catch: (error) => error,
+    });
 
     const handler = new ActionResponseHandler(response);
     handler.toastErrors();
@@ -121,25 +125,29 @@ export function PracticeProvider({
         nextCards: data.map((c) => new PracticeCardModel(c)),
       }));
     }
-  }
+  });
 
-  const rate = async (rating: PracticeCardRatingModel) => {
+  const rate = (rating: PracticeCardRatingModel) => {
     if (!practicer) return;
     const practiceResult = practicer.rate(rating);
     addTask(
       practiceResult,
-      async (payload, tasks) => {
+      Effect.fn("Practice.persistReview")(function* (payload, tasks) {
         const { cards, currentCardIndex } = state;
         const { card, reviewLog } = payload;
-        const response = await practiceAction({
-          courseId: course.id,
-          card: card.data,
-          reviewLog: reviewLog.data,
+        const response = yield* Effect.tryPromise({
+          try: () =>
+            practiceAction({
+              courseId: course.id,
+              card: card.data,
+              reviewLog: reviewLog.data,
+            }),
+          catch: (error) => error,
         });
         const handler = new ActionResponseHandler(response);
         if (handler.hasErrors) {
           console.error(response.errors);
-          throw new Error();
+          return yield* Effect.fail(new Error());
         }
         if (handler.data) {
           const newCard = handler.data.card;
@@ -164,10 +172,10 @@ export function PracticeProvider({
           reviewLog.data.id = handler.data.reviewLog.id;
           reviewLog.data.cardId = handler.data.reviewLog.cardId;
           if (currentCardIndex === cards.length - 1) {
-            await getNextPracticeCards();
+            yield* getNextPracticeCards();
           }
         }
-      },
+      }),
       () => {
         toast.error("Error al guardar los cambios. Reintentando...");
       },

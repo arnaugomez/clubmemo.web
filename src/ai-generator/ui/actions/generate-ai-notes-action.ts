@@ -1,8 +1,11 @@
 "use server";
-
+import * as Effect from "effect/Effect";
+import * as Result from "effect/Result";
+import * as Schema from "effect/Schema";
+import { GenerateAiNotesUseCaseService } from "@/src/ai-generator/layers/layer_generate-ai-notes-use-case";
+import { runServer } from "@/src/common/effect/server-runtime";
 import { ActionErrorHandler } from "@/src/common/ui/actions/action-error-handler";
 import { ActionResponse } from "@/src/common/ui/models/server-form-errors";
-import { locator_aiGenerator_GenerateAiNotesUseCase } from "../../locators/locator_generate-ai-notes-use-case";
 import type { GenerateAiNotesActionModel } from "../schemas/generate-ai-notes-action-schema";
 import { GenerateAiNotesActionSchema } from "../schemas/generate-ai-notes-action-schema";
 
@@ -13,14 +16,28 @@ import { GenerateAiNotesActionSchema } from "../schemas/generate-ai-notes-action
  * @returns A list of generated notes or an error
  */
 export async function generateAiNotesAction(input: GenerateAiNotesActionModel) {
-  try {
-    const parsed = GenerateAiNotesActionSchema.parse(input);
+  return runServer(
+    Effect.gen(function* () {
+      {
+        const outcome = yield* Effect.result(
+          Effect.gen(function* () {
+            const parsed = yield* Schema.decodeUnknownEffect(
+              GenerateAiNotesActionSchema,
+            )(input);
 
-    const useCase = locator_aiGenerator_GenerateAiNotesUseCase();
-    const result = await useCase.execute(parsed);
+            const useCase = yield* GenerateAiNotesUseCaseService;
+            const result = yield* useCase.execute(parsed);
 
-    return ActionResponse.formSuccess(result);
-  } catch (e) {
-    return ActionErrorHandler.handle(e);
-  }
+            return ActionResponse.formSuccess(result);
+          }),
+        );
+        if (Result.isFailure(outcome)) {
+          const e = outcome.failure;
+          return ActionErrorHandler.handle(e);
+        } else {
+          return outcome.success;
+        }
+      }
+    }),
+  );
 }

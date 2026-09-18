@@ -1,13 +1,13 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
+import * as SchemaGetter from "effect/SchemaGetter";
 import { Edit2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "@/i18n/zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError, runClient } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { OptionalFileFieldSchema } from "@/src/common/schemas/file-schema";
 import { HandleSchema } from "@/src/common/schemas/handle-schema";
 import { FileFormField } from "@/src/common/ui/components/form/file-form-field";
@@ -27,8 +27,7 @@ import {
   DialogTitle,
 } from "@/src/common/ui/components/shadcn/ui/dialog";
 import { FormResponseHandler } from "@/src/common/ui/models/server-form-errors";
-import { locator_fileUpload_ClientFileUploadService } from "@/src/file-upload/locators/locator_client-file-upload-service";
-import { uploadFileAction } from "@/src/file-upload/ui/actions/upload-file-action";
+import { uploadFileWorkflow } from "@/src/file-upload/ui/workflows/upload-file";
 import type { ProfileModelData } from "@/src/profile/domain/models/profile-model";
 import { ProfileModel } from "@/src/profile/domain/models/profile-model";
 import { TagsSchema } from "@/src/tags/domain/schemas/tags-schema";
@@ -64,18 +63,71 @@ interface EditProfileDialogProps {
 /**
  * Validation rules for the edit profile form
  */
-const EditProfileSchema = z.object({
-  displayName: z.string().trim().min(1).max(50),
+const EditProfileSchema = Schema.Struct({
+  displayName: Schema.String.pipe(
+    Schema.decode({
+      decode: SchemaGetter.transform((value) => value.trim()),
+      encode: SchemaGetter.passthrough(),
+    }),
+  )
+    .check(
+      Schema.isMinLength(1, {
+        message: `El texto debe contener al menos ${1} carácter(es)`,
+      }),
+    )
+    .check(
+      Schema.isMaxLength(50, {
+        message: `El texto debe contener como máximo ${50} carácter(es)`,
+      }),
+    ),
   handle: HandleSchema,
-  bio: z.string().trim().min(0).max(255),
-  website: z.string().url().max(2083).or(z.string().max(0)),
-  isPublic: z.boolean(),
+  bio: Schema.String.pipe(
+    Schema.decode({
+      decode: SchemaGetter.transform((value) => value.trim()),
+      encode: SchemaGetter.passthrough(),
+    }),
+  )
+    .check(
+      Schema.isMinLength(0, {
+        message: `El texto debe contener al menos ${0} carácter(es)`,
+      }),
+    )
+    .check(
+      Schema.isMaxLength(255, {
+        message: `El texto debe contener como máximo ${255} carácter(es)`,
+      }),
+    ),
+  website: Schema.Union([
+    Schema.String.check(
+      Schema.makeFilter(
+        (value) => {
+          try {
+            new URL(value);
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        { message: "Enlace inválido" },
+      ),
+    ).check(
+      Schema.isMaxLength(2083, {
+        message: `El texto debe contener como máximo ${2083} carácter(es)`,
+      }),
+    ),
+    Schema.String.check(
+      Schema.isMaxLength(0, {
+        message: `El texto debe contener como máximo ${0} carácter(es)`,
+      }),
+    ),
+  ]),
+  isPublic: Schema.Boolean,
   tags: TagsSchema,
-  picture: OptionalFileFieldSchema,
-  backgroundPicture: OptionalFileFieldSchema,
+  picture: Schema.mutableKey(OptionalFileFieldSchema),
+  backgroundPicture: Schema.mutableKey(OptionalFileFieldSchema),
 });
 
-type FormValues = z.infer<typeof EditProfileSchema>;
+type FormValues = (typeof EditProfileSchema)["Type"];
 
 /**
  * Dialog with a form to edit the profile
@@ -84,7 +136,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
   const router = useRouter();
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(EditProfileSchema),
+    resolver: schemaResolver(EditProfileSchema),
     defaultValues: {
       displayName: profile.displayName ?? "",
       handle: profile.handle ?? "",
@@ -100,47 +152,39 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
   const onSubmit = form.handleSubmit(async (data) => {
     try {
       if (data.picture instanceof File) {
-        const response = await uploadFileAction({
-          collection: "profiles",
-          field: "picture",
-          contentType: data.picture.type,
-        });
+        const response = await runClient(
+          uploadFileWorkflow({
+            collection: "profiles",
+            field: "picture",
+            file: data.picture,
+          }),
+        );
         const handler = new FormResponseHandler(response, form);
         if (handler.hasErrors) {
           handler.setErrors();
           return;
         } else if (handler.data) {
-          const fileUploadService =
-            locator_fileUpload_ClientFileUploadService();
-          await fileUploadService.uploadPresignedUrl({
-            file: data.picture,
-            presignedUrl: handler.data.presignedUrl,
-          });
           data.picture = handler.data.url;
         }
       }
       if (data.backgroundPicture instanceof File) {
-        const response = await uploadFileAction({
-          collection: "profiles",
-          field: "backgroundPicture",
-          contentType: data.backgroundPicture.type,
-        });
+        const response = await runClient(
+          uploadFileWorkflow({
+            collection: "profiles",
+            field: "backgroundPicture",
+            file: data.backgroundPicture,
+          }),
+        );
         const handler = new FormResponseHandler(response, form);
         if (handler.hasErrors) {
           handler.setErrors();
           return;
         } else if (handler.data) {
-          const fileUploadService =
-            locator_fileUpload_ClientFileUploadService();
-          await fileUploadService.uploadPresignedUrl({
-            file: data.backgroundPicture,
-            presignedUrl: handler.data.presignedUrl,
-          });
           data.backgroundPicture = handler.data.url;
         }
       }
     } catch (e) {
-      locator_common_ErrorTrackingService().captureError(e);
+      captureError(e);
       toast.error("Error al subir las imágenes");
       return;
     }
@@ -169,7 +213,7 @@ function EditProfileDialog({ profile, onClose }: EditProfileDialogProps) {
       }
       handler.setErrors();
     } catch (e) {
-      locator_common_ErrorTrackingService().captureError(e);
+      captureError(e);
       FormResponseHandler.setGlobalError(form);
     }
   });

@@ -1,9 +1,9 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as Schema from "effect/Schema";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { default_maximum_interval } from "ts-fsrs";
-import { z } from "@/i18n/zod";
-import { locator_common_ErrorTrackingService } from "@/src/common/locators/locator_error-tracking-service";
+import { captureError } from "@/src/common/effect/client-runtime";
+import { schemaResolver } from "@/src/common/effect/schema-resolver";
 import { FormGlobalErrorMessage } from "@/src/common/ui/components/form/form-global-error-message";
 import { FormSubmitButton } from "@/src/common/ui/components/form/form-submit-button";
 import { SliderFormField } from "@/src/common/ui/components/form/slider-form-field";
@@ -22,15 +22,53 @@ import { textStyles } from "@/src/common/ui/styles/text-styles";
 import type { CourseEnrollmentModel } from "@/src/courses/domain/models/course-enrollment-model";
 import { editCourseConfigAction } from "../actions/edit-course-config-action";
 
-const EditCourseConfigSchema = z.object({
-  enableFuzz: z.boolean(),
-  maximumInterval: z.number().int().min(1).max(default_maximum_interval),
-  requestRetention: z.number().min(0).max(1),
-  dailyNewCardsCount: z.number().int().min(1).max(100),
-  showAdvancedRatingOptions: z.boolean(),
+const EditCourseConfigSchema = Schema.Struct({
+  enableFuzz: Schema.Boolean,
+  maximumInterval: Schema.Number.check(
+    Schema.makeFilter((n) => !Number.isNaN(n)),
+  )
+    .check(Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }))
+    .check(
+      Schema.isGreaterThanOrEqualTo(1, {
+        message: `El número debe ser mayor o igual a ${1}`,
+      }),
+    )
+    .check(
+      Schema.isLessThanOrEqualTo(default_maximum_interval, {
+        message: `El número debe ser menor o igual a ${default_maximum_interval}`,
+      }),
+    ),
+  requestRetention: Schema.Number.check(
+    Schema.makeFilter((n) => !Number.isNaN(n)),
+  )
+    .check(
+      Schema.isGreaterThanOrEqualTo(0, {
+        message: `El número debe ser mayor o igual a ${0}`,
+      }),
+    )
+    .check(
+      Schema.isLessThanOrEqualTo(1, {
+        message: `El número debe ser menor o igual a ${1}`,
+      }),
+    ),
+  dailyNewCardsCount: Schema.Number.check(
+    Schema.makeFilter((n) => !Number.isNaN(n)),
+  )
+    .check(Schema.isInt({ message: "Se esperaba entero, se recibió decimal" }))
+    .check(
+      Schema.isGreaterThanOrEqualTo(1, {
+        message: `El número debe ser mayor o igual a ${1}`,
+      }),
+    )
+    .check(
+      Schema.isLessThanOrEqualTo(100, {
+        message: `El número debe ser menor o igual a ${100}`,
+      }),
+    ),
+  showAdvancedRatingOptions: Schema.Boolean,
 });
 
-type FormValues = z.infer<typeof EditCourseConfigSchema>;
+type FormValues = (typeof EditCourseConfigSchema)["Type"];
 
 interface EditCourseConfigDialogProps {
   enrollment: CourseEnrollmentModel;
@@ -41,7 +79,7 @@ export function EditCourseConfigDialog({
   onClose,
 }: EditCourseConfigDialogProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(EditCourseConfigSchema),
+    resolver: schemaResolver(EditCourseConfigSchema),
     defaultValues: {
       dailyNewCardsCount: enrollment.config.dailyNewCardsCount,
       enableFuzz: enrollment.config.enableFuzz,
@@ -64,7 +102,7 @@ export function EditCourseConfigDialog({
       }
       handler.setErrors();
     } catch (error) {
-      locator_common_ErrorTrackingService().captureError(error);
+      captureError(error);
       FormResponseHandler.setGlobalError(form);
     }
   });

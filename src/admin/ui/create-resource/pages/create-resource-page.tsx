@@ -12,9 +12,10 @@ import { CreateResourceAlert } from "../components/create-resource-warning";
  * Page of the admin panel that contains the form to create a new resource of a
  * specific type.
  */
-export function CreateResourcePage({
-  params: { resourceType },
+export async function CreateResourcePage({
+  params,
 }: PropsWithResourceTypeParam) {
+  const { resourceType } = await params;
   const resource = getAdminResourceByType(resourceType);
   if (resource.cannotCreate) notFound();
   return (

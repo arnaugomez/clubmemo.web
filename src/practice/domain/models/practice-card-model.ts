@@ -1,28 +1,31 @@
+import * as Schema from "effect/Schema";
 import type { Card } from "ts-fsrs";
 import { createEmptyCard } from "ts-fsrs";
-import type { NoteModelData } from "@/src/notes/domain/models/note-model";
-import { NoteModel } from "@/src/notes/domain/models/note-model";
-import type { PracticeCardStateModel } from "./practice-card-state-model";
-import { PracticeCardStateTransformer } from "./practice-card-state-model";
+import {
+  NoteModel,
+  NoteModelDataSchema,
+} from "@/src/notes/domain/models/note-model";
+import {
+  PracticeCardStateModel,
+  PracticeCardStateTransformer,
+} from "./practice-card-state-model";
 
-export interface PracticeCardModelData {
-  id: string;
-
-  courseEnrollmentId: string;
-  note: NoteModelData;
-
-  provisionalId?: number;
-
-  due: Date;
-  stability: number;
-  difficulty: number;
-  elapsedDays: number;
-  scheduledDays: number;
-  reps: number;
-  lapses: number;
-  state: PracticeCardStateModel;
-  lastReview?: Date;
-}
+export const PracticeCardModelDataSchema = Schema.Struct({
+  id: Schema.mutableKey(Schema.String),
+  courseEnrollmentId: Schema.mutableKey(Schema.String),
+  note: Schema.mutableKey(NoteModelDataSchema),
+  provisionalId: Schema.mutableKey(Schema.optional(Schema.Number)),
+  due: Schema.mutableKey(Schema.Date),
+  stability: Schema.mutableKey(Schema.Number),
+  difficulty: Schema.mutableKey(Schema.Number),
+  elapsedDays: Schema.mutableKey(Schema.Number),
+  scheduledDays: Schema.mutableKey(Schema.Number),
+  reps: Schema.mutableKey(Schema.Number),
+  lapses: Schema.mutableKey(Schema.Number),
+  state: Schema.mutableKey(Schema.Enum(PracticeCardStateModel)),
+  lastReview: Schema.mutableKey(Schema.optional(Schema.Date)),
+});
+export type PracticeCardModelData = typeof PracticeCardModelDataSchema.Type;
 
 interface NewPracticeCardInput {
   courseEnrollmentId: string;
@@ -38,8 +41,12 @@ interface NewPracticeCardInput {
  * contains the data of the learner's progress, such as the next time the
  * learner should practice the note, the number of previous practices, etc.
  */
-export class PracticeCardModel {
-  constructor(readonly data: PracticeCardModelData) {}
+export class PracticeCardModel extends Schema.Class<PracticeCardModel>(
+  "PracticeCardModel",
+)({ data: PracticeCardModelDataSchema }) {
+  constructor(data: PracticeCardModelData) {
+    super({ data });
+  }
 
   static createNew({
     courseEnrollmentId,

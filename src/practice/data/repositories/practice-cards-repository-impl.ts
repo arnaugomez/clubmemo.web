@@ -1,7 +1,9 @@
+import * as Effect from "effect/Effect";
 import type { WithId } from "mongodb";
 import { ObjectId } from "mongodb";
 import type { DatabaseService } from "@/src/common/domain/interfaces/database-service";
 import type { DateTimeService } from "@/src/common/domain/interfaces/date-time-service";
+import { ExternalServiceError } from "@/src/common/effect/errors";
 import type { NoteDoc } from "@/src/notes/data/collections/notes-collection";
 import {
   NoteDocTransformer,
@@ -32,30 +34,15 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
     this.notes = databaseService.collection(notesCollection);
   }
 
-  async create(input: PracticeCardModel): Promise<PracticeCardModel> {
-    const result = await this.practiceCards.insertOne({
-      courseEnrollmentId: new ObjectId(input.data.courseEnrollmentId),
-      noteId: new ObjectId(input.note.data.id),
-      due: input.data.due,
-      stability: input.data.stability,
-      difficulty: input.data.difficulty,
-      elapsedDays: input.data.elapsedDays,
-      scheduledDays: input.data.scheduledDays,
-      reps: input.data.reps,
-      lapses: input.data.lapses,
-      state: input.data.state,
-      lastReview: input.data.lastReview,
-    });
-    input.data.id = result.insertedId.toString();
-    return new PracticeCardModel(input.data);
-  }
-  async update(input: PracticeCardModel): Promise<void> {
-    await this.practiceCards.updateOne(
-      {
-        _id: new ObjectId(input.data.id),
-      },
-      {
-        $set: {
+  create = Effect.fn("PracticeCardsRepositoryImpl.create")(function* (
+    this: PracticeCardsRepositoryImpl,
+    input: PracticeCardModel,
+  ) {
+    const result = yield* Effect.tryPromise({
+      try: () =>
+        this.practiceCards.insertOne({
+          courseEnrollmentId: new ObjectId(input.data.courseEnrollmentId),
+          noteId: new ObjectId(input.note.data.id),
           due: input.data.due,
           stability: input.data.stability,
           difficulty: input.data.difficulty,
@@ -65,12 +52,52 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
           lapses: input.data.lapses,
           state: input.data.state,
           lastReview: input.data.lastReview,
-        },
-      },
-    );
-  }
+        }),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "PracticeCardsRepositoryImpl.create",
+          cause,
+        }),
+    });
+    input.data.id = result.insertedId.toString();
+    return new PracticeCardModel(input.data);
+  }).bind(this);
+  update = Effect.fn("PracticeCardsRepositoryImpl.update")(function* (
+    this: PracticeCardsRepositoryImpl,
+    input: PracticeCardModel,
+  ) {
+    yield* Effect.tryPromise({
+      try: () =>
+        this.practiceCards.updateOne(
+          {
+            _id: new ObjectId(input.data.id),
+          },
+          {
+            $set: {
+              due: input.data.due,
+              stability: input.data.stability,
+              difficulty: input.data.difficulty,
+              elapsedDays: input.data.elapsedDays,
+              scheduledDays: input.data.scheduledDays,
+              reps: input.data.reps,
+              lapses: input.data.lapses,
+              state: input.data.state,
+              lastReview: input.data.lastReview,
+            },
+          },
+        ),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "PracticeCardsRepositoryImpl.update",
+          cause,
+        }),
+    });
+  }).bind(this);
 
-  async getNew(input: GetNewInput): Promise<PracticeCardModel[]> {
+  getNew = Effect.fn("PracticeCardsRepositoryImpl.getNew")(function* (
+    this: PracticeCardsRepositoryImpl,
+    input: GetNewInput,
+  ) {
     const cursor = this.notes.aggregate<WithId<NoteDoc>>([
       {
         $match: {
@@ -108,7 +135,14 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
         $limit: input.limit,
       },
     ]);
-    const results = await cursor.toArray();
+    const results = yield* Effect.tryPromise({
+      try: () => cursor.toArray(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "PracticeCardsRepositoryImpl.getNew",
+          cause,
+        }),
+    });
     return results.map((e, i) => {
       return PracticeCardModel.createNew({
         courseEnrollmentId: input.courseEnrollmentId,
@@ -116,9 +150,12 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
         provisionalId: i,
       });
     });
-  }
+  }).bind(this);
 
-  async getNewCount(input: GetNewInput): Promise<number> {
+  getNewCount = Effect.fn("PracticeCardsRepositoryImpl.getNewCount")(function* (
+    this: PracticeCardsRepositoryImpl,
+    input: GetNewInput,
+  ) {
     const cursor = this.notes.aggregate<{ count: number }>([
       {
         $match: {
@@ -159,16 +196,27 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
         },
       },
     ]);
-    const result = await cursor.next();
+    const result = yield* Effect.tryPromise({
+      try: () => cursor.next(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "PracticeCardsRepositoryImpl.getNewCount",
+          cause,
+        }),
+    });
     return result?.count ?? 0;
-  }
+  }).bind(this);
 
-  async getDue(input: GetDueInput): Promise<PracticeCardModel[]> {
+  getDue = Effect.fn("PracticeCardsRepositoryImpl.getDue")(function* (
+    this: PracticeCardsRepositoryImpl,
+    input: GetDueInput,
+  ) {
+    const getStartOfTomorrow = yield* this.dateTimeService.getStartOfTomorrow();
     const cursor = this.practiceCards.aggregate<PracticeCardAggregationDoc>([
       {
         $match: {
           courseEnrollmentId: new ObjectId(input.courseEnrollmentId),
-          due: { $lte: this.dateTimeService.getStartOfTomorrow() },
+          due: { $lte: getStartOfTomorrow },
         },
       },
       { $limit: input.limit },
@@ -184,18 +232,29 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
         $unwind: "$note",
       },
     ]);
-    const result = await cursor.toArray();
+    const result = yield* Effect.tryPromise({
+      try: () => cursor.toArray(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "PracticeCardsRepositoryImpl.getDue",
+          cause,
+        }),
+    });
     return result.map((e) =>
       new PracticeCardAggregationDocTransformer(e).toDomain(),
     );
-  }
+  }).bind(this);
 
-  async getDueCount(courseEnrollmentId: string): Promise<number> {
+  getDueCount = Effect.fn("PracticeCardsRepositoryImpl.getDueCount")(function* (
+    this: PracticeCardsRepositoryImpl,
+    courseEnrollmentId: string,
+  ) {
+    const getStartOfTomorrow = yield* this.dateTimeService.getStartOfTomorrow();
     const cursor = this.practiceCards.aggregate<{ count: number }>([
       {
         $match: {
           courseEnrollmentId: new ObjectId(courseEnrollmentId),
-          due: { $lte: this.dateTimeService.getStartOfTomorrow() },
+          due: { $lte: getStartOfTomorrow },
         },
       },
       {
@@ -205,7 +264,14 @@ export class PracticeCardsRepositoryImpl implements PracticeCardsRepository {
         },
       },
     ]);
-    const result = await cursor.next();
+    const result = yield* Effect.tryPromise({
+      try: () => cursor.next(),
+      catch: (cause) =>
+        new ExternalServiceError({
+          operation: "PracticeCardsRepositoryImpl.getDueCount",
+          cause,
+        }),
+    });
     return result?.count ?? 0;
-  }
+  }).bind(this);
 }

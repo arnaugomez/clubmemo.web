@@ -1,3 +1,6 @@
+import * as Context from "effect/Context";
+import type * as Effect from "effect/Effect";
+import type { ExternalServiceError } from "@/src/common/effect/errors";
 /**
  * Repository for course permissions
  *
@@ -12,5 +15,10 @@ export interface CoursePermissionsRepository {
    *
    * @param courseId The id of a course
    */
-  deleteByCourseId(courseId: string): Promise<void>;
+  deleteByCourseId(courseId: string): Effect.Effect<void, ExternalServiceError>;
 }
+
+export const CoursePermissionsRepository =
+  Context.Service<CoursePermissionsRepository>(
+    "clubmemo/courses/domain/interfaces/course-permissions-repository/CoursePermissionsRepository",
+  );

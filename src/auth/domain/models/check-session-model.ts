@@ -1,17 +1,24 @@
+import * as Schema from "effect/Schema";
+
 import type { UserModel } from "./user-model";
 
-export interface SessionModelData {
-  id: string;
-  expiresAt: Date;
-  fresh: boolean;
-  userId: string;
-}
+export const SessionModelDataSchema = Schema.Struct({
+  id: Schema.mutableKey(Schema.String),
+  expiresAt: Schema.mutableKey(Schema.Date),
+  fresh: Schema.mutableKey(Schema.Boolean),
+  userId: Schema.mutableKey(Schema.String),
+});
+export type SessionModelData = typeof SessionModelDataSchema.Type;
 
 /**
  * A user session, meaning that a user is logged in
  */
-export class SessionModel {
-  constructor(private data: SessionModelData) {}
+export class SessionModel extends Schema.Class<SessionModel>("SessionModel")({
+  data: SessionModelDataSchema,
+}) {
+  constructor(data: SessionModelData) {
+    super({ data });
+  }
 
   get id() {
     return this.data.id;

@@ -1,6 +1,7 @@
-import type { CookieService } from "@/src/common/domain/interfaces/cookie-service";
-import type { AuthService } from "../interfaces/auth-service";
-import type { CheckSessionModel } from "../models/check-session-model";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import { CookieService } from "@/src/common/domain/interfaces/cookie-service";
+import { AuthService } from "../interfaces/auth-service";
 import { emptyCheckSession } from "../models/check-session-model";
 
 /**
@@ -8,36 +9,37 @@ import { emptyCheckSession } from "../models/check-session-model";
  * session cookie does not exist or if it expired, it returns an empty
  * object.
  */
-export class GetSessionUseCase {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly cookieService: CookieService,
-  ) {}
+export class GetSessionUseCase extends Context.Service<GetSessionUseCase>()(
+  "clubmemo/auth/domain/use-cases/get-session-use-case",
+  {
+    make: Effect.gen(function* () {
+      const authService = yield* AuthService;
+      const cookieService = yield* CookieService;
+      const execute = Effect.fn("GetSessionUseCase.execute")(function* () {
+        const sessionCookieName = authService.getSessionCookieName();
+        const sessionId = yield* cookieService.get(sessionCookieName);
+        if (!sessionId) return emptyCheckSession;
 
-  /**
-   * Gets the current session of the user from the session cookie. If the
-   * session cookie does not exist or if it expired, it returns an empty object.
-   */
-  async execute(): Promise<CheckSessionModel> {
-    const sessionCookieName = this.authService.getSessionCookieName();
-    const sessionId = await this.cookieService.get(sessionCookieName);
-    if (!sessionId) return emptyCheckSession;
+        const result = yield* authService.validateSession(sessionId);
 
-    const result = await this.authService.validateSession(sessionId);
+        // next.js throws when you attempt to set cookie in Server Components
+        yield* Effect.gen(function* () {
+          if (result.session?.fresh) {
+            const sessionCookie = authService.createSessionCookie(
+              result.session.id,
+            );
+            yield* cookieService.set(sessionCookie);
+          }
+          if (!result.session) {
+            const sessionCookie = authService.createBlankSessionCookie();
+            yield* cookieService.set(sessionCookie);
+          }
+        }).pipe(Effect.ignore);
+        return result;
+      });
+      return { execute };
+    }),
+  },
+) {}
 
-    // next.js throws when you attempt to set cookie in Server Components
-    try {
-      if (result.session?.fresh) {
-        const sessionCookie = this.authService.createSessionCookie(
-          result.session.id,
-        );
-        await this.cookieService.set(sessionCookie);
-      }
-      if (!result.session) {
-        const sessionCookie = this.authService.createBlankSessionCookie();
-        await this.cookieService.set(sessionCookie);
-      }
-    } catch {}
-    return result;
-  }
-}
+export const GetSessionUseCaseService = GetSessionUseCase;

@@ -1,10 +1,11 @@
+import * as Schema from "effect/Schema";
 import chunk from "lodash/chunk";
 import { FilterXIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
-import { z } from "zod";
+
 import type {
   AdminFieldModel,
   AdminJoinModel,
@@ -46,7 +47,9 @@ export function ResourceListFiltersForm({
   const filters = useMemo(() => {
     try {
       const object = JSON.parse(filtersString);
-      return z.record(z.unknown()).parse(object);
+      return Schema.decodeUnknownSync(
+        Schema.Record(Schema.String, Schema.Unknown),
+      )(object);
     } catch {
       return {};
     }

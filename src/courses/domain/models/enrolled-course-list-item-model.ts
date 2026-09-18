@@ -1,17 +1,25 @@
-export interface EnrolledCourseListItemModelData {
-  courseId: string;
-  name: string;
-  picture: string;
-  isFavorite: boolean;
-  dueCount: number;
-  newCount: number;
-}
+import * as Schema from "effect/Schema";
+
+export const EnrolledCourseListItemModelDataSchema = Schema.Struct({
+  courseId: Schema.mutableKey(Schema.String),
+  name: Schema.mutableKey(Schema.String),
+  picture: Schema.mutableKey(Schema.optional(Schema.NullOr(Schema.String))),
+  isFavorite: Schema.mutableKey(Schema.Boolean),
+  dueCount: Schema.mutableKey(Schema.Number),
+  newCount: Schema.mutableKey(Schema.Number),
+});
+export type EnrolledCourseListItemModelData =
+  typeof EnrolledCourseListItemModelDataSchema.Type;
 
 /**
  * A list item containing the data of an enrolled course.
  */
-export class EnrolledCourseListItemModel {
-  constructor(readonly data: EnrolledCourseListItemModelData) {}
+export class EnrolledCourseListItemModel extends Schema.Class<EnrolledCourseListItemModel>(
+  "EnrolledCourseListItemModel",
+)({ data: EnrolledCourseListItemModelDataSchema }) {
+  constructor(data: EnrolledCourseListItemModelData) {
+    super({ data });
+  }
 
   get courseId() {
     return this.data.courseId;
@@ -22,7 +30,7 @@ export class EnrolledCourseListItemModel {
   }
 
   get picture() {
-    return this.data.picture;
+    return this.data.picture ?? undefined;
   }
 
   get isFavorite() {
